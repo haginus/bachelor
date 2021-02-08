@@ -1,21 +1,25 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
 
 const exports = [
   MatCardModule,
   MatButtonModule,
-  MatTabsModule
+  MatTabsModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatDividerModule,
+  MatIconModule
 ]
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    ...exports
-  ],
+  imports: exports,
   exports: exports
 })
 export class MaterialModule { }
