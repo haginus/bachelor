@@ -1,0 +1,63 @@
+<mat-card>
+    <mat-horizontal-stepper labelPosition="bottom" linear #stepper>
+        <mat-step [stepControl]="validationForm">
+            <ng-template matStepLabel>Validare</ng-template>
+            <form [formGroup]="validationForm">
+                <h2>Validarea datelor</h2>
+                <div class="step-details">Asigurați-vă că datele de mai jos sunt corecte.</div>
+                <mat-list>
+                    <div mat-subheader>Date personale</div>
+                    <mat-list-item>
+                        <div mat-line>Nume</div>
+                        <div mat-line>{{user.lastName}}</div>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <div mat-line>Prenume</div>
+                        <div mat-line>{{user.firstName}}</div>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <div mat-line>Data nașterii</div>
+                        <div mat-line>{{user.dateOfBirth | date}}</div>
+                    </mat-list-item>
+                    <mat-divider inset></mat-divider>
+                    <div mat-subheader>Formațiune de studiu</div>
+                    <mat-list-item>
+                        <div mat-line>Program de studiu</div>
+                        <div mat-line>{{user.studies.studyProgram}}</div>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <div mat-line>Domeniu</div>
+                        <div mat-line>{{user.studies.domain}}</div>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <div mat-line>Grupa</div>
+                        <div mat-line>{{user.studies.group}}</div>
+                    </mat-list-item>
+                </mat-list>
+                <mat-checkbox formControlName="isValid" class="v-checkbox">Confirm că datele sunt corecte.</mat-checkbox>
+                <div class="flex-container align-end actions-container">
+                    <button mat-raised-button matStepperNext [disabled]="validationForm.invalid">Pasul următor</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Teme</ng-template>
+            <form [formGroup]="topicsForm">
+                <h2>Teme preferate</h2>
+                <div class="step-details">Alegeți temele care vă atrag.</div>
+
+                <mat-selection-list #topicSelect formControlName="selectedTopics">
+                    <mat-list-option *ngFor="let topic of topics" [value]="topic.id">{{topic.name}}</mat-list-option>
+                </mat-selection-list>
+            </form>
+
+            <div class="flex-container align-end actions-container">
+                <button mat-raised-button matStepperNext [disabled]="topicsForm.invalid">Pasul următor</button>
+            </div>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Gata</ng-template>
+            <p>Încărcare date.</p>
+        </mat-step>
+    </mat-horizontal-stepper>
+</mat-card>
