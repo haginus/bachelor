@@ -1,0 +1,24 @@
+.main-drawer {
+    cursor: default;
+    min-width: 280px;
+}
+
+.main-container {
+    flex-direction: column;
+}
+
+.toolbar-title {
+    padding-left: 8px;
+}
+
+.toolbar-spacer {
+    flex: 1 1 auto;
+}
+
+.drawer-container {
+    flex: 1;
+}
+
+.main-content {
+    height: 100%;
+}

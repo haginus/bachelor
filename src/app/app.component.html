@@ -1,1 +1,33 @@
-<router-outlet></router-outlet>
+<div class="flex-container fullscreen main-container">
+    <mat-toolbar *ngIf="!hideToolbar">
+        <button mat-icon-button matTooltip="Comutați meniul" aria-label="Comutați meniul" *ngIf="!hideDrawer"
+            (click)="drawer.toggle()">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <span class="toolbar-title">{{title}}</span>
+        <span class="toolbar-spacer"></span>
+        <button mat-icon-button class="example-icon favorite-icon" matTooltip="Ieșiți din cont"
+            aria-label="Ieșiți din cont">
+            <mat-icon>logout</mat-icon>
+        </button>
+    </mat-toolbar>
+    <mat-drawer-container class="drawer-container">
+        <mat-drawer #drawer [mode]="drawerMode" class="main-drawer">
+            <mat-list>
+                <div mat-subheader>Profesori</div>
+                <a mat-list-item class="nav-item active">
+                    <mat-icon mat-list-icon>stars</mat-icon>
+                    <div mat-line>Profesori sugerați</div>
+                </a>
+                <mat-list-item class="nav-item">
+                    <mat-icon mat-list-icon>school</mat-icon>
+                    <div mat-line>Toți profesorii</div>
+                </mat-list-item>
+            </mat-list>
+        </mat-drawer>
+
+        <div class="main-content">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-drawer-container>
+</div>

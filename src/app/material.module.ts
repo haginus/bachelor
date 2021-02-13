@@ -9,6 +9,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatListModule } from '@angular/material/list';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 const exports = [
   MatCardModule,
@@ -20,7 +23,10 @@ const exports = [
   MatIconModule,
   MatStepperModule,
   MatCheckboxModule,
-  MatListModule
+  MatListModule,
+  MatToolbarModule,
+  MatSidenavModule,
+  MatTooltipModule
 ]
 
 @NgModule({
