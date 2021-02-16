@@ -9,12 +9,14 @@ import { LoginComponent } from './login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StudentSetupComponent } from './setup/student-setup/student-setup.component';
 import { HttpClientModule } from '@angular/common/http';
+import { LoadingComponent } from './shared/loading/loading.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    StudentSetupComponent
+    StudentSetupComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,
