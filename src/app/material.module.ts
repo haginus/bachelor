@@ -12,6 +12,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 const exports = [
   MatCardModule,
@@ -26,7 +28,9 @@ const exports = [
   MatListModule,
   MatToolbarModule,
   MatSidenavModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatSnackBarModule,
+  MatProgressBarModule
 ]
 
 @NgModule({

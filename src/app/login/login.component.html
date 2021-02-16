@@ -1,5 +1,6 @@
 <div class="flex-container align-center v-align-center fullscreen">
     <div class="login-container mat-elevation-z2">
+        <mat-progress-bar color="accent" mode="indeterminate" *ngIf="loading"></mat-progress-bar>
         <div class="image-container flex-container align-center logo">
             <img src="assets/img/fmi-logo.png"/>
         </div>
@@ -16,7 +17,7 @@
                             <input matInput type="password" formControlName="password">
                         </mat-form-field>
                         <div class="flex-container align-center">
-                            <button mat-raised-button color="accent" [disabled]="loginForm.invalid">Autentificare</button>
+                            <button mat-raised-button color="accent" [disabled]="loginForm.invalid || loading" (click)="signIn()">Autentificare</button>
                         </div>
                     </form>
                     <mat-divider class="divider"></mat-divider>
