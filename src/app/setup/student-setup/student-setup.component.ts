@@ -1,16 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Observable, Subscription } from 'rxjs';
+import { Topic, TopicsService } from 'src/app/services/topics.service';
+import { UserData, UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-student-setup',
   templateUrl: './student-setup.component.html',
   styleUrls: ['./student-setup.component.scss']
 })
-export class StudentSetupComponent implements OnInit {
+export class StudentSetupComponent implements OnInit, OnDestroy {
 
-  constructor() { }
+  constructor(private topicsService: TopicsService, private userService: UserService) { }
+
+  userObservable: any;
+
+  user!: UserData;
 
   ngOnInit(): void {
+    this.userObservable = this.userService.getUserData().subscribe(user => {
+      this.user = (user as UserData);
+    });
   }
 
   validationForm = new FormGroup({
@@ -22,51 +32,9 @@ export class StudentSetupComponent implements OnInit {
   });
 
 
-  //mock data
-  user : Student = {
-    firstName: "Andrei",
-    lastName: "Hagi",
-    dateOfBirth: 934070400000,
-    studies: {
-      studyProgram: "Licență",
-      domain: "Informatică",
-      group: "331"
-    }
+  topics: Observable<Topic[]> = this.topicsService.getTopics();
+
+  ngOnDestroy(): void {
+    this.userObservable.unsubscribe();
   }
-
-  topics : Topic[] = [
-    {
-      name: "Criptografie",
-      id: 1
-    },
-    {
-      name: "Tehnici de programare",
-      id: 2
-    },
-    {
-      name: "Aplicații web",
-      id: 3
-    },
-    {
-      name: "Aplicații distribuite",
-      id: 4
-    },
-  ]
-
-}
-
-interface Student {
-  firstName: string,
-  lastName: string,
-  dateOfBirth: number,
-  studies: {
-    studyProgram: string,
-    domain: string,
-    group: string
-  }
-}
-
-interface Topic {
-  name: string,
-  id: number
 }
