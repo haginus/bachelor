@@ -31,7 +31,11 @@ export class LoginComponent implements OnInit {
       if(res.error) {
         this.handleError(res.error);
       } else {
-        this.router.navigate(["dashboard"]);
+        if(res.validated) {
+          this.router.navigate(["dashboard"]);
+        } else {
+          this.router.navigate(["setup", "student"]);
+        }
       }
     })
   }

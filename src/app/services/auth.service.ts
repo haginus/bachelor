@@ -35,7 +35,7 @@ export class AuthService {
       map(res => {
         this.setToken((res as any).token);
         this.loginState.next(true);
-        return {token: (res as any).token }
+        return res
       }),
       catchError(this.handleError('signInWithEmailAndPassword'))
     );
@@ -70,5 +70,6 @@ export class AuthService {
 
 interface AuthResponse {
   token?: string,
+  validated?: boolean,
   error?: string
 }
