@@ -3,8 +3,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
+import { AuthService, UserData } from 'src/app/services/auth.service';
 import { Topic, TopicsService } from 'src/app/services/topics.service';
-import { UserData, UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-student-setup',
@@ -13,7 +13,7 @@ import { UserData, UserService } from 'src/app/services/user.service';
 })
 export class StudentSetupComponent implements OnInit, OnDestroy {
 
-  constructor(private topicsService: TopicsService, private userService: UserService, private router: Router) { }
+  constructor(private topicsService: TopicsService, private userService: AuthService, private router: Router) { }
 
   userObservable: any;
   loadingUser: boolean = true;

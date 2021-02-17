@@ -1,4 +1,8 @@
-<div class="flex-container fullscreen main-container">
+<div class="flex-container fullscreen align-center v-align-center" *ngIf="loading">
+    <mat-spinner [diameter]="48"></mat-spinner>
+</div>
+
+<div class="flex-container fullscreen main-container" *ngIf="!loading">
     <mat-toolbar *ngIf="!hideToolbar">
         <button mat-icon-button matTooltip="Comutați meniul" aria-label="Comutați meniul" *ngIf="!hideDrawer"
             (click)="drawer.toggle()">

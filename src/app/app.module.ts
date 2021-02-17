@@ -10,13 +10,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StudentSetupComponent } from './setup/student-setup/student-setup.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoadingComponent } from './shared/loading/loading.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     StudentSetupComponent,
-    LoadingComponent
+    LoadingComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,

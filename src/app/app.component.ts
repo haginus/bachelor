@@ -2,8 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { MatDrawerMode } from '@angular/material/sidenav';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators'
-import { AuthService } from './services/auth.service';
-import { UserService, UserData } from './services/user.service';
+import { AuthService, UserData } from './services/auth.service';
 
 
 const SideWidth = 800;
@@ -19,9 +18,10 @@ export class AppComponent implements OnInit {
   hideDrawer = false;
   hideToolbar = false;
 
-  constructor(private router: Router, private route: ActivatedRoute, private userService: UserService, private auth: AuthService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private auth: AuthService) { }
 
   user : UserData | undefined = undefined;
+  loading = true;
 
   ngOnInit(): void {
     this.drawerMode = window.innerWidth < SideWidth ? "over" : "side";
@@ -41,7 +41,10 @@ export class AppComponent implements OnInit {
       this.title = data.title != undefined ? data.title : 'Platformă de asociere';
     })
 
-    this.userService.watchUserData().subscribe(user => this.user = user);
+    this.auth.userData.subscribe(user => {
+      this.loading = false;
+      this.user = user
+    });
   }
 
   @HostListener('window:resize', ['$event'])
