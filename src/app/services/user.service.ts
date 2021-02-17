@@ -1,9 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
+import { Topic } from './topics.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,9 +31,21 @@ export class UserService {
     );
   }
 
+  validateStudent(topics: Topic[]) : Observable<boolean> {
+    const url = `${environment.apiUrl}/student/validate`;
+    return this.http.post(url, { topics }, this.auth.getPrivateHeaders()).pipe(
+      map(res => (res as any).success === true),
+      catchError((err, caught) => {
+        if(err.error == "ALREADY_VALIDATED") {
+          return of(true);
+        }
+        return of(false);
+      })
+    );
+  }
+
   private handleError(result?: any) {
     return (error: HttpErrorResponse): Observable<UserData | undefined> => {
-      console.log(error)
       return of(undefined);
     };
   }
