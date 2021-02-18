@@ -2,6 +2,10 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { merge, Observable, of as observableOf } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { AdminService } from 'src/app/services/admin.service';
+import { UserData } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-students',
@@ -15,47 +19,43 @@ export class AdminStudentsComponent implements OnInit, AfterViewInit {
   }
 
   displayedColumns: string[] = ['id', 'lastName', 'firstName', 'domain', 'group', 'email', 'actions'];
-  dataSource: MatTableDataSource<Student>;
+  data: UserData[] = [];
+  
+  resultsLength = 0;
+  isLoadingResults = true;
+  isRateLimitReached = false;
+
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() {
-    const users: Student[] = [
-      { id: 1, firstName: "Andrei", lastName: "Hagi", email: "hagiandrei.ah@gmail.com", group: "331", domain: {domainId: 1, name: "Informatică", type: "bachelor"} },
-      { id: 2, firstName: "Alex", lastName: "Dra", email: "ah@gmail.com", group: "331", domain: {domainId: 1, name: "Biostatică", type: "master"} },
-      { id: 3, firstName: "Andrei", lastName: "Hagi", email: "hagiandrei.ah@gmail.com", group: "331", domain: {domainId: 1, name: "Informatică", type: "bachelor"} }
 
-    ]
-
-    this.dataSource = new MatTableDataSource(users);
-  }
+  constructor(private admin: AdminService) { }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+
+    merge(this.sort.sortChange, this.paginator.page)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          return this.admin.getStudentUsers(
+            this.sort.active, this.sort.direction.toUpperCase(), this.paginator.pageIndex, this.paginator.pageSize);
+        }),
+        map(data => {
+          // Flip flag to show that loading has finished.
+          this.isLoadingResults = false;
+          this.isRateLimitReached = false;
+          this.resultsLength = data.count;
+
+          return data.rows;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          this.isRateLimitReached = true;
+          return observableOf([]);
+        })
+      ).subscribe(data => this.data = data);
   }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-}
-
-export interface Student {
-  id: number,
-  firstName: string,
-  lastName: string,
-  email: string,
-  group: string,
-  domain: {
-    domainId: number,
-    name: string,
-    type: "bachelor" | "master"
-  }
-
 }

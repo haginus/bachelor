@@ -12,13 +12,14 @@ export class AdminService {
 
   constructor(private http: HttpClient, private auth: AuthService) { }
 
-  getStudentUsers(sort: string, order: string, page: number): Observable<UserData[]> {
-    const url = `${environment.apiUrl}/admin/students`
+  getStudentUsers(sort: string = 'id', order: string = 'ASC', page: number = 0, pageSize: number = 20):
+  Observable<StudentQueryResult> {
+    const url = `${environment.apiUrl}/admin/students?sort=${sort}&order=${order}&page=${page}&pageSize=${pageSize}`;
     return this.http
-      .get<UserData[]>(url, this.auth.getPrivateHeaders())
+      .get<StudentQueryResult>(url, this.auth.getPrivateHeaders(), )
       .pipe(
         retry(3),
-        catchError(this.handleError<UserData[]>('getStudentUsers', []))
+        catchError(this.handleError<StudentQueryResult>('getStudentUsers', { rows: [], count: 0 }))
       );
   }
 
@@ -27,4 +28,9 @@ export class AdminService {
       return of(result as T);
     };
   }
+}
+
+export interface StudentQueryResult {
+  rows: UserData[],
+  count: number
 }
