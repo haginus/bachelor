@@ -11,11 +11,8 @@ import { StudentSetupComponent } from './setup/student-setup/student-setup.compo
 import { HttpClientModule } from '@angular/common/http';
 import { LoadingComponent } from './shared/loading/loading.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-<<<<<<< HEAD
 import { AdminStudentsComponent } from './pages/admin/students/students.component';
-=======
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
->>>>>>> f18cff89daf981f63188fc0cc268049e270ccd87
 
 @NgModule({
   declarations: [
