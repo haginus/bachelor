@@ -3,22 +3,22 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { AuthService } from './auth.service';
+import { AuthService, UserData } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TopicsService {
+export class AdminService {
 
   constructor(private http: HttpClient, private auth: AuthService) { }
 
-  getTopics(): Observable<Topic[]> {
-    const url = `${environment.apiUrl}/topics/`
+  getStudentUsers(sort: string, order: string, page: number): Observable<UserData[]> {
+    const url = `${environment.apiUrl}/admin/students`
     return this.http
-      .get<Topic[]>(url, this.auth.getPrivateHeaders())
+      .get<UserData[]>(url, this.auth.getPrivateHeaders())
       .pipe(
         retry(3),
-        catchError(this.handleError<Topic[]>('getTopics', []))
+        catchError(this.handleError<UserData[]>('getStudentUsers', []))
       );
   }
 
@@ -27,9 +27,4 @@ export class TopicsService {
       return of(result as T);
     };
   }
-}
-
-export interface Topic {
-  id: number,
-  name: string
 }

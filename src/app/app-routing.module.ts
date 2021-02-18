@@ -5,6 +5,7 @@ import { NotValidatedGuard } from './guards/not-validated.guard';
 import { SignedInGuard } from './guards/signed-in.guard';
 import { ValidatedGuard } from './guards/validated.guard';
 import { LoginComponent } from './login/login.component';
+import { AdminStudentsComponent } from './pages/admin/students/students.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { StudentSetupComponent } from './setup/student-setup/student-setup.component';
 
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'setup/student', component: StudentSetupComponent, data: { hideDrawer: true, title: "Validare" }, canActivate: [SignedInGuard, NotValidatedGuard] },
   { path: 'dashboard', component: DashboardComponent, data: { title: "Dashboard" }, canActivate: [SignedInGuard, ValidatedGuard] },
   { path: '', pathMatch: "full", component: DashboardComponent, data: { title: "Dashboard" }, canActivate: [SignedInGuard, ValidatedGuard] },
+  { path: 'admin/students', component: AdminStudentsComponent, data: { title: "Studenți" }, canActivate: [SignedInGuard] },
 ];
 
 @NgModule({

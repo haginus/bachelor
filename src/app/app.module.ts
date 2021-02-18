@@ -11,6 +11,7 @@ import { StudentSetupComponent } from './setup/student-setup/student-setup.compo
 import { HttpClientModule } from '@angular/common/http';
 import { LoadingComponent } from './shared/loading/loading.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { AdminStudentsComponent } from './pages/admin/students/students.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
     LoginComponent,
     StudentSetupComponent,
     LoadingComponent,
-    DashboardComponent
+    DashboardComponent,
+    AdminStudentsComponent
   ],
   imports: [
     BrowserModule,

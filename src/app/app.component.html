@@ -2,7 +2,7 @@
     <mat-spinner [diameter]="48"></mat-spinner>
 </div>
 
-<div class="flex-container fullscreen main-container" *ngIf="!loading">
+<div class="flex-container fullscreen main-container" [hidden]="loading">
     <mat-toolbar *ngIf="!hideToolbar">
         <button mat-icon-button matTooltip="Comutați meniul" aria-label="Comutați meniul" *ngIf="!hideDrawer"
             (click)="drawer.toggle()">
@@ -19,13 +19,24 @@
         <mat-drawer #drawer [mode]="drawerMode" class="main-drawer">
             <mat-list>
                 <div mat-subheader>Profesori</div>
-                <a mat-list-item class="nav-item active">
+                <a mat-list-item class="nav-item" routerLinkActive="active">
                     <mat-icon mat-list-icon>stars</mat-icon>
                     <div mat-line>Profesori sugerați</div>
                 </a>
-                <mat-list-item class="nav-item">
+                <mat-list-item class="nav-item" routerLinkActive="active">
                     <mat-icon mat-list-icon>school</mat-icon>
                     <div mat-line>Toți profesorii</div>
+                </mat-list-item>
+            </mat-list>
+            <mat-list *ngIf="user?.type == 'admin'">
+                <div mat-subheader>Persoane</div>
+                <a mat-list-item class="nav-item" routerLink="admin/students" routerLinkActive="active">
+                    <mat-icon mat-list-icon>stars</mat-icon>
+                    <div mat-line>Listă studenți</div>
+                </a>
+                <mat-list-item class="nav-item" routerLinkActive="active">
+                    <mat-icon mat-list-icon>school</mat-icon>
+                    <div mat-line>Listă profesori</div>
                 </mat-list-item>
             </mat-list>
         </mat-drawer>
