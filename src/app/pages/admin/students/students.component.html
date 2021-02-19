@@ -1,5 +1,7 @@
 <div class="container">
-
+    <div class="flex-container align-end">
+        <button mat-raised-button color="accent" (click)="openNewStudentDialog()">Adăugați student</button>
+    </div>
     <div class="mat-elevation-z8 table-container">
         <div class="loading-shade" *ngIf="isLoadingResults">
             <mat-spinner></mat-spinner>

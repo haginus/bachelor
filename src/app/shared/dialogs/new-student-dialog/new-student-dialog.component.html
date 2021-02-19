@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>Adăugați student</h2>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="studentForm">
+        <mat-form-field appearance="outline">
+            <mat-label>Nume</mat-label>
+            <input matInput type="text" formControlName="lastName">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Prenume</mat-label>
+            <input matInput type="text" formControlName="firstName">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>CNP</mat-label>
+            <input matInput type="text" formControlName="CNP">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>E-mail</mat-label>
+            <input matInput type="email" formControlName="email">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Grupă</mat-label>
+            <input matInput type="text" formControlName="group">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Domeniu</mat-label>
+            <mat-select formControlName="domainId">
+                <mat-option *ngFor="let domain of domains | async" [value]="domain.id">
+                  <span>{{domain.name}}</span>
+                  <span *ngIf="domain.type == 'bachelor'"> (Licență)</span>
+                  <span *ngIf="domain.type == 'master'"> (Master)</span>
+                </mat-option>
+              </mat-select>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Anulați</button>
+  <button mat-button [mat-dialog-close]="addStudent()" [disabled]="studentForm.invalid"
+    cdkFocusInitial>Adăugați</button>
+</mat-dialog-actions>
