@@ -20,6 +20,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
 
 const exports = [
   MatCardModule,
@@ -42,7 +43,8 @@ const exports = [
   MatTableModule,
   MatSortModule,
   MatDialogModule,
-  MatSelectModule
+  MatSelectModule,
+  MatMenuModule
 ]
 
 @NgModule({

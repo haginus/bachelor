@@ -32,6 +32,15 @@ export class AdminService {
     );
   }
 
+  editStudent(id: number, firstName: string, lastName: string, CNP: string,
+    group: string, domainId: number): Observable<UserData | null> {
+    const url = `${environment.apiUrl}/admin/students/edit`;
+    const body = { id, firstName, lastName, CNP, group, domainId };
+    return this.http.post<UserData>(url, body, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError("editStudent", null))
+    );
+  }
+
   getDomains():
     Observable<Domain[]> {
     const url = `${environment.apiUrl}/admin/domains`;

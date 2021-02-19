@@ -13,7 +13,7 @@ import { LoadingComponent } from './shared/loading/loading.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AdminStudentsComponent } from './pages/admin/students/students.component';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
-import { NewStudentDialogComponent } from './shared/dialogs/new-student-dialog/new-student-dialog.component';
+import { StudentDialogComponent } from './shared/dialogs/new-student-dialog/student-dialog.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +23,7 @@ import { NewStudentDialogComponent } from './shared/dialogs/new-student-dialog/n
     LoadingComponent,
     DashboardComponent,
     AdminStudentsComponent,
-    NewStudentDialogComponent
+    StudentDialogComponent
   ],
   imports: [
     BrowserModule,
