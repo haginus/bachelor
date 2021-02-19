@@ -5,3 +5,10 @@ mat-form-field {
 mat-dialog-content {
     min-width: 280px;
 }
+
+.select-spinner {
+    position: absolute;
+    top: 6px;
+    right: 4px;
+    background: white;
+}

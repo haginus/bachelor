@@ -33,6 +33,7 @@
                     <span *ngIf="domain.type == 'master'"> (Master)</span>
                 </mat-option>
             </mat-select>
+            <mat-spinner class="select-spinner" [diameter]="24" *ngIf="loadingDomains"></mat-spinner>
         </mat-form-field>
     </form>
 </mat-dialog-content>
