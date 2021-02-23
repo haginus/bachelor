@@ -16,6 +16,7 @@ import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { StudentDialogComponent } from './shared/dialogs/new-student-dialog/student-dialog.component';
 import { StudentsBulkAddDialogComponent } from './shared/dialogs/students-bulk-add-dialog/students-bulk-add-dialog.component';
 import { StudentDeleteDialogComponent } from './shared/dialogs/student-delete-dialog/student-delete-dialog.component';
+import { ChangePasswordComponent } from './user-components/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { StudentDeleteDialogComponent } from './shared/dialogs/student-delete-di
     AdminStudentsComponent,
     StudentDialogComponent,
     StudentsBulkAddDialogComponent,
-    StudentDeleteDialogComponent
+    StudentDeleteDialogComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,

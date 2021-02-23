@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   signInWithEmailAndPassword(email: string, password: string) : Observable<AuthResponse> {
-    const url = `${environment.apiUrl}/login`;
+    const url = `${environment.apiUrl}/auth/login`;
     return this.http.post<AuthResponse>(url, { email, password }).pipe(
       map(res => {
         this.setToken((res as any).token);
@@ -49,6 +49,19 @@ export class AuthService {
         return res
       }),
       catchError(this.handleError('signInWithEmailAndPassword'))
+    );
+  }
+
+  signInWithTokenAndChangePassword(token: string, password: string, passwordConfirm): Observable<AuthResponse> {
+    const url = `${environment.apiUrl}/auth/change-password-token`;
+    return this.http.post<AuthResponse>(url, { token, password, passwordConfirm }).pipe(
+      map(res => {
+        this.setToken((res as any).token);
+        this.loginState.next(true);
+        this.userDataSource.next((res as any).user);
+        return res
+      }),
+      catchError(this.handleError('signInWithTokenAndChangePassword'))
     );
   }
 
