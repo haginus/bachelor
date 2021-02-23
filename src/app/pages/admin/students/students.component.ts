@@ -9,6 +9,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { AdminService } from 'src/app/services/admin.service';
 import { UserData } from 'src/app/services/auth.service';
 import { StudentDialogComponent } from 'src/app/shared/dialogs/new-student-dialog/student-dialog.component';
+import { StudentsBulkAddDialogComponent } from 'src/app/shared/dialogs/students-bulk-add-dialog/students-bulk-add-dialog.component';
 
 @Component({
   selector: 'app-students',
@@ -89,7 +90,7 @@ export class AdminStudentsComponent implements OnInit, AfterViewInit {
     let dialogRef = this.dialog.open(StudentDialogComponent, {
       data: {
         mode: "view",
-        data: this.data.find( student => student.id == studentId)
+        data: this.data.find(student => student.id == studentId)
       }
     });
 
@@ -99,14 +100,14 @@ export class AdminStudentsComponent implements OnInit, AfterViewInit {
     let dialogRef = this.dialog.open(StudentDialogComponent, {
       data: {
         mode: "edit",
-        data: this.data.find( student => student.id == studentId)
+        data: this.data.find(student => student.id == studentId)
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result) {
+      if (result) {
         result.subscribe(res => {
-          if(res) {
+          if (res) {
             this.snackbar.open("Student editat.");
             this.performedActions.next("studentEdited");
           } else {
@@ -116,6 +117,19 @@ export class AdminStudentsComponent implements OnInit, AfterViewInit {
       }
     })
 
+  }
+
+  refreshResults() {
+    this.performedActions.next("refresh");
+  }
+
+  bulkAddStudents() {
+    const dialogRef = this.dialog.open(StudentsBulkAddDialogComponent);
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) {
+        this.performedActions.next("bulkAdd");
+      }
+    })
   }
 
 }

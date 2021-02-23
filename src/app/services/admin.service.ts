@@ -41,6 +41,17 @@ export class AdminService {
     );
   }
 
+  addStudentsBulk(file: File): Observable<any> {
+    const url = `${environment.apiUrl}/admin/students/add-bulk`;
+    const formData: FormData = new FormData();
+    console.log(file)
+    formData.append('file', file, file.name);
+    console.log(formData)
+    return this.http.post<any>(url, formData, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError("addStudentsBulk", null))
+    );
+  }
+
   getDomains():
     Observable<Domain[]> {
     const url = `${environment.apiUrl}/admin/domains`;
@@ -48,7 +59,7 @@ export class AdminService {
       .get<Domain[]>(url, this.auth.getPrivateHeaders(),)
       .pipe(
         retry(3),
-        catchError(this.handleError<Domain[]>('getStudentUsers', []))
+        catchError(this.handleError<Domain[]>('getDomains', []))
       );
   }
 

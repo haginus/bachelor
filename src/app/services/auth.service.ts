@@ -61,7 +61,6 @@ export class AuthService {
   getPrivateHeaders() {
     return {
       headers: new HttpHeaders({
-        'content-type': 'application/json',
         Authorization: 'Bearer ' + this.getToken(),
       }),
       withCredentials: false,

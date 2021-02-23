@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Adăugare studenți din .CSV</h2>
+<mat-dialog-content class="mat-typography">
+    <p>
+        Încărcați un fișier .csv cu următoarele coloane: <br> 
+        <i>prenume, nume, CNP, e-mail, nume domeniu, tip domeniu (bachelor/master), grupă</i></p>
+    <form>
+        <div class="form-group flex-container align-center">
+            <div [hidden]="loading">
+                <label for="file" class="mat-raised-button">Încărcați</label>
+                <input type="file" id="file" (change)="handleFileInput($event.target)">
+            </div>
+            <mat-spinner [diameter]="36" *ngIf="loading"></mat-spinner>
+        </div>
+    </form>
+</mat-dialog-content>
