@@ -9,6 +9,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { AdminService } from 'src/app/services/admin.service';
 import { UserData } from 'src/app/services/auth.service';
 import { StudentDialogComponent } from 'src/app/shared/dialogs/new-student-dialog/student-dialog.component';
+import { StudentDeleteDialogComponent } from 'src/app/shared/dialogs/student-delete-dialog/student-delete-dialog.component';
 import { StudentsBulkAddDialogComponent } from 'src/app/shared/dialogs/students-bulk-add-dialog/students-bulk-add-dialog.component';
 
 @Component({
@@ -110,6 +111,25 @@ export class AdminStudentsComponent implements OnInit, AfterViewInit {
           if (res) {
             this.snackbar.open("Student editat.");
             this.performedActions.next("studentEdited");
+          } else {
+            this.snackbar.open("A apărut o eroare.");
+          }
+        })
+      }
+    })
+  }
+
+  deleteStudent(studentId: number) {
+    let dialogRef = this.dialog.open(StudentDeleteDialogComponent, {
+      data: this.data.find(student => student.id == studentId)
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        result.subscribe(res => {
+          if (res != null) {
+            this.snackbar.open("Student șters.");
+            this.performedActions.next("studentDeleted");
           } else {
             this.snackbar.open("A apărut o eroare.");
           }

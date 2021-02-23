@@ -44,11 +44,16 @@ export class AdminService {
   addStudentsBulk(file: File): Observable<any> {
     const url = `${environment.apiUrl}/admin/students/add-bulk`;
     const formData: FormData = new FormData();
-    console.log(file)
     formData.append('file', file, file.name);
-    console.log(formData)
     return this.http.post<any>(url, formData, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("addStudentsBulk", null))
+    );
+  }
+
+  deleteUser(id: number): Observable<any> {
+    const url = `${environment.apiUrl}/admin/students/delete`;
+    return this.http.post<any>(url, { id }, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError("deleteUser", null))
     );
   }
 
