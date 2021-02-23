@@ -11,11 +11,7 @@ import { StudentSetupComponent } from './setup/student-setup/student-setup.compo
 import { HttpClientModule } from '@angular/common/http';
 import { LoadingComponent } from './shared/loading/loading.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { AdminStudentsComponent } from './pages/admin/students/students.component';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
-import { StudentDialogComponent } from './shared/dialogs/new-student-dialog/student-dialog.component';
-import { StudentsBulkAddDialogComponent } from './shared/dialogs/students-bulk-add-dialog/students-bulk-add-dialog.component';
-import { StudentDeleteDialogComponent } from './shared/dialogs/student-delete-dialog/student-delete-dialog.component';
 import { ChangePasswordComponent } from './user-components/change-password/change-password.component';
 
 @NgModule({
@@ -25,10 +21,6 @@ import { ChangePasswordComponent } from './user-components/change-password/chang
     StudentSetupComponent,
     LoadingComponent,
     DashboardComponent,
-    AdminStudentsComponent,
-    StudentDialogComponent,
-    StudentsBulkAddDialogComponent,
-    StudentDeleteDialogComponent,
     ChangePasswordComponent
   ],
   imports: [
