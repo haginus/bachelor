@@ -109,6 +109,25 @@ export class AuthService {
     );
   }
 
+  validateTeacher() : Observable<boolean> {
+    const url = `${environment.apiUrl}/teacher/validate`;
+    return this.http.post(url, {}, this.getPrivateHeaders()).pipe(
+      tap(res => {
+        this.userData.pipe(take(1)).subscribe(user => { // change 
+          (user as UserData).validated = true;
+          this.userDataSource.next(user);
+        });
+      }),
+      map(res => (res as any).success === true),
+      catchError((err, caught) => {
+        if(err.error == "ALREADY_VALIDATED") {
+          return of(true);
+        }
+        return of(false);
+      })
+    );
+  }
+
   private handleUserError(result?: any) {
     return (error: HttpErrorResponse): Observable<UserData | undefined> => {
       if(result == "getUserData") {

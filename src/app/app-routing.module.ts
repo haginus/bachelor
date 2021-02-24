@@ -13,11 +13,11 @@ import { ChangePasswordComponent } from './user-components/change-password/chang
 const routes: Routes = [
   { path: 'login', component: LoginComponent, data: { hideDrawer: true, hideToolbar: true }, canActivate: [NotSignedInGuard] },
   { path: 'login/token/:token', component: ChangePasswordComponent, data: { hideDrawer: true, hideToolbar: true } },
-  { path: 'setup/student', component: StudentSetupComponent, data: { hideDrawer: true, title: "Validare" }, canActivate: [SignedInGuard, NotValidatedGuard] },
+  { path: 'student/setup', component: StudentSetupComponent, data: { hideDrawer: true, title: "Validare" }, canActivate: [SignedInGuard, NotValidatedGuard] },
   { path: 'dashboard', component: DashboardComponent, data: { title: "Dashboard" }, canActivate: [SignedInGuard, ValidatedGuard] },
   { path: '', pathMatch: "full", component: DashboardComponent, data: { title: "Dashboard" }, canActivate: [SignedInGuard, ValidatedGuard] },
   { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule), canActivate: [SignedInGuard] },
-  { path: 'teacher', loadChildren: () => import('./teacher/teacher.module').then(m => m.TeacherModule) },
+  { path: 'teacher', loadChildren: () => import('./teacher/teacher.module').then(m => m.TeacherModule), canActivate: [SignedInGuard] },
 ];
 
 @NgModule({

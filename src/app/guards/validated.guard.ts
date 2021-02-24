@@ -19,7 +19,7 @@ export class ValidatedGuard implements CanActivate {
           return false;
         }
         else if(!user.validated) {
-          this.router.navigate(['setup', user.type]); // redirect to setup
+          this.router.navigate([user.type, 'setup']); // redirect to setup
         }
         return true;
       })
