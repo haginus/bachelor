@@ -7,7 +7,7 @@ import { AuthService, UserData } from 'src/app/services/auth.service';
 import { Topic, TopicsService } from 'src/app/services/topics.service';
 
 @Component({
-  selector: 'app-student-setup',
+  selector: 'student-setup',
   templateUrl: './student-setup.component.html',
   styleUrls: ['./student-setup.component.scss']
 })
@@ -28,7 +28,7 @@ export class StudentSetupComponent implements OnInit, OnDestroy {
       if(!this.user.validated) {
         this.loadingUser = false;
       } else {
-        this.router.navigate(['dashboard']);
+        this.router.navigate(['student']);
       }
     });
   }
@@ -57,7 +57,7 @@ export class StudentSetupComponent implements OnInit, OnDestroy {
       if(!res) {
         this.loadingValidation = false;
       } else {
-        this.router.navigate(['dashboard']);
+        this.router.navigate(['student']);
       }
     })
   }
