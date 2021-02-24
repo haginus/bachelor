@@ -4,7 +4,7 @@ import { NotSignedInGuard } from './guards/not-signed-in.guard';
 import { NotValidatedGuard } from './guards/not-validated.guard';
 import { SignedInGuard } from './guards/signed-in.guard';
 import { ValidatedGuard } from './guards/validated.guard';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './pages/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ChangePasswordComponent } from './user-components/change-password/change-password.component';
 
