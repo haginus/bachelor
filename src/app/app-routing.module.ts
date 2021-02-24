@@ -16,7 +16,7 @@ const routes: Routes = [
   { path: 'setup/student', component: StudentSetupComponent, data: { hideDrawer: true, title: "Validare" }, canActivate: [SignedInGuard, NotValidatedGuard] },
   { path: 'dashboard', component: DashboardComponent, data: { title: "Dashboard" }, canActivate: [SignedInGuard, ValidatedGuard] },
   { path: '', pathMatch: "full", component: DashboardComponent, data: { title: "Dashboard" }, canActivate: [SignedInGuard, ValidatedGuard] },
-  { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
+  { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule), canActivate: [SignedInGuard] },
 ];
 
 @NgModule({

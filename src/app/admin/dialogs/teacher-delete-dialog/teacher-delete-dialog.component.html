@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Ștergeți profesorul?</h2>
+<mat-dialog-content class="mat-typography">
+    <p>Ștergeți profesorul {{data.firstName}} {{data.lastName}}?<br>
+    Acesta va pierde accesul la cont, iar toată activitatea acestuia din platformă va fi ștearsă.
+    </p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Anulați</button>
+    <button mat-button [mat-dialog-close]="deleteTeacher()">Ștergeți</button>
+</mat-dialog-actions>
