@@ -21,6 +21,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 const exports = [
   MatCardModule,
@@ -44,7 +45,8 @@ const exports = [
   MatSortModule,
   MatDialogModule,
   MatSelectModule,
-  MatMenuModule
+  MatMenuModule,
+  MatButtonToggleModule
 ]
 
 @NgModule({

@@ -1,0 +1,65 @@
+<div class="main">
+    <mat-card class="filter-container mat-elevation-z3">
+        <form [formGroup]="filterForm" class="form-group">
+            <div class="group-header">FILTRAȚI DUPĂ</div>
+            <div class="group-controls">
+                <mat-form-field appearance="outline">
+                    <mat-label>Teme propuse</mat-label>
+                    <mat-select formControlName="topics" multiple>
+                        <mat-option *ngFor="let topic of topics" [value]="topic.id">
+                            <span>{{topic.name}}</span>
+                        </mat-option>
+                    </mat-select>
+                    <mat-hint class="select-options">
+                        <span (click)="setAllTopics()">Selectați tot</span> |
+                        <span (click)="removeTopicSelection()">Ștergeți selecția</span>
+                    </mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="control-flex">
+                    <mat-label>Nume profesor</mat-label>
+                    <input matInput type="text" formControlName="teacherName" />
+                </mat-form-field>
+                <div>
+                    <mat-button-toggle-group class="toggle-group" formControlName="onlyFree">
+                        <mat-button-toggle [value]="false">Toți profesorii</mat-button-toggle>
+                        <mat-button-toggle [value]="true">Profesorii liberi</mat-button-toggle>
+                    </mat-button-toggle-group>
+                </div>
+            </div>
+        </form>
+    </mat-card>
+
+    <div class="results">
+        <mat-card class="teacher-card" *ngFor="let teacher of teachers">
+            <mat-card-header>
+                <mat-card-title>{{teacher.firstName}} {{teacher.lastName}}</mat-card-title>
+                <mat-card-subtitle>
+                    {{ teacher.offers.length }}
+                    {{ teacher.offers.length == 1 ? 'ofertă' : 'oferte' }}
+                </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-divider></mat-divider>
+                <div *ngFor="let offer of teacher.offers">
+                    <div class="teacher-offer">
+                        <div class="offer-topics">
+                            <span *ngFor="let topic of offer.topics" class="badge">{{ topic.name }} </span>
+                        </div>
+                        <div class="offer-places"
+                        [class.low]="offer.takenPlaces / offer.limit < 0.35"
+                        [class.mid]="offer.takenPlaces / offer.limit >= 0.35"
+                        [class.high]="offer.takenPlaces / offer.limit > 0.75"
+                        >{{offer.takenPlaces}} / {{offer.limit}}</div>
+                        <div class="offer-actions">
+                            <button mat-stroked-button [disabled]="!!offer.hasApplied">
+                                <span *ngIf="offer.hasApplied">Aplicat</span>
+                                <span *ngIf="!offer.hasApplied">Aplicați</span>
+                            </button>
+                        </div>
+                    </div>
+                    <mat-divider></mat-divider>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

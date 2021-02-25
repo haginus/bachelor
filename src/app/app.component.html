@@ -17,26 +17,48 @@
     </mat-toolbar>
     <mat-drawer-container class="drawer-container">
         <mat-drawer #drawer [mode]="drawerMode" class="main-drawer">
-            <mat-list>
+            <!-- STUDENT -->
+            <mat-list *ngIf="user?.type == 'student'">
                 <div mat-subheader>Profesori</div>
                 <a mat-list-item class="nav-item" routerLinkActive="active">
                     <mat-icon mat-list-icon>stars</mat-icon>
                     <div mat-line>Profesori sugerați</div>
                 </a>
-                <mat-list-item class="nav-item" routerLinkActive="active">
+                <a mat-list-item class="nav-item" routerLink="student/teachers" routerLinkActive="active">
                     <mat-icon mat-list-icon>school</mat-icon>
                     <div mat-line>Toți profesorii</div>
-                </mat-list-item>
+                </a>
+                <div mat-subheader>Cereri</div>
+                <a mat-list-item class="nav-item" routerLinkActive="active">
+                    <mat-icon mat-list-icon>assignment</mat-icon>
+                    <div mat-line>Cereri în așteptare</div>
+                </a>
             </mat-list>
+            <!-- ADMIN -->
             <mat-list *ngIf="user?.type == 'admin'">
-                <div mat-subheader>Persoane</div>
+                <div mat-subheader>Utilizatori</div>
                 <a mat-list-item class="nav-item" routerLink="admin/students" routerLinkActive="active">
-                    <mat-icon mat-list-icon>stars</mat-icon>
+                    <mat-icon mat-list-icon>people</mat-icon>
                     <div mat-line>Listă studenți</div>
                 </a>
                 <a mat-list-item class="nav-item" routerLink="admin/teachers" routerLinkActive="active">
                     <mat-icon mat-list-icon>school</mat-icon>
                     <div mat-line>Listă profesori</div>
+                </a>
+                <div mat-subheader>Domenii</div>
+                <a mat-list-item class="nav-item" routerLinkActive="active">
+                    <mat-icon mat-list-icon>category</mat-icon>
+                    <div mat-line>Domenii</div>
+                </a>
+                <div mat-subheader>Teme</div>
+                <a mat-list-item class="nav-item" routerLinkActive="active">
+                    <mat-icon mat-list-icon>topic</mat-icon>
+                    <div mat-line>Teme</div>
+                </a>
+                <div mat-subheader>Setări</div>
+                <a mat-list-item class="nav-item" routerLinkActive="active">
+                    <mat-icon mat-list-icon>settings</mat-icon>
+                    <div mat-line>Setări sesiune de asociere</div>
                 </a>
             </mat-list>
         </mat-drawer>
