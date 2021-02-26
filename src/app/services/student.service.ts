@@ -13,8 +13,14 @@ export class StudentService {
 
   constructor(private http: HttpClient, private auth: AuthService) { }
 
-  getTeacherOffers(): Observable<TeacherOffers[]> {
-    const url = `${environment.apiUrl}/student/teacher-offers`
+  getTeacherOffers(filters: GetTeacherOffersFilters): Observable<TeacherOffers[]> {
+    let url = `${environment.apiUrl}/student/teacher-offers?onlyFree=${filters.onlyFree}`
+    if(filters.teacherName) {
+      url += '&teacherName=' + filters.teacherName;
+    }
+    if(filters.topicIds) {
+      url += '&topicIds=' + filters.topicIds.join(',');
+    }
     return this.http
       .get<TeacherOffers[]>(url, this.auth.getPrivateHeaders())
       .pipe(
@@ -44,4 +50,10 @@ export interface Offer {
   limit: number
   topics: Topic[]
   domainId: number
+}
+
+export interface GetTeacherOffersFilters {
+  onlyFree: boolean,
+  teacherName: string | null,
+  topicIds: number[] | null
 }

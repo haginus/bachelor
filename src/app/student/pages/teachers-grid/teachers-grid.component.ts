@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
-import { StudentService, TeacherOffers } from 'src/app/services/student.service';
+import { debounceTime, switchMap } from 'rxjs/operators';
+import { GetTeacherOffersFilters, StudentService, TeacherOffers } from 'src/app/services/student.service';
 import { Topic, TopicsService } from 'src/app/services/topics.service';
 
 @Component({
@@ -19,13 +20,17 @@ export class StundentTeachersGridComponent implements OnInit, OnDestroy {
   teachers: TeacherOffers[] = []
   teacherSubscription: Subscription;
 
+  isLoadingTeachers: boolean = true;
+
   filterForm = new FormGroup({
-    "topics": new FormControl([]),
+    "topicIds": new FormControl([]),
     "teacherName": new FormControl(null),
     "onlyFree": new FormControl(true)
   });
 
-  get topicSelect() { return this.filterForm.get("topics") }
+  get topicSelect() { return this.filterForm.get("topicIds") }
+  get teacherName() { return this.filterForm.get("teacherName") }
+  get onlyFree() { return this.filterForm.get("onlyFree") }
 
   // Topic Select Controls
 
@@ -39,8 +44,29 @@ export class StundentTeachersGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.topicSubscription = this.topicService.getTopics().subscribe(topics => this.topics = topics);
-    this.teacherSubscription = this.studentService.getTeacherOffers().subscribe(teachers => this.teachers = teachers);
+    this.topicSubscription = this.topicService.getTopics().subscribe(topics => {
+      this.topics = topics;
+      this.setAllTopics();
+    });
+
+    this.teacherSubscription = this.filterForm.valueChanges.pipe(
+      debounceTime(500), // wait until user stops typing
+      switchMap(result => {
+        this.isLoadingTeachers = true;
+        let filters: GetTeacherOffersFilters = result;
+        console.log(filters)
+        if(this.topics.length == filters.topicIds.length || filters.topicIds.length == 0) {
+          filters.topicIds = null;
+        }
+        if(filters.teacherName == '') {
+          filters.teacherName = null;
+        }
+        return this.studentService.getTeacherOffers(filters);
+      })
+    ).subscribe(teachers => {
+      this.teachers = teachers;
+      this.isLoadingTeachers = false;
+    })
   }
 
   ngOnDestroy() {
