@@ -1,5 +1,6 @@
 <div class="main">
-    <mat-card class="filter-container mat-elevation-z3">
+    <mat-progress-bar mode="query" class="progress-bar top" *ngIf="isLoadingTeachers && mode == 'suggested'"></mat-progress-bar>
+    <mat-card class="filter-container mat-elevation-z3" *ngIf="mode == 'all'">
         <form [formGroup]="filterForm" class="form-group">
             <div class="group-header">FILTRAȚI DUPĂ</div>
             <div class="group-controls">

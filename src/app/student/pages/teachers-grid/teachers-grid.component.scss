@@ -12,12 +12,17 @@
     border-radius: 8px;
     position: relative;
     overflow: hidden;
+}
 
-    .progress-bar {
-        position: absolute;
-        left: 0px;
-        bottom: 0px;
-    }
+.progress-bar {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+}
+
+.progress-bar.top {
+    bottom: unset;
+    top: 0px;
 }
 
 .form-group {

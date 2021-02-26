@@ -29,6 +29,16 @@ export class StudentService {
       );
   }
 
+  getSuggestedTeacherOffers(): Observable<TeacherOffers[]> {
+    const url = `${environment.apiUrl}/student/teacher-offers/suggested`
+    return this.http
+      .get<TeacherOffers[]>(url, this.auth.getPrivateHeaders())
+      .pipe(
+        retry(3),
+        catchError(this.handleError<TeacherOffers[]>('getSuggestedTeacherOffers', []))
+      );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       return of(result as T);

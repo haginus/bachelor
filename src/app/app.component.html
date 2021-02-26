@@ -20,7 +20,7 @@
             <!-- STUDENT -->
             <mat-list *ngIf="user?.type == 'student'">
                 <div mat-subheader>Profesori</div>
-                <a mat-list-item class="nav-item" routerLinkActive="active">
+                <a mat-list-item class="nav-item" routerLink="student/suggested-teachers" routerLinkActive="active">
                     <mat-icon mat-list-icon>stars</mat-icon>
                     <div mat-line>Profesori sugerați</div>
                 </a>
