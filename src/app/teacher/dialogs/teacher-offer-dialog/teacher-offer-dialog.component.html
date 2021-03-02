@@ -1,0 +1,56 @@
+<div class="loading-shade" *ngIf="isLoadingQuery">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+
+<h2 mat-dialog-title *ngIf="data.mode == 'create'">Adăugați ofertă</h2>
+<h2 mat-dialog-title *ngIf="data.mode == 'edit'">Editați oferta</h2>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="offerForm">
+        <mat-form-field appearance="outline">
+            <mat-label>Domeniu</mat-label>
+            <mat-select formControlName="domainId">
+                <mat-option *ngFor="let domain of domains" [value]="domain.id">
+                    <span>{{domain.name}}</span>
+                    <span *ngIf="domain.type == 'bachelor'"> (Licență)</span>
+                    <span *ngIf="domain.type == 'master'"> (Master)</span>
+                </mat-option>
+            </mat-select>
+            <mat-spinner class="select-spinner" [diameter]="24" *ngIf="isLoadingDomains"></mat-spinner>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Teme ofertă</mat-label>
+            <mat-chip-list #chipList aria-label="Fruit selection">
+                <mat-chip *ngFor="let topic of selectedTopics" [selectable]="true" [removable]="true"
+                    (removed)="removeTopic(topic)">
+                    {{topic.name}}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Temă nouă..." #topicInput formControlName="topics" [matAutocomplete]="auto"
+                    [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="addTopic($event)">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTopic($event)">
+                <mat-option *ngFor="let topic of filteredTopics | async" [value]="topic">
+                    {{topic.name}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Limită de locuri</mat-label>
+            <input matInput type="number" formControlName="limit">
+            <mat-error *ngIf="data.mode == 'create'">Numărul de locuri trebuie să fie minimum 1.</mat-error>
+            <mat-error *ngIf="data.mode == 'edit'">Numărul de locuri nu poate fi mai mic decât locurile ocupate deja!
+            </mat-error>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Anulați</button>
+    <button mat-button (click)="addOffer()" [disabled]="offerForm.invalid || selectedTopics.length == 0"
+        *ngIf="data.mode == 'create'">Adăugați</button>
+    <button mat-button (click)="editOffer()" [disabled]="offerForm.invalid || selectedTopics.length == 0"
+        *ngIf="data.mode == 'edit'">Salvați</button>
+</mat-dialog-actions>

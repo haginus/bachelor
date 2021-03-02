@@ -1,0 +1,27 @@
+:host {
+    position: relative;
+    display: block;
+}
+
+mat-form-field {
+    display: block;
+    min-width: 600px;
+}
+
+.select-spinner {
+    position: absolute;
+    top: 6px;
+    right: 4px;
+    background: white;
+}
+
+.loading-shade {
+    position: absolute;
+    top: -24px;
+    left: -24px;
+    bottom: 0;
+    right: -24px;
+    background: rgba(0, 0, 0, 0.10);
+    z-index: 1;
+    display: flex;
+}

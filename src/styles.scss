@@ -70,3 +70,22 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     }
 }
 
+.badge {
+    padding: 6px;
+    background-color: #eeeeee;
+    margin: 4px;
+    display: inline-block;
+    border-radius: 6px;
+}
+
+.col-2 {
+    width: 50%;
+    display: inline-block;
+}
+
+@media screen and (max-width: 600px) {
+    .col-2 {
+        width: 100%;
+    }
+}
+

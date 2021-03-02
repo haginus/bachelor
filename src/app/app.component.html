@@ -34,6 +34,19 @@
                     <div mat-line>Cereri în așteptare</div>
                 </a>
             </mat-list>
+            <!-- TEACHER -->
+            <mat-list *ngIf="user?.type == 'teacher'">
+                <div mat-subheader>Oferte</div>
+                <a mat-list-item class="nav-item" routerLink="teacher/offers" routerLinkActive="active">
+                    <mat-icon mat-list-icon>stars</mat-icon>
+                    <div mat-line>Ofertele dvs.</div>
+                </a>
+                <div mat-subheader>Cereri de asociere</div>
+                <a mat-list-item class="nav-item" routerLinkActive="active">
+                    <mat-icon mat-list-icon>assignment</mat-icon>
+                    <div mat-line>Cereri în așteptare</div>
+                </a>
+            </mat-list>
             <!-- ADMIN -->
             <mat-list *ngIf="user?.type == 'admin'">
                 <div mat-subheader>Utilizatori</div>

@@ -1,0 +1,56 @@
+<mat-menu #offerMenu="matMenu">
+    <ng-template matMenuContent let-id="id">
+        <button mat-menu-item (click)="editOffer(id)">
+            <mat-icon>mode</mat-icon>
+            <span>Editați oferta</span>
+        </button>
+        <button mat-menu-item>
+            <mat-icon>delete</mat-icon>
+            <span>Ștergeți oferta</span>
+        </button>
+    </ng-template>
+</mat-menu>
+
+<mat-toolbar>
+    <span class="toolbar-spacer"></span>
+    <button mat-raised-button color="accent" (click)="addOffer()">Adăugați o ofertă</button>
+</mat-toolbar>
+
+<div class="flex-container align-center" *ngIf="isLoadingOffers">
+    <mat-spinner [diameter]="48"></mat-spinner>
+</div>
+
+<div class="results">
+    <div class="col-2" *ngFor="let offer of offers">
+        <mat-card class="offer-card">
+            <div class="offer-card-header">
+                <div class="header-content">
+                    <span>
+                        {{ offer.domain.name }},
+                        <span *ngIf="offer.domain.type == 'bachelor'">Licență</span>
+                        <span *ngIf="offer.domain.type == 'master'">Master</span>
+                    </span>
+                    <div class="offer-topics">
+                        <span class="badge" *ngFor="let topic of offer.topics">{{ topic.name }}</span>
+                    </div>
+                </div>
+                <button mat-icon-button [matMenuTriggerFor]="offerMenu" [matMenuTriggerData]="{id: offer.id}">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </div>
+
+            <mat-list>
+                <mat-list-item>
+                    <div mat-line>Locuri ocupate</div>
+                    <div mat-line>{{ offer.takenPlaces }} / {{ offer.limit }}</div>
+                </mat-list-item>
+            </mat-list>
+            <div class="offer-card-footer">
+                <div class="card-action">
+                    <span>{{ offer.pendingApplications }} cereri în așteptare</span>
+                    <mat-icon>arrow_forward</mat-icon>
+                </div>
+            </div>
+        </mat-card>
+    </div>
+</div>

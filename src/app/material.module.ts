@@ -22,6 +22,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 const exports = [
   MatCardModule,
@@ -46,7 +48,9 @@ const exports = [
   MatDialogModule,
   MatSelectModule,
   MatMenuModule,
-  MatButtonToggleModule
+  MatButtonToggleModule,
+  MatChipsModule,
+  MatAutocompleteModule
 ]
 
 @NgModule({

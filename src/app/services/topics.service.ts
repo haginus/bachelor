@@ -22,6 +22,15 @@ export class TopicsService {
       );
   }
 
+  addTopics(names: string[]): Observable<Topic[]> {
+    const url = `${environment.apiUrl}/topics/add-bulk`
+    return this.http
+      .post<Topic[]>(url, { names }, this.auth.getPrivateHeaders())
+      .pipe(
+        catchError(this.handleError<Topic[]>('addTopics', []))
+      );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       return of(result as T);
