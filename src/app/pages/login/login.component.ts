@@ -49,6 +49,9 @@ export class LoginComponent implements OnInit {
         msg = 'Parolă incorectă.';
         passwordControl?.setErrors({"wrong": true});
         break;
+      case 'NOT_ACTIVATED':
+        msg = 'Contul nu este activat. Verificați-vă e-mailul.';
+        break;
       default:
         msg = 'A apărut o eroare. Reîncercați.';
     }
