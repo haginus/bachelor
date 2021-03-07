@@ -12,12 +12,12 @@ import { LoadingComponent } from './shared/loading/loading.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { ChangePasswordComponent } from './user-components/change-password/change-password.component';
+import { SharedModule } from './shared/shared.module'
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    LoadingComponent,
     DashboardComponent,
     ChangePasswordComponent
   ],
@@ -28,7 +28,8 @@ import { ChangePasswordComponent } from './user-components/change-password/chang
     BrowserAnimationsModule,
     MaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 4000 } }
