@@ -2,6 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { Offer, TeacherService } from 'src/app/services/teacher.service';
+import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
 import { TeacherOfferDialogComponent } from '../../dialogs/teacher-offer-dialog/teacher-offer-dialog.component';
 
 @Component({
@@ -63,6 +64,26 @@ export class TeacherOffersComponent implements OnInit, OnDestroy {
         this.getOffers();
       }
     })
+  }
+
+  deleteOffer(id: number) {
+    let dialogRef = this.dialog.open(CommonDialogComponent, {
+      data: {
+        title: "Doriți să ștergeți această ofertă?",
+        content: "Toate cererile în curs de la studenți vor fi revocate.",
+        actions: [
+          {
+            name: "Anulați",
+            value: false
+          },
+          {
+            name: "Ștergeți",
+            value: true
+          }
+        ]
+      }
+    });
+    dialogRef.afterClosed().subscribe(console.log)
   }
 
 
