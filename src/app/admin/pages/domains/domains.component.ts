@@ -18,7 +18,7 @@ export class AdminDomainsComponent implements OnInit, OnDestroy {
   @ViewChild('table') table: MatTable<Domain>;
   data: Domain[]
   isLoadingResults: boolean = true;
-  displayedColumns: string[] = ['id', 'name', 'type', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'type', 'studentNumber', 'offerNumber', 'actions'];
 
   private domainSub: Subscription;
 
@@ -27,7 +27,7 @@ export class AdminDomainsComponent implements OnInit, OnDestroy {
       this.domainSub.unsubscribe();
     }
     this.isLoadingResults = true;
-    this.domainSub = this.admin.getDomains().subscribe(domains => {
+    this.domainSub = this.admin.getDomains(true).subscribe(domains => {
       this.data = domains;
       this.isLoadingResults = false;
     });
@@ -69,7 +69,8 @@ export class AdminDomainsComponent implements OnInit, OnDestroy {
       if(domain) {
         const idx = this.data.findIndex(oldDomain => oldDomain.id == domain.id);
         if(idx >= 0) {
-          this.data[idx] = domain;
+          this.data[idx].name = domain.name;
+          this.data[idx].type = domain.type;
           this.table.renderRows();
         }
       }
@@ -88,7 +89,6 @@ export class AdminDomainsComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
         const idx = this.data.findIndex(oldDomain => oldDomain.id == id);
-        console.log(idx)
         if(idx >= 0) {
           this.data.splice(idx, 1);
           this.table.renderRows();

@@ -178,6 +178,8 @@ export interface UserData {
 export interface Domain {
   id: number,
   name: string,
-  type: "bachelor" | "master"
+  type: "bachelor" | "master",
+  studentNumber?: number,
+  offerNumber?: number
 }
 

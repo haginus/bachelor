@@ -98,8 +98,9 @@ export class AdminService {
     );
   }
 
-  getDomains(): Observable<Domain[]> {
-    const url = `${environment.apiUrl}/admin/domains`;
+  getDomains(extraDetails?: boolean): Observable<Domain[]> {
+    let url = `${environment.apiUrl}/admin/domains`;
+    if(extraDetails) url += `/extra`;
     return this.http
       .get<Domain[]>(url, this.auth.getPrivateHeaders(),)
       .pipe(
