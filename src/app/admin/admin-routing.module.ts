@@ -4,12 +4,14 @@ import { AdminComponent } from './admin.component';
 import { AdminDomainsComponent } from './pages/domains/domains.component';
 import { AdminStudentsComponent } from './pages/students/students.component';
 import { AdminTeachersComponent } from './pages/teachers/teachers.component';
+import { AdminTopicsComponent } from './pages/topics/topics.component';
 
 const routes: Routes = [
   { path: '', component: AdminComponent },
   { path: 'students', component: AdminStudentsComponent },
   { path: 'teachers', component: AdminTeachersComponent },
-  { path: 'domains', component: AdminDomainsComponent }
+  { path: 'domains', component: AdminDomainsComponent },
+  { path: 'topics', component: AdminTopicsComponent }
 ];
 
 @NgModule({

@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AuthService, Domain, UserData } from './auth.service';
+import { Topic } from './topics.service';
 
 @Injectable({
   providedIn: 'root'
@@ -136,6 +137,36 @@ export class AdminService {
     );
   }
 
+  // Topics
+
+  getTopics(sort: string = 'id', order: string = 'ASC', page: number = 0, pageSize: number = 10):
+    Observable<TopicQueryResult> {
+    const url = `${environment.apiUrl}/admin/topics?sort=${sort}&order=${order}&page=${page}&pageSize=${pageSize}`;
+    return this.http
+      .get<TopicQueryResult>(url, this.auth.getPrivateHeaders(),)
+      .pipe(
+        retry(3),
+        catchError(this.handleError<TopicQueryResult>('getTopics', { rows: [], count: 0 }))
+      );
+  }
+
+  addTopic(name: string): Observable<Topic> {
+    const url = `${environment.apiUrl}/admin/topics/add`;
+    return this.http.post<Topic>(url, { name }, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError<Topic>('addTopic', null))
+    );
+  }
+
+  editTopic(id: number, name: string): Observable<Topic> {
+    const url = `${environment.apiUrl}/admin/topics/edit`;
+    return this.http.post<any>(url, { id, name }, this.auth.getPrivateHeaders()).pipe(
+      map(res => {
+        return { id, name } as Topic
+      }),
+      catchError(this.handleError<Topic>('editTopic', null))
+    );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       return of(result as T);
@@ -150,5 +181,10 @@ export interface StudentQueryResult {
 
 export interface TeacherQueryResult {
   rows: UserData[],
+  count: number
+}
+
+export interface TopicQueryResult {
+  rows: Topic[],
   count: number
 }

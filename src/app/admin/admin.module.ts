@@ -16,6 +16,8 @@ import { AdminTeacherBulkAddDialogComponent } from './dialogs/teacher-bulk-add-d
 import { AdminDomainsComponent } from './pages/domains/domains.component';
 import { AdminDomainDialogComponent } from './dialogs/domain-dialog/domain-dialog.component';
 import { SharedModule } from '../shared/shared.module';
+import { AdminTopicsComponent } from './pages/topics/topics.component';
+import { AdminTopicDialogComponent } from './dialogs/topic-dialog/topic-dialog.component';
 
 
 @NgModule({
@@ -30,7 +32,9 @@ import { SharedModule } from '../shared/shared.module';
     AdminTeacherDeleteDialogComponent,
     AdminTeacherBulkAddDialogComponent,
     AdminDomainsComponent,
-    AdminDomainDialogComponent
+    AdminDomainDialogComponent,
+    AdminTopicsComponent,
+    AdminTopicDialogComponent
   ],
   imports: [
     CommonModule,

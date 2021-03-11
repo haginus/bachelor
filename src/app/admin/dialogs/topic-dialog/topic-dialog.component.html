@@ -1,0 +1,32 @@
+<app-loading *ngIf="isLoading" class="loading-container"></app-loading>
+
+<h2 mat-dialog-title *ngIf="data.mode == 'create'">Adăugați temă</h2>
+<h2 mat-dialog-title *ngIf="data.mode == 'edit'">Editați temă</h2>
+<h2 mat-dialog-title *ngIf="data.mode == 'delete'">Ștergeți tema?</h2>
+
+<mat-dialog-content class="mat-typography" *ngIf="data.mode == 'edit' || data.mode == 'create'">
+    <form [formGroup]="editTopicForm">
+        <mat-form-field appearance="outline">
+            <mat-label>Nume temă</mat-label>
+            <input matInput type="text" formControlName="name">
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-content class="mat-typography" *ngIf="data.mode == 'delete'">
+    <p>Este nevoie să transferați studenții din acest domeniu (dacă există) către alt domeniu.</p>
+    <form [formGroup]="deleteTopicForm">
+        <mat-form-field appearance="outline">
+            <mat-label>Mutați studenții în</mat-label>
+            <mat-select formControlName="moveTo">
+                <mat-option *ngFor="let domain of remainingTopics" [value]="domain.id">{{ domain.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Anulați</button>
+    <button mat-button (click)="addTopic()" *ngIf="data.mode == 'create'" [disabled]="editTopicForm.invalid">Adăugați</button>
+    <button mat-button (click)="editTopic()" *ngIf="data.mode == 'edit'" [disabled]="editTopicForm.invalid">Salvați</button>
+    <button mat-button (click)="deleteTopic()" *ngIf="data.mode == 'delete'" [disabled]="deleteTopicForm.invalid">Ștergeți</button>
+</mat-dialog-actions>
