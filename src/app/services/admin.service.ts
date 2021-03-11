@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AuthService, Domain, UserData } from './auth.service';
 
@@ -98,8 +98,7 @@ export class AdminService {
     );
   }
 
-  getDomains():
-    Observable<Domain[]> {
+  getDomains(): Observable<Domain[]> {
     const url = `${environment.apiUrl}/admin/domains`;
     return this.http
       .get<Domain[]>(url, this.auth.getPrivateHeaders(),)
@@ -107,6 +106,33 @@ export class AdminService {
         retry(3),
         catchError(this.handleError<Domain[]>('getDomains', []))
       );
+  }
+
+  addDomain(name: string, type: string): Observable<Domain> {
+    const url = `${environment.apiUrl}/admin/domains/add`;
+    return this.http.post<Domain>(url, { name, type }, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError<Domain>('addDomain', null))
+    );
+  }
+
+  editDomain(id: number, name: string, type: string): Observable<Domain> {
+    const url = `${environment.apiUrl}/admin/domains/edit`;
+    return this.http.post<any>(url, { id, name, type }, this.auth.getPrivateHeaders()).pipe(
+      map(res => {
+        return { id, name, type } as Domain
+      }),
+      catchError(this.handleError<Domain>('editDomain', null))
+    );
+  }
+
+  deleteDomain(id: number, moveStudentsTo: number): Observable<boolean> {
+    const url = `${environment.apiUrl}/admin/domains/delete`;
+    return this.http.post<any>(url, { id, moveStudentsTo }, this.auth.getPrivateHeaders()).pipe(
+      map(res => {
+        return true;
+      }),
+      catchError(this.handleError<boolean>('editDomain', false))
+    );
   }
 
   private handleError<T>(operation = 'operation', result?: T) {

@@ -1,0 +1,39 @@
+<app-loading *ngIf="isLoading" class="loading-container"></app-loading>
+
+<h2 mat-dialog-title *ngIf="data.mode == 'create'">Adăugați domeniu</h2>
+<h2 mat-dialog-title *ngIf="data.mode == 'edit'">Editați domeniul</h2>
+<h2 mat-dialog-title *ngIf="data.mode == 'delete'">Ștergeți domeniul?</h2>
+
+<mat-dialog-content class="mat-typography" *ngIf="data.mode == 'edit' || data.mode == 'create'">
+    <form [formGroup]="editDomainForm">
+        <mat-form-field appearance="outline">
+            <mat-label>Nume domeniu</mat-label>
+            <input matInput type="text" formControlName="name">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Tip</mat-label>
+            <mat-select formControlName="type">
+                <mat-option value="bachelor">Licență</mat-option>
+                <mat-option value="master">Master</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-content class="mat-typography" *ngIf="data.mode == 'delete'">
+    <p>Este nevoie să transferați studenții din acest domeniu (dacă există) către alt domeniu.</p>
+    <form [formGroup]="deleteDomainForm">
+        <mat-form-field appearance="outline">
+            <mat-label>Mutați studenții în</mat-label>
+            <mat-select formControlName="moveStudentsTo">
+                <mat-option *ngFor="let domain of remainingDomains" [value]="domain.id">{{ domain.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Anulați</button>
+    <button mat-button (click)="addDomain()" *ngIf="data.mode == 'create'" [disabled]="editDomainForm.invalid">Adăugați</button>
+    <button mat-button (click)="editDomain()" *ngIf="data.mode == 'edit'" [disabled]="editDomainForm.invalid">Salvați</button>
+    <button mat-button (click)="deleteDomain()" *ngIf="data.mode == 'delete'" [disabled]="deleteDomainForm.invalid">Ștergeți</button>
+</mat-dialog-actions>

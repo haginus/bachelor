@@ -1,0 +1,38 @@
+.container {
+    padding: 16px;
+}
+
+.table-container {
+    position: relative;
+    margin-top: 16px;
+}
+
+.loading-shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toolbar-spacer {
+    flex: 1 1 auto;
+}
+
+table {
+    width: 100%;
+    overflow-x: auto;
+}
+
+td, th {
+    width: auto;
+}
+
+tr th:last-child, tr td:last-child {
+    width: 80px;
+}

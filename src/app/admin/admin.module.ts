@@ -13,6 +13,9 @@ import { AdminTeacherDialogConmonent } from './dialogs/teacher-dialog/teacher-di
 import { AdminTeachersComponent } from './pages/teachers/teachers.component';
 import { AdminTeacherDeleteDialogComponent } from './dialogs/teacher-delete-dialog/teacher-delete-dialog.component';
 import { AdminTeacherBulkAddDialogComponent } from './dialogs/teacher-bulk-add-dialog/teacher-bulk-add-dialog.component';
+import { AdminDomainsComponent } from './pages/domains/domains.component';
+import { AdminDomainDialogComponent } from './dialogs/domain-dialog/domain-dialog.component';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -25,14 +28,17 @@ import { AdminTeacherBulkAddDialogComponent } from './dialogs/teacher-bulk-add-d
     AdminTeachersComponent,
     AdminTeacherDialogConmonent,
     AdminTeacherDeleteDialogComponent,
-    AdminTeacherBulkAddDialogComponent
+    AdminTeacherBulkAddDialogComponent,
+    AdminDomainsComponent,
+    AdminDomainDialogComponent
   ],
   imports: [
     CommonModule,
     AdminRoutingModule,
     MaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ]
 })
 export class AdminModule { }
