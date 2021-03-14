@@ -1,10 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { GetTeacherOffersFilters, StudentService, TeacherOffers } from 'src/app/services/student.service';
 import { Topic, TopicsService } from 'src/app/services/topics.service';
+import { OfferApplicationSenderComponent } from '../../dialogs/offer-application-sender/offer-application-sender.component';
 
 @Component({
   selector: 'student-teachers-grid',
@@ -13,7 +15,8 @@ import { Topic, TopicsService } from 'src/app/services/topics.service';
 })
 export class StundentTeachersGridComponent implements OnInit, OnDestroy {
 
-  constructor(private topicService: TopicsService, private studentService: StudentService, private route: ActivatedRoute) { }
+  constructor(private topicService: TopicsService, private studentService: StudentService, private dialog: MatDialog,
+    private route: ActivatedRoute) { }
 
   mode: 'all' | 'suggested';
   topics: Topic[] = []
@@ -77,6 +80,22 @@ export class StundentTeachersGridComponent implements OnInit, OnDestroy {
       this.teachers = teachers;
       this.isLoadingTeachers = false;
     });
+  }
+
+  applyOffer(id: number) {
+    const dialogRef = this.dialog.open(OfferApplicationSenderComponent, {
+      data: id
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        let teacherIdx = this.teachers.findIndex(teacher => teacher.offers.findIndex(offer => offer.id == id) >= 0);
+        if(teacherIdx >= 0) {
+          let offerIdx = this.teachers[teacherIdx].offers.findIndex(offer => offer.id == id);
+          this.teachers[teacherIdx].offers[offerIdx].hasApplied = true;
+        }
+      }
+    })
   }
 
   ngOnDestroy() {

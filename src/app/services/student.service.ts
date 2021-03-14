@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 import { Topic } from './topics.service';
@@ -11,7 +12,7 @@ import { Topic } from './topics.service';
 })
 export class StudentService {
 
-  constructor(private http: HttpClient, private auth: AuthService) { }
+  constructor(private http: HttpClient, private auth: AuthService, private snackbar: MatSnackBar) { }
 
   getTeacherOffers(filters: GetTeacherOffersFilters): Observable<TeacherOffers[]> {
     let url = `${environment.apiUrl}/student/teacher-offers?onlyFree=${filters.onlyFree}`
@@ -39,6 +40,19 @@ export class StudentService {
       );
   }
 
+  applyToOffer(offerId, application: OfferApplication): Observable<PostResponse> {
+    const url = `${environment.apiUrl}/student/teacher-offers/apply`;
+    return this.http.post(url, { offerId, ...application }, this.auth.getPrivateHeaders()).pipe(
+      map(res => {
+        return { success: true } as PostResponse
+      }),
+      catchError(err => {
+        let error = (err as any).error as string
+        return of({ error })
+      })
+    );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       return of(result as T);
@@ -62,8 +76,20 @@ export interface Offer {
   domainId: number
 }
 
+export interface OfferApplication {
+  id?: number,
+  title: string,
+  description: string,
+  usedTechnologies?: string
+}
+
 export interface GetTeacherOffersFilters {
   onlyFree: boolean,
   teacherName: string | null,
   topicIds: number[] | null
+}
+
+export interface PostResponse {
+  success?: boolean,
+  error?: string
 }

@@ -1,0 +1,19 @@
+:host {
+    display: block;
+    position: relative;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.loading-shade {
+    position: absolute;
+    top: -24px;
+    left: -24px;
+    bottom: 0;
+    right: -24px;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    display: flex;
+}
