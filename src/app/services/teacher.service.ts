@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AuthService, Domain } from './auth.service';
 import { OfferApplication } from './student.service';
@@ -61,6 +61,28 @@ export class TeacherService {
       .pipe(
         retry(3),
         catchError(this.handleError<OfferApplication[]>('getApplications', []))
+      );
+  }
+
+  declineApplication(id: number): Observable<boolean> {
+    const url = `${environment.apiUrl}/teacher/applications/decline`;
+    const data = { applicationId: id };
+    return this.http
+      .post<any>(url, data, this.auth.getPrivateHeaders())
+      .pipe(
+        map(_ => true),
+        catchError(this.handleError<boolean>('declineApplication', null))
+      );
+  }
+
+  acceptApplication(id: number): Observable<boolean> {
+    const url = `${environment.apiUrl}/teacher/applications/accept`;
+    const data = { applicationId: id };
+    return this.http
+      .post<any>(url, data, this.auth.getPrivateHeaders())
+      .pipe(
+        map(_ => true),
+        catchError(this.handleError<boolean>('acceptApplication', null))
       );
   }
 

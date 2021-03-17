@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { OfferApplication } from 'src/app/services/student.service';
 import { TeacherService } from 'src/app/services/teacher.service';
@@ -11,7 +12,7 @@ import { ApplicationListActions } from 'src/app/shared/application-list/applicat
 })
 export class TeacherApplicationsComponent implements OnInit {
 
-  constructor(private teacher: TeacherService) { }
+  constructor(private teacher: TeacherService, private snackbar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.getApplications();
@@ -32,15 +33,45 @@ export class TeacherApplicationsComponent implements OnInit {
   applicationSubscription: Subscription;
   isLoadingApplications: boolean = true;
 
+  declineApplication(id: number) {
+    let application = this._getApplication(id);
+    application.accepted = false;
+    this.teacher.declineApplication(id).subscribe(res => {
+      if(res) {
+        this.snackbar.open("Cerere respinsă.");
+      } else {
+        this.snackbar.open("A apărut o eroare.");
+        application.accepted = null;
+      }
+    })
+  }
+
+  acceptApplication(id: number) {
+    let application = this._getApplication(id);
+    application.accepted = true;
+    this.teacher.acceptApplication(id).subscribe(res => {
+      if(res) {
+        this.snackbar.open("Cerere acceptată.");
+      } else {
+        this.snackbar.open("A apărut o eroare.");
+        application.accepted = null;
+      }
+    })
+  }
+
+  private _getApplication(id: number) {
+    let idx = this.applications.findIndex(application => application.id == id);
+    return idx >= 0 ? this.applications[idx] : null;
+
+  }
+
 
   handleActions(event: ApplicationListActions) {
     if(event.action == 'accept') {
-      let idx = this.applications.findIndex(application => application.id == event.applicationId);
-      this.applications[idx].accepted = true;
+      this.acceptApplication(event.applicationId);
     }
     if(event.action == 'decline') {
-      let idx = this.applications.findIndex(application => application.id == event.applicationId);
-      this.applications[idx].accepted = false;
+      this.declineApplication(event.applicationId);
     }
   }
 
