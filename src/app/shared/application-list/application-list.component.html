@@ -1,0 +1,57 @@
+<mat-card class="offer-card" *ngFor="let application of applications">
+    <div class="offer-card-header">
+        <div class="header-content">
+            <span>
+                {{ application.offer.domain.name }},
+                <span *ngIf="application.offer.domain.type == 'bachelor'">Licență</span>
+                <span *ngIf="application.offer.domain.type == 'master'">Master</span>
+            </span>
+            <div class="offer-topics">
+                <span class="badge" *ngFor="let topic of application.offer.topics">{{topic.name}}</span>
+            </div>
+        </div>
+        <div>
+            <span class="badge">{{application.offer.takenPlaces }} / {{application.offer.limit}} Locuri ocupate</span>
+        </div>
+    </div>
+    <mat-card-content>
+        <mat-list>
+            <mat-list-item *ngIf="mode == 'teacher'">
+                <div mat-line>Student</div>
+                <div mat-line>{{application.student.firstName}} {{application.student.lastName}}</div>
+            </mat-list-item>
+            <mat-list-item *ngIf="mode == 'student'">
+                <div mat-line>Profesor</div>
+                <div mat-line>{{application.teacher.firstName}} {{application.teacher.lastName}}</div>
+            </mat-list-item>
+            <mat-list-item>
+                <div mat-line>Titlu</div>
+                <div mat-line>{{application.title}}</div>
+            </mat-list-item>
+            <mat-list-item>
+                <div mat-line>Descriere</div>
+                <div mat-line class="nowrap">{{application.description}}</div>
+            </mat-list-item>
+            <mat-list-item *ngIf="application.usedTechnologies">
+                <div mat-line>Tehnologii folosite</div>
+                <div mat-line>{{application.usedTechnologies}}</div>
+            </mat-list-item>
+        </mat-list>
+    </mat-card-content>
+    <mat-card-actions align="end">
+        <div *ngIf="application.accepted == null">
+            <div *ngIf="mode == 'teacher'">
+                <button mat-button (click)="sendEvent('decline', application.id)">Respingeți</button>
+                <button mat-flat-button color="primary" (click)="sendEvent('accept', application.id)">Acceptați</button>
+            </div>
+            <div *ngIf="mode == 'student'">
+                <button mat-button (click)="sendEvent('cancel', application.id)">Retrageți cererea</button>
+            </div>
+        </div>
+        <div *ngIf="application.accepted != null">
+            <button mat-button disabled *ngIf="application.accepted">Acceptată</button>
+            <button mat-button disabled *ngIf="application.accepted == false">Respinsă</button>
+
+        </div>
+    </mat-card-actions>
+</mat-card>

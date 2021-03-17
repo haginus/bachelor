@@ -5,11 +5,13 @@ import { ValidatedGuard } from '../guards/validated.guard';
 import { TeacherOffersComponent } from './pages/offers/offers.component';
 import { TeacherSetupComponent } from './pages/setup/setup.component';
 import { TeacherComponent } from './teacher.component';
+import { TeacherApplicationsComponent } from './pages/applications/applications.component'; 
 
 const routes: Routes = [
   { path: '', component: TeacherComponent },
   { path: 'setup', component: TeacherSetupComponent, data: { hideDrawer: true, title: "Validare" }, canActivate: [NotValidatedGuard] },
   { path: 'offers', component: TeacherOffersComponent, data: { title: "Ofertele dvs." }, canActivate: [ValidatedGuard] },
+  { path: 'applications', component: TeacherApplicationsComponent, data: { title: "Cereri" }, canActivate: [ValidatedGuard] },
 ];
 
 @NgModule({

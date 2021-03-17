@@ -175,6 +175,12 @@ export interface UserData {
   }
 }
 
+export interface UserDataMin {
+  id: number,
+  firstName: string,
+  lastName: string
+}
+
 export interface Domain {
   id: number,
   name: string,

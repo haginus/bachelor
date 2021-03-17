@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AuthService, Domain } from './auth.service';
+import { OfferApplication } from './student.service';
 import { Topic } from './topics.service';
 
 @Injectable({
@@ -50,6 +51,16 @@ export class TeacherService {
       .post<Offer>(url, data, this.auth.getPrivateHeaders())
       .pipe(
         catchError(this.handleError<Offer>('editOffer', null))
+      );
+  }
+
+  getApplications(): Observable<OfferApplication[]> {
+    const url = `${environment.apiUrl}/teacher/applications`
+    return this.http
+      .get<OfferApplication[]>(url, this.auth.getPrivateHeaders())
+      .pipe(
+        retry(3),
+        catchError(this.handleError<OfferApplication[]>('getApplications', []))
       );
   }
 

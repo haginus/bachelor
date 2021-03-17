@@ -1,0 +1,33 @@
+:host {
+    display: block;
+    padding: 12px;
+}
+
+.offer-card {
+    width: calc(100% - 48px);
+    margin: 0 auto;
+    margin-bottom: 16px;
+    overflow: hidden;
+    max-width: 800px;
+
+    .offer-card-header {
+        display: flex;
+        .header-content {
+            flex: 1;
+        }
+    }
+
+    .offer-card-footer {
+        border-top: 1px solid #eeeeee;
+        margin: 0 -16px -16px -16px;
+    }
+
+    button {
+        margin: 0 4px;
+    }
+}
+
+.nowrap {
+    display: block;
+    white-space: unset!important;
+}

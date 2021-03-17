@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TeacherOffersComponent } from './pages/offers/offers.component';
 import { TeacherOfferDialogComponent } from './dialogs/teacher-offer-dialog/teacher-offer-dialog.component';
 import { SharedModule } from '../shared/shared.module';
+import { TeacherApplicationsComponent } from './pages/applications/applications.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { SharedModule } from '../shared/shared.module';
     TeacherComponent,
     TeacherSetupComponent,
     TeacherOffersComponent,
-    TeacherOfferDialogComponent
+    TeacherOfferDialogComponent,
+    TeacherApplicationsComponent
   ],
   imports: [
     CommonModule,

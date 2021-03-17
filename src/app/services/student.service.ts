@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { AuthService } from './auth.service';
+import { AuthService, Domain, UserData, UserDataMin } from './auth.service';
 import { Topic } from './topics.service';
 
 @Injectable({
@@ -70,17 +70,22 @@ export interface TeacherOffers {
 export interface Offer {
   id: number
   takenPlaces: number
-  hasApplied: boolean
+  hasApplied?: boolean
   limit: number
   topics: Topic[]
-  domainId: number
+  domainId: number,
+  domain?: Domain
 }
 
 export interface OfferApplication {
   id?: number,
   title: string,
   description: string,
-  usedTechnologies?: string
+  usedTechnologies?: string,
+  accepted?: null | boolean,
+  offer?: Offer,
+  student?: UserDataMin,
+  teacher?: UserDataMin
 }
 
 export interface GetTeacherOffersFilters {

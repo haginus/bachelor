@@ -78,6 +78,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     border-radius: 6px;
 }
 
+.badge:first-child {
+    margin-left: 0px;
+}
+
 .col-2 {
     width: 50%;
     display: inline-block;
