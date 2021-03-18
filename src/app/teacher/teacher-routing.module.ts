@@ -12,6 +12,8 @@ const routes: Routes = [
   { path: 'setup', component: TeacherSetupComponent, data: { hideDrawer: true, title: "Validare" }, canActivate: [NotValidatedGuard] },
   { path: 'offers', component: TeacherOffersComponent, data: { title: "Ofertele dvs." }, canActivate: [ValidatedGuard] },
   { path: 'applications', component: TeacherApplicationsComponent, data: { title: "Cereri" }, canActivate: [ValidatedGuard] },
+  { path: 'applications/:state', component: TeacherApplicationsComponent, data: { title: "Cereri" }, canActivate: [ValidatedGuard] },
+  { path: 'applications/:state/:offerId', component: TeacherApplicationsComponent, data: { title: "Cereri" }, canActivate: [ValidatedGuard] },
 ];
 
 @NgModule({

@@ -46,10 +46,10 @@
                 </mat-list-item>
             </mat-list>
             <div class="offer-card-footer">
-                <div class="card-action">
+                <a class="card-action" [routerLink]="['/teacher', 'applications', 'pending', offer.id]">
                     <span>{{ offer.pendingApplications }} cereri în așteptare</span>
                     <mat-icon>arrow_forward</mat-icon>
-                </div>
+                </a>
             </div>
         </mat-card>
     </div>

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { OfferApplication } from 'src/app/services/student.service';
 import { TeacherService } from 'src/app/services/teacher.service';
@@ -10,12 +11,42 @@ import { ApplicationListActions } from 'src/app/shared/application-list/applicat
   templateUrl: './applications.component.html',
   styleUrls: ['./applications.component.scss']
 })
-export class TeacherApplicationsComponent implements OnInit {
+export class TeacherApplicationsComponent implements OnInit, OnDestroy {
 
-  constructor(private teacher: TeacherService, private snackbar: MatSnackBar) { }
+  constructor(private teacher: TeacherService, private snackbar: MatSnackBar,
+    private route: ActivatedRoute, private router: Router) { }
+
+  offerId: number = null;
+  state: 'accepted' | 'declined' | 'pending' = null;
+
+  applications: OfferApplication[] = []
+  isLoadingApplications: boolean = true;
+
+  applicationSubscription: Subscription;
+  routeSubscription: Subscription;
 
   ngOnInit(): void {
+    this.routeSubscription =  this.route.params.subscribe(res => {
+      if(res.state !== undefined) {
+        if(!['accepted', 'declined', 'pending'].includes(res.state)) { // check state
+          this.router.navigate(['teacher', 'applications']);
+        } else {
+          this.state = res.state;
+        }
+      }
+      if(res.offerId !== undefined) {
+        let number = parseInt(res.offerId);
+        if(isFinite(number)) {
+          this.offerId = number;
+        }
+      }
     this.getApplications();
+    });
+  }
+
+  ngOnDestroy() {
+    this.routeSubscription.unsubscribe();
+    this.applicationSubscription.unsubscribe();
   }
 
   getApplications() {
@@ -23,15 +54,11 @@ export class TeacherApplicationsComponent implements OnInit {
       this.applicationSubscription.unsubscribe();
     }
     this.isLoadingApplications = true;
-    this.applicationSubscription = this.teacher.getApplications().subscribe(applications => {
+    this.applicationSubscription = this.teacher.getApplications(this.offerId, this.state).subscribe(applications => {
       this.applications = applications;
       this.isLoadingApplications = false;
     });
   }
-
-  applications: OfferApplication[] = []
-  applicationSubscription: Subscription;
-  isLoadingApplications: boolean = true;
 
   declineApplication(id: number) {
     let application = this._getApplication(id);

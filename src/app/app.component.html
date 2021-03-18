@@ -49,9 +49,13 @@
                     <div mat-line>Ofertele dvs.</div>
                 </a>
                 <div mat-subheader>Cereri de asociere</div>
-                <a mat-list-item class="nav-item" routerLink="teacher/applications" routerLinkActive="active">
+                <a mat-list-item class="nav-item" routerLink="teacher/applications/pending" routerLinkActive="active">
                     <mat-icon mat-list-icon>assignment</mat-icon>
                     <div mat-line>Cereri în așteptare</div>
+                </a>
+                <a mat-list-item class="nav-item" routerLink="teacher/applications/declined" routerLinkActive="active">
+                    <mat-icon mat-list-icon>assignment_returned</mat-icon>
+                    <div mat-line>Cereri refuzate</div>
                 </a>
             </mat-list>
             <!-- ADMIN -->

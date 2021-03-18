@@ -37,6 +37,8 @@ mat-toolbar {
     padding: 0 16px;
     transition: 0.2s;
     cursor: pointer;
+    text-decoration: none;
+    color: inherit;
 
 
     &:hover {

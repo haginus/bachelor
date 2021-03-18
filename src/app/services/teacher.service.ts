@@ -54,8 +54,15 @@ export class TeacherService {
       );
   }
 
-  getApplications(): Observable<OfferApplication[]> {
-    const url = `${environment.apiUrl}/teacher/applications`
+  getApplications(offerId: number = null, state: 'accepted' | 'declined' | 'pending' = null):
+  Observable<OfferApplication[]> {
+    let url = `${environment.apiUrl}/teacher/applications?`;
+    if(offerId) {
+      url += `offerId=${offerId}&`;
+    }
+    if(state) {
+      url += `state=${state}`;
+    }
     return this.http
       .get<OfferApplication[]>(url, this.auth.getPrivateHeaders())
       .pipe(
