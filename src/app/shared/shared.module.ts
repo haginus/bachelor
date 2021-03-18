@@ -8,7 +8,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { ApplicationListComponent } from './application-list/application-list.component';
 import { MatCardModule } from "@angular/material/card";
 import { MatListModule } from "@angular/material/list";
-
+import { MatIconModule } from "@angular/material/icon";
 
 
 @NgModule({
@@ -23,7 +23,8 @@ import { MatListModule } from "@angular/material/list";
         MatDialogModule,
         MatButtonModule,
         MatCardModule,
-        MatListModule
+        MatListModule,
+        MatIconModule
     ],
     exports: [
         LoadingComponent,
