@@ -53,6 +53,32 @@ export class StudentService {
     );
   }
 
+  getApplications(state: 'accepted' | 'declined' | 'pending' = null):
+  Observable<OfferApplication[]> {
+    let url = `${environment.apiUrl}/student/applications`;
+    if(state) {
+      url += `?state=${state}`;
+    }
+    return this.http
+      .get<OfferApplication[]>(url, this.auth.getPrivateHeaders())
+      .pipe(
+        retry(3),
+        catchError(this.handleError<OfferApplication[]>('getApplications', []))
+      );
+  }
+
+  cancelApplication(id: number): Observable<boolean> {
+    const url = `${environment.apiUrl}/student/applications/cancel`;
+    const data = { applicationId: id };
+    return this.http
+      .post<any>(url, data, this.auth.getPrivateHeaders())
+      .pipe(
+        map(_ => true),
+        catchError(this.handleError<boolean>('cancelApplication', null))
+      );
+  }
+
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       return of(result as T);
@@ -74,7 +100,8 @@ export interface Offer {
   limit: number
   topics: Topic[]
   domainId: number,
-  domain?: Domain
+  domain?: Domain,
+  teacher?: UserDataMin
 }
 
 export interface OfferApplication {
@@ -84,8 +111,7 @@ export interface OfferApplication {
   usedTechnologies?: string,
   accepted?: null | boolean,
   offer?: Offer,
-  student?: UserDataMin,
-  teacher?: UserDataMin
+  student?: UserDataMin
 }
 
 export interface GetTeacherOffersFilters {

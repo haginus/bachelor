@@ -1,0 +1,4 @@
+<app-loading *ngIf="isLoadingApplications" color="primary"></app-loading>
+
+<app-application-list mode="student" [items]="applications" 
+(actions)="handleActions($event)" [class.hidden]="isLoadingApplications"></app-application-list>

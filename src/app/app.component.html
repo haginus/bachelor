@@ -29,9 +29,13 @@
                     <div mat-line>Toți profesorii</div>
                 </a>
                 <div mat-subheader>Cereri</div>
-                <a mat-list-item class="nav-item" routerLinkActive="active">
+                <a mat-list-item class="nav-item" routerLink="student/applications/pending" routerLinkActive="active">
                     <mat-icon mat-list-icon>assignment</mat-icon>
                     <div mat-line>Cereri în așteptare</div>
+                </a>
+                <a mat-list-item class="nav-item" routerLink="student/applications/declined" routerLinkActive="active">
+                    <mat-icon mat-list-icon>assignment_returned</mat-icon>
+                    <div mat-line>Cereri respinse</div>
                 </a>
             </mat-list>
             <mat-list *ngIf="user?.type == 'student' && user.student.paper">

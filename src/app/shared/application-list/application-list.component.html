@@ -22,7 +22,7 @@
             </mat-list-item>
             <mat-list-item *ngIf="mode == 'student'">
                 <div mat-line>Profesor</div>
-                <div mat-line>{{application.teacher.firstName}} {{application.teacher.lastName}}</div>
+                <div mat-line>{{application.offer.teacher.firstName}} {{application.offer.teacher.lastName}}</div>
             </mat-list-item>
             <mat-list-item>
                 <div mat-line>Titlu</div>
@@ -56,7 +56,7 @@
     </mat-card-actions>
 </mat-card>
 
-<div class="no-results">
+<div class="no-results" *ngIf="applications?.length == 0">
     <div class="icon-container">
         <mat-icon>assignment</mat-icon>
     </div>

@@ -9,6 +9,7 @@ import { StudentSetupComponent } from './pages/setup/student-setup.component';
 import { StundentTeachersGridComponent } from './pages/teachers-grid/teachers-grid.component';
 import { OfferApplicationSenderComponent } from './dialogs/offer-application-sender/offer-application-sender.component';
 import { SharedModule } from '../shared/shared.module';
+import { StudentApplicationsComponent } from './pages/applications/applications.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { SharedModule } from '../shared/shared.module';
     StudentComponent,
     StudentSetupComponent,
     StundentTeachersGridComponent,
-    OfferApplicationSenderComponent
+    OfferApplicationSenderComponent,
+    StudentApplicationsComponent
   ],
   imports: [
     CommonModule,
