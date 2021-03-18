@@ -18,7 +18,7 @@
     <mat-drawer-container class="drawer-container">
         <mat-drawer #drawer [mode]="drawerMode" class="main-drawer">
             <!-- STUDENT -->
-            <mat-list *ngIf="user?.type == 'student'">
+            <mat-list *ngIf="user?.type == 'student' && user.student.paper == null">
                 <div mat-subheader>Profesori</div>
                 <a mat-list-item class="nav-item" routerLink="student/suggested-teachers" routerLinkActive="active">
                     <mat-icon mat-list-icon>stars</mat-icon>
@@ -32,6 +32,13 @@
                 <a mat-list-item class="nav-item" routerLinkActive="active">
                     <mat-icon mat-list-icon>assignment</mat-icon>
                     <div mat-line>Cereri în așteptare</div>
+                </a>
+            </mat-list>
+            <mat-list *ngIf="user?.type == 'student' && user.student.paper">
+                <div mat-subheader>Asociere</div>
+                <a mat-list-item class="nav-item" routerLink="student/paper" routerLinkActive="active">
+                    <mat-icon mat-list-icon>stars</mat-icon>
+                    <div mat-line>Lucrarea mea</div>
                 </a>
             </mat-list>
             <!-- TEACHER -->

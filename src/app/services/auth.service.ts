@@ -171,7 +171,8 @@ export interface UserData {
     userId?: 1,
     domainId?: 1,
     group: string,
-    domain: Domain
+    domain: Domain,
+    paper: Paper
   }
 }
 
@@ -187,5 +188,13 @@ export interface Domain {
   type: "bachelor" | "master",
   studentNumber?: number,
   offerNumber?: number
+}
+
+export interface Paper {
+  id: number,
+  title: string,
+  description: string,
+  type: "bachelor" | "master",
+  documents: any[]
 }
 
