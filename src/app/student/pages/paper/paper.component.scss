@@ -1,0 +1,74 @@
+.paper-card {
+    margin-top: 16px;
+    border-radius: 0px;
+    padding: 24px;
+}
+
+.paper-header {
+    display: flex;
+    .paper-header-content {
+        flex: 1;
+    }
+    
+}
+
+.paper-title {
+    margin-bottom: 4px;
+}
+
+.paper-type, .paper-teacher {
+    color: #424242;
+}
+
+.paper-description {
+    color: #616161;
+    margin-top: 16px;
+    white-space: pre-wrap;
+}
+
+.tip-card {
+    display: flex;
+    margin: 0 -24px;
+    padding: 0 16px;
+    height: 64px;
+    align-items: center;
+    background: #78909c;
+
+    &.warning {
+        background: #ff9800;
+    }
+
+    &.success {
+        background: #4caf50;
+    }
+
+    &.isGenerating {
+        position: relative;
+        background-color: #03a9f4;
+
+        mat-progress-bar {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    }
+
+    .tip-icon {
+        margin-right: 16px;
+    }
+
+    .tip-card-content {
+        flex: 1;
+    }
+}
+
+.document-list {
+    padding-top: 8px;
+    margin: 0 -16px;
+
+    .mat-list-icon {
+        color: rgba(0, 0, 0, 0.54);
+    }
+}
+

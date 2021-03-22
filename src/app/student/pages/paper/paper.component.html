@@ -1,0 +1,118 @@
+<app-loading *ngIf="isLoadingInitialData" color="primary"></app-loading>
+
+<mat-card class="paper-card" *ngIf="!isLoadingInitialData">
+    <div class="paper-header">
+        <div class="paper-header-content">
+            <h1 class="paper-title">{{paper.title}}</h1>
+            <h3 class="paper-type">
+                <span>Lucrare de </span>
+                <span *ngIf="paper.type == 'bachelor'">licență</span>
+                <span *ngIf="paper.type == 'master'">disertație</span>
+                <span></span>
+            </h3>
+            <p class="paper-description">{{ paper.description }}</p>
+            <p class="paper-teacher">Profesor coordonator: {{paper.teacher.firstName}} {{paper.teacher.lastName}}</p>
+        </div>
+        <div class="paper-header-actions">
+            <button mat-icon-button>
+                <mat-icon>mode</mat-icon>
+            </button>
+        </div>
+    </div>
+
+    <!-- TIP CARD - NO STUDENT EXTRA DATA -->
+    <div class="tip-card warning" *ngIf="studentExtraData == null && !isWaitingForDocumentGeneration">
+        <mat-icon class="tip-icon">warning_amber</mat-icon>
+        <div class="tip-card-content">
+            Pentru a genera documentele de la dosar, este necesar să completați date suplimentare.
+        </div>
+        <div class="tip-card-action">
+            <button mat-button (click)="editStudentExtraData()">Completați</button>
+        </div>
+    </div>
+
+    <!-- TIP CARD - STUDENT EXTRA DATA EDIT -->
+    <div class="tip-card success" *ngIf="studentExtraData && !isWaitingForDocumentGeneration">
+        <mat-icon class="tip-icon">done</mat-icon>
+        <div class="tip-card-content">
+            Documente generate.
+        </div>
+        <div class="tip-card-action">
+            <button mat-button (click)="editStudentExtraData()">Modificați datele</button>
+        </div>
+    </div>
+
+    <!-- TIP CARD - Waiting document generation -->
+    <div class="tip-card isGenerating" *ngIf="isWaitingForDocumentGeneration">
+        <div class="tip-card-content">
+            Se generează documentele...
+        </div>
+        <mat-progress-bar mode="query" color="primary"></mat-progress-bar>
+    </div>
+
+    <mat-list class="document-list">
+        <div mat-subheader>Documente</div>
+        <mat-list-item *ngFor="let document of requiredDocuments">
+            <mat-icon mat-list-icon>description</mat-icon>
+            <div mat-line>{{document.title}}</div>
+            <div mat-line>
+                <span *ngIf="documentMap[document.name].requiredTypes.copy">
+                    <span *ngIf="!documentMap[document.name].actualTypes.copy">Document lipsă</span>
+                    <span *ngIf="documentMap[document.name].actualTypes.copy">Document încărcat</span>
+                </span>
+                <span *ngIf="documentMap[document.name].requiredTypes.generated">
+                    <span *ngIf="!documentMap[document.name].requiredTypes.signed">
+                        <span *ngIf="documentMap[document.name].actualTypes.generated">Document generat</span>
+                        <span *ngIf="!documentMap[document.name].actualTypes.generated">Document lipsă</span>
+                    </span>
+                    <span *ngIf="documentMap[document.name].requiredTypes.signed">
+                        <span *ngIf="documentMap[document.name].actualTypes.generated">
+                            <span *ngIf="!documentMap[document.name].actualTypes.signed">Necesită semnătură</span>
+                            <span *ngIf="documentMap[document.name].actualTypes.signed">Document semnat</span>
+                        </span>
+                        <span *ngIf="!documentMap[document.name].actualTypes.generated">Document lipsă</span>
+                    </span>
+                </span>
+            </div>
+            <button 
+                mat-stroked-button
+                *ngIf="documentMap[document.name].requiredTypes.generated && documentMap[document.name].actualTypes.generated && !documentMap[document.name].requiredTypes.signed">
+                Vizualizați
+            </button>
+            <button 
+                mat-stroked-button
+                *ngIf="documentMap[document.name].requiredTypes.generated && documentMap[document.name].actualTypes.generated && documentMap[document.name].requiredTypes.signed && !documentMap[document.name].actualTypes.signed">
+                Semnați
+            </button>
+            <button 
+                mat-stroked-button
+                *ngIf="documentMap[document.name].requiredTypes.signed && documentMap[document.name].actualTypes.signed">
+                Vizualizați
+            </button>
+            <button 
+                mat-stroked-button
+                *ngIf="documentMap[document.name].requiredTypes.copy && !documentMap[document.name].actualTypes.copy">
+                Încărcați
+            </button>
+            <button 
+                mat-stroked-button
+                *ngIf="documentMap[document.name].requiredTypes.copy && documentMap[document.name].actualTypes.copy">
+                Vizualizați
+            </button>
+        </mat-list-item>
+    </mat-list>
+</mat-card>
+
+<ng-template let-types="types" #docType>
+    <div mat-line>
+        <ng-container *ngIf="types.signed; then signed; else notSigned"></ng-container>
+    </div>
+
+    <ng-template #signed>Tip: Semnat</ng-template>
+    <ng-template #notSigned>
+        <span *ngIf="types.generated">Tip: Generat</span>
+        <span *ngIf="types.copy">Tip: Copie</span>
+        <span *ngIf="!(types.generated || types.copy)">Document lipsă</span>
+    </ng-template>
+
+</ng-template>
