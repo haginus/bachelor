@@ -38,6 +38,9 @@ export class AppComponent implements OnInit {
       filter(route => route.outlet === 'primary'),
       mergeMap(route => route.data)
     ).subscribe(data => {
+      if(this.drawerMode == 'over') {
+        this.drawer.close();
+      }
       this.hideDrawer = data.hideDrawer === true;
       this.hideToolbar = data.hideToolbar === true;
       this.title = data.title != undefined ? data.title : 'Platformă de asociere';
