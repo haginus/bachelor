@@ -9,6 +9,7 @@ import { ApplicationListComponent } from './application-list/application-list.co
 import { MatCardModule } from "@angular/material/card";
 import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from "@angular/material/icon";
+import { FlexLayoutModule } from "@angular/flex-layout";
 
 
 @NgModule({
@@ -24,12 +25,14 @@ import { MatIconModule } from "@angular/material/icon";
         MatButtonModule,
         MatCardModule,
         MatListModule,
-        MatIconModule
+        MatIconModule,
+        FlexLayoutModule
     ],
     exports: [
         LoadingComponent,
         CommonDialogComponent,
-        ApplicationListComponent
+        ApplicationListComponent,
+        FlexLayoutModule
     ]
   })
   export class SharedModule { }
