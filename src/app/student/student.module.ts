@@ -10,6 +10,8 @@ import { StundentTeachersGridComponent } from './pages/teachers-grid/teachers-gr
 import { OfferApplicationSenderComponent } from './dialogs/offer-application-sender/offer-application-sender.component';
 import { SharedModule } from '../shared/shared.module';
 import { StudentApplicationsComponent } from './pages/applications/applications.component';
+import { StudentPaperComponent } from './pages/paper/paper.component';
+import { StudentExtraDataEditorComponent } from './dialogs/student-extra-data-editor/student-extra-data-editor.component';
 
 
 @NgModule({
@@ -18,7 +20,9 @@ import { StudentApplicationsComponent } from './pages/applications/applications.
     StudentSetupComponent,
     StundentTeachersGridComponent,
     OfferApplicationSenderComponent,
-    StudentApplicationsComponent
+    StudentApplicationsComponent,
+    StudentPaperComponent,
+    StudentExtraDataEditorComponent
   ],
   imports: [
     CommonModule,

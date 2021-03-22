@@ -1,0 +1,145 @@
+<div class="loading-shade" *ngIf="isSavingData">
+    <mat-spinner diameter="48" color="accent"></mat-spinner>
+    <div class="message">Se salveză datele...</div>
+</div>
+
+<h2 mat-dialog-title>Completați datele necesare</h2>
+
+<mat-dialog-content class="mat-typography">
+        <form [formGroup]="studentDataForm">
+            <div class="section-header">Date personale</div>
+            <div fxLayout="row grid" fxLayoutGap="10px grid">
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                    <mat-label>Nume de familie la naștere *</mat-label>
+                    <input matInput type="text" formControlName="birthLastName">
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                    <mat-label>Nume de familie actual *</mat-label>
+                    <input matInput type="text" disabled [value]="userData.lastName">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="70">
+                    <mat-label>Prenume *</mat-label>
+                    <input matInput type="text" disabled [value]="userData.firstName">
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="30">
+                    <mat-label>Inițiala părintelui *</mat-label>
+                    <input matInput type="text" formControlName="parentInitial" placeholder="Exemplu: Gh">
+                    <mat-error>Prima literă trebuie să fie majusculă, iar a doua minusculă.</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                    <mat-label>Prenume tată *</mat-label>
+                    <input matInput type="text" formControlName="fatherName">
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                    <mat-label>Prenume mamă *</mat-label>
+                    <input matInput type="text" formControlName="motherName">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                    <mat-label>Data nașterii *</mat-label>
+                    <input matInput type="date" formControlName="dateOfBirth">
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                    <mat-label>State civilă *</mat-label>
+                    <mat-select formControlName="civilState">
+                        <mat-option value="not_married">Necăsătorit</mat-option>
+                        <mat-option value="married">Căsătorit</mat-option>
+                        <mat-option value="divorced">Divorțat</mat-option>
+                        <mat-option value="widow">Văduv</mat-option>
+                        <mat-option value="re_married">Recăsătorit</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                    <mat-label>Cetățenie *</mat-label>
+                    <input matInput type="text" formControlName="citizenship">
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                    <mat-label>Etnie *</mat-label>
+                    <input matInput type="text" formControlName="ethnicity">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="100">
+                    <mat-label>CNP *</mat-label>
+                    <input matInput type="text" disabled [value]="userData.CNP">
+                </mat-form-field>
+            </div>
+
+            <div class="section-header">Locul nașterii</div>
+            <div fxLayout="row grid" fxLayoutGap="10px grid">
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                    <mat-label>Țară *</mat-label>
+                    <input matInput type="text" formControlName="placeOfBirthCountry">
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                    <mat-label>Județ/Sector *</mat-label>
+                    <input matInput type="text" formControlName="placeOfBirthCounty">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                    <mat-label>Localitate *</mat-label>
+                    <input matInput type="text" formControlName="placeOfBirthLocality">
+                </mat-form-field>
+            </div>
+
+            <div class="section-header">Date de contact</div>
+            <div fxLayout="row grid" fxLayoutGap="10px grid">
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                    <mat-label>Telefon fix *</mat-label>
+                    <input matInput type="text" formControlName="landline">
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                    <mat-label>Telefon mobil *</mat-label>
+                    <input matInput type="text" formControlName="mobilePhone">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                    <mat-label>E-mail *</mat-label>
+                    <input matInput type="text" formControlName="personalEmail">
+                </mat-form-field>
+            </div>
+
+            <div class="section-header">Adresă de domiciliu</div>
+            <div fxLayout="row grid" fxLayoutGap="10px grid" formGroupName="address">
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                    <mat-label>Județ/Sector *</mat-label>
+                    <input matInput type="text" formControlName="county">
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                    <mat-label>Localitate *</mat-label>
+                    <input matInput type="text" formControlName="locality">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex="70" fxFlex.gt-xs="70">
+                    <mat-label>Stradă *</mat-label>
+                    <input matInput type="text" formControlName="street">
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="30" fxFlex.gt-xs="30">
+                    <mat-label>Număr *</mat-label>
+                    <input matInput type="text" formControlName="streetNumber">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex="50" fxFlex.gt-xs="25">
+                    <mat-label>Bloc</mat-label>
+                    <input matInput type="text" formControlName="building">
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="50" fxFlex.gt-xs="25">
+                    <mat-label>Scară</mat-label>
+                    <input matInput type="text" formControlName="stair">
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="50" fxFlex.gt-xs="25">
+                    <mat-label>Etaj</mat-label>
+                    <input matInput type="text" formControlName="floor">
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="50" fxFlex.gt-xs="25">
+                    <mat-label>Apartament</mat-label>
+                    <input matInput type="text" formControlName="apartment">
+                </mat-form-field>
+            </div>
+        </form>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button mat-raised-button [disabled]="studentDataForm.invalid" (click)="saveData()">Salvați</button>
+</mat-dialog-actions>

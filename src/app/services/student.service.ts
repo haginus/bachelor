@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { AuthService, Domain, UserData, UserDataMin } from './auth.service';
+import { AuthService, Domain, Paper, UserData, UserDataMin } from './auth.service';
 import { Topic } from './topics.service';
 
 @Injectable({
@@ -78,6 +78,36 @@ export class StudentService {
       );
   }
 
+  getPaper(): Observable<Paper> {
+    const url = `${environment.apiUrl}/student/paper`
+    return this.http
+      .get<Paper>(url, this.auth.getPrivateHeaders())
+      .pipe(
+        retry(3),
+        catchError(this.handleError<Paper>('getPaper', null))
+      );
+  }
+
+  getExtraData(): Observable<StudentExtraData> {
+    const url = `${environment.apiUrl}/student/extra-data`
+    return this.http
+      .get<StudentExtraData>(url, this.auth.getPrivateHeaders())
+      .pipe(
+        retry(3),
+        catchError(this.handleError<StudentExtraData>('getExtraData', null))
+      );
+  }
+
+  setExtraData(data: StudentExtraData): Observable<boolean> {
+    const url = `${environment.apiUrl}/student/extra-data/set`
+    return this.http
+      .post<any>(url, data, this.auth.getPrivateHeaders())
+      .pipe(
+        map(_ => true),
+        catchError(this.handleError<boolean>('setExtraData', false))
+      );
+  }
+
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
@@ -123,4 +153,33 @@ export interface GetTeacherOffersFilters {
 export interface PostResponse {
   success?: boolean,
   error?: string
+}
+
+export interface StudentExtraData {
+  birthLastName: string,
+  parentInitial: string,
+  fatherName: string,
+  motherName: string,
+  civilState: 'not_married' | 'married' | 'divorced' | 'widow' | 're_married',
+  dateOfBirth: Date | any,
+  citizenship: string,
+  ethnicity: string,
+  placeOfBirthCountry: string,
+  placeOfBirthCounty: string,
+  placeOfBirthLocality: string,
+  landline: string,
+  mobilePhone: string,
+  personalEmail: string,
+  address: UserAddress;
+}
+
+export interface UserAddress {
+  county: string,
+  locality: string,
+  street: string,
+  streetNumber: string,
+  building?: string,
+  stair?: string,
+  floor?: string,
+  apartment?: string,
 }

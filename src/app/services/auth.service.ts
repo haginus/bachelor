@@ -195,6 +195,12 @@ export interface Paper {
   title: string,
   description: string,
   type: "bachelor" | "master",
-  documents: any[]
+  teacher: UserDataMin,
+  documents: PaperDocument[]
+}
+
+export interface PaperDocument {
+  name: string,
+  type: 'generated' | 'signed' | 'copy'
 }
 
