@@ -81,6 +81,10 @@ export class StudentPaperComponent implements OnInit {
 
   viewDocument(mapElement: DocumentMapElement) {
     mapElement.actionPending = true;
+    let snackbarRef = this.snackbar.open("Se descarcă documentul...", null, {
+      duration: 100000
+    });
+
     const id = mapElement.lastId;
     const type = this.paper.documents.find(doc => doc.id == id).mimeType;
     this.student.getDocument(id).subscribe(data => {
@@ -89,6 +93,7 @@ export class StudentPaperComponent implements OnInit {
         this.snackbar.open("A apărut o eroare.");
         return;
       }
+      snackbarRef.dismiss();
       const blob = new Blob([data], { type });
       const url = window.URL.createObjectURL(blob);
       window.open(url);
@@ -96,8 +101,9 @@ export class StudentPaperComponent implements OnInit {
   }
 
   openDocumentDialog(action: 'sign' | 'uploadCopy', documentName: string, documentId?: number) {
+    this.documentMap[documentName].actionPending = true;
     const document = this.requiredDocuments.find(doc => doc.name == documentName);
-    this.dialog.open(DocumentUploadDialogComponent, {
+    let dialogRef = this.dialog.open(DocumentUploadDialogComponent, {
       data: {
         action,
         document,
@@ -106,6 +112,20 @@ export class StudentPaperComponent implements OnInit {
       width: '100%',
       maxWidth: '500px'
     });
+    dialogRef.afterClosed().pipe(
+      switchMap(res => {
+        if(res) {
+          return this.student.getPaper();
+        }
+        return of(null);
+      })
+    ).subscribe(paper => {
+      this.documentMap[documentName].actionPending = false;
+      if(paper) {
+        this.paper = paper;
+        this._generateDocumentMap();
+      }
+    })
   }
 
 
@@ -118,7 +138,8 @@ export class StudentPaperComponent implements OnInit {
         generated: true,
         signed: true
       },
-      acceptedMimeTypes: 'application/pdf'
+      acceptedMimeTypes: 'application/pdf',
+      acceptedExtensions: ['pdf']
     },
     {
       title: "Declarație pe proprie răspundere",
@@ -127,7 +148,8 @@ export class StudentPaperComponent implements OnInit {
         generated: true,
         signed: true
       },
-      acceptedMimeTypes: 'application/pdf'
+      acceptedMimeTypes: 'application/pdf',
+      acceptedExtensions: ['pdf']
     },
     {
       title: "Formular de lichidare",
@@ -136,7 +158,8 @@ export class StudentPaperComponent implements OnInit {
         generated: true,
         signed: true
       },
-      acceptedMimeTypes: 'application/pdf'
+      acceptedMimeTypes: 'application/pdf',
+      acceptedExtensions: ['pdf']
     },
     {
       title: "Copie C.I.",
@@ -144,7 +167,9 @@ export class StudentPaperComponent implements OnInit {
       types: {
         copy: true
       },
-      acceptedMimeTypes: 'application/pdf, image/png, image/jpeg'
+      acceptedMimeTypes: 'application/pdf,image/png,image/jpeg',
+      acceptedExtensions: ['pdf', 'png', 'jpeg']
+
     }
   ]
 }
@@ -153,7 +178,8 @@ export interface RequiredDocument {
   title: string,
   name: string,
   types: DocumentTypes,
-  acceptedMimeTypes: string
+  acceptedMimeTypes: string,
+  acceptedExtensions: string[]
 }
 
 interface DocumentMap {

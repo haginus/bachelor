@@ -53,7 +53,10 @@
     <mat-list class="document-list">
         <div mat-subheader>Documente</div>
         <mat-list-item *ngFor="let document of requiredDocuments">
-            <mat-icon mat-list-icon>description</mat-icon>
+            <span mat-list-icon>
+                <mat-icon *ngIf="!documentMap[document.name].actionPending">description</mat-icon>
+                <mat-spinner diameter="24" *ngIf="documentMap[document.name].actionPending"></mat-spinner>
+            </span>
             <div mat-line>{{document.title}}</div>
             <div mat-line>
                 <span *ngIf="documentMap[document.name].requiredTypes.copy">
@@ -94,7 +97,8 @@
             </button>
             <button 
                 mat-stroked-button
-                *ngIf="documentMap[document.name].requiredTypes.copy && !documentMap[document.name].actualTypes.copy">
+                *ngIf="documentMap[document.name].requiredTypes.copy && !documentMap[document.name].actualTypes.copy"
+                (click)="openDocumentDialog('uploadCopy', document.name)">
                 Încărcați
             </button>
             <button 
