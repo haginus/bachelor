@@ -17,14 +17,28 @@
 
     <div *ngIf="state == 'docDownloaded'">
         <p>
-        Încărcați documentul semnat.
+        Încărcați documentul semnat. <br>
+        Fișiere acceptete: {{ acceptedExtensions }}
         </p>
         <div fxLayout="column" fxLayoutAlign="center center">
             <div [hidden]="isLoadingFile">
                 <label for="file" class="mat-raised-button">Încărcați</label>
-                <input type="file" id="file" [accept]="data.document.acceptedMimeTypes" (change)="handleFileInput($event.target)">     
+                <input type="file" id="file" [accept]="data.document.acceptedMimeTypes" (change)="handleFileInput($event.target, 'signed')">     
             </div>
             <mat-spinner [diameter]="36" *ngIf="isLoadingFile"></mat-spinner>
         </div>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-content class="mat-typography" *ngIf="mode == 'uploadDocument'">
+    <p>
+    Fișiere acceptete: {{ acceptedExtensions }}
+    </p>
+    <div fxLayout="column" fxLayoutAlign="center center">
+        <div [hidden]="isLoadingFile">
+            <label for="file" class="mat-raised-button">Încărcați</label>
+            <input type="file" id="file" [accept]="data.document.acceptedMimeTypes" (change)="handleFileInput($event.target, 'copy')">     
+        </div>
+        <mat-spinner [diameter]="36" *ngIf="isLoadingFile"></mat-spinner>
     </div>
 </mat-dialog-content>

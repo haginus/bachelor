@@ -15,9 +15,10 @@ export class DocumentUploadDialogComponent implements OnInit {
     private snackbar: MatSnackBar, private dialogRef: MatDialogRef<DocumentUploadDialogComponent>) { }
 
   mode: 'signDocument' | 'uploadDocument';
-  state: 'initial' | 'docDownloaded' = 'docDownloaded';
+  state: 'initial' | 'docDownloaded';
   documentId: number = null;
   isLoadingFile: boolean = false;
+  acceptedExtensions: string;
 
   ngOnInit(): void {
     if(this.data.action == 'sign') {
@@ -27,6 +28,7 @@ export class DocumentUploadDialogComponent implements OnInit {
     } else {
       this.mode = 'uploadDocument';
     }
+    this.acceptedExtensions = this.data.document.acceptedExtensions.join(', ');
   }
 
   downloadDocument() {
@@ -47,10 +49,10 @@ export class DocumentUploadDialogComponent implements OnInit {
     })
   }
 
-  handleFileInput(target: any) {
+  handleFileInput(target: any, type: string) {
     const file: File = target.files[0];
     this.isLoadingFile = true;
-    this.student.uploadDocument(file, this.data.document.name, 'signed').subscribe(res => {
+    this.student.uploadDocument(file, this.data.document.name, type).subscribe(res => {
       if(res == null) {
         this.snackbar.open("A apărut o eroare.");
         this.isLoadingFile = false;
