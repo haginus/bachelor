@@ -101,7 +101,6 @@ export class StudentPaperComponent implements OnInit {
   }
 
   openDocumentDialog(action: 'sign' | 'uploadCopy', documentName: string, documentId?: number) {
-    this.documentMap[documentName].actionPending = true;
     const document = this.requiredDocuments.find(doc => doc.name == documentName);
     let dialogRef = this.dialog.open(DocumentUploadDialogComponent, {
       data: {
@@ -114,6 +113,7 @@ export class StudentPaperComponent implements OnInit {
     });
     dialogRef.afterClosed().pipe(
       switchMap(res => {
+        this.documentMap[documentName].actionPending = true;
         if(res) {
           return this.student.getPaper();
         }
