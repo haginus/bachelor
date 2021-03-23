@@ -1,9 +1,12 @@
+import { devOnlyGuardedExpression } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { combineLatest, of } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { Paper } from 'src/app/services/auth.service';
 import { StudentExtraData, StudentService } from 'src/app/services/student.service';
+import { DocumentUploadDialogComponent } from '../../dialogs/document-upload-dialog/document-upload-dialog.component';
 import { StudentExtraDataEditorComponent } from '../../dialogs/student-extra-data-editor/student-extra-data-editor.component';
 
 @Component({
@@ -13,7 +16,7 @@ import { StudentExtraDataEditorComponent } from '../../dialogs/student-extra-dat
 })
 export class StudentPaperComponent implements OnInit {
 
-  constructor(private dialog: MatDialog, private student: StudentService) { }
+  constructor(private dialog: MatDialog, private student: StudentService, private snackbar: MatSnackBar) { }
 
   paper: Paper = null;
   studentExtraData: StudentExtraData = null;
@@ -32,7 +35,8 @@ export class StudentPaperComponent implements OnInit {
       currentDocuments.forEach(doc => {
         actualTypes[doc.type] = true;
       })
-      let doc = { requiredTypes: requiredDoc.types, actualTypes, title: requiredDoc.title };
+      let lastId = currentDocuments.length == 0 ? null : currentDocuments.map(doc => doc.id).reduce((max, id) => (max < id) ? id : max);
+      let doc = { requiredTypes: requiredDoc.types, actualTypes, title: requiredDoc.title, lastId };
       documentMap[docName] = doc;
     });
     this.documentMap = documentMap;
@@ -67,11 +71,41 @@ export class StudentPaperComponent implements OnInit {
           if(paper) {
             this.studentExtraData = data;
             this.paper = paper;
+            this._generateDocumentMap();
           }
           this.isWaitingForDocumentGeneration = false;
         })
       }
     })
+  }
+
+  viewDocument(mapElement: DocumentMapElement) {
+    mapElement.actionPending = true;
+    const id = mapElement.lastId;
+    const type = this.paper.documents.find(doc => doc.id == id).mimeType;
+    this.student.getDocument(id).subscribe(data => {
+      mapElement.actionPending = false;
+      if(!data) {
+        this.snackbar.open("A apărut o eroare.");
+        return;
+      }
+      const blob = new Blob([data], { type });
+      const url = window.URL.createObjectURL(blob);
+      window.open(url);
+    })
+  }
+
+  openDocumentDialog(action: 'sign' | 'uploadCopy', documentName: string, documentId?: number) {
+    const document = this.requiredDocuments.find(doc => doc.name == documentName);
+    this.dialog.open(DocumentUploadDialogComponent, {
+      data: {
+        action,
+        document,
+        documentId
+      },
+      width: '100%',
+      maxWidth: '500px'
+    });
   }
 
 
@@ -83,7 +117,8 @@ export class StudentPaperComponent implements OnInit {
       types: {
         generated: true,
         signed: true
-      }
+      },
+      acceptedMimeTypes: 'application/pdf'
     },
     {
       title: "Declarație pe proprie răspundere",
@@ -91,7 +126,8 @@ export class StudentPaperComponent implements OnInit {
       types: {
         generated: true,
         signed: true
-      }
+      },
+      acceptedMimeTypes: 'application/pdf'
     },
     {
       title: "Formular de lichidare",
@@ -99,31 +135,37 @@ export class StudentPaperComponent implements OnInit {
       types: {
         generated: true,
         signed: true
-      }
+      },
+      acceptedMimeTypes: 'application/pdf'
     },
     {
       title: "Copie C.I.",
       name: "identity_card",
       types: {
         copy: true
-      }
+      },
+      acceptedMimeTypes: 'application/pdf, image/png, image/jpeg'
     }
   ]
-
 }
 
-interface RequiredDocument {
+export interface RequiredDocument {
   title: string,
   name: string,
-  types: DocumentTypes
+  types: DocumentTypes,
+  acceptedMimeTypes: string
 }
 
 interface DocumentMap {
-  [name: string]: {
-    title: string,
-    requiredTypes: DocumentTypes,
-    actualTypes: DocumentTypes
-  }
+  [name: string]: DocumentMapElement
+}
+
+interface DocumentMapElement {
+  title: string,
+  requiredTypes: DocumentTypes,
+  actualTypes: DocumentTypes,
+  lastId: number,
+  actionPending: boolean
 }
 
 interface DocumentTypes {

@@ -200,7 +200,9 @@ export interface Paper {
 }
 
 export interface PaperDocument {
+  id: number,
   name: string,
+  mimeType: string,
   type: 'generated' | 'signed' | 'copy'
 }
 

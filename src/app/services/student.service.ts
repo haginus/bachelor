@@ -108,6 +108,27 @@ export class StudentService {
       );
   }
 
+  getDocument(id: number): Observable<any> {
+    const url = `${environment.apiUrl}/documents/view?id=${id}`;
+    const options = this.auth.getPrivateHeaders();
+    return this.http
+      .get<any>(url, {...options, responseType: 'arraybuffer' as 'json'})
+      .pipe(
+        catchError(this.handleError<any>('viewDocument', null))
+      );
+  }
+
+  uploadDocument(file: File, name: string, type: string): Observable<any> {
+    const url = `${environment.apiUrl}/student/paper/documents/upload`;
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+    formData.append('name', name);
+    formData.append('type', type);
+    return this.http.post<any>(url, formData, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError("uploadDocument", null))
+    );
+  }
+
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {

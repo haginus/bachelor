@@ -76,17 +76,20 @@
             </div>
             <button 
                 mat-stroked-button
-                *ngIf="documentMap[document.name].requiredTypes.generated && documentMap[document.name].actualTypes.generated && !documentMap[document.name].requiredTypes.signed">
+                *ngIf="documentMap[document.name].requiredTypes.generated && documentMap[document.name].actualTypes.generated && !documentMap[document.name].requiredTypes.signed"
+                (click)="viewDocument(documentMap[document.name])" [disabled]="documentMap[document.name].actionPending">
                 Vizualizați
             </button>
             <button 
                 mat-stroked-button
-                *ngIf="documentMap[document.name].requiredTypes.generated && documentMap[document.name].actualTypes.generated && documentMap[document.name].requiredTypes.signed && !documentMap[document.name].actualTypes.signed">
+                *ngIf="documentMap[document.name].requiredTypes.generated && documentMap[document.name].actualTypes.generated && documentMap[document.name].requiredTypes.signed && !documentMap[document.name].actualTypes.signed"
+                (click)="openDocumentDialog('sign', document.name, documentMap[document.name].lastId)">
                 Semnați
             </button>
             <button 
                 mat-stroked-button
-                *ngIf="documentMap[document.name].requiredTypes.signed && documentMap[document.name].actualTypes.signed">
+                *ngIf="documentMap[document.name].requiredTypes.signed && documentMap[document.name].actualTypes.signed"
+                (click)="viewDocument(documentMap[document.name])" [disabled]="documentMap[document.name].actionPending">
                 Vizualizați
             </button>
             <button 
@@ -96,7 +99,8 @@
             </button>
             <button 
                 mat-stroked-button
-                *ngIf="documentMap[document.name].requiredTypes.copy && documentMap[document.name].actualTypes.copy">
+                *ngIf="documentMap[document.name].requiredTypes.copy && documentMap[document.name].actualTypes.copy"
+                (click)="viewDocument(documentMap[document.name])" [disabled]="documentMap[document.name].actionPending">
                 Vizualizați
             </button>
         </mat-list-item>
