@@ -72,9 +72,9 @@ export class StudentPaperComponent implements OnInit {
         let subscription = this.student.setExtraData(data).pipe(
           switchMap(result => {
             if(result) {
-              return combineLatest(this.student.getPaper(), this.student.getPaperRequiredDocuments());
+              return combineLatest([this.student.getPaper(), this.student.getPaperRequiredDocuments()]);
             }
-            return combineLatest(of(null), of([]));
+            return combineLatest([of(null), of([])]);
           })
         ).subscribe( ([paper, requiredDocuments ]) => {
           if(paper) {
