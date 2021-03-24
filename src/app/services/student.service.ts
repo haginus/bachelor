@@ -129,6 +129,15 @@ export class StudentService {
     );
   }
 
+  getPaperRequiredDocuments(): Observable<PaperRequiredDocument[]> {
+    const url = `${environment.apiUrl}/student/paper/documents/get-required`;
+    return this.http
+      .get<PaperRequiredDocument[]>(url, this.auth.getPrivateHeaders())
+      .pipe(
+        catchError(this.handleError<PaperRequiredDocument[]>('getPaperRequiredDocuments', []))
+      );
+  }
+
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
@@ -174,6 +183,20 @@ export interface GetTeacherOffersFilters {
 export interface PostResponse {
   success?: boolean,
   error?: string
+}
+
+export interface PaperDocumentTypes {
+  generated?: boolean,
+  signed?: boolean,
+  copy?: boolean
+}
+
+export interface PaperRequiredDocument {
+  title: string,
+  name: string,
+  types: PaperDocumentTypes,
+  acceptedMimeTypes: string,
+  acceptedExtensions: string[]
 }
 
 export interface StudentExtraData {

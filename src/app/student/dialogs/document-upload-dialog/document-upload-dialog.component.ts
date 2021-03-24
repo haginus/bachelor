@@ -1,8 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StudentService } from 'src/app/services/student.service';
-import { RequiredDocument } from '../../pages/paper/paper.component'
+import { PaperRequiredDocument, StudentService } from 'src/app/services/student.service';
 
 @Component({
   selector: 'app-document-upload-dialog',
@@ -65,7 +64,7 @@ export class DocumentUploadDialogComponent implements OnInit {
 }
 
 export interface DocumentUploadDialogData {
-  document: RequiredDocument,
+  document: PaperRequiredDocument,
   action: 'sign' | 'uploadCopy',
   documentId: number
 }

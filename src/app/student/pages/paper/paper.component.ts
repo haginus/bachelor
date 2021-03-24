@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { combineLatest, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { Paper } from 'src/app/services/auth.service';
-import { StudentExtraData, StudentService } from 'src/app/services/student.service';
+import { StudentExtraData, StudentService, PaperDocumentTypes, PaperRequiredDocument } from 'src/app/services/student.service';
 import { DocumentUploadDialogComponent } from '../../dialogs/document-upload-dialog/document-upload-dialog.component';
 import { StudentExtraDataEditorComponent } from '../../dialogs/student-extra-data-editor/student-extra-data-editor.component';
 
@@ -43,13 +43,19 @@ export class StudentPaperComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getData();
+  }
 
-    combineLatest([this.student.getPaper(), this.student.getExtraData()]).subscribe(([paper, extraData]) => {
-      this.paper = paper;
-      this.studentExtraData = extraData;
-      this._generateDocumentMap();
-      this.isLoadingInitialData = false;
-    });
+  getData() {
+    let subscription = combineLatest([this.student.getPaper(), this.student.getExtraData(), this.student.getPaperRequiredDocuments()])
+      .subscribe(([paper, extraData, requiredDocuments]) => {
+        this.paper = paper;
+        this.requiredDocuments = requiredDocuments;
+        this.studentExtraData = extraData;
+        this._generateDocumentMap();
+        this.isLoadingInitialData = false;
+        subscription.unsubscribe();
+      });
   }
 
   editStudentExtraData() {
@@ -61,17 +67,19 @@ export class StudentPaperComponent implements OnInit {
     dialogRef.afterClosed().subscribe(data => {
       if(data) {
         this.isWaitingForDocumentGeneration = true;
-        this.student.setExtraData(data).pipe(
+        let subscription = this.student.setExtraData(data).pipe(
           switchMap(result => {
             if(result)
-              return this.student.getPaper();
-            return of(null);
+              return combineLatest(this.student.getPaper(), this.student.getPaperRequiredDocuments());
+            return of([null, null]);
           })
-        ).subscribe(paper => {
+        ).subscribe(([paper, requiredDocuments]) => {
           if(paper) {
             this.studentExtraData = data;
             this.paper = paper;
+            this.requiredDocuments = requiredDocuments;
             this._generateDocumentMap();
+            subscription.unsubscribe();
           }
           this.isWaitingForDocumentGeneration = false;
         })
@@ -128,58 +136,7 @@ export class StudentPaperComponent implements OnInit {
     })
   }
 
-
-
-  requiredDocuments: RequiredDocument[] = [
-    {
-      title: "Cerere de înscriere",
-      name: "sign_up_form",
-      types: {
-        generated: true,
-        signed: true
-      },
-      acceptedMimeTypes: 'application/pdf',
-      acceptedExtensions: ['pdf']
-    },
-    {
-      title: "Declarație pe proprie răspundere",
-      name: "statutory_declaration",
-      types: {
-        generated: true,
-        signed: true
-      },
-      acceptedMimeTypes: 'application/pdf',
-      acceptedExtensions: ['pdf']
-    },
-    {
-      title: "Formular de lichidare",
-      name: "liquidation_form",
-      types: {
-        generated: true,
-        signed: true
-      },
-      acceptedMimeTypes: 'application/pdf',
-      acceptedExtensions: ['pdf']
-    },
-    {
-      title: "Copie C.I.",
-      name: "identity_card",
-      types: {
-        copy: true
-      },
-      acceptedMimeTypes: 'application/pdf,image/png,image/jpeg',
-      acceptedExtensions: ['pdf', 'png', 'jpeg']
-
-    }
-  ]
-}
-
-export interface RequiredDocument {
-  title: string,
-  name: string,
-  types: DocumentTypes,
-  acceptedMimeTypes: string,
-  acceptedExtensions: string[]
+  requiredDocuments: PaperRequiredDocument[] = []
 }
 
 interface DocumentMap {
@@ -188,14 +145,8 @@ interface DocumentMap {
 
 interface DocumentMapElement {
   title: string,
-  requiredTypes: DocumentTypes,
-  actualTypes: DocumentTypes,
+  requiredTypes: PaperDocumentTypes,
+  actualTypes: PaperDocumentTypes,
   lastId: number,
   actionPending: boolean
-}
-
-interface DocumentTypes {
-  generated?: boolean,
-  signed?: boolean,
-  copy?: boolean
 }
