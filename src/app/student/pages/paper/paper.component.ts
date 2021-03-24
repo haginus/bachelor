@@ -24,6 +24,8 @@ export class StudentPaperComponent implements OnInit {
   isWaitingForDocumentGeneration = false;
 
   documentMap: DocumentMap = {}
+  requiredDocuments: PaperRequiredDocument[] = []
+
 
   private _generateDocumentMap() {
     const documents = this.paper.documents;
@@ -69,11 +71,12 @@ export class StudentPaperComponent implements OnInit {
         this.isWaitingForDocumentGeneration = true;
         let subscription = this.student.setExtraData(data).pipe(
           switchMap(result => {
-            if(result)
+            if(result) {
               return combineLatest(this.student.getPaper(), this.student.getPaperRequiredDocuments());
-            return of([null, null]);
+            }
+            return combineLatest(of(null), of([]));
           })
-        ).subscribe(([paper, requiredDocuments]) => {
+        ).subscribe( ([paper, requiredDocuments ]) => {
           if(paper) {
             this.studentExtraData = data;
             this.paper = paper;
@@ -135,8 +138,6 @@ export class StudentPaperComponent implements OnInit {
       }
     })
   }
-
-  requiredDocuments: PaperRequiredDocument[] = []
 }
 
 interface DocumentMap {
