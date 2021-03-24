@@ -27,9 +27,9 @@ export class LoginComponent implements OnInit {
     const password = this.loginForm.get('password')?.value;
     this.loading = true;
     this.auth.signInWithEmailAndPassword(email, password).subscribe(res => {
-      this.loading = false;
       if(res.error) {
         this.handleError(res.error);
+        this.loading = false;
       } else {
         this.router.navigate([res.user.type]);
       }
