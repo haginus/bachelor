@@ -172,6 +172,9 @@ export interface UserData {
     domainId?: 1,
     group: string,
     domain: Domain,
+    specialization: DomainSpecialization,
+    promotion: string,
+    identificationCode: string,
     paper: Paper
   }
 }
@@ -188,6 +191,11 @@ export interface Domain {
   type: "bachelor" | "master",
   studentNumber?: number,
   offerNumber?: number
+}
+
+export interface DomainSpecialization {
+  id: number,
+  name: string
 }
 
 export interface Paper {
