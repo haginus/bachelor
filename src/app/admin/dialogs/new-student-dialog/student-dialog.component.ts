@@ -26,16 +26,24 @@ export class StudentDialogComponent implements OnInit {
     this.domainSubscrition = this.admin.getDomains().subscribe(domains => {
       this.loadingDomains = false;
       this.domains = domains;
-      this.studentForm.get('domainId').enable();
+      if(this.data.mode != 'view') {
+        this.studentForm.get('domainId').enable();
+      }
     });
+    if(this.data.mode == 'view') {
+      this.studentForm.disable();
+    }
   }
 
   studentForm = new FormGroup({
     'firstName': new FormControl(this.data.data?.firstName, [Validators.required]),
     'lastName': new FormControl(this.data.data?.lastName, [Validators.required]),
     'CNP': new FormControl(this.data.data?.CNP, [Validators.required, Validators.minLength(13), Validators.maxLength(13)]),
+    'identificationCode': new FormControl(this.data.data?.student?.identificationCode, [Validators.required]),
     'email': new FormControl({ value: this.data.data?.email, disabled: true }, [Validators.email, Validators.required]),
     'domainId': new FormControl({ value: this.data.data?.student?.domainId, disabled: true }, [Validators.required]),
+    //'domainSpecializationId': new FormControl({ value: this.data.data?.student?.domainId, disabled: true }, [Validators.required]),
+    'promotion': new FormControl(this.data.data?.student?.promotion, [Validators.required]),
     'group': new FormControl(this.data.data?.student?.group, [Validators.required]),
   });
 
@@ -46,18 +54,20 @@ export class StudentDialogComponent implements OnInit {
     const email = this.studentForm.get("email").value;
     const domainId = this.studentForm.get("domainId").value;
     const group = this.studentForm.get("group").value;
+    const identificationCode = this.studentForm.get("identificationCode").value;
+    const promotion = this.studentForm.get("promotion").value;
 
-    return { firstName, lastName, CNP, email, group, domainId };
+    return { firstName, lastName, CNP, email, group, domainId, identificationCode, promotion };
   }
   addStudent() {
-    const { firstName, lastName, CNP, email, group, domainId } = this.getControlValues();
-    return this.admin.addStudent(firstName, lastName, CNP, email, group, domainId);
+    const { firstName, lastName, CNP, email, group, domainId, identificationCode, promotion } = this.getControlValues();
+    return this.admin.addStudent(firstName, lastName, CNP, email, group, domainId, identificationCode, promotion);
   }
 
   editStudent() {
-    const { firstName, lastName, CNP, email, group, domainId } = this.getControlValues();
+    const { firstName, lastName, CNP, group, domainId, identificationCode, promotion } = this.getControlValues();
     const id = this.data.data.id;
-    return this.admin.editStudent(id, firstName, lastName, CNP, group, domainId);
+    return this.admin.editStudent(id, firstName, lastName, CNP, group, domainId, identificationCode, promotion);
   }
 
   ngOnDestroy(): void {

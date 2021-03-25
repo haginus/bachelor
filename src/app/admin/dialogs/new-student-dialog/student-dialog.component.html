@@ -1,74 +1,55 @@
 <h2 mat-dialog-title *ngIf="data.mode == 'create'">Adăugați student</h2>
 <h2 mat-dialog-title *ngIf="data.mode == 'edit'">Editați student</h2>
 <h2 mat-dialog-title *ngIf="data.mode == 'view'">Vizualizare student</h2>
-<mat-dialog-content class="mat-typography" *ngIf="data.mode == 'edit' || data.mode == 'create'">
+<mat-dialog-content class="mat-typography">
     <form [formGroup]="studentForm">
-        <mat-form-field appearance="outline">
-            <mat-label>Nume</mat-label>
-            <input matInput type="text" formControlName="lastName">
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Prenume</mat-label>
-            <input matInput type="text" formControlName="firstName">
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>CNP</mat-label>
-            <input matInput type="text" formControlName="CNP">
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>E-mail</mat-label>
-            <input matInput type="email" formControlName="email">
-            <mat-hint *ngIf="data.mode == 'edit'">E-mailul nu poate fi modificat.</mat-hint>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Grupă</mat-label>
-            <input matInput type="text" formControlName="group">
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Domeniu</mat-label>
-            <mat-select formControlName="domainId">
-                <mat-option *ngFor="let domain of domains" [value]="domain.id">
-                    <span>{{domain.name}}</span>
-                    <span *ngIf="domain.type == 'bachelor'"> (Licență)</span>
-                    <span *ngIf="domain.type == 'master'"> (Master)</span>
-                </mat-option>
-            </mat-select>
-            <mat-spinner class="select-spinner" [diameter]="24" *ngIf="loadingDomains"></mat-spinner>
-        </mat-form-field>
+        <div fxLayout="row grid" fxLayoutGap="10px grid">
+            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                <mat-label>Nume</mat-label>
+                <input matInput type="text" formControlName="lastName">
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                <mat-label>Prenume</mat-label>
+                <input matInput type="text" formControlName="firstName">
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                <mat-label>CNP</mat-label>
+                <input matInput type="text" formControlName="CNP">
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                <mat-label>Număr matricol</mat-label>
+                <input matInput type="text" formControlName="identificationCode">
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="100">
+                <mat-label>E-mail</mat-label>
+                <input matInput type="email" formControlName="email">
+                <mat-hint *ngIf="data.mode == 'edit'">E-mailul nu poate fi modificat.</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                <mat-label>Grupă</mat-label>
+                <input matInput type="text" formControlName="group">
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                <mat-label>Promoție</mat-label>
+                <input matInput type="text" formControlName="promotion">
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50" *ngIf="data.mode != 'view'">
+                <mat-label>Domeniu</mat-label>
+                <mat-select formControlName="domainId">
+                    <mat-option *ngFor="let domain of domains" [value]="domain.id">
+                        <span>{{domain.name}}</span>
+                        <span *ngIf="domain.type == 'bachelor'"> (Licență)</span>
+                        <span *ngIf="domain.type == 'master'"> (Master)</span>
+                    </mat-option>
+                </mat-select>
+                <mat-spinner class="select-spinner" [diameter]="24" *ngIf="loadingDomains"></mat-spinner>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50" *ngIf="data.mode == 'view'">
+                <mat-label>Domeniu</mat-label>
+                <input matInput disabled type="text" [value]="data.data.student.domain.name">
+            </mat-form-field>
+        </div>
     </form>
-</mat-dialog-content>
-<mat-dialog-content *ngIf="data.mode =='view'">
-    <mat-list>
-        <div mat-subheader>Date personale</div>
-        <mat-list-item>
-            <div mat-line>Nume</div>
-            <div mat-line>{{data.data.lastName}}</div>
-        </mat-list-item>
-        <mat-list-item>
-            <div mat-line>Prenume</div>
-            <div mat-line>{{data.data.firstName}}</div>
-        </mat-list-item>
-        <mat-list-item>
-            <div mat-line>CNP</div>
-            <div mat-line>{{data.data.CNP}}</div>
-        </mat-list-item>
-        <div mat-subheader>Formațiune de studiu</div>
-        <mat-list-item>
-            <div mat-line>Program de studiu</div>
-            <div mat-line>
-                <span *ngIf="data.data?.student?.domain?.type == 'bachelor'">Licență</span>
-                <span *ngIf="data.data?.student?.domain?.type == 'master'">Master</span>
-            </div>
-        </mat-list-item>
-        <mat-list-item>
-            <div mat-line>Domeniu</div>
-            <div mat-line>{{data.data?.student?.domain?.name}}</div>
-        </mat-list-item>
-        <mat-list-item>
-            <div mat-line>Grupa</div>
-            <div mat-line>{{data.data?.student?.group}}</div>
-        </mat-list-item>
-    </mat-list>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close *ngIf="data.mode != 'view'">Anulați</button>

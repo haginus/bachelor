@@ -27,18 +27,18 @@ export class AdminService {
   }
 
   addStudent(firstName: string, lastName: string, CNP: string, email: string,
-    group: string, domainId: number): Observable<UserData | null> {
+    group: string, domainId: number, identificationCode: string, promotion: string): Observable<UserData | null> {
     const url = `${environment.apiUrl}/admin/students/add`;
-    const body = { firstName, lastName, CNP, email, group, domainId };
+    const body = { firstName, lastName, CNP, email, group, domainId, identificationCode, promotion };
     return this.http.post<UserData>(url, body, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("addStudent", null))
     );
   }
 
   editStudent(id: number, firstName: string, lastName: string, CNP: string,
-    group: string, domainId: number): Observable<UserData | null> {
+    group: string, domainId: number, identificationCode: string, promotion: string): Observable<UserData | null> {
     const url = `${environment.apiUrl}/admin/students/edit`;
-    const body = { id, firstName, lastName, CNP, group, domainId };
+    const body = { id, firstName, lastName, CNP, group, domainId, identificationCode, promotion };
     return this.http.post<UserData>(url, body, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("editStudent", null))
     );
