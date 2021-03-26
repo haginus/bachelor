@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AdminService } from 'src/app/services/admin.service';
@@ -20,31 +20,54 @@ export class AdminDomainDialogComponent implements OnInit {
   editDomainForm = new FormGroup({
     "name": new FormControl(this.data.domain?.name, [Validators.required]),
     "type": new FormControl(this.data.domain?.type, [Validators.required]),
+    "specializations": new FormArray([])
   });
 
-  deleteDomainForm = new FormGroup({
-    "moveStudentsTo": new FormControl(null, [Validators.required])
-  })
-
-  remainingDomains: Domain[];
+  get formSpecializations() { return this.editDomainForm.get("specializations") as FormArray }
 
   ngOnInit(): void {
-    if(this.data.mode == 'delete') { // exclude the deleted in the future domain from the list to transfer students
-      this.remainingDomains = this.data.domains.filter(domain => domain.id != this.data.domain.id)
+    if(this.data.mode == 'edit') {
+      let specializations = this.data.domain.specializations;
+
+      specializations.forEach(specialization => {
+        this.formSpecializations.push(new FormGroup({
+          "id": new FormControl(specialization.id),
+          "name": new FormControl(specialization.name, [Validators.required]),
+          "studentNumber": new FormControl(specialization.studentNumber)
+        }));
+      });
     }
   }
 
-  private getDomainFormValue() {
-    const name = this.editDomainForm.get("name").value;
-    const type = this.editDomainForm.get("type").value;
-    return { name, type }
+  addSpecialization() {
+    let group = new FormGroup({
+      "id": new FormControl(null),
+      "name": new FormControl('', [Validators.required]),
+      "studentNumber": new FormControl(0)
+    });
+    this.formSpecializations.push(group);
+  }
+
+  removeSpecialization(index: number) {
+    this.formSpecializations.removeAt(index);
+  }
+
+  private getDomainFormValue(): Domain {
+    let domain = this.editDomainForm.value as Domain;
+    domain.specializations = domain.specializations.map(spec => { // remove id attribute
+      let newSpec: any = { name: spec.name };
+      if(spec.id != null) {
+        newSpec.id = spec.id;
+      }
+      return newSpec;
+    });
+    return domain;
   }
 
   addDomain() {
-    const { name, type } = this.getDomainFormValue();
-    
+    let domain = this.getDomainFormValue();
     this.isLoading = true;
-    this.admin.addDomain(name, type).subscribe(res => {
+    this.admin.addDomain(domain).subscribe(res => {
       if(res) {
         this.snackbar.open("Domeniu salvat.");
         this.dialogRef.close(res);
@@ -56,11 +79,11 @@ export class AdminDomainDialogComponent implements OnInit {
   }
 
   editDomain() {
-    const { name, type } = this.getDomainFormValue();
-    const id = this.data.domain.id;
+    let domain = this.getDomainFormValue();
+    domain.id = this.data.domain.id;
 
     this.isLoading = true;
-    this.admin.editDomain(id, name, type).subscribe(res => {
+    this.admin.editDomain(domain).subscribe(res => {
       if(res) {
         this.snackbar.open("Domeniu salvat.");
         this.dialogRef.close(res);
@@ -73,10 +96,9 @@ export class AdminDomainDialogComponent implements OnInit {
 
   deleteDomain() {
     const id = this.data.domain.id;
-    const moveStudentsTo = this.deleteDomainForm.get("moveStudentsTo").value;
     
     this.isLoading = true;
-    this.admin.deleteDomain(id, moveStudentsTo).subscribe(res => {
+    this.admin.deleteDomain(id).subscribe(res => {
       if(res) {
         this.snackbar.open("Domeniu șters.");
         this.dialogRef.close(res);
@@ -91,6 +113,5 @@ export class AdminDomainDialogComponent implements OnInit {
 
 export interface DomainDialogData {
   mode: 'create' | 'edit' | 'delete';
-  domains?: Domain[]
   domain?: Domain
 }

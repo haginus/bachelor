@@ -190,12 +190,14 @@ export interface Domain {
   name: string,
   type: "bachelor" | "master",
   studentNumber?: number,
-  offerNumber?: number
+  offerNumber?: number,
+  specializations: DomainSpecialization[]
 }
 
 export interface DomainSpecialization {
   id: number,
-  name: string
+  name: string,
+  studentNumber?: number
 }
 
 export interface Paper {

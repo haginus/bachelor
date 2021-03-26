@@ -17,23 +17,35 @@
                 <mat-option value="master">Master</mat-option>
             </mat-select>
         </mat-form-field>
+        <div formArrayName="specializations">
+            <h3>Specializări</h3>
+            <div *ngFor="let specialization of formSpecializations.controls; let i = index">
+                <div [formGroupName]="i" class="specialization-row">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Nume specializare</mat-label>
+                        <input matInput type="text" formControlName="name">
+                    </mat-form-field>
+                    <div [matTooltip]="specialization.get('studentNumber')?.value > 0 ? 'Mutați întâi studenții la altă specializare' : 'Ștergeți specializarea'">
+                        <button mat-icon-button (click)="removeSpecialization(i)"
+                            [disabled]="specialization.get('studentNumber')?.value > 0">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div fxLayout="column" fxLayoutAlign="center center">
+                <button mat-raised-button (click)="addSpecialization()">Adăugați o specializare</button>
+            </div>
+        </div>
     </form>
 </mat-dialog-content>
 <mat-dialog-content class="mat-typography" *ngIf="data.mode == 'delete'">
-    <p>Este nevoie să transferați studenții din acest domeniu (dacă există) către alt domeniu.</p>
-    <form [formGroup]="deleteDomainForm">
-        <mat-form-field appearance="outline">
-            <mat-label>Mutați studenții în</mat-label>
-            <mat-select formControlName="moveStudentsTo">
-                <mat-option *ngFor="let domain of remainingDomains" [value]="domain.id">{{ domain.name }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </form>
+    <p>Sunteți sigur că doriți să ștergeți acest domeniu?</p>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Anulați</button>
     <button mat-button (click)="addDomain()" *ngIf="data.mode == 'create'" [disabled]="editDomainForm.invalid">Adăugați</button>
     <button mat-button (click)="editDomain()" *ngIf="data.mode == 'edit'" [disabled]="editDomainForm.invalid">Salvați</button>
-    <button mat-button (click)="deleteDomain()" *ngIf="data.mode == 'delete'" [disabled]="deleteDomainForm.invalid">Ștergeți</button>
+    <button mat-button (click)="deleteDomain()" *ngIf="data.mode == 'delete'">Ștergeți</button>
 </mat-dialog-actions>

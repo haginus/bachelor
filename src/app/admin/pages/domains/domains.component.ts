@@ -69,8 +69,7 @@ export class AdminDomainsComponent implements OnInit, OnDestroy {
       if(domain) {
         const idx = this.data.findIndex(oldDomain => oldDomain.id == domain.id);
         if(idx >= 0) {
-          this.data[idx].name = domain.name;
-          this.data[idx].type = domain.type;
+          this.data[idx] = domain;
           this.table.renderRows();
         }
       }
@@ -81,8 +80,7 @@ export class AdminDomainsComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(AdminDomainDialogComponent, {
       data: {
         mode: 'delete',
-        domain: this.data.find(domain => domain.id == id),
-        domains: this.data
+        domain: this.data.find(domain => domain.id == id)
       }
     });
 
