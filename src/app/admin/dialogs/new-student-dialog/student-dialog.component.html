@@ -44,9 +44,22 @@
                 </mat-select>
                 <mat-spinner class="select-spinner" [diameter]="24" *ngIf="loadingDomains"></mat-spinner>
             </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50" *ngIf="data.mode != 'view'">
+                <mat-label>Specializare</mat-label>
+                <mat-select formControlName="specializationId">
+                    <mat-option *ngFor="let specialization of chosenDomain?.specializations" [value]="specialization.id">
+                        <span>{{specialization.name}}</span>
+                    </mat-option>
+                </mat-select>
+                <mat-spinner class="select-spinner" [diameter]="24" *ngIf="loadingDomains"></mat-spinner>
+            </mat-form-field>
             <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50" *ngIf="data.mode == 'view'">
                 <mat-label>Domeniu</mat-label>
                 <input matInput disabled type="text" [value]="data.data.student.domain.name">
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50" *ngIf="data.mode == 'view'">
+                <mat-label>Specializare</mat-label>
+                <input matInput disabled type="text" [value]="data.data.student.specialization?.name">
             </mat-form-field>
         </div>
     </form>

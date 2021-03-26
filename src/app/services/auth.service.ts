@@ -168,8 +168,9 @@ export interface UserData {
   type: "student" | "teacher" | "admin",
   student?: {
     id?: number,
-    userId?: 1,
-    domainId?: 1,
+    userId?: number,
+    domainId?: number,
+    specializationId?: number,
     group: string,
     domain: Domain,
     specialization: DomainSpecialization,

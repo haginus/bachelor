@@ -18,6 +18,7 @@ export class StudentDialogComponent implements OnInit {
   domainSubscrition: Subscription;
   loadingDomains: boolean = true;;
   domains: Domain[];
+  chosenDomain: Domain;
 
   ngOnInit(): void {
     if(this.data.mode == 'create') {
@@ -26,8 +27,14 @@ export class StudentDialogComponent implements OnInit {
     this.domainSubscrition = this.admin.getDomains().subscribe(domains => {
       this.loadingDomains = false;
       this.domains = domains;
-      if(this.data.mode != 'view') {
+      if(this.data.mode != 'view') { // create or edit
         this.studentForm.get('domainId').enable();
+        this.studentForm.get('specializationId').enable();
+        this.chosenDomain = domains.find(domain => domain.id == this.data.data?.student.domain.id);
+        this.studentForm.get('domainId').valueChanges.subscribe(domainId => { // 
+          this.chosenDomain = domains.find(domain => domain.id == domainId);
+          
+        })
       }
     });
     if(this.data.mode == 'view') {
@@ -42,7 +49,7 @@ export class StudentDialogComponent implements OnInit {
     'identificationCode': new FormControl(this.data.data?.student?.identificationCode, [Validators.required]),
     'email': new FormControl({ value: this.data.data?.email, disabled: true }, [Validators.email, Validators.required]),
     'domainId': new FormControl({ value: this.data.data?.student?.domainId, disabled: true }, [Validators.required]),
-    //'domainSpecializationId': new FormControl({ value: this.data.data?.student?.domainId, disabled: true }, [Validators.required]),
+    'specializationId': new FormControl({ value: this.data.data?.student?.specializationId, disabled: true }, [Validators.required]),
     'promotion': new FormControl(this.data.data?.student?.promotion, [Validators.required]),
     'group': new FormControl(this.data.data?.student?.group, [Validators.required]),
   });
@@ -53,21 +60,22 @@ export class StudentDialogComponent implements OnInit {
     const CNP = this.studentForm.get("CNP").value;
     const email = this.studentForm.get("email").value;
     const domainId = this.studentForm.get("domainId").value;
+    const specializationId = this.studentForm.get("specializationId").value;
     const group = this.studentForm.get("group").value;
     const identificationCode = this.studentForm.get("identificationCode").value;
     const promotion = this.studentForm.get("promotion").value;
 
-    return { firstName, lastName, CNP, email, group, domainId, identificationCode, promotion };
+    return { firstName, lastName, CNP, email, group, domainId, specializationId, identificationCode, promotion };
   }
   addStudent() {
-    const { firstName, lastName, CNP, email, group, domainId, identificationCode, promotion } = this.getControlValues();
-    return this.admin.addStudent(firstName, lastName, CNP, email, group, domainId, identificationCode, promotion);
+    const { firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion } = this.getControlValues();
+    return this.admin.addStudent(firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion);
   }
 
   editStudent() {
-    const { firstName, lastName, CNP, group, domainId, identificationCode, promotion } = this.getControlValues();
+    const { firstName, lastName, CNP, group, specializationId, identificationCode, promotion } = this.getControlValues();
     const id = this.data.data.id;
-    return this.admin.editStudent(id, firstName, lastName, CNP, group, domainId, identificationCode, promotion);
+    return this.admin.editStudent(id, firstName, lastName, CNP, group, specializationId, identificationCode, promotion);
   }
 
   ngOnDestroy(): void {
