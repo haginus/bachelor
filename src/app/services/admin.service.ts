@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { AuthService, Domain, UserData } from './auth.service';
+import { AuthService, Domain, SessionSettings, UserData } from './auth.service';
 import { Topic } from './topics.service';
 
 @Injectable({
@@ -11,7 +12,7 @@ import { Topic } from './topics.service';
 })
 export class AdminService {
 
-  constructor(private http: HttpClient, private auth: AuthService) { }
+  constructor(private http: HttpClient, private auth: AuthService, private snackbar: MatSnackBar) { }
 
   // Students
 
@@ -164,8 +165,21 @@ export class AdminService {
     );
   }
 
+  changeSessionSettings(settings: SessionSettings): Observable<SessionSettings> {
+    const url = `${environment.apiUrl}/admin/session`;
+    return this.http.post<any>(url, settings, this.auth.getPrivateHeaders()).pipe(
+      map(_ => {
+        // Update the session settings in the state of the app
+        this.auth.sessionSettingsSource.next(settings);
+        return settings;
+      }),
+      catchError(this.handleError<SessionSettings>('changeSessionSettings', null))
+    );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
+      this.snackbar.open("A apărut o eroare.");
       return of(result as T);
     };
   }

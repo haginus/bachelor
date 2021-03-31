@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer, MatDrawerMode } from '@angular/material/sidenav';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { combineLatest } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators'
-import { AuthService, UserData } from './services/auth.service';
+import { AuthService, SessionSettings, UserData } from './services/auth.service';
 
 
 const SideWidth = 800;
@@ -22,6 +23,7 @@ export class AppComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute, private auth: AuthService) { }
 
   user : UserData | undefined = undefined;
+  sessionSettings: SessionSettings;
   loading = true;
 
   @ViewChild('drawer') drawer: MatDrawer;
@@ -51,9 +53,10 @@ export class AppComponent implements OnInit {
       }
     })
 
-    this.auth.userData.subscribe(user => {
+    combineLatest([this.auth.userData, this.auth.sessionSettings]).subscribe(([user, settings]) => {
       this.loading = false;
-      this.user = user
+      this.user = user;
+      this.sessionSettings = settings;
     });
   }
 

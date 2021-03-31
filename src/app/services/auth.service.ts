@@ -19,6 +19,10 @@ export class AuthService {
     } else {
       this.userDataSource.next(undefined);
     }
+    let sub = this.getSessionSettings().subscribe(settings => {
+      this.sessionSettingsSource.next(settings);
+      sub.unsubscribe();
+    })
   }
 
   public loginState = new BehaviorSubject(this.isSignedIn());
@@ -87,6 +91,18 @@ export class AuthService {
     const url = `${environment.apiUrl}/user/info`;
     return this.http.get<UserData>(url, this.getPrivateHeaders()).pipe(
       catchError(this.handleUserError('getUserData'))
+    );
+  }
+
+  sessionSettingsSource: ReplaySubject<SessionSettings> = new ReplaySubject<SessionSettings>(1);
+  sessionSettings = this.sessionSettingsSource.asObservable();
+
+  getSessionSettings(): Observable<SessionSettings> {
+    const url = `${environment.apiUrl}/auth/session`;
+    return this.http.get<SessionSettings>(url).pipe(
+      catchError((err, caught) => { 
+        return of(null);
+      })
     );
   }
 
@@ -217,3 +233,11 @@ export interface PaperDocument {
   type: 'generated' | 'signed' | 'copy'
 }
 
+export interface SessionSettings {
+  sessionName: string, // name of the session
+  currentPromotion: string,
+  applyStartDate: string, // YYYY-MM-DD
+  applyEndDate: string,
+  fileSubmissionStartDate: string,
+  fileSubmissionEndDate: string,
+}
