@@ -31,9 +31,9 @@ export class StudentDialogComponent implements OnInit {
         this.studentForm.get('domainId').enable();
         this.studentForm.get('specializationId').enable();
         this.chosenDomain = domains.find(domain => domain.id == this.data.data?.student.domain.id);
-        this.studentForm.get('domainId').valueChanges.subscribe(domainId => { // 
+        this.studentForm.get('domainId').valueChanges.subscribe(domainId => { 
           this.chosenDomain = domains.find(domain => domain.id == domainId);
-          
+          this.specializationId.reset();
         })
       }
     });
@@ -52,7 +52,12 @@ export class StudentDialogComponent implements OnInit {
     'specializationId': new FormControl({ value: this.data.data?.student?.specializationId, disabled: true }, [Validators.required]),
     'promotion': new FormControl(this.data.data?.student?.promotion, [Validators.required]),
     'group': new FormControl(this.data.data?.student?.group, [Validators.required]),
+    'matriculationYear': new FormControl(this.data.data?.student?.matriculationYear, [Validators.required]),
+    'studyForm': new FormControl(this.data.data?.student?.studyForm, [Validators.required]),
+    'fundingForm': new FormControl(this.data.data?.student?.fundingForm, [Validators.required])
   });
+
+  get specializationId() { return this.studentForm.get("specializationId") };
 
   private getControlValues() {
     const firstName = this.studentForm.get("firstName").value;
@@ -64,18 +69,26 @@ export class StudentDialogComponent implements OnInit {
     const group = this.studentForm.get("group").value;
     const identificationCode = this.studentForm.get("identificationCode").value;
     const promotion = this.studentForm.get("promotion").value;
+    const matriculationYear = this.studentForm.get("matriculationYear").value;
+    const studyForm = this.studentForm.get("studyForm").value;
+    const fundingForm = this.studentForm.get("fundingForm").value;
 
-    return { firstName, lastName, CNP, email, group, domainId, specializationId, identificationCode, promotion };
+    return { firstName, lastName, CNP, email, group, domainId, specializationId, identificationCode, promotion,
+    matriculationYear, studyForm, fundingForm };
   }
   addStudent() {
-    const { firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion } = this.getControlValues();
-    return this.admin.addStudent(firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion);
+    const { firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion,
+      studyForm, fundingForm, matriculationYear, } = this.getControlValues();
+    return this.admin.addStudent(firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion,
+      studyForm, fundingForm, matriculationYear);
   }
 
   editStudent() {
-    const { firstName, lastName, CNP, group, specializationId, identificationCode, promotion } = this.getControlValues();
+    const { firstName, lastName, CNP, group, specializationId, identificationCode, promotion,
+      studyForm, fundingForm, matriculationYear} = this.getControlValues();
     const id = this.data.data.id;
-    return this.admin.editStudent(id, firstName, lastName, CNP, group, specializationId, identificationCode, promotion);
+    return this.admin.editStudent(id, firstName, lastName, CNP, group, specializationId, identificationCode, promotion,
+      studyForm, fundingForm, matriculationYear);
   }
 
   ngOnDestroy(): void {

@@ -28,18 +28,22 @@ export class AdminService {
   }
 
   addStudent(firstName: string, lastName: string, CNP: string, email: string,
-    group: string, specializationId: number, identificationCode: string, promotion: string): Observable<UserData | null> {
+    group: string, specializationId: number, identificationCode: string, promotion: string,
+    studyForm: string, fundingForm: string, matriculationYear: string): Observable<UserData | null> {
     const url = `${environment.apiUrl}/admin/students/add`;
-    const body = { firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion };
+    const body = { firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion,
+      studyForm, fundingForm, matriculationYear };
     return this.http.post<UserData>(url, body, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("addStudent", null))
     );
   }
 
   editStudent(id: number, firstName: string, lastName: string, CNP: string,
-    group: string, specializationId: number, identificationCode: string, promotion: string): Observable<UserData | null> {
+    group: string, specializationId: number, identificationCode: string, promotion: string,
+    studyForm: string, fundingForm: string, matriculationYear: string): Observable<UserData | null> {
     const url = `${environment.apiUrl}/admin/students/edit`;
-    const body = { id, firstName, lastName, CNP, group, specializationId, identificationCode, promotion };
+    const body = { id, firstName, lastName, CNP, group, specializationId, identificationCode, promotion,
+      studyForm, fundingForm, matriculationYear };
     return this.http.post<UserData>(url, body, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("editStudent", null))
     );

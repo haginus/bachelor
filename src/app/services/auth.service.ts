@@ -191,7 +191,10 @@ export interface UserData {
     domain: Domain,
     specialization: DomainSpecialization,
     promotion: string,
-    identificationCode: string,
+    identificationCode: string, // cod matricol
+    studyForm: 'if' | 'id' | 'ifr',
+    matriculationYear: string,
+    fundingForm: 'budget' | 'tax',
     paper: Paper
   }
 }
