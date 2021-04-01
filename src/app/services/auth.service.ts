@@ -214,6 +214,7 @@ export interface Domain {
 export interface DomainSpecialization {
   id: number,
   name: string,
+  studyYears: number,
   studentNumber?: number
 }
 

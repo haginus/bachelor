@@ -3,7 +3,7 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AdminService } from 'src/app/services/admin.service';
-import { Domain } from 'src/app/services/auth.service';
+import { Domain, DomainSpecialization } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-domain-dialog',
@@ -30,20 +30,17 @@ export class AdminDomainDialogComponent implements OnInit {
       let specializations = this.data.domain.specializations;
 
       specializations.forEach(specialization => {
-        this.formSpecializations.push(new FormGroup({
-          "id": new FormControl(specialization.id),
-          "name": new FormControl(specialization.name, [Validators.required]),
-          "studentNumber": new FormControl(specialization.studentNumber)
-        }));
+        this.addSpecialization(specialization);
       });
     }
   }
 
-  addSpecialization() {
+  addSpecialization(specialization?: DomainSpecialization) {
     let group = new FormGroup({
-      "id": new FormControl(null),
-      "name": new FormControl('', [Validators.required]),
-      "studentNumber": new FormControl(0)
+      "id": new FormControl(specialization?.id),
+      "name": new FormControl(specialization?.name, [Validators.required]),
+      "studyYears": new FormControl(specialization?.studyYears, [Validators.required, Validators.min(1)]),
+      "studentNumber": new FormControl((specialization ? specialization.studentNumber : 0))
     });
     this.formSpecializations.push(group);
   }
@@ -55,7 +52,7 @@ export class AdminDomainDialogComponent implements OnInit {
   private getDomainFormValue(): Domain {
     let domain = this.editDomainForm.value as Domain;
     domain.specializations = domain.specializations.map(spec => { // remove id attribute
-      let newSpec: any = { name: spec.name };
+      let newSpec: any = { name: spec.name, studyYears: spec.studyYears };
       if(spec.id != null) {
         newSpec.id = spec.id;
       }
