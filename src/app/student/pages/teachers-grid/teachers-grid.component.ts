@@ -3,7 +3,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { debounceTime, switchMap } from 'rxjs/operators';
+import { debounceTime, map, switchMap } from 'rxjs/operators';
+import { AuthService } from 'src/app/services/auth.service';
 import { GetTeacherOffersFilters, StudentService, TeacherOffers } from 'src/app/services/student.service';
 import { Topic, TopicsService } from 'src/app/services/topics.service';
 import { OfferApplicationSenderComponent } from '../../dialogs/offer-application-sender/offer-application-sender.component';
@@ -15,8 +16,8 @@ import { OfferApplicationSenderComponent } from '../../dialogs/offer-application
 })
 export class StundentTeachersGridComponent implements OnInit, OnDestroy {
 
-  constructor(private topicService: TopicsService, private studentService: StudentService, private dialog: MatDialog,
-    private route: ActivatedRoute) { }
+  constructor(private topicService: TopicsService, private studentService: StudentService, private auth: AuthService,
+    private dialog: MatDialog, private route: ActivatedRoute) { }
 
   mode: 'all' | 'suggested';
   topics: Topic[] = []
@@ -24,6 +25,8 @@ export class StundentTeachersGridComponent implements OnInit, OnDestroy {
 
   teachers: TeacherOffers[] = []
   teacherSubscription: Subscription;
+
+  canApply: boolean = true; // If application session is in progress
 
   isLoadingTeachers: boolean = true;
 
@@ -49,6 +52,15 @@ export class StundentTeachersGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.auth.sessionSettings.pipe(
+      map(settings => {
+        const today = new Date().getTime();
+        const start = new Date(settings.fileSubmissionStartDate).getTime();
+        const end = new Date(settings.fileSubmissionEndDate).getTime();
+        return start <= today && today <= end;
+      })
+    ).subscribe(result => this.canApply = result);
+
     this.topicSubscription = this.topicService.getTopics().subscribe(topics => {
       this.topics = topics;
       this.setAllTopics();

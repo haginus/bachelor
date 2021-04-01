@@ -98,3 +98,27 @@ mat-icon {
     font-family: 'Material Icons Outlined'!important;
 }
 
+.tip-card {
+    display: flex;
+    margin: 0 -24px;
+    padding: 0 16px;
+    height: 64px;
+    align-items: center;
+    background: #78909c;
+
+    &.warning {
+        background: #ff9800;
+    }
+
+    &.success {
+        background: #4caf50;
+    }
+
+    .tip-icon {
+        margin-right: 16px;
+    }
+
+    .tip-card-content {
+        flex: 1;
+    }
+}
