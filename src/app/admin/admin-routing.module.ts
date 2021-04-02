@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
+import { CommitteesComponent } from './pages/committees/committees.component';
 import { AdminDomainsComponent } from './pages/domains/domains.component';
 import { SessionSettingsComponent } from './pages/session-settings/session-settings.component';
 import { AdminStudentsComponent } from './pages/students/students.component';
@@ -13,7 +14,8 @@ const routes: Routes = [
   { path: 'teachers', component: AdminTeachersComponent },
   { path: 'domains', component: AdminDomainsComponent },
   { path: 'topics', component: AdminTopicsComponent },
-  { path: 'session', component: SessionSettingsComponent, data: { title: 'Setări sesiune de asociere' } }
+  { path: 'session', component: SessionSettingsComponent, data: { title: 'Setări sesiune de asociere' } },
+  { path: 'committees', component: CommitteesComponent, data: { title: 'Comisii' } }
 ];
 
 @NgModule({

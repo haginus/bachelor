@@ -19,7 +19,7 @@ import { SharedModule } from '../shared/shared.module';
 import { AdminTopicsComponent } from './pages/topics/topics.component';
 import { AdminTopicDialogComponent } from './dialogs/topic-dialog/topic-dialog.component';
 import { SessionSettingsComponent } from './pages/session-settings/session-settings.component';
-
+import { CommitteesComponent } from './pages/committees/committees.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +36,8 @@ import { SessionSettingsComponent } from './pages/session-settings/session-setti
     AdminDomainDialogComponent,
     AdminTopicsComponent,
     AdminTopicDialogComponent,
-    SessionSettingsComponent
+    SessionSettingsComponent,
+    CommitteesComponent
   ],
   imports: [
     CommonModule,

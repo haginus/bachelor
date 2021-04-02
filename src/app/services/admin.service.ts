@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { Committee } from '../admin/pages/committees/committees.component';
 import { AuthService, Domain, SessionSettings, UserData } from './auth.service';
 import { Topic } from './topics.service';
 
@@ -168,6 +169,17 @@ export class AdminService {
       catchError(this.handleError<Topic>('editTopic', null))
     );
   }
+
+  // Committees
+
+  getCommittees(): Observable<Committee[]> {
+    const url = `${environment.apiUrl}/admin/committees`;
+    return this.http.get<Committee[]>(url, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError<Committee[]>('getCommittees', []))
+    );
+  }
+
+  // Session Settings 
 
   changeSessionSettings(settings: SessionSettings): Observable<SessionSettings> {
     const url = `${environment.apiUrl}/admin/session`;
