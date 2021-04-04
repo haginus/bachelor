@@ -45,8 +45,47 @@
             "GROUP": "Grupă",
             "MATRICULATION_YEAR": "An de înmatriculare",
             "FUNDING_FORM": "Formă de finanțare",
-            "STUDY_FORM": "Formă de învățământ"
+            "STUDY_FORM": "Formă de învățământ",
+            "EXTRA_DATA": {
+                "BIRTH_LAST_NAME": "Nume de familie la naștere",
+                "CURRENT_LAST_NAME": "Nume de familie actual",
+                "PARENT_INITIAL": "Inițiala părintelui",
+                "FATHER_FIRST_NAME": "Prenume tată",
+                "MOTHER_FIRST_NAME": "Prenume mamă",
+                "DATE_OF_BIRTH": "Data nașterii",
+                "CIVIL_STATE": "Stare civilă",
+                "CIVIL_STATES": {
+                    "NOT_MARRIED": "Necăsătorit",
+                    "MARRIED": "Căsătorit",
+                    "DIVORCED": "Divorțat",
+                    "WIDOW": "Văduv",
+                    "RE_MARRIED": "Recăsătorit"
+                },
+                "CITIZENSHIP": "Cetățenie",
+                "ETHNICITY": "Etnie",
+                "PLACE_OF_BIRTH": "Locul nașterii",
+                "CONTACT_INFO": "Date de contact",
+                "LANDLINE": "Telefon fix",
+                "MOBILE_PHONE": "Telefon mobil",
+                "HOME_ADDRESS": "Adresă de domiciliu",
+                "COUNTRY": "Țară",
+                "COUNTY": "Județ/Sector",
+                "LOCALITY": "Localitate",
+                "STREET": "Stradă",
+                "NUMBER": "Număr",
+                "BUILDING": "Bloc",
+                "STAIR": "Scară",
+                "FLOOR": "Etaj",
+                "APARTMENT": "Apartament"
+            }
         }
+    },
+    "DIALOG_BUTTONS": {
+        "SAVE": "Salvați",
+        "ADD": "Adăugați",
+        "EDIT": "Editați",
+        "DELETE": "Ștergeți",
+        "CANCEL": "Anulați"
     },
     "STUDENT": {
         "DASHBOARD": {
@@ -86,6 +125,30 @@
             "APPLIED": "Aplicat",
             "TAKEN": "Ocupat",
             "NO_RESULTS": "Nu există rezultate."
+        },
+        "PAPER": {
+            "BACHELOR_PAPER": "Lucrare de licență",
+            "MASTER_PAPER": "Lucrare de disertație",
+            "COORDINATING_TEACHER": "Profesor coordonator",
+            "FILL_IN_EXTRA_DATA_MESSAGE": "Pentru a genera documentele de la dosar, este necesar să completați date suplimentare.",
+            "FILL_IN": "Completați",
+            "DOCUMENTS_GENERATED_MESSAGE": "Documente generate.",
+            "CHANGE_DATA": "Modificați datele",
+            "DOCUMENTS_GENERATING_MESSAGE": "Se generează documentele...",
+            "DOCUMENTS_HEADER": "Documente",
+            "MISSING_DOCUMENT": "Document lipsă",
+            "UPLOADED_DOCUMENT": "Document încărcat",
+            "GENERATED_DOCUMENT": "Document generat",
+            "DOCUMENT_NEEDS_SIGNATURE": "Necesită semnătură",
+            "SIGNED_DOCUMENT": "Document semnat",
+            "SIGN_DOCUMENT": "Semnați",
+            "VIEW_DOCUMENT": "Vizualizați",
+            "UPLOAD_DOCUMENT": "Încărcați"
+        },
+        "EXTRA_DATA_EDITOR": {
+            "HEADER": "Completați datele necesare",
+            "FILL_IN_ROMANIAN": "",
+            "PARENT_INITIAL_ERROR": "Prima literă trebuie să fie majusculă, iar a doua minusculă."
         }
     }
 }

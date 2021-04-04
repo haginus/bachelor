@@ -45,8 +45,47 @@
             "GROUP": "Group",
             "MATRICULATION_YEAR": "Matriculation year",
             "FUNDING_FORM": "Funding form",
-            "STUDY_FORM": "Study form"
+            "STUDY_FORM": "Study form",
+            "EXTRA_DATA": {
+                "BIRTH_LAST_NAME": "Birth last name",
+                "CURRENT_LAST_NAME": "Current last name",
+                "PARENT_INITIAL": "Father initial",
+                "FATHER_FIRST_NAME": "Father first name",
+                "MOTHER_FIRST_NAME": "Mother first name",
+                "DATE_OF_BIRTH": "Date of birth",
+                "CIVIL_STATE": "Civil state",
+                "CIVIL_STATES": {
+                    "NOT_MARRIED": "Not married",
+                    "MARRIED": "Married",
+                    "DIVORCED": "Divorced",
+                    "WIDOW": "Widow",
+                    "RE_MARRIED": "Re-married"
+                },
+                "CITIZENSHIP": "Citizenship",
+                "ETHNICITY": "Ethnicity",
+                "PLACE_OF_BIRTH": "Place of birth",
+                "CONTACT_INFO": "Contact info",
+                "LANDLINE": "Landline",
+                "MOBILE_PHONE": "Mobile phone",
+                "HOME_ADDRESS": "Home address",
+                "COUNTRY": "Country",
+                "COUNTY": "County",
+                "LOCALITY": "Locality",
+                "STREET": "Street",
+                "NUMBER": "Number",
+                "BUILDING": "Building",
+                "STAIR": "Stair",
+                "FLOOR": "Floor",
+                "APARTMENT": "Apartment"
+            }
         }
+    },
+    "DIALOG_BUTTONS": {
+        "SAVE": "Save",
+        "ADD": "Add",
+        "EDIT": "Edit",
+        "DELETE": "Delete",
+        "CANCEL": "Cancel"
     },
     "STUDENT": {
         "DASHBOARD": {
@@ -86,6 +125,30 @@
             "APPLIED": "Applied",
             "TAKEN": "Taken",
             "NO_RESULTS": "There are no results."
+        },
+        "PAPER": {
+            "BACHELOR_PAPER": "Bachelor paper",
+            "MASTER_PAPER": "Master paper",
+            "COORDINATING_TEACHER": "Coordinating teacher",
+            "FILL_IN_EXTRA_DATA_MESSAGE": "To generate the needed documents for sign up, it is necessary to fill in additional data.",
+            "FILL_IN": "Fill in",
+            "DOCUMENTS_GENERATED_MESSAGE": "Documents were generated.",
+            "CHANGE_DATA": "Change data",
+            "DOCUMENTS_GENERATING_MESSAGE": "Documents are generating...",
+            "DOCUMENTS_HEADER": "Documents",
+            "MISSING_DOCUMENT": "Missing document",
+            "UPLOADED_DOCUMENT": "Document uploaded",
+            "GENERATED_DOCUMENT": "Document generated",
+            "DOCUMENT_NEEDS_SIGNATURE": "Needs signature",
+            "SIGNED_DOCUMENT": "Document signed",
+            "SIGN_DOCUMENT": "Sign",
+            "VIEW_DOCUMENT": "View",
+            "UPLOAD_DOCUMENT": "Upload"
+        },
+        "EXTRA_DATA_EDITOR": {
+            "HEADER": "Fill in required data",
+            "FILL_IN_ROMANIAN": "Please fill this field in Romanian.",
+            "PARENT_INITIAL_ERROR": "Prima literă trebuie să fie majusculă, iar a doua minusculă."
         }
     }
 }

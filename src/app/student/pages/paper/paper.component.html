@@ -5,13 +5,13 @@
         <div class="paper-header-content">
             <h1 class="paper-title">{{paper.title}}</h1>
             <h3 class="paper-type">
-                <span>Lucrare de </span>
-                <span *ngIf="paper.type == 'bachelor'">licență</span>
-                <span *ngIf="paper.type == 'master'">disertație</span>
-                <span></span>
+                <span *ngIf="paper.type == 'bachelor'">{{ 'STUDENT.PAPER.BACHELOR_PAPER' | translate }}</span>
+                <span *ngIf="paper.type == 'master'">{{ 'STUDENT.PAPER.MASTER_PAPER' | translate }}</span>
             </h3>
             <p class="paper-description">{{ paper.description }}</p>
-            <p class="paper-teacher">Profesor coordonator: {{paper.teacher.firstName}} {{paper.teacher.lastName}}</p>
+            <p class="paper-teacher">
+                {{ 'STUDENT.PAPER.COORDINATING_TEACHER' | translate }}:
+                {{paper.teacher.firstName}} {{paper.teacher.lastName}}</p>
         </div>
         <div class="paper-header-actions">
             <button mat-icon-button>
@@ -24,10 +24,12 @@
     <div class="tip-card warning" *ngIf="studentExtraData == null && !isWaitingForDocumentGeneration">
         <mat-icon class="tip-icon">warning_amber</mat-icon>
         <div class="tip-card-content">
-            Pentru a genera documentele de la dosar, este necesar să completați date suplimentare.
+            {{ 'STUDENT.PAPER.FILL_IN_EXTRA_DATA_MESSAGE' | translate }}
         </div>
         <div class="tip-card-action">
-            <button mat-button (click)="editStudentExtraData()">Completați</button>
+            <button mat-button (click)="editStudentExtraData()">
+                {{ 'STUDENT.PAPER.FILL_IN' | translate }}
+            </button>
         </div>
     </div>
 
@@ -35,23 +37,25 @@
     <div class="tip-card success" *ngIf="studentExtraData && !isWaitingForDocumentGeneration">
         <mat-icon class="tip-icon">done</mat-icon>
         <div class="tip-card-content">
-            Documente generate.
+            {{ 'STUDENT.PAPER.DOCUMENTS_GENERATED_MESSAGE' | translate }}
         </div>
         <div class="tip-card-action">
-            <button mat-button (click)="editStudentExtraData()">Modificați datele</button>
+            <button mat-button (click)="editStudentExtraData()">
+            {{ 'STUDENT.PAPER.CHANGE_DATA' | translate }}
+            </button>
         </div>
     </div>
 
     <!-- TIP CARD - Waiting document generation -->
     <div class="tip-card isGenerating" *ngIf="isWaitingForDocumentGeneration">
         <div class="tip-card-content">
-            Se generează documentele...
+            {{ 'STUDENT.PAPER.DOCUMENTS_GENERATING_MESSAGE' | translate }}
         </div>
         <mat-progress-bar mode="query" color="primary"></mat-progress-bar>
     </div>
 
     <mat-list class="document-list">
-        <div mat-subheader>Documente</div>
+        <div mat-subheader>{{ 'STUDENT.PAPER.DOCUMENTS_HEADER' | translate }}</div>
         <mat-list-item *ngFor="let document of requiredDocuments">
             <span mat-list-icon>
                 <mat-icon *ngIf="!documentMap[document.name].actionPending">description</mat-icon>
@@ -60,20 +64,20 @@
             <div mat-line>{{document.title}}</div>
             <div mat-line>
                 <span *ngIf="documentMap[document.name].requiredTypes.copy">
-                    <span *ngIf="!documentMap[document.name].actualTypes.copy">Document lipsă</span>
-                    <span *ngIf="documentMap[document.name].actualTypes.copy">Document încărcat</span>
+                    <span *ngIf="!documentMap[document.name].actualTypes.copy">{{ 'STUDENT.PAPER.MISSING_DOCUMENT' | translate }}</span>
+                    <span *ngIf="documentMap[document.name].actualTypes.copy">{{ 'STUDENT.PAPER.UPLOADED_DOCUMENT' | translate }}</span>
                 </span>
                 <span *ngIf="documentMap[document.name].requiredTypes.generated">
                     <span *ngIf="!documentMap[document.name].requiredTypes.signed">
-                        <span *ngIf="documentMap[document.name].actualTypes.generated">Document generat</span>
-                        <span *ngIf="!documentMap[document.name].actualTypes.generated">Document lipsă</span>
+                        <span *ngIf="documentMap[document.name].actualTypes.generated">{{ 'STUDENT.PAPER.GENERATED_DOCUMENT' | translate }}</span>
+                        <span *ngIf="!documentMap[document.name].actualTypes.generated">{{ 'STUDENT.PAPER.MISSING_DOCUMENT' | translate }}</span>
                     </span>
                     <span *ngIf="documentMap[document.name].requiredTypes.signed">
                         <span *ngIf="documentMap[document.name].actualTypes.generated">
-                            <span *ngIf="!documentMap[document.name].actualTypes.signed">Necesită semnătură</span>
-                            <span *ngIf="documentMap[document.name].actualTypes.signed">Document semnat</span>
+                            <span *ngIf="!documentMap[document.name].actualTypes.signed">{{ 'STUDENT.PAPER.DOCUMENT_NEEDS_SIGNATURE' | translate }}</span>
+                            <span *ngIf="documentMap[document.name].actualTypes.signed">{{ 'STUDENT.PAPER.SIGNED_DOCUMENT' | translate }}</span>
                         </span>
-                        <span *ngIf="!documentMap[document.name].actualTypes.generated">Document lipsă</span>
+                        <span *ngIf="!documentMap[document.name].actualTypes.generated">{{ 'STUDENT.PAPER.MISSING_DOCUMENT' | translate }}</span>
                     </span>
                 </span>
             </div>
@@ -81,46 +85,32 @@
                 mat-stroked-button
                 *ngIf="documentMap[document.name].requiredTypes.generated && documentMap[document.name].actualTypes.generated && !documentMap[document.name].requiredTypes.signed"
                 (click)="viewDocument(documentMap[document.name])" [disabled]="documentMap[document.name].actionPending">
-                Vizualizați
+                {{ 'STUDENT.PAPER.VIEW_DOCUMENT' | translate }}
             </button>
             <button 
                 mat-stroked-button
                 *ngIf="documentMap[document.name].requiredTypes.generated && documentMap[document.name].actualTypes.generated && documentMap[document.name].requiredTypes.signed && !documentMap[document.name].actualTypes.signed"
                 (click)="openDocumentDialog('sign', document.name, documentMap[document.name].lastId)">
-                Semnați
+                {{ 'STUDENT.PAPER.SIGN_DOCUMENT' | translate }}
             </button>
             <button 
                 mat-stroked-button
                 *ngIf="documentMap[document.name].requiredTypes.signed && documentMap[document.name].actualTypes.signed"
                 (click)="viewDocument(documentMap[document.name])" [disabled]="documentMap[document.name].actionPending">
-                Vizualizați
+                {{ 'STUDENT.PAPER.VIEW_DOCUMENT' | translate }}
             </button>
             <button 
                 mat-stroked-button
                 *ngIf="documentMap[document.name].requiredTypes.copy && !documentMap[document.name].actualTypes.copy"
                 (click)="openDocumentDialog('uploadCopy', document.name)">
-                Încărcați
+                {{ 'STUDENT.PAPER.UPLOAD_DOCUMENT' | translate }}
             </button>
             <button 
                 mat-stroked-button
                 *ngIf="documentMap[document.name].requiredTypes.copy && documentMap[document.name].actualTypes.copy"
                 (click)="viewDocument(documentMap[document.name])" [disabled]="documentMap[document.name].actionPending">
-                Vizualizați
+                {{ 'STUDENT.PAPER.VIEW_DOCUMENT' | translate }}
             </button>
         </mat-list-item>
     </mat-list>
 </mat-card>
-
-<ng-template let-types="types" #docType>
-    <div mat-line>
-        <ng-container *ngIf="types.signed; then signed; else notSigned"></ng-container>
-    </div>
-
-    <ng-template #signed>Tip: Semnat</ng-template>
-    <ng-template #notSigned>
-        <span *ngIf="types.generated">Tip: Generat</span>
-        <span *ngIf="types.copy">Tip: Copie</span>
-        <span *ngIf="!(types.generated || types.copy)">Document lipsă</span>
-    </ng-template>
-
-</ng-template>
