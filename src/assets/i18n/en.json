@@ -24,6 +24,21 @@
             "FILE_SUBMISSION_PERIOD": "File submission period",
             "TURN_IN_DEADLINE": "Paper turn in deadline",
             "FAQ": "Frequently asked questions"
+        },
+        "TEACHERS_GRID": {
+            "FILTER_BY": "Filter by",
+            "TOPICS": "Topics",
+            "SELECT_ALL": "Select all",
+            "REMOVE_SELECTION": "Remove selection",
+            "TEACHER_NAME": "Teacher name",
+            "ALL_TEACHERS": "All teachers",
+            "FREE_TEACHERS": "Suggested teachers",
+            "OFFER": "offer",
+            "OFFERS": "offers",
+            "APPLY": "Apply",
+            "APPLIED": "Applied",
+            "TAKEN": "Taken",
+            "NO_RESULTS": "There are no results."
         }
     }
 }

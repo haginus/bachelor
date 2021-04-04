@@ -24,6 +24,21 @@
             "FILE_SUBMISSION_PERIOD": "Perioadă depunere documente",
             "TURN_IN_DEADLINE": "Termen limită predare lucrare",
             "FAQ": "Întrebări frecvente"
+        },
+        "TEACHERS_GRID": {
+            "FILTER_BY": "Filtrați după",
+            "TOPICS": "Teme propuse",
+            "SELECT_ALL": "Selectați tot",
+            "REMOVE_SELECTION": "Ștergeți selecția",
+            "TEACHER_NAME": "Nume profesor",
+            "ALL_TEACHERS": "Toți profesorii",
+            "FREE_TEACHERS": "Profesorii liberi",
+            "OFFER": "ofertă",
+            "OFFERS": "oferte",
+            "APPLY": "Aplicați",
+            "APPLIED": "Aplicat",
+            "TAKEN": "Ocupat",
+            "NO_RESULTS": "Nu există rezultate."
         }
     }
 }
