@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer, MatDrawerMode } from '@angular/material/sidenav';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators'
+import { routerFadeAnimation } from './animations';
 import { AuthService, SessionSettings, UserData } from './services/auth.service';
 
 
@@ -11,7 +12,8 @@ const SideWidth = 800;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  animations: [routerFadeAnimation]
 })
 
 export class AppComponent implements OnInit {
@@ -74,4 +76,13 @@ export class AppComponent implements OnInit {
     });
   }
 
+  prepareRoute(outlet: RouterOutlet) {
+    if(outlet && outlet.isActivated) {
+      if(outlet.activatedRouteData.animate === false) {
+        return "DoNotAnimate";
+      }
+      return outlet.activatedRoute;
+    }
+    return null;
+  }
 }
