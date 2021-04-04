@@ -8,8 +8,8 @@ table {
     width: 100%;
 }
 
-td, th {
-    width: 15%;
+td:last-child, th:last-child {
+    width: 80px;
 }
 
 .container {

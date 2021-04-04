@@ -12,6 +12,19 @@ table {
     position: relative;
 }
 
+td, th {
+    width: auto;
+}
+
+tr th:first-child, tr td:first-child {
+    min-width: 100px;
+}
+
+tr th:last-child, tr td:last-child {
+    width: 80px;
+    padding-right: 12px;
+}
+
 .table-container {
     position: relative;
 }

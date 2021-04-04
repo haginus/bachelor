@@ -4,7 +4,11 @@ table {
 }
 
 td, th {
-    width: 20%;
+    width: auto;
+}
+
+tr th:last-child, tr td:last-child {
+    width: 80px;
 }
 
 .container {
