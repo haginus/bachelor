@@ -1,42 +1,71 @@
 <div mat-dialog-title>
-    <h2 class="title" *ngIf="mode == 'signDocument'">Semnați documentul</h2>
-    <h2 class="title" *ngIf="mode == 'uploadDocument'">Încărcați documentul</h2>
+    <h2 class="title" *ngIf="mode == 'signDocument'">
+        {{ 'STUDENT.DOCUMENT_UPLOADER.HEADER_SIGN' | translate }}
+    </h2>
+    <h2 class="title" *ngIf="mode == 'uploadDocument'">
+        {{ 'STUDENT.DOCUMENT_UPLOADER.HEADER_UPLOAD' | translate }}
+    </h2>
     <h3 class="subtitle">{{data.document.title}}</h3>
 </div>
 
 <mat-dialog-content class="mat-typography" *ngIf="mode == 'signDocument'">
-    <div *ngIf="state == 'initial'">
+    <div>
         <p>
-            Descărcați fișierul generat și aplicați semnătura. Apoi, îl veți încărca înapoi în platformă.
+            {{ 'STUDENT.DOCUMENT_UPLOADER.STEPS' | translate }}: <br>
+            1. {{ 'STUDENT.DOCUMENT_UPLOADER.DOWNLOAD_GENERATED_DOCUMENT_STEP' | translate }}
         </p>
-        <div fxLayout="row" fxLayoutAlign="center" *ngIf="state == 'initial'">
-            <button mat-button (click)="downloadDocument()" *ngIf="!isLoadingFile">Descărcați documentul</button>
+        <div class="button-container">
+            <button mat-raised-button (click)="downloadDocument()"
+            *ngIf="!isLoadingFile" class="icon-button">
+                <mat-icon>cloud_download</mat-icon>
+                <span>
+                    {{ 'STUDENT.DOCUMENT_UPLOADER.DOWNLOAD_DOCUMENT_BUTTON' | translate }}
+                </span>
+            </button>
             <mat-spinner [diameter]="36" *ngIf="isLoadingFile"></mat-spinner>
         </div>
-    </div>
-
-    <div *ngIf="state == 'docDownloaded'">
         <p>
-        Încărcați documentul semnat. <br>
-        Fișiere acceptete: {{ acceptedExtensions }}
+            2. {{ 'STUDENT.DOCUMENT_UPLOADER.SIGN_DOCUMENT_STEP' | translate }}
         </p>
-        <div fxLayout="column" fxLayoutAlign="center center">
+        <p>
+            3. {{ 'STUDENT.DOCUMENT_UPLOADER.UPLOAD_DOCUMENT_STEP' | translate }} <br>
+            {{ 'STUDENT.DOCUMENT_UPLOADER.ACCEPTED_FILES' | translate }}:
+            {{ acceptedExtensions }}
+        </p>
+        <div fxLayout="row">
             <div [hidden]="isLoadingFile">
-                <label for="file" class="mat-raised-button">Încărcați</label>
+                <label for="file" class="mat-raised-button icon-button" *ngIf="state == 'docDownloaded'">
+                    <mat-icon>cloud_upload</mat-icon>
+                    <span>
+                        {{ 'STUDENT.DOCUMENT_UPLOADER.UPLOAD_DOCUMENT_BUTTON' | translate }}
+                    </span>
+                </label>
+                <button mat-raised-button *ngIf="state == 'initial'" class="icon-button" disabled>
+                    <mat-icon>cloud_upload</mat-icon>
+                    <span>
+                        {{ 'STUDENT.DOCUMENT_UPLOADER.UPLOAD_DOCUMENT_BUTTON' | translate }}
+                    </span>
+                </button>
                 <input type="file" id="file" [accept]="data.document.acceptedMimeTypes" (change)="handleFileInput($event.target, 'signed')">     
             </div>
-            <mat-spinner [diameter]="36" *ngIf="isLoadingFile"></mat-spinner>
+            <mat-spinner [diameter]="36" *ngIf="isUploadingFile"></mat-spinner>
         </div>
     </div>
 </mat-dialog-content>
 
 <mat-dialog-content class="mat-typography" *ngIf="mode == 'uploadDocument'">
     <p>
-    Fișiere acceptete: {{ acceptedExtensions }}
+        {{ 'STUDENT.DOCUMENT_UPLOADER.ACCEPTED_FILES' | translate }}:
+        {{ acceptedExtensions }}
     </p>
-    <div fxLayout="column" fxLayoutAlign="center center">
+    <div fxLayout="row">
         <div [hidden]="isLoadingFile">
-            <label for="file" class="mat-raised-button">Încărcați</label>
+            <label for="file" class="mat-raised-button icon-button">
+                <mat-icon>cloud_upload</mat-icon>
+                <span>
+                    {{ 'STUDENT.DOCUMENT_UPLOADER.UPLOAD_DOCUMENT_BUTTON' | translate }}
+                </span>
+            </label>
             <input type="file" id="file" [accept]="data.document.acceptedMimeTypes" (change)="handleFileInput($event.target, 'copy')">     
         </div>
         <mat-spinner [diameter]="36" *ngIf="isLoadingFile"></mat-spinner>

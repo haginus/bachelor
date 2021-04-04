@@ -149,6 +149,17 @@
             "HEADER": "Completați datele necesare",
             "FILL_IN_ROMANIAN": "",
             "PARENT_INITIAL_ERROR": "Prima literă trebuie să fie majusculă, iar a doua minusculă."
+        },
+        "DOCUMENT_UPLOADER": {
+            "HEADER_SIGN": "Semnați documentul",
+            "HEADER_UPLOAD": "Încărcați documentul",
+            "STEPS": "Pași",
+            "DOWNLOAD_GENERATED_DOCUMENT_STEP": "Descărcați documentul generat.",
+            "SIGN_DOCUMENT_STEP": "Semnați documentul.",
+            "UPLOAD_DOCUMENT_STEP": "Încărcați documentul semnat.",
+            "ACCEPTED_FILES": "Fișiere acceptate",
+            "UPLOAD_DOCUMENT_BUTTON": "Încărcați documentul",
+            "DOWNLOAD_DOCUMENT_BUTTON": "Descărcați documentul"
         }
     }
 }

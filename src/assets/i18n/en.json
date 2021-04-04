@@ -149,6 +149,17 @@
             "HEADER": "Fill in required data",
             "FILL_IN_ROMANIAN": "Please fill this field in Romanian.",
             "PARENT_INITIAL_ERROR": "Prima literă trebuie să fie majusculă, iar a doua minusculă."
+        },
+        "DOCUMENT_UPLOADER": {
+            "HEADER_SIGN": "Sign document",
+            "HEADER_UPLOAD": "Upload document",
+            "STEPS": "Steps",
+            "DOWNLOAD_GENERATED_DOCUMENT_STEP": "Download the generated document.",
+            "SIGN_DOCUMENT_STEP": "Sign the document.",
+            "UPLOAD_DOCUMENT_STEP": "Upload the signed document.",
+            "ACCEPTED_FILES": "Accepted files",
+            "UPLOAD_DOCUMENT_BUTTON": "Upload document",
+            "DOWNLOAD_DOCUMENT_BUTTON": "Dowmnload document"
         }
     }
 }

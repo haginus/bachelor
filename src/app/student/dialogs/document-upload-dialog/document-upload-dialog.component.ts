@@ -17,6 +17,7 @@ export class DocumentUploadDialogComponent implements OnInit {
   state: 'initial' | 'docDownloaded';
   documentId: number = null;
   isLoadingFile: boolean = false;
+  isUploadingFile: boolean = false;
   acceptedExtensions: string;
 
   ngOnInit(): void {
@@ -50,11 +51,11 @@ export class DocumentUploadDialogComponent implements OnInit {
 
   handleFileInput(target: any, type: string) {
     const file: File = target.files[0];
-    this.isLoadingFile = true;
+    this.isUploadingFile = true;
     this.student.uploadDocument(file, this.data.document.name, type).subscribe(res => {
       if(res == null) {
         this.snackbar.open("A apărut o eroare.");
-        this.isLoadingFile = false;
+        this.isUploadingFile = false;
       } else {
         this.snackbar.open(`Document încărcat.`);
         this.dialogRef.close(true);

@@ -9,3 +9,15 @@ input[type="file"] {
 label {
     margin-bottom: 6px;
 }
+
+.button-container {
+    height: 48px;
+}
+
+.icon-button {
+    display: flex;
+    align-items: center;
+    mat-icon {
+        margin-right: 8px;
+    }
+}
