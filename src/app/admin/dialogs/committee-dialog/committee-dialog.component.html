@@ -1,0 +1,75 @@
+<app-loading *ngIf="isLoading" class="loading-container"></app-loading>
+
+<h2 mat-dialog-title *ngIf="data.mode == 'create'">Adăugați comisie</h2>
+<h2 mat-dialog-title *ngIf="data.mode == 'edit'">Editați comisia</h2>
+<h2 mat-dialog-title *ngIf="data.mode == 'delete'">Ștergeți comisia?</h2>
+
+<mat-dialog-content class="mat-typography" *ngIf="data.mode == 'edit' || data.mode == 'create'">
+    <form [formGroup]="editCommitteeForm" autocomplete="off">
+        <div fxLayout="row grid">
+            <mat-form-field appearance="outline" fxFlex="100">
+                <mat-label>Nume comisie</mat-label>
+                <input matInput type="text" formControlName="name" on>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="100">
+                <mat-label>Domenii</mat-label>
+                <mat-select formControlName="domains" multiple>
+                    <mat-option *ngFor="let domain of domains | async" [value]="domain.id">{{domain.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div formArrayName="members">
+            <h3>Membri</h3>
+            <ul class="error-list">
+                <li *ngIf="formMembers.errors?.atLeastOnePresident">Comisia trebuie să aibă un președinte.</li>
+                <li *ngIf="formMembers.errors?.atMostOnePresident">Comisia nu poate avea mai mulți președinți.</li>
+                <li *ngIf="formMembers.errors?.atLeastOneSecretary">Comisia trebuie să aibă un secretar.</li>
+                <li *ngIf="formMembers.errors?.atMostOneSecretary">Comisia nu poate avea mai mulți secretari.</li>
+                <li *ngIf="formMembers.errors?.atLeastTwoMembers">Comisia trebuie să aibă cel puțin doi membri.</li>
+            </ul>
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let teacher of filteredTeachers" [value]="teacher">
+                  <span>{{teacher.lastName + ' ' + teacher.firstName}}</span>
+                </mat-option>
+              </mat-autocomplete>
+            <div *ngFor="let member of formMembers.controls; let i = index">
+                <div [formGroupName]="i" class="member-row">
+                    <div fxLayout="row" fxLayoutGap="5px">
+                        <mat-form-field appearance="outline" fxFlex="70">
+                            <mat-label>Membru</mat-label>
+                            <input matInput type="text" formControlName="name" name="teacherName"
+                            [matAutocomplete]="auto" [errorStateMatcher]="teacherNameMatcher" />
+                            <mat-error>Alegeți un profesor din listă!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" fxFlex="30">
+                            <mat-label>Rol</mat-label>
+                            <mat-select formControlName="role">
+                                <mat-option value="president">Președinte</mat-option>
+                                <mat-option value="secretary">Secretar</mat-option>
+                                <mat-option value="member">Membru</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <button mat-icon-button (click)="$event.preventDefault(); removeMember(i)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div fxLayout="column" fxLayoutAlign="center center">
+                <button mat-stroked-button (click)="$event.preventDefault(); addMember()">Adăugați membru</button>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-content class="mat-typography" *ngIf="data.mode == 'delete'">
+    <p>Sunteți sigur că doriți să ștergeți această comisie?</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Anulați</button>
+    <button mat-button (click)="addCommittee()" *ngIf="data.mode == 'create'"
+        [disabled]="editCommitteeForm.invalid">Adăugați</button>
+    <button mat-button (click)="editCommittee()" *ngIf="data.mode == 'edit'"
+        [disabled]="editCommitteeForm.invalid">Salvați</button>
+    <button mat-button (click)="deleteCommittee()" *ngIf="data.mode == 'delete'">Ștergeți</button>
+</mat-dialog-actions>

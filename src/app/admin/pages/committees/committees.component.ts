@@ -1,10 +1,12 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AdminService } from 'src/app/services/admin.service';
 import { Domain, Paper, UserDataMin } from 'src/app/services/auth.service';
+import { CommitteeDialogComponent } from '../../dialogs/committee-dialog/committee-dialog.component';
 
 @Component({
   selector: 'app-committees',
@@ -13,7 +15,7 @@ import { Domain, Paper, UserDataMin } from 'src/app/services/auth.service';
 })
 export class CommitteesComponent implements OnInit {
 
-  constructor(private admin: AdminService) { }
+  constructor(private admin: AdminService, private dialog: MatDialog) { }
 
   displayedColumns: string[] = ['name', 'domains', 'president', 'secretary', 'members', 'paperNumber', 'actions'];
   resultsLength: number;
@@ -49,7 +51,16 @@ export class CommitteesComponent implements OnInit {
   }
 
   addCommittee() {
-
+    const dialogDef = this.dialog.open(CommitteeDialogComponent, {
+      data: {
+        mode: 'create'
+      }
+    });
+    dialogDef.afterClosed().subscribe(result => {
+      if(result) {
+        this.performedActions.next('addCommittee');
+      }
+    })
   }
 
   refreshResults() {
@@ -67,8 +78,9 @@ export interface Committee {
 }
 
 export interface CommitteeMember {
+  teacherId: number,
   role: 'president' | 'secretary' | 'member',
-  user: UserDataMin
+  user?: UserDataMin
 }
 
 interface CommitteeRow {

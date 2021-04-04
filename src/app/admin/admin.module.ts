@@ -20,6 +20,7 @@ import { AdminTopicsComponent } from './pages/topics/topics.component';
 import { AdminTopicDialogComponent } from './dialogs/topic-dialog/topic-dialog.component';
 import { SessionSettingsComponent } from './pages/session-settings/session-settings.component';
 import { CommitteesComponent } from './pages/committees/committees.component';
+import { CommitteeDialogComponent } from './dialogs/committee-dialog/committee-dialog.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { CommitteesComponent } from './pages/committees/committees.component';
     AdminTopicsComponent,
     AdminTopicDialogComponent,
     SessionSettingsComponent,
-    CommitteesComponent
+    CommitteesComponent,
+    CommitteeDialogComponent
   ],
   imports: [
     CommonModule,

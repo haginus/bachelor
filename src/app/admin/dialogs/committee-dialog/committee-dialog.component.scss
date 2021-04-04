@@ -1,0 +1,27 @@
+:host {
+    position: relative;
+    display: block;
+}
+
+.member-row {
+    display: flex;
+    align-items: center;
+    button {
+        margin-bottom: 20px;
+        margin-left: 5px;
+    }
+}
+
+.error-list {
+    color: #d32f2f;
+}
+
+app-loading {
+    position: absolute;
+    margin: -24px;
+    margin-bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}

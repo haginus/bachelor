@@ -178,6 +178,7 @@ export interface UserData {
   id: number,
   firstName: string,
   lastName: string,
+  fullName: string,
   CNP: string,
   email: string,
   validated: boolean,
@@ -196,6 +197,9 @@ export interface UserData {
     matriculationYear: string,
     fundingForm: 'budget' | 'tax',
     paper: Paper
+  },
+  teacher?: {
+    id: number
   }
 }
 

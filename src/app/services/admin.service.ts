@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Committee } from '../admin/pages/committees/committees.component';
+import { Committee, CommitteeMember } from '../admin/pages/committees/committees.component';
 import { AuthService, Domain, SessionSettings, UserData } from './auth.service';
 import { Topic } from './topics.service';
 
@@ -176,6 +176,13 @@ export class AdminService {
     const url = `${environment.apiUrl}/admin/committees`;
     return this.http.get<Committee[]>(url, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError<Committee[]>('getCommittees', []))
+    );
+  }
+
+  addCommittee(name: string, domains: number[], members: CommitteeMember[]): Observable<any> {
+    const url = `${environment.apiUrl}/admin/committees/add`;
+    return this.http.post<any>(url, { name, domains, members }, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError<any>('addCommittee', null))
     );
   }
 
