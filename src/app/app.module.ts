@@ -13,6 +13,8 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { ChangePasswordComponent } from './user-components/change-password/change-password.component';
 import { SharedModule } from './shared/shared.module'
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { MatPaginatorIntlRo } from './providers/mat-paginator-intl-ro';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,8 @@ import { SharedModule } from './shared/shared.module'
     SharedModule
   ],
   providers: [
-    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 4000 } }
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 4000 } },
+    { provide: MatPaginatorIntl, useClass: MatPaginatorIntlRo}
   ],
   bootstrap: [AppComponent]
 })
