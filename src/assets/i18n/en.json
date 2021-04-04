@@ -7,7 +7,7 @@
     "STUDENT": {
         "DASHBOARD": {
             "PLATFORM_TITLE": "FMI Association Platform",
-            "SESSION": "Session",
+            "SESSION_NAME": "{{name}} Session",
             "APPLY_PERIOD": "Offer applications period",
             "FILE_SUBMISSION_PERIOD": "File submission period",
             "TURN_IN_DEADLINE": "Paper turn in deadline",

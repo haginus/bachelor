@@ -7,7 +7,7 @@
     "STUDENT": {
         "DASHBOARD": {
             "PLATFORM_TITLE": "Platforma de asociere FMI",
-            "SESSION": "Sesiunea",
+            "SESSION_NAME": "Sesiunea {{name}}",
             "APPLY_PERIOD": "Perioadă cereri de asociere",
             "FILE_SUBMISSION_PERIOD": "Perioadă depunere documente",
             "TURN_IN_DEADLINE": "Termen limită predare lucrare",
