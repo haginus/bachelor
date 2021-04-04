@@ -10,6 +10,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from "@angular/material/icon";
 import { FlexLayoutModule } from "@angular/flex-layout";
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 @NgModule({
@@ -26,13 +27,15 @@ import { FlexLayoutModule } from "@angular/flex-layout";
         MatCardModule,
         MatListModule,
         MatIconModule,
-        FlexLayoutModule
+        FlexLayoutModule,
+        MatExpansionModule
     ],
     exports: [
         LoadingComponent,
         CommonDialogComponent,
         ApplicationListComponent,
-        FlexLayoutModule
+        FlexLayoutModule,
+        MatExpansionModule
     ]
   })
   export class SharedModule { }

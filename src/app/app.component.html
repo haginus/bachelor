@@ -20,7 +20,7 @@
         <span class="toolbar-title">{{title}}</span>
         <span class="toolbar-spacer"></span>
         <button mat-button class="user-preview-container" [matMenuTriggerFor]="userMenu">
-            <span class="user-name" fxHide.lt-md>{{user?.firstName}} {{user?.lastName}}</span>
+            <span class="user-name" fxHide.lt-sm>{{user?.firstName}} {{user?.lastName}}</span>
             <mat-icon>person</mat-icon>
         </button>
     </mat-toolbar>
@@ -28,6 +28,11 @@
         <mat-drawer #drawer [mode]="drawerMode" class="main-drawer">
             <!-- STUDENT -->
             <mat-list *ngIf="user?.type == 'student' && user.student.paper == null">
+                <div mat-subheader>Informații</div>
+                <a mat-list-item class="nav-item" routerLink="student" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    <mat-icon mat-list-icon>stars</mat-icon>
+                    <div mat-line>Informații și întrebări</div>
+                </a>
                 <div mat-subheader>Profesori</div>
                 <a mat-list-item class="nav-item" routerLink="student/suggested-teachers" routerLinkActive="active">
                     <mat-icon mat-list-icon>stars</mat-icon>
@@ -48,6 +53,11 @@
                 </a>
             </mat-list>
             <mat-list *ngIf="user?.type == 'student' && user.student.paper">
+                <div mat-subheader>Informații</div>
+                <a mat-list-item class="nav-item" routerLink="student" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    <mat-icon mat-list-icon>stars</mat-icon>
+                    <div mat-line>Informații și întrebări</div>
+                </a>
                 <div mat-subheader>Asociere</div>
                 <a mat-list-item class="nav-item" routerLink="student/paper" routerLinkActive="active">
                     <mat-icon mat-list-icon>stars</mat-icon>
