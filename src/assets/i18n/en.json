@@ -1,0 +1,17 @@
+{
+    "TOOLBAR": {
+        "DEFAULT_TITLE": "Association Platform",
+        "SIGN_OUT": "Sign out",
+        "LANGUAGE": "Language"
+    },
+    "STUDENT": {
+        "DASHBOARD": {
+            "PLATFORM_TITLE": "FMI Association Platform",
+            "SESSION": "Session",
+            "APPLY_PERIOD": "Offer applications period",
+            "FILE_SUBMISSION_PERIOD": "File submission period",
+            "TURN_IN_DEADLINE": "Paper turn in deadline",
+            "FAQ": "Frequently asked questions"
+        }
+    }
+}

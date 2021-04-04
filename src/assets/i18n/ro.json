@@ -1,0 +1,17 @@
+{
+    "TOOLBAR": {
+        "DEFAULT_TITLE": "Platformă de asociere",
+        "SIGN_OUT": "Deconectare",
+        "LANGUAGE": "Limbă"
+    },
+    "STUDENT": {
+        "DASHBOARD": {
+            "PLATFORM_TITLE": "Platforma de asociere FMI",
+            "SESSION": "Sesiunea",
+            "APPLY_PERIOD": "Perioadă cereri de asociere",
+            "FILE_SUBMISSION_PERIOD": "Perioadă depunere documente",
+            "TURN_IN_DEADLINE": "Termen limită predare lucrare",
+            "FAQ": "Întrebări frecvente"
+        }
+    }
+}

@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer, MatDrawerMode } from '@angular/material/sidenav';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { combineLatest } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators'
 import { routerFadeAnimation } from './animations';
@@ -17,12 +18,20 @@ const SideWidth = 800;
 })
 
 export class AppComponent implements OnInit {
-  title = 'Platformă de asociere';
+  title: string;
+  defaultTitle: string;
   drawerMode: MatDrawerMode = "over";
   hideDrawer = false;
   hideToolbar = false;
 
-  constructor(private router: Router, private route: ActivatedRoute, private auth: AuthService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private auth: AuthService,
+    public translate: TranslateService) { 
+      translate.setDefaultLang('ro');
+
+      let language = this.auth.getPreferredLanguage();
+      translate.use(language);
+      this.translate.get("TOOLBAR.DEFAULT_TITLE").subscribe(title => this.defaultTitle = title);
+    }
 
   user : UserData | undefined = undefined;
   sessionSettings: SessionSettings;
@@ -47,7 +56,7 @@ export class AppComponent implements OnInit {
       }
       this.hideDrawer = data.hideDrawer === true;
       this.hideToolbar = data.hideToolbar === true;
-      this.title = data.title != undefined ? data.title : 'Platformă de asociere';
+      this.title = data.title != undefined ? data.title : this.defaultTitle;
       if(this.hideDrawer) {
         this.drawer.close();
       } else if(this.drawerMode == 'side') {
@@ -73,6 +82,14 @@ export class AppComponent implements OnInit {
   signOut() {
     this.auth.signOut().subscribe(res => {
       this.router.navigate(['login']);
+    });
+  }
+
+  changeLanguage(language: string) {
+    this.loading = true;
+    this.translate.use(language).subscribe(_ => {
+      this.loading = false;
+      this.auth.setPreferredLanguage(language);
     });
   }
 

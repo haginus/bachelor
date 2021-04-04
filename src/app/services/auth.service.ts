@@ -106,6 +106,20 @@ export class AuthService {
     );
   }
 
+  getPreferredLanguage(): string {
+    let language = localStorage.getItem('language');
+    if(['ro', 'en'].includes(language)) { // check language is supported
+      return language;
+    }
+    // reset the language
+    this.setPreferredLanguage('ro');
+    return 'ro';
+  }
+
+  setPreferredLanguage(language: string): void {
+    localStorage.setItem('language', language);
+  }
+
   validateStudent(topics: Topic[]) : Observable<boolean> {
     const url = `${environment.apiUrl}/student/validate`;
     return this.http.post(url, { topics }, this.getPrivateHeaders()).pipe(
