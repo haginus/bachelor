@@ -23,7 +23,7 @@
                 <div [formGroupName]="i" class="specialization-row">
                     <div fxLayout="row" fxLayoutGap="5px">
                         <mat-form-field appearance="outline" fxFlex="70">
-                            <mat-label>Nume specializare</mat-label>
+                            <mat-label>Nume program de studiu</mat-label>
                             <input matInput type="text" formControlName="name">
                         </mat-form-field>
                         <mat-form-field appearance="outline" fxFlex="30">
@@ -31,8 +31,8 @@
                             <input matInput type="number" formControlName="studyYears" min="1">
                         </mat-form-field>
                     </div>
-                    <div [matTooltip]="specialization.get('studentNumber')?.value > 0 ? 'Mutați întâi studenții la altă specializare' : 'Ștergeți specializarea'">
-                        <button mat-icon-button (click)="removeSpecialization(i)"
+                    <div [matTooltip]="specialization.get('studentNumber')?.value > 0 ? 'Mutați întâi studenții la alt program de studiu' : 'Ștergeți programul de studiu'">
+                        <button mat-icon-button (click)="$event.preventDefault(); removeSpecialization(i)"
                             [disabled]="specialization.get('studentNumber')?.value > 0">
                             <mat-icon>delete</mat-icon>
                         </button>
@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div fxLayout="column" fxLayoutAlign="center center">
-                <button mat-stroked-button (click)="addSpecialization()">Adăugați o specializare</button>
+                <button mat-stroked-button (click)="$event.preventDefault(); addSpecialization()">Adăugați program de studiu</button>
             </div>
         </div>
     </form>
