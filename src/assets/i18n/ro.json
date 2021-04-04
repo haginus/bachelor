@@ -16,6 +16,38 @@
         "ASSOCIATION_HEADER": "Asociere",
         "MY_PAPER": "Lucrarea mea"
     },
+    "DOMAIN_TYPES": {
+        "BACHELOR": "licență",
+        "MASTER": "master"
+    },
+    "FUNDING_FORMS": {
+        "BUDGET": "buget",
+        "TAX": "taxă"
+    },
+    "STUDY_FORMS": {
+        "IF": "Învățământ cu frecvență",
+        "IFR": "Învățământ cu frecvență redusă",
+        "ID": "Învățământ la distanță"
+    },
+    "USER_DATA": {
+        "PERSONAL_DATA": "Date personale",
+        "LAST_NAME": "Nume",
+        "FIRST_NAME": "Preume",
+        "CNP": "CNP",
+        "EMAIL": "E-mail",
+        "STUDENT": {
+            "IDENTIFICATION_CODE": "Număr matricol",
+            "STUDY_FORMATION": "Formațiune de studiu",
+            "STUDY_PROGRAM": "Program de studiu",
+            "DOMAIN": "Domeniu",
+            "SPECIALIZATION": "Plan de învățământ",
+            "PROMOTION": "Promoție",
+            "GROUP": "Grupă",
+            "MATRICULATION_YEAR": "An de înmatriculare",
+            "FUNDING_FORM": "Formă de finanțare",
+            "STUDY_FORM": "Formă de învățământ"
+        }
+    },
     "STUDENT": {
         "DASHBOARD": {
             "PLATFORM_TITLE": "Platforma de asociere FMI",
@@ -24,6 +56,21 @@
             "FILE_SUBMISSION_PERIOD": "Perioadă depunere documente",
             "TURN_IN_DEADLINE": "Termen limită predare lucrare",
             "FAQ": "Întrebări frecvente"
+        },
+        "SETUP": {
+            "VALIDATION": "Validare",
+            "DATA_VALIDATION": "Validarea datelor",
+            "DATA_VALIDATION_SUBTITLE": "Asigurați-vă că datele de mai jos sunt corecte.",
+            "DATA_CONFIRMATION_MESSAGE": "Confirm că datele sunt corecte.",
+            "TOPICS": "Teme",
+            "FAVORITE_TOPICS": "Teme preferate",
+            "FAVORITE_TOPICS_SUBTITLE": "Alegeți temele care vă atrag.",
+            "NEXT_STEP": "Pasul următor",
+            "DONE": "Gata",
+            "VALIDATION_IN_PROGRESS": "În curs de validare",
+            "ERROR": "A apărut o eroare.",
+            "RETRY": "Reîncercați",
+            "RETAKE_VALIDATION": "Reluați validarea"
         },
         "TEACHERS_GRID": {
             "FILTER_BY": "Filtrați după",

@@ -16,6 +16,38 @@
         "ASSOCIATION_HEADER": "Association",
         "MY_PAPER": "My paper"
     },
+    "DOMAIN_TYPES": {
+        "BACHELOR": "bachelor",
+        "MASTER": "master"
+    },
+    "FUNDING_FORMS": {
+        "BUDGET": "budget",
+        "TAX": "tax"
+    },
+    "STUDY_FORMS": {
+        "IF": "Full-time education",
+        "IFR": "Part-time education",
+        "ID": "Distance learning"
+    },
+    "USER_DATA": {
+        "PERSONAL_DATA": "Personal data",
+        "LAST_NAME": "Last name",
+        "FIRST_NAME": "First name",
+        "CNP": "CNP",
+        "EMAIL": "Email",
+        "STUDENT": {
+            "IDENTIFICATION_CODE": "Identification code",
+            "STUDY_FORMATION": "Study formation",
+            "STUDY_PROGRAM": "Study program",
+            "DOMAIN": "Domain",
+            "SPECIALIZATION": "Educational plan",
+            "PROMOTION": "Promotion",
+            "GROUP": "Group",
+            "MATRICULATION_YEAR": "Matriculation year",
+            "FUNDING_FORM": "Funding form",
+            "STUDY_FORM": "Study form"
+        }
+    },
     "STUDENT": {
         "DASHBOARD": {
             "PLATFORM_TITLE": "FMI Association Platform",
@@ -24,6 +56,21 @@
             "FILE_SUBMISSION_PERIOD": "File submission period",
             "TURN_IN_DEADLINE": "Paper turn in deadline",
             "FAQ": "Frequently asked questions"
+        },
+        "SETUP": {
+            "VALIDATION": "Validation",
+            "DATA_VALIDATION": "Data validation",
+            "DATA_VALIDATION_SUBTITLE": "Please assure that the following data is correct.",
+            "DATA_CONFIRMATION_MESSAGE": "I confirm that the data is correct.",
+            "TOPICS": "Topics",
+            "FAVORITE_TOPICS": "Favorite topics",
+            "FAVORITE_TOPICS_SUBTITLE": "Choose the topics you are interested in.",
+            "NEXT_STEP": "Next step",
+            "DONE": "Done",
+            "VALIDATION_IN_PROGRESS": "Validation in progress",
+            "ERROR": "Something went wrong.",
+            "RETRY": "Retry",
+            "RETAKE_VALIDATION": "Retake validation"
         },
         "TEACHERS_GRID": {
             "FILTER_BY": "Filter by",
