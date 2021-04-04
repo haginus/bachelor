@@ -4,6 +4,18 @@
         "SIGN_OUT": "Deconectare",
         "LANGUAGE": "Limbă"
     },
+    "DRAWER": {
+        "INFO_HEADER": "Informații",
+        "INFO_AND_QUESTIONS": "Informații și întrebări",
+        "TEACHERS_HEADER": "Profesori",
+        "SUGGESTED_TEACHERS": "Profesori sugerați",
+        "ALL_TEACHERS": "Toți profesorii",
+        "APPLICATIONS_HEADER": "Cereri",
+        "PENDING_APPLICATIONS": "Cereri în așteptare",
+        "DECLINED_APPLICATIONS": "Cereri respinse",
+        "ASSOCIATION_HEADER": "Asociere",
+        "MY_PAPER": "Lucrarea mea"
+    },
     "STUDENT": {
         "DASHBOARD": {
             "PLATFORM_TITLE": "Platforma de asociere FMI",

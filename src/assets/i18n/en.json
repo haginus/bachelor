@@ -4,6 +4,18 @@
         "SIGN_OUT": "Sign out",
         "LANGUAGE": "Language"
     },
+    "DRAWER": {
+        "INFO_HEADER": "Information",
+        "INFO_AND_QUESTIONS": "Info and questions",
+        "TEACHERS_HEADER": "Teachers",
+        "SUGGESTED_TEACHERS": "Suggested teachers",
+        "ALL_TEACHERS": "All teachers",
+        "APPLICATIONS_HEADER": "Applications",
+        "PENDING_APPLICATIONS": "Pending applications",
+        "DECLINED_APPLICATIONS": "Declined applications",
+        "ASSOCIATION_HEADER": "Association",
+        "MY_PAPER": "My paper"
+    },
     "STUDENT": {
         "DASHBOARD": {
             "PLATFORM_TITLE": "FMI Association Platform",
