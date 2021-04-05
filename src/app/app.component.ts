@@ -9,6 +9,7 @@ import { AuthService, SessionSettings, UserData } from './services/auth.service'
 
 
 const SideWidth = 800;
+const DefaultTitle = 'ROUTE_TITLES.DEFAULT';
 
 @Component({
   selector: 'app-root',
@@ -18,8 +19,7 @@ const SideWidth = 800;
 })
 
 export class AppComponent implements OnInit {
-  title: string;
-  defaultTitle: string;
+  title: string = DefaultTitle;
   drawerMode: MatDrawerMode = "over";
   hideDrawer = false;
   hideToolbar = false;
@@ -30,7 +30,6 @@ export class AppComponent implements OnInit {
 
       let language = this.auth.getPreferredLanguage();
       translate.use(language);
-      this.translate.get("TOOLBAR.DEFAULT_TITLE").subscribe(title => this.defaultTitle = title);
     }
 
   user : UserData | undefined = undefined;
@@ -56,7 +55,7 @@ export class AppComponent implements OnInit {
       }
       this.hideDrawer = data.hideDrawer === true;
       this.hideToolbar = data.hideToolbar === true;
-      this.title = data.title != undefined ? data.title : this.defaultTitle;
+      this.title = data.title != undefined ? data.title : DefaultTitle;
       if(this.hideDrawer) {
         this.drawer.close();
       } else if(this.drawerMode == 'side') {

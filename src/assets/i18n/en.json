@@ -1,6 +1,6 @@
 {
     "TOOLBAR": {
-        "DEFAULT_TITLE": "Association Platform",
+        "TOGGLE_MENU": "Toggle menu",
         "SIGN_OUT": "Sign out",
         "LANGUAGE": "Language"
     },
@@ -15,6 +15,16 @@
         "DECLINED_APPLICATIONS": "Declined applications",
         "ASSOCIATION_HEADER": "Association",
         "MY_PAPER": "My paper"
+    },
+    "ROUTE_TITLES": {
+        "DEFAULT": "Association Platform",
+        "STUDENT": {
+            "VALIDATION": "Validation",
+            "ALL_TEACHERS": "All teachers",
+            "SUGGESTED_TEACHERS": "Suggested teachers",
+            "APPLICATIONS": "Applications",
+            "YOUR_PAPER": "Your paper"
+        }
     },
     "DOMAIN_TYPES": {
         "BACHELOR": "bachelor",

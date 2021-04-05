@@ -1,6 +1,6 @@
 {
     "TOOLBAR": {
-        "DEFAULT_TITLE": "Platformă de asociere",
+        "TOGGLE_MENU": "Comutați meniul",
         "SIGN_OUT": "Deconectare",
         "LANGUAGE": "Limbă"
     },
@@ -15,6 +15,16 @@
         "DECLINED_APPLICATIONS": "Cereri respinse",
         "ASSOCIATION_HEADER": "Asociere",
         "MY_PAPER": "Lucrarea mea"
+    },
+    "ROUTE_TITLES": {
+        "DEFAULT": "Platformă de asociere",
+        "STUDENT": {
+            "VALIDATION": "Validare",
+            "ALL_TEACHERS": "Toți profesorii",
+            "SUGGESTED_TEACHERS": "Profesori sugerați",
+            "APPLICATIONS": "Cereri",
+            "YOUR_PAPER": "Lucrarea dvs."
+        }
     },
     "DOMAIN_TYPES": {
         "BACHELOR": "licență",
