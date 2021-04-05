@@ -87,6 +87,22 @@
         "DELETE": "Ștergeți",
         "CANCEL": "Anulați"
     },
+    "SHARED": {
+        "APPLICATION_LIST": {
+            "TAKEN_PLACES": "Locuri ocupate",
+            "STUDENT": "Student",
+            "TEACHER": "Profesor",
+            "TITLE": "Titlu",
+            "DESCRIPTION": "Descriere",
+            "USED_TECHNOLOGIES": "Tehnologii folosite",
+            "DECLINE_APPLICATION": "Respingeți",
+            "ACCEPT_APPLICATION": "Acceptați",
+            "WITHDRAW_APPLICATION": "Retrageți cererea",
+            "APPLICATION_ACCEPTED": "Acceptată",
+            "APPLICATION_DECLINED": "Respinsă",
+            "NO_RESULTS_MESSAGE": "Nu există cereri."
+        }
+    },
     "STUDENT": {
         "DASHBOARD": {
             "PLATFORM_TITLE": "Platforma de asociere FMI",
@@ -160,6 +176,15 @@
             "ACCEPTED_FILES": "Fișiere acceptate",
             "UPLOAD_DOCUMENT_BUTTON": "Încărcați documentul",
             "DOWNLOAD_DOCUMENT_BUTTON": "Descărcați documentul"
+        },
+        "OFFER_APPLICATION_SENDER": {
+            "HEADER": "Aplicați la această ofertă",
+            "TITLE": "Titlu lucrare",
+            "TITLE_ERROR": "Titlul trebuie să fie de lungime între 3 și 128 caractere.",
+            "DESCRIPTION": "Descriere lucrare",
+            "DESCRIPTION_ERROR": "Descrierea trebuie să fie de lungime 5 și 1024 caractere.",
+            "USED_TECHNOLOGIES": "Tehnologii folosite",
+            "APPLY": "Aplicați"
         }
     }
 }

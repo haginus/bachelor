@@ -3,37 +3,50 @@
         <div class="header-content">
             <span>
                 {{ application.offer.domain.name }},
-                <span *ngIf="application.offer.domain.type == 'bachelor'">Licență</span>
-                <span *ngIf="application.offer.domain.type == 'master'">Master</span>
+                {{'DOMAIN_TYPES.' + application.offer.domain.type.toUpperCase() | translate | titlecase }}
             </span>
             <div class="offer-topics">
                 <span class="badge" *ngFor="let topic of application.offer.topics">{{topic.name}}</span>
             </div>
         </div>
         <div>
-            <span class="badge">{{application.offer.takenPlaces }} / {{application.offer.limit}} Locuri ocupate</span>
+            <span class="badge">
+                {{application.offer.takenPlaces }} / {{application.offer.limit}}
+                {{ 'SHARED.APPLICATION_LIST.TAKEN_PLACES' | translate }}
+
+            </span>
         </div>
     </div>
     <mat-card-content>
         <mat-list>
             <mat-list-item *ngIf="mode == 'teacher'">
-                <div mat-line>Student</div>
+                <div mat-line>
+                    {{ 'SHARED.APPLICATION_LIST.STUDENT' | translate }}
+                </div>
                 <div mat-line>{{application.student.firstName}} {{application.student.lastName}}</div>
             </mat-list-item>
             <mat-list-item *ngIf="mode == 'student'">
-                <div mat-line>Profesor</div>
+                <div mat-line>
+                    {{ 'SHARED.APPLICATION_LIST.TEACHER' | translate }}
+                </div>
                 <div mat-line>{{application.offer.teacher.firstName}} {{application.offer.teacher.lastName}}</div>
             </mat-list-item>
             <mat-list-item>
-                <div mat-line>Titlu</div>
+                <div mat-line>
+                    {{ 'SHARED.APPLICATION_LIST.TITLE' | translate }}
+                </div>
                 <div mat-line>{{application.title}}</div>
             </mat-list-item>
             <mat-list-item>
-                <div mat-line>Descriere</div>
+                <div mat-line>
+                    {{ 'SHARED.APPLICATION_LIST.DESCRIPTION' | translate }}
+                </div>
                 <div mat-line class="nowrap">{{application.description}}</div>
             </mat-list-item>
             <mat-list-item *ngIf="application.usedTechnologies">
-                <div mat-line>Tehnologii folosite</div>
+                <div mat-line>
+                    {{ 'SHARED.APPLICATION_LIST.USED_TECHNOLOGIES' | translate }}
+                </div>
                 <div mat-line>{{application.usedTechnologies}}</div>
             </mat-list-item>
         </mat-list>
@@ -41,17 +54,26 @@
     <mat-card-actions align="end">
         <div *ngIf="application.accepted == null">
             <div *ngIf="mode == 'teacher'">
-                <button mat-button (click)="sendEvent('decline', application.id)">Respingeți</button>
-                <button mat-flat-button color="primary" (click)="sendEvent('accept', application.id)">Acceptați</button>
+                <button mat-button (click)="sendEvent('decline', application.id)">
+                    {{ 'SHARED.APPLICATION_LIST.DECLINE_APPLICATION' | translate }}
+                </button>
+                <button mat-flat-button color="primary" (click)="sendEvent('accept', application.id)">
+                    {{ 'SHARED.APPLICATION_LIST.ACCEPT_APPLICATION' | translate }}
+                </button>
             </div>
             <div *ngIf="mode == 'student'">
-                <button mat-button (click)="sendEvent('cancel', application.id)">Retrageți cererea</button>
+                <button mat-button (click)="sendEvent('cancel', application.id)">
+                    {{ 'SHARED.APPLICATION_LIST.WITHDRAW_APPLICATION' | translate }}
+                </button>
             </div>
         </div>
         <div *ngIf="application.accepted != null">
-            <button mat-button disabled *ngIf="application.accepted">Acceptată</button>
-            <button mat-button disabled *ngIf="application.accepted == false">Respinsă</button>
-
+            <button mat-button disabled *ngIf="application.accepted">
+                {{ 'SHARED.APPLICATION_LIST.APPLICATION_ACCEPTED' | translate }}
+            </button>
+            <button mat-button disabled *ngIf="application.accepted == false">
+                {{ 'SHARED.APPLICATION_LIST.APPLICATION_DECLINED' | translate }}
+            </button>
         </div>
     </mat-card-actions>
 </mat-card>
@@ -60,5 +82,7 @@
     <div class="icon-container">
         <mat-icon>assignment</mat-icon>
     </div>
-    <h1>Nu există cereri.</h1>
+    <h1>
+        {{ 'SHARED.APPLICATION_LIST.NO_RESULTS_MESSAGE' | translate }}
+    </h1>
 </div>

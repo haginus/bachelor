@@ -87,6 +87,22 @@
         "DELETE": "Delete",
         "CANCEL": "Cancel"
     },
+    "SHARED": {
+        "APPLICATION_LIST": {
+            "TAKEN_PLACES": "Taken places",
+            "STUDENT": "Student",
+            "TEACHER": "Teacher",
+            "TITLE": "Title",
+            "DESCRIPTION": "Description",
+            "USED_TECHNOLOGIES": "Used technologies",
+            "DECLINE_APPLICATION": "Decline",
+            "ACCEPT_APPLICATION": "Accept",
+            "WITHDRAW_APPLICATION": "Withdraw application",
+            "APPLICATION_ACCEPTED": "Accepted",
+            "APPLICATION_DECLINED": "Declined",
+            "NO_RESULTS_MESSAGE": "There are no applications."
+        }
+    },
     "STUDENT": {
         "DASHBOARD": {
             "PLATFORM_TITLE": "FMI Association Platform",
@@ -160,6 +176,15 @@
             "ACCEPTED_FILES": "Accepted files",
             "UPLOAD_DOCUMENT_BUTTON": "Upload document",
             "DOWNLOAD_DOCUMENT_BUTTON": "Dowmnload document"
+        },
+        "OFFER_APPLICATION_SENDER": {
+            "HEADER": "Apply to this offer",
+            "TITLE": "Paper title",
+            "TITLE_ERROR": "Title must be of length between 3 and 128 characters.",
+            "DESCRIPTION": "Paper description",
+            "DESCRIPTION_ERROR": "Description must be of length between 5 and 1024 characters.",
+            "USED_TECHNOLOGIES": "Used technologies",
+            "APPLY": "Apply"
         }
     }
 }
