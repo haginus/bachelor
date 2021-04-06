@@ -63,6 +63,34 @@ export class CommitteesComponent implements OnInit {
     })
   }
 
+  editCommittee(id: number) {
+    const dialogDef = this.dialog.open(CommitteeDialogComponent, {
+      data: {
+        mode: 'edit',
+        data: this.committees.find(committee => committee.id == id)
+      }
+    });
+    dialogDef.afterClosed().subscribe(result => {
+      if(result) {
+        this.performedActions.next('editCommittee');
+      }
+    })
+  }
+
+  deleteCommittee(id: number) {
+    const dialogDef = this.dialog.open(CommitteeDialogComponent, {
+      data: {
+        mode: 'delete',
+        data: this.committees.find(committee => committee.id == id)
+      }
+    });
+    dialogDef.afterClosed().subscribe(result => {
+      if(result) {
+        this.performedActions.next('deleteCommittee');
+      }
+    })
+  }
+
   refreshResults() {
     this.performedActions.next("refresh");
   }

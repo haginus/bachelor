@@ -186,6 +186,20 @@ export class AdminService {
     );
   }
 
+  editCommittee(id: number, name: string, domains: number[], members: CommitteeMember[]): Observable<any> {
+    const url = `${environment.apiUrl}/admin/committees/edit`;
+    return this.http.post<any>(url, { id, name, domains, members }, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError<any>('editCommittee', null))
+    );
+  }
+
+  deleteCommittee(id: number): Observable<any> {
+    const url = `${environment.apiUrl}/admin/committees/delete`;
+    return this.http.post<any>(url, { id }, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError<any>('deleteCommittee', null))
+    );
+  }
+
   // Session Settings 
 
   changeSessionSettings(settings: SessionSettings): Observable<SessionSettings> {

@@ -1,10 +1,10 @@
 <mat-menu #committeeMenu="matMenu">
     <ng-template matMenuContent let-id="id">
-        <button mat-menu-item>
+        <button mat-menu-item (click)="editCommittee(id)">
             <mat-icon>mode</mat-icon>
             <span>Editați comisia</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="deleteCommittee(id)">
             <mat-icon>delete</mat-icon>
             <span>Ștergeți comisia</span>
         </button>

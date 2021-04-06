@@ -25,9 +25,9 @@ export class CommitteeDialogComponent implements OnInit {
   teacherNameMatcher = new TeacherNameMatcher();
 
   editCommitteeForm = new FormGroup({
-    "id": new FormControl(null),
-    "name": new FormControl(null, [Validators.required]),
-    "members": new FormArray([], [CommitteeMembersValidator]), // validators only sg pres
+    "id": new FormControl(this.data.data?.id),
+    "name": new FormControl(this.data.data?.name, [Validators.required]),
+    "members": new FormArray([], [CommitteeMembersValidator]), // Validate that the committee componence is OK
     "domains": new FormControl([], [Validators.required])
   })
 
@@ -41,10 +41,19 @@ export class CommitteeDialogComponent implements OnInit {
       this.addMember({ role: 'member', teacherId: null, user: { firstName: null, lastName: null, id: null } }, true);
       this.addMember({ role: 'member', teacherId: null, user: { firstName: null, lastName: null, id: null } }, true);
     }
+    // Edit mode
+    if(this.data.mode == 'edit') {
+      // Add members to form
+      this.data.data.members.forEach(member => this.addMember(member));
+      // Add domains to form - map domain to object to just id and set control value to the array
+      let domainIds = this.data.data.domains.map(domain => domain.id);
+      this.editCommitteeForm.get("domains").setValue(domainIds);
+    }
+
     // Get teachers for filtering
     this.admin.getTeacherUsers('id', 'asc', 0, 1000).subscribe(result => {
       this.teachers = result.rows;
-      this.filteredTeachers = [...this.teachers];
+      this.filteredTeachers = this._filterTeachers(null);
     });
   }
 
@@ -90,12 +99,27 @@ export class CommitteeDialogComponent implements OnInit {
   }
 
   editCommittee() {
-
+    const { id, name, domains, members } = this._getFormData();
+    this.isLoading = true;
+    this.admin.editCommittee(id, name, domains, members).subscribe(result => {
+      this.isLoading = false;
+      if(result) {
+        this.dialog.close(result);
+      }
+    })
   }
 
   deleteCommittee() {
-
+    const { id } = this._getFormData();
+    this.isLoading = true;
+    this.admin.deleteCommittee(id).subscribe(result => {
+      this.isLoading = false;
+      if(result) {
+        this.dialog.close(result);
+      }
+    })
   }
+
   // Handle value change event of teacher name control
   handleValueChange(value: string | UserData, formGroup: FormGroup) {
     if (typeof value == "string") { // if the value is string
