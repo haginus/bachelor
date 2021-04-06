@@ -29,14 +29,6 @@ tr th:last-child, tr td:last-child {
     position: relative;
 }
 
-.iterating span::after {
-    content: ', '
-}
-
-.iterating span:last-child:after {
-    content: ''
-}
-
 .loading-shade {
     position: absolute;
     top: 0;

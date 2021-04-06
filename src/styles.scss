@@ -122,3 +122,12 @@ mat-icon {
         flex: 1;
     }
 }
+
+.iterating {
+    span::after {
+        content: ', '
+    }
+    span:last-child::after {
+        content: ''
+    }
+}
