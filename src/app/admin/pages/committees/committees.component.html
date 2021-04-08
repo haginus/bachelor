@@ -72,7 +72,8 @@
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef>Acțiuni</th>
             <td mat-cell *matCellDef="let row">
-                <button mat-mini-fab color="primary" matTooltip="Atribuire lucrări">
+                <button mat-mini-fab color="primary" matTooltip="Atribuire lucrări"
+                    [routerLink]="[row.id, 'assign-papers']">
                     <mat-icon>description</mat-icon>
                 </button>
                 <button mat-icon-button matTooltip="Mai multe" [matMenuTriggerFor]="committeeMenu" [matMenuTriggerData]="{id: row.id}">

@@ -4,8 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Committee, CommitteeMember } from '../admin/pages/committees/committees.component';
-import { AuthService, Domain, SessionSettings, UserData } from './auth.service';
+import { AuthService, Domain, Paper, SessionSettings, UserData, Committee, CommitteeMember } from './auth.service';
 import { Topic } from './topics.service';
 
 @Injectable({
@@ -179,6 +178,13 @@ export class AdminService {
     );
   }
 
+  getCommittee(id: number): Observable<Committee> {
+    const url = `${environment.apiUrl}/admin/committees/${id}`;
+    return this.http.get<Committee>(url, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError<Committee>('getCommittee', null))
+    );
+  }
+
   addCommittee(name: string, domains: number[], members: CommitteeMember[]): Observable<any> {
     const url = `${environment.apiUrl}/admin/committees/add`;
     return this.http.post<any>(url, { name, domains, members }, this.auth.getPrivateHeaders()).pipe(
@@ -197,6 +203,23 @@ export class AdminService {
     const url = `${environment.apiUrl}/admin/committees/delete`;
     return this.http.post<any>(url, { id }, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError<any>('deleteCommittee', null))
+    );
+  }
+
+  setCommitteePapers(id: number, paperIds: number[]): Observable<boolean> {
+    const url = `${environment.apiUrl}/admin/committees/assign-papers`;
+    return this.http.post<any>(url, { id, paperIds }, this.auth.getPrivateHeaders()).pipe(
+      map(_ => true),
+      catchError(this.handleError<any>('setCommitteePapers', false))
+    );
+  }
+
+  // Papers 
+
+  getPapers(filter: any): Observable<Paper[]> {
+    const url = `${environment.apiUrl}/admin/papers`;
+    return this.http.post<Paper[]>(url, { filter }, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError<Paper[]>('getPapers', []))
     );
   }
 

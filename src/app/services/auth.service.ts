@@ -245,7 +245,11 @@ export interface Paper {
   description: string,
   type: "bachelor" | "master",
   teacher: UserDataMin,
-  documents: PaperDocument[]
+  teacherId: number,
+  student?: UserDataMin,
+  documents: PaperDocument[],
+  committee?: Committee,
+  topics?: Topic[]
 }
 
 export interface PaperDocument {
@@ -262,4 +266,18 @@ export interface SessionSettings {
   applyEndDate: string,
   fileSubmissionStartDate: string,
   fileSubmissionEndDate: string,
+}
+
+export interface Committee {
+  id: number,
+  name: string,
+  domains: Domain[],
+  members: CommitteeMember[],
+  papers: Paper[]
+}
+
+export interface CommitteeMember {
+  teacherId: number,
+  role: 'president' | 'secretary' | 'member',
+  user?: UserDataMin
 }

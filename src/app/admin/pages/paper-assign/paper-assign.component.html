@@ -1,0 +1,64 @@
+<div class="splash-loading" *ngIf="isLoadingCommittee">
+    <mat-spinner diameter="48"></mat-spinner>
+</div>
+
+<mat-toolbar *ngIf="committee" class="committee-toolbar">
+    <button mat-icon-button routerLink="/admin/committees">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="committee-info">
+        <div class="committee-name">{{ committee.name }}</div>
+        <div class="committer-domains">
+            Domenii:
+            <ng-container *ngFor="let domain of committee.domains; let isLast = last">
+                {{ domain.name }}<ng-container *ngIf="!isLast">, </ng-container>
+            </ng-container>
+        </div>
+    </div>
+    <button mat-raised-button color="primary" fxHide.lt-sm (click)="saveChanges()">Salvați modificările</button>
+    <button mat-icon-button fxHide.gt-xs>
+        <mat-icon>save</mat-icon>
+    </button>
+</mat-toolbar>
+
+<div cdkDropListGroup class="paper-assign-container" fxLayout="grid" fxLayoutGap="16px">
+    <div class="list-container" fxFlex="50">
+        <h2>Lucrări atribuite acestei comisii</h2>
+        <div cdkDropList [cdkDropListData]="assignedPappers" class="paper-list" cdkDropListSortingDisabled
+            (cdkDropListDropped)="drop($event)">
+            <div class="spinner-container" *ngIf="isLoadingAssignedPapers">
+                <mat-spinner diameter="36"></mat-spinner>
+            </div>
+            <div class="paper-box" *ngFor="let paper of assignedPappers" cdkDrag>
+                <ng-template *ngTemplateOutlet="paperTemplate; context: { paper: paper }"></ng-template>
+            </div>
+        </div>
+    </div>
+
+    <div class="list-container" fxFlex="50">
+        <h2>Alte lucrări</h2>
+        <div cdkDropList [cdkDropListData]="otherPapers" class="paper-list" cdkDropListSortingDisabled
+        (cdkDropListDropped)="drop($event)">
+            <div class="spinner-container" *ngIf="isLoadingOtherPapers">
+                <mat-spinner diameter="36"></mat-spinner>
+            </div>
+            <div class="paper-box" *ngFor="let paper of otherPapers" cdkDrag
+                [cdkDragDisabled]="teacherIsInCommittee(paper.teacherId)">
+                <ng-template *ngTemplateOutlet="paperTemplate; context: { paper: paper }"></ng-template>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template let-paper="paper" #paperTemplate>
+    <div class="paper-title">{{ paper.title }}</div>
+    <div class="paper-description" [matTooltip]="paper.description">{{paper.description}}</div>
+    <div class="paper-topics">
+        <span class="badge" *ngFor="let topic of paper.topics">{{ topic.name }}</span>
+    </div>
+    <div class="paper-authors">
+        <div>Student: {{ paper.student?.lastName }} {{ paper.student?.firstName }}</div>
+        <div>Profesor: {{ paper.teacher?.lastName }} {{ paper.teacher?.firstName }}</div>
+        <i *ngIf="teacherIsInCommittee(paper.teacherId)">Profesorul coordonator face parte din comisie.</i>
+    </div>
+</ng-template>

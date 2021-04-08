@@ -8,6 +8,7 @@ import { StudentDialogComponent } from './dialogs/new-student-dialog/student-dia
 import { StudentsBulkAddDialogComponent } from './dialogs/students-bulk-add-dialog/students-bulk-add-dialog.component';
 import { StudentDeleteDialogComponent } from './dialogs/student-delete-dialog/student-delete-dialog.component';
 import { MaterialModule } from '../material.module';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminTeacherDialogConmonent } from './dialogs/teacher-dialog/teacher-dialog.component';
 import { AdminTeachersComponent } from './pages/teachers/teachers.component';
@@ -21,6 +22,7 @@ import { AdminTopicDialogComponent } from './dialogs/topic-dialog/topic-dialog.c
 import { SessionSettingsComponent } from './pages/session-settings/session-settings.component';
 import { CommitteesComponent } from './pages/committees/committees.component';
 import { CommitteeDialogComponent } from './dialogs/committee-dialog/committee-dialog.component';
+import { PaperAssignComponent } from './pages/paper-assign/paper-assign.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,8 @@ import { CommitteeDialogComponent } from './dialogs/committee-dialog/committee-d
     AdminTopicDialogComponent,
     SessionSettingsComponent,
     CommitteesComponent,
-    CommitteeDialogComponent
+    CommitteeDialogComponent,
+    PaperAssignComponent
   ],
   imports: [
     CommonModule,
@@ -47,7 +50,8 @@ import { CommitteeDialogComponent } from './dialogs/committee-dialog/committee-d
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    DragDropModule
   ]
 })
 export class AdminModule { }

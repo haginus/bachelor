@@ -5,7 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AdminService } from 'src/app/services/admin.service';
-import { Domain, Paper, UserDataMin } from 'src/app/services/auth.service';
+import { Committee, Domain, Paper, UserDataMin } from 'src/app/services/auth.service';
 import { CommitteeDialogComponent } from '../../dialogs/committee-dialog/committee-dialog.component';
 
 @Component({
@@ -95,20 +95,6 @@ export class CommitteesComponent implements OnInit {
     this.performedActions.next("refresh");
   }
 
-}
-
-export interface Committee {
-  id: number,
-  name: string,
-  domains: Domain[],
-  members: CommitteeMember[],
-  papers: Paper[]
-}
-
-export interface CommitteeMember {
-  teacherId: number,
-  role: 'president' | 'secretary' | 'member',
-  user?: UserDataMin
 }
 
 interface CommitteeRow {
