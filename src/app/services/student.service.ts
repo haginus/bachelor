@@ -194,9 +194,11 @@ export interface PaperDocumentTypes {
 export interface PaperRequiredDocument {
   title: string,
   name: string,
+  category: string,
   types: PaperDocumentTypes,
   acceptedMimeTypes: string,
-  acceptedExtensions: string[]
+  acceptedExtensions: string[],
+  uploadBy: 'student' | 'teacher' | 'committee'
 }
 
 export interface StudentExtraData {

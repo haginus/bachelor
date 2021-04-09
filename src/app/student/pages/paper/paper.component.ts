@@ -26,6 +26,52 @@ export class StudentPaperComponent implements OnInit {
   documentMap: DocumentMap = {}
   requiredDocuments: PaperRequiredDocument[] = []
 
+  private _computeNextAction(doc: DocumentMapElement): DocumentAction {
+    const isGenerated = doc.actualTypes.generated == true;
+    const isSigned = doc.actualTypes.signed == true;
+    const isUploaded = doc.actualTypes.copy == true;
+
+    const needsGenerated = doc.requiredTypes.generated == true;
+    const needsSigned = doc.requiredTypes.signed == true;
+    const needsUploaded = doc.requiredTypes.copy == true;
+
+    const canUpload = doc.uploadBy == 'student';
+
+    // Only 'generated' and 'signed' can be required at once. 'copy' must be required separately
+
+    // If file needs to be generated
+    if(needsGenerated) {
+      // If it is not generated then there is nothing to do
+      if(!isGenerated) {
+        return null;
+      }
+      else {
+        // Else we check if it needs to be signed
+        if(needsSigned) {
+          // If it is signed, return 'view' action
+          if(isSigned) {
+            return 'view';
+          } else {
+            // Else check if user can upload and return the correct action
+            return canUpload ? 'sign' : null;
+          }
+        }
+        // If it does not need to be signed, then we can view it
+        return 'view';
+      }
+    }
+    // If file needs to be uploaded ('copy')
+    if(needsUploaded) {
+      // If it actually is uploaded, return 'view'
+      if(isUploaded) {
+        return 'view';
+      }
+      // Else check if user can upload and return the correct action
+      return canUpload ? 'upload' : null;
+    }
+    return 'view';
+  }
+
 
   private _generateDocumentMap() {
     const documents = this.paper.documents;
@@ -38,7 +84,9 @@ export class StudentPaperComponent implements OnInit {
         actualTypes[doc.type] = true;
       })
       let lastId = currentDocuments.length == 0 ? null : currentDocuments.map(doc => doc.id).reduce((max, id) => (max < id) ? id : max);
-      let doc = { requiredTypes: requiredDoc.types, actualTypes, title: requiredDoc.title, lastId };
+      let doc = { requiredTypes: requiredDoc.types, actualTypes, title: requiredDoc.title, lastId,
+        uploadBy: requiredDoc.uploadBy, category: requiredDoc.category };
+      doc['nextAction'] = this._computeNextAction(doc);
       documentMap[docName] = doc;
     });
     this.documentMap = documentMap;
@@ -146,8 +194,13 @@ interface DocumentMap {
 
 interface DocumentMapElement {
   title: string,
+  category: string,
   requiredTypes: PaperDocumentTypes,
   actualTypes: PaperDocumentTypes,
   lastId: number,
-  actionPending: boolean
+  actionPending?: boolean,
+  nextAction?: DocumentAction,
+  uploadBy: 'student' | 'teacher' | 'committee'
 }
+
+type DocumentAction = 'sign' | 'upload'  | 'view' | null;
