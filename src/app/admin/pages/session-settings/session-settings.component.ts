@@ -34,6 +34,7 @@ export class SessionSettingsComponent implements OnInit {
     "applyEndDate": new FormControl(null, [Validators.required]),
     "fileSubmissionStartDate": new FormControl(null, [Validators.required]),
     "fileSubmissionEndDate": new FormControl(null, [Validators.required]),
+    "paperSubmissionEndDate": new FormControl(null, [Validators.required]),
   }, {
     validators: [dateValidator]
   });
@@ -64,6 +65,9 @@ const dateValidator: ValidatorFn = (control: FormGroup): ValidationErrors | null
   }
   if(new Date(settings.fileSubmissionEndDate).getTime() < new Date(settings.fileSubmissionStartDate).getTime()) {
     errors['fileSubmissionEndDateLowerThanFileSubmissionStartDate'] = true;
+  }
+  if(new Date(settings.paperSubmissionEndDate).getTime() < new Date(settings.fileSubmissionStartDate).getTime()) {
+    errors['paperSubmissionEndDateLowerThanFileSubmissionStartDate'] = true;
   }
   return Object.keys(errors).length ? errors : null;
 };

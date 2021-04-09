@@ -36,6 +36,13 @@
                 <mat-hint>Data până la care studenții pot depune documentele la dosar</mat-hint>
                 <mat-error>Data încheierii depunerilor de documente nu poate fi mai devreme de cea a începerii!</mat-error>
             </mat-form-field>
+            <div fxFlex="50" fxHide.xs></div>
+            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+                <mat-label>Termen limită depunere lucrări</mat-label>
+                <input matInput type="date" formControlName="paperSubmissionEndDate" [errorStateMatcher]="settingsFormMatcher">
+                <mat-hint>Data până la care studenții și profesorii pot depune lucrarea, respectiv referatul.</mat-hint>
+                <mat-error>Termenul limită pentru depunerea lucrărilor nu poate fi mai devreme de data începerii depunerilor de documente!</mat-error>
+            </mat-form-field>
         </div>
         <div fxLayout="column" fxLayoutAlign="center center" class="form-actions">
             <button mat-raised-button color="primary" (click)="saveSettings()" [disabled]="settingsForm.invalid">Salvați setările</button>

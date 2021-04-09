@@ -266,6 +266,7 @@ export interface SessionSettings {
   applyEndDate: string,
   fileSubmissionStartDate: string,
   fileSubmissionEndDate: string,
+  paperSubmissionEndDate: string
 }
 
 export interface Committee {
