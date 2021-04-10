@@ -114,7 +114,6 @@ export class PaperDocumentListComponent implements OnChanges {
       maxWidth: '500px'
     });
     dialogRef.afterClosed().subscribe(document => {
-      this.documentMap[documentName].actionPending = true;
       if(document) {
         this._documentEventsSource.next({ documentName, action });
         this.documents.push(document);

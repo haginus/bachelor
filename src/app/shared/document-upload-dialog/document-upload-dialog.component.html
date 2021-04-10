@@ -33,7 +33,7 @@
             {{ acceptedExtensions }}
         </p>
         <div fxLayout="row">
-            <div [hidden]="isLoadingFile">
+            <div [hidden]="isUploadingFile">
                 <label for="file" class="mat-raised-button icon-button" *ngIf="state == 'docDownloaded'">
                     <mat-icon>cloud_upload</mat-icon>
                     <span>
@@ -59,7 +59,7 @@
         {{ acceptedExtensions }}
     </p>
     <div fxLayout="row">
-        <div [hidden]="isLoadingFile">
+        <div [hidden]="isUploadingFile">
             <label for="file" class="mat-raised-button icon-button">
                 <mat-icon>cloud_upload</mat-icon>
                 <span>
@@ -68,6 +68,6 @@
             </label>
             <input type="file" id="file" [accept]="data.document.acceptedMimeTypes" (change)="handleFileInput($event.target, 'copy')">     
         </div>
-        <mat-spinner [diameter]="36" *ngIf="isLoadingFile"></mat-spinner>
+        <mat-spinner [diameter]="36" *ngIf="isUploadingFile"></mat-spinner>
     </div>
 </mat-dialog-content>
