@@ -169,7 +169,9 @@
             "SIGNED_DOCUMENT": "Document semnat",
             "SIGN_DOCUMENT": "Semnați",
             "VIEW_DOCUMENT": "Vizualizați",
-            "UPLOAD_DOCUMENT": "Încărcați"
+            "UPLOAD_DOCUMENT": "Încărcați",
+            "CAN_BE_UPLOADED_BY_TEACHER": "Se încarcă de către profesor",
+            "CAN_BE_UPLOADED_BY_COMMITTEE": "Se încarcă de către comisie"
         },
         "EXTRA_DATA_EDITOR": {
             "HEADER": "Completați datele necesare",

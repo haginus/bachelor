@@ -169,7 +169,9 @@
             "SIGNED_DOCUMENT": "Document signed",
             "SIGN_DOCUMENT": "Sign",
             "VIEW_DOCUMENT": "View",
-            "UPLOAD_DOCUMENT": "Upload"
+            "UPLOAD_DOCUMENT": "Upload",
+            "CAN_BE_UPLOADED_BY_TEACHER": "Can be uploaded by teacher",
+            "CAN_BE_UPLOADED_BY_COMMITTEE": "Can be uploaded by committee"
         },
         "EXTRA_DATA_EDITOR": {
             "HEADER": "Fill in required data",
