@@ -220,7 +220,8 @@ export interface UserData {
 export interface UserDataMin {
   id: number,
   firstName: string,
-  lastName: string
+  lastName: string,
+  email?: string
 }
 
 export interface Domain {
@@ -244,7 +245,7 @@ export interface Paper {
   title: string,
   description: string,
   type: "bachelor" | "master",
-  teacher: UserDataMin,
+  teacher?: UserDataMin,
   teacherId: number,
   student?: UserDataMin,
   documents: PaperDocument[],
