@@ -12,13 +12,18 @@ import { MatIconModule } from "@angular/material/icon";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { MatExpansionModule } from '@angular/material/expansion';
 import { TranslateModule } from "@ngx-translate/core";
+import { PaperDocumentListComponent } from './paper-document-list/paper-document-list.component';
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { DocumentUploadDialogComponent } from "./document-upload-dialog/document-upload-dialog.component";
 
 
 @NgModule({
     declarations: [
         LoadingComponent,
         CommonDialogComponent,
-        ApplicationListComponent
+        ApplicationListComponent,
+        DocumentUploadDialogComponent,
+        PaperDocumentListComponent
     ],
     imports: [
         CommonModule,
@@ -28,6 +33,7 @@ import { TranslateModule } from "@ngx-translate/core";
         MatCardModule,
         MatListModule,
         MatIconModule,
+        MatProgressSpinnerModule,
         FlexLayoutModule,
         MatExpansionModule,
         TranslateModule
@@ -38,7 +44,9 @@ import { TranslateModule } from "@ngx-translate/core";
         ApplicationListComponent,
         FlexLayoutModule,
         MatExpansionModule,
-        TranslateModule
+        TranslateModule,
+        PaperDocumentListComponent,
+        DocumentUploadDialogComponent
     ]
   })
   export class SharedModule { }
