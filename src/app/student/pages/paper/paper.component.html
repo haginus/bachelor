@@ -56,7 +56,7 @@
 
     <mat-list class="document-list">
         <div mat-subheader>{{ 'STUDENT.PAPER.DOCUMENTS_HEADER' | translate }}</div>
-        <app-paper-document-list *ngIf="!isLoadingInitialData"
+        <app-paper-document-list *ngIf="!isLoadingInitialData" [paperId]="paper.id"
             [requiredDocuments]="requiredDocuments"
             [documents]="paper.documents" perspective="student"
             (documentEvents)="handleDocumentEvents($event)"

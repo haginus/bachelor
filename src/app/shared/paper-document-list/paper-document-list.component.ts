@@ -21,7 +21,11 @@ export class PaperDocumentListComponent implements OnChanges {
 
   @Input() requiredDocuments: PaperRequiredDocument[] = [];
   @Input() documents: PaperDocument[] = [];
+  // In what quality is the viewer of this list
   @Input() perspective: 'student' | 'teacher' | 'committee' = 'student';
+  // Paper ID (needed for teacher / committee to know where to upload the document)
+  @Input() paperId: number;
+  // Emit events when documents change (signed / copy uploaded)
   @Output() documentEvents: Observable<PaperDocumentEvent>;
 
   private _documentEventsSource: BehaviorSubject<PaperDocumentEvent> = new BehaviorSubject(null);
@@ -103,15 +107,18 @@ export class PaperDocumentListComponent implements OnChanges {
       data: {
         action,
         document,
-        documentId
+        documentId,
+        paperId: this.paperId
       },
       width: '100%',
       maxWidth: '500px'
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(document => {
       this.documentMap[documentName].actionPending = true;
-      if(result) {
+      if(document) {
         this._documentEventsSource.next({ documentName, action });
+        this.documents.push(document);
+        this._generateDocumentMap();
       }
     })
   }

@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable, of } from 'rxjs';
 import { PaperRequiredDocument, StudentService } from 'src/app/services/student.service';
 
 @Component({
@@ -52,13 +53,22 @@ export class DocumentUploadDialogComponent implements OnInit {
   handleFileInput(target: any, type: string) {
     const file: File = target.files[0];
     this.isUploadingFile = true;
-    this.student.uploadDocument(file, this.data.document.name, type).subscribe(res => {
+    let ob: Observable<any>;
+    switch(this.data.document.uploadBy) {
+      case 'student':
+        ob = this.student.uploadDocument(file, this.data.document.name, type);
+        break;
+      default:
+        ob = of(null);
+    }
+    ob.subscribe(res => {
       if(res == null) {
         this.snackbar.open("A apărut o eroare.");
         this.isUploadingFile = false;
+        target.value = null;
       } else {
         this.snackbar.open(`Document încărcat.`);
-        this.dialogRef.close(true);
+        this.dialogRef.close(res);
       }
     })
   }
@@ -67,5 +77,6 @@ export class DocumentUploadDialogComponent implements OnInit {
 export interface DocumentUploadDialogData {
   document: PaperRequiredDocument,
   action: 'sign' | 'uploadCopy',
-  documentId: number
+  documentId: number,
+  paperId: number
 }

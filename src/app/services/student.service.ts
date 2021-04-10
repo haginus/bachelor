@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { AuthService, Domain, Paper, UserData, UserDataMin } from './auth.service';
+import { AuthService, Domain, Paper, PaperDocument, UserData, UserDataMin } from './auth.service';
 import { Topic } from './topics.service';
 
 @Injectable({
@@ -108,7 +108,7 @@ export class StudentService {
       );
   }
 
-  getDocument(id: number): Observable<any> {
+  getDocument(id: number): Observable<ArrayBuffer> {
     const url = `${environment.apiUrl}/documents/view?id=${id}`;
     const options = this.auth.getPrivateHeaders();
     return this.http
@@ -118,13 +118,13 @@ export class StudentService {
       );
   }
 
-  uploadDocument(file: File, name: string, type: string): Observable<any> {
+  uploadDocument(file: File, name: string, type: string): Observable<PaperDocument> {
     const url = `${environment.apiUrl}/student/paper/documents/upload`;
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
     formData.append('name', name);
     formData.append('type', type);
-    return this.http.post<any>(url, formData, this.auth.getPrivateHeaders()).pipe(
+    return this.http.post<PaperDocument>(url, formData, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("uploadDocument", null))
     );
   }
