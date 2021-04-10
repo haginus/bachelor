@@ -56,53 +56,10 @@
 
     <mat-list class="document-list">
         <div mat-subheader>{{ 'STUDENT.PAPER.DOCUMENTS_HEADER' | translate }}</div>
-        <mat-list-item *ngFor="let document of requiredDocuments">
-            <span mat-list-icon>
-                <mat-icon *ngIf="!documentMap[document.name].actionPending">description</mat-icon>
-                <mat-spinner diameter="24" *ngIf="documentMap[document.name].actionPending"></mat-spinner>
-            </span>
-            <div mat-line>{{document.title}}</div>
-            <div mat-line>
-                <span *ngIf="documentMap[document.name].nextAction == null || documentMap[document.name].nextAction == 'upload'">
-                    {{ 'STUDENT.PAPER.MISSING_DOCUMENT' | translate }}
-                    <span *ngIf="documentMap[document.name].uploadBy == 'teacher'">
-                        | {{ 'STUDENT.PAPER.CAN_BE_UPLOADED_BY_TEACHER' | translate }}
-                    </span>
-                    <span *ngIf="documentMap[document.name].uploadBy == 'committee'">
-                        | {{ 'STUDENT.PAPER.CAN_BE_UPLOADED_BY_COMMITTEE' | translate }}
-                    </span>
-                </span>
-                <span *ngIf="documentMap[document.name].nextAction == 'sign'">
-                    {{ 'STUDENT.PAPER.DOCUMENT_NEEDS_SIGNATURE' | translate }}
-                </span>
-                <span *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].actualTypes.generated && !documentMap[document.name].requiredTypes.signed">
-                    {{ 'STUDENT.PAPER.GENERATED_DOCUMENT' | translate }}
-                </span>
-                <span *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].actualTypes.signed">
-                    {{ 'STUDENT.PAPER.SIGNED_DOCUMENT' | translate }}
-                </span>
-                <span *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].actualTypes.copy">
-                    {{ 'STUDENT.PAPER.UPLOADED_DOCUMENT' | translate }}
-                </span>
-            </div>
-            <button 
-                mat-stroked-button
-                *ngIf="documentMap[document.name].nextAction == 'view'"
-                (click)="viewDocument(documentMap[document.name])" [disabled]="documentMap[document.name].actionPending">
-                {{ 'STUDENT.PAPER.VIEW_DOCUMENT' | translate }}
-            </button>
-            <button 
-                mat-stroked-button
-                *ngIf="documentMap[document.name].nextAction == 'sign'"
-                (click)="openDocumentDialog('sign', document.name, documentMap[document.name].lastId)">
-                {{ 'STUDENT.PAPER.SIGN_DOCUMENT' | translate }}
-            </button>
-            <button 
-                mat-stroked-button
-                *ngIf="documentMap[document.name].nextAction == 'upload'"
-                (click)="openDocumentDialog('uploadCopy', document.name)">
-                {{ 'STUDENT.PAPER.UPLOAD_DOCUMENT' | translate }}
-            </button>
-        </mat-list-item>
+        <app-paper-document-list *ngIf="!isLoadingInitialData"
+            [requiredDocuments]="requiredDocuments"
+            [documents]="paper.documents" perspective="student"
+            (documentEvents)="handleDocumentEvents($event)"
+        ></app-paper-document-list>
     </mat-list>
 </mat-card>
