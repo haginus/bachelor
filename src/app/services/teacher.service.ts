@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { AuthService, Domain } from './auth.service';
+import { AuthService, Domain, Paper } from './auth.service';
 import { OfferApplication } from './student.service';
 import { Topic } from './topics.service';
 
@@ -90,6 +90,18 @@ export class TeacherService {
       .pipe(
         map(_ => true),
         catchError(this.handleError<boolean>('acceptApplication', null))
+      );
+  }
+
+  // Student Papers
+
+  getStudentPapers(): Observable<Paper[]> {
+    const url = `${environment.apiUrl}/teacher/papers`
+    return this.http
+      .get<Paper[]>(url, this.auth.getPrivateHeaders())
+      .pipe(
+        retry(3),
+        catchError(this.handleError<Paper[]>('getStudentPapers', []))
       );
   }
 

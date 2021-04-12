@@ -40,7 +40,7 @@
             <mat-list *ngIf="user?.type == 'student' && user.student.paper == null">
                 <div mat-subheader>{{'DRAWER.INFO_HEADER' | translate}}</div>
                 <a mat-list-item class="nav-item" routerLink="student" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                    <mat-icon mat-list-icon>stars</mat-icon>
+                    <mat-icon mat-list-icon>lightbulb</mat-icon>
                     <div mat-line>{{'DRAWER.INFO_AND_QUESTIONS' | translate}}</div>
                 </a>
                 <div mat-subheader>{{'DRAWER.TEACHERS_HEADER' | translate}}</div>
@@ -65,7 +65,7 @@
             <mat-list *ngIf="user?.type == 'student' && user.student.paper">
                 <div mat-subheader>{{'DRAWER.INFO_HEADER' | translate}}</div>
                 <a mat-list-item class="nav-item" routerLink="student" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                    <mat-icon mat-list-icon>stars</mat-icon>
+                    <mat-icon mat-list-icon>lightbulb</mat-icon>
                     <div mat-line>{{'DRAWER.INFO_AND_QUESTIONS' | translate}}</div>
                 </a>
                 <div mat-subheader>{{'DRAWER.ASSOCIATION_HEADER' | translate}}</div>
@@ -89,6 +89,11 @@
                 <a mat-list-item class="nav-item" routerLink="teacher/applications/declined" routerLinkActive="active">
                     <mat-icon mat-list-icon>assignment_returned</mat-icon>
                     <div mat-line>Cereri refuzate</div>
+                </a>
+                <div mat-subheader>Lucrări</div>
+                <a mat-list-item class="nav-item" routerLink="teacher/papers" routerLinkActive="active">
+                    <mat-icon mat-list-icon>description</mat-icon>
+                    <div mat-line>Lucrări coordonate</div>
                 </a>
             </mat-list>
             <!-- ADMIN -->

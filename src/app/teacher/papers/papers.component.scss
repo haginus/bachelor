@@ -1,0 +1,52 @@
+table {
+    width: 100%;
+}
+
+.detail-row {
+    height: 0px;
+}
+
+.status-icon {
+    cursor: default;
+    user-select: none;
+
+    &.done {
+        color: #388e3c;
+    }
+    &.warn {
+        color: #f57c00;
+    }
+}
+
+.paper-detail {
+    overflow: hidden;
+    .paper-header {
+        display: flex;
+        margin-top: 12px;
+        .paper-description {
+            flex: 1;
+            color: #616161;
+        }
+    }
+    .document-list {
+        padding-top: 8px;
+        margin: 0 -16px;
+    }
+}
+
+.paper-row td {
+    border-bottom-width: 0;
+}
+
+.paper-row td:first-child {
+    width: 24px;
+    padding: 0 12px;
+}
+
+tr.paper-row:not(.expanded-row):hover {
+    background: whitesmoke;
+}
+  
+tr.paper-row:not(.expanded-row):active {
+    background: #efefef;
+}

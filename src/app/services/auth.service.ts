@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, map, take, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { PaperRequiredDocument } from './student.service';
 import { Topic } from './topics.service';
 
 @Injectable({
@@ -250,7 +251,8 @@ export interface Paper {
   student?: UserDataMin,
   documents: PaperDocument[],
   committee?: Committee,
-  topics?: Topic[]
+  topics?: Topic[],
+  requiredDocuments?: PaperRequiredDocument[]
 }
 
 export interface PaperDocument {
