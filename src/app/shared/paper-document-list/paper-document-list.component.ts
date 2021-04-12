@@ -1,8 +1,7 @@
-import { Component, DoCheck, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, DoCheck, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 import { PaperDocument } from 'src/app/services/auth.service';
 import { StudentService } from 'src/app/services/student.service';
 import { DocumentUploadDialogComponent } from '../document-upload-dialog/document-upload-dialog.component';
@@ -15,9 +14,7 @@ import { DocumentUploadDialogComponent } from '../document-upload-dialog/documen
 export class PaperDocumentListComponent implements OnChanges {
 
   constructor(private snackbar: MatSnackBar, private dialog: MatDialog,
-    private student: StudentService) {
-      this.documentEvents = this._documentEventsSource.asObservable();
-    }
+    private student: StudentService) { }
 
   @Input() requiredDocuments: PaperRequiredDocument[] = [];
   @Input() documents: PaperDocument[] = [];
@@ -26,9 +23,9 @@ export class PaperDocumentListComponent implements OnChanges {
   // Paper ID (needed for teacher / committee to know where to upload the document)
   @Input() paperId: number;
   // Emit events when documents change (signed / copy uploaded)
-  @Output() documentEvents: Observable<PaperDocumentEvent>;
-
-  private _documentEventsSource: BehaviorSubject<PaperDocumentEvent> = new BehaviorSubject(null);
+  @Output() documentEvents = new EventEmitter<PaperDocumentEvent>();
+  // Output variable that tells whether all the documents are uploaded (by uploader and category)
+  @Output() areDocumentsUploaded = new EventEmitter<AreDocumentsUploaded>();
 
   ngOnChanges(changes: SimpleChanges): void {
     this._generateDocumentMap();
@@ -99,6 +96,39 @@ export class PaperDocumentListComponent implements OnChanges {
       documentMap[docName] = doc;
     });
     this.documentMap = documentMap;
+    this._generateAreDocumentsUploaded();
+  }
+
+  private _generateAreDocumentsUploaded(): void {
+    let areDocumentsUploaded: AreDocumentsUploaded = {
+      byCategory: {},
+      byUploader: {
+        student: true,
+        teacher: true,
+        committee: true
+      }
+    }
+    let docNames = Object.keys(this.documentMap);
+    docNames.forEach(docName => {
+      let doc = this.documentMap[docName];
+      // Init by category with true
+      if(areDocumentsUploaded[doc.category] != undefined) {
+        areDocumentsUploaded.byCategory[doc.category] = true;
+      }
+      // Get required types
+      let requiredTypes = Object.keys(doc.requiredTypes);
+      // Get uploader
+      let uploader = doc.uploadBy;
+      // For each required type
+      requiredTypes.forEach(type => {
+        // If doc actual type lacks required type set byUploader and byCategory correspondig to the doc to false
+        if(!doc.actualTypes[type]) {
+          areDocumentsUploaded.byUploader[uploader] = false;
+          areDocumentsUploaded.byCategory[doc.category] = false;
+        }
+      });
+    });
+    this.areDocumentsUploaded.emit(areDocumentsUploaded);
   }
 
   openDocumentDialog(action: 'sign' | 'uploadCopy', documentName: string, documentId?: number) {
@@ -115,7 +145,7 @@ export class PaperDocumentListComponent implements OnChanges {
     });
     dialogRef.afterClosed().subscribe(document => {
       if(document) {
-        this._documentEventsSource.next({ documentName, action });
+        this.documentEvents.emit({ documentName, action });
         this.documents.push(document);
         this._generateDocumentMap();
       }
@@ -149,6 +179,8 @@ interface DocumentMap {
   [name: string]: DocumentMapElement
 }
 
+type UploadBy = 'student' | 'teacher' | 'committee';
+
 interface DocumentMapElement {
   title: string,
   category: string,
@@ -157,7 +189,7 @@ interface DocumentMapElement {
   lastId: number,
   actionPending?: boolean,
   nextAction?: DocumentAction,
-  uploadBy: 'student' | 'teacher' | 'committee'
+  uploadBy: UploadBy;
 }
 
 type DocumentAction = 'sign' | 'upload'  | 'view' | null;
@@ -175,10 +207,19 @@ export interface PaperRequiredDocument {
   types: PaperDocumentTypes,
   acceptedMimeTypes: string,
   acceptedExtensions: string[],
-  uploadBy: 'student' | 'teacher' | 'committee'
+  uploadBy: UploadBy;
 }
 
 export interface PaperDocumentEvent {
   documentName: string,
   action: 'sign' | 'uploadCopy'
+}
+
+export interface AreDocumentsUploaded {
+  byCategory: {
+    [name: string]: boolean
+  };
+  byUploader: {
+    [name in UploadBy]: boolean
+  }
 }

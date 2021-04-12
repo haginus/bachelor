@@ -27,19 +27,22 @@
     <button 
         mat-stroked-button
         *ngIf="documentMap[document.name].nextAction == 'view'"
-        (click)="viewDocument(documentMap[document.name])" [disabled]="documentMap[document.name].actionPending">
+        (click)="viewDocument(documentMap[document.name])"
+        [disabled]="documentMap[document.name].actionPending">
         {{ 'STUDENT.PAPER.VIEW_DOCUMENT' | translate }}
     </button>
     <button 
         mat-stroked-button
         *ngIf="documentMap[document.name].nextAction == 'sign'"
-        (click)="openDocumentDialog('sign', document.name, documentMap[document.name].lastId)">
+        (click)="openDocumentDialog('sign', document.name, documentMap[document.name].lastId)"
+        [disabled]="documentMap[document.name].actionPending">
         {{ 'STUDENT.PAPER.SIGN_DOCUMENT' | translate }}
     </button>
     <button 
         mat-stroked-button
         *ngIf="documentMap[document.name].nextAction == 'upload'"
-        (click)="openDocumentDialog('uploadCopy', document.name)">
+        (click)="openDocumentDialog('uploadCopy', document.name)"
+        [disabled]="documentMap[document.name].actionPending">
         {{ 'STUDENT.PAPER.UPLOAD_DOCUMENT' | translate }}
     </button>
 </mat-list-item>
