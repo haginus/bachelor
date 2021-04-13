@@ -175,6 +175,21 @@ export class PaperDocumentListComponent implements OnChanges {
     })
   }
 
+  deleteDocument(mapElement: DocumentMapElement) {
+    let documentId = mapElement.lastId;
+    mapElement.actionPending = true;
+    this.document.deleteDocument(documentId).subscribe(result => {
+      if(result) {
+        let idx = this.documents.findIndex(doc => doc.id == documentId);
+        this.documents.splice(idx, 1);
+        this._generateDocumentMap();
+        this.snackbar.open('Document șters.');
+      }
+      mapElement.actionPending = false;
+
+    });
+  }
+
 }
 
 interface DocumentMap {

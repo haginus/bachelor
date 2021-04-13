@@ -24,6 +24,14 @@
             {{ 'STUDENT.PAPER.UPLOADED_DOCUMENT' | translate }}
         </span>
     </div>
+    <button class="left-button"
+        mat-icon-button
+        matTooltip="Ștergeți documentul"
+        (click)="deleteDocument(documentMap[document.name])"
+        *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].uploadBy == perspective"
+        [disabled]="documentMap[document.name].actionPending">
+        <mat-icon>history</mat-icon>
+    </button>
     <button 
         mat-stroked-button
         *ngIf="documentMap[document.name].nextAction == 'view'"

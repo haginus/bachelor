@@ -15,6 +15,7 @@ import { TranslateModule } from "@ngx-translate/core";
 import { PaperDocumentListComponent } from './paper-document-list/paper-document-list.component';
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { DocumentUploadDialogComponent } from "./document-upload-dialog/document-upload-dialog.component";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import { DocumentUploadDialogComponent } from "./document-upload-dialog/document
         MatCardModule,
         MatListModule,
         MatIconModule,
+        MatTooltipModule,
         MatProgressSpinnerModule,
         FlexLayoutModule,
         MatExpansionModule,
