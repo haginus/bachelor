@@ -1,9 +1,13 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTable } from '@angular/material/table';
+import { BehaviorSubject, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { Paper } from 'src/app/services/auth.service';
-import { PaperDocumentTypes } from 'src/app/services/student.service';
 import { TeacherService } from 'src/app/services/teacher.service';
+import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
 import { AreDocumentsUploaded, PaperDocumentEvent } from 'src/app/shared/paper-document-list/paper-document-list.component';
 
 @Component({
@@ -20,7 +24,8 @@ import { AreDocumentsUploaded, PaperDocumentEvent } from 'src/app/shared/paper-d
 })
 export class TeacherPapersComponent implements OnInit {
 
-  constructor(private teacher: TeacherService, private cd: ChangeDetectorRef) { }
+  constructor(private teacher: TeacherService, private cd: ChangeDetectorRef, private dialog: MatDialog,
+    private snackbar: MatSnackBar) { }
 
   displayedColumns: string[] = ['status', 'title', 'type', 'student', 'committee'];
   expandedPaper: Paper | null;
@@ -33,6 +38,7 @@ export class TeacherPapersComponent implements OnInit {
 
   performedActions: BehaviorSubject<string> = new BehaviorSubject('');
 
+  @ViewChild('table') table: MatTable<Paper>;
 
   ngOnInit(): void {
     this.teacher.getStudentPapers().subscribe(papers => {
@@ -53,6 +59,47 @@ export class TeacherPapersComponent implements OnInit {
     this.paperNeedsAttentionMap[paper.id] = !event.byUploader.teacher;
     // Detect changes so that the new value is reflected it the DOM
     this.cd.detectChanges();
+  }
+
+  removePaper(paper: Paper) {
+    let dialogRef = this.dialog.open(CommonDialogComponent, {
+      data: {
+        title: 'Rupeți asocierea?',
+        content: 'Sunteți sigur că doriți să rupeți asocierea?\nStudentul va trebui să își găsească alt profesor.',
+        actions: [
+          {
+            name: 'Anulați',
+            value: false
+          },
+          {
+            name: 'Rupeți asocierea',
+            value: true
+          }
+        ]
+      }
+    });
+
+    let sub = dialogRef.afterClosed().pipe(
+      switchMap(result => {
+        // If dialog result is true, return removePaper observable, else return Observable<null>
+        return result == true ? this.teacher.removePaper(paper.id) : of(null);
+      })
+    ).subscribe(result => {
+      // If dialog result was false, exit
+      if(result == null) {
+        return;
+      }
+      let msg = result ? 'Asociere ruptă' : 'A apărut o eroare.';
+      this.snackbar.open(msg);
+      // If delete was successful, remove paper from table
+      if(result) {
+        let idx = this.data.findIndex(p => paper.id == p.id);
+        this.data.splice(idx, 1);
+        this.table.renderRows();
+      }
+
+      sub.unsubscribe();
+    });
   }
 
 }

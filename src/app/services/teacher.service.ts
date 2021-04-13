@@ -120,6 +120,17 @@ export class TeacherService {
     );
   }
 
+  removePaper(paperId: number): Observable<boolean> {
+    const url = `${environment.apiUrl}/teacher/papers/remove`;
+    const data = { paperId };
+    return this.http
+      .post<any>(url, data, this.auth.getPrivateHeaders())
+      .pipe(
+        map(_ => true),
+        catchError(this.handleError<boolean>('removePaper', false))
+      );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       return of(result as T);
