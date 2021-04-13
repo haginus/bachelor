@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
+import { DocumentService } from 'src/app/services/document.service';
 import { PaperRequiredDocument, StudentService } from 'src/app/services/student.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 
@@ -13,7 +14,7 @@ import { TeacherService } from 'src/app/services/teacher.service';
 export class DocumentUploadDialogComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: DocumentUploadDialogData, private student: StudentService,
-  private teacher: TeacherService,
+  private teacher: TeacherService, private document: DocumentService,
   private snackbar: MatSnackBar, private dialogRef: MatDialogRef<DocumentUploadDialogComponent>) { }
 
   mode: 'signDocument' | 'uploadDocument';
@@ -36,7 +37,7 @@ export class DocumentUploadDialogComponent implements OnInit {
 
   downloadDocument() {
     this.isLoadingFile = true;
-    this.student.getDocument(this.documentId).subscribe(data => {
+    this.document.getDocument(this.documentId).subscribe(data => {
       if(data) {
         const blob = new Blob([data], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
