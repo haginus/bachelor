@@ -108,16 +108,6 @@ export class StudentService {
       );
   }
 
-  getDocument(id: number): Observable<ArrayBuffer> {
-    const url = `${environment.apiUrl}/documents/view?id=${id}`;
-    const options = this.auth.getPrivateHeaders();
-    return this.http
-      .get<any>(url, {...options, responseType: 'arraybuffer' as 'json'})
-      .pipe(
-        catchError(this.handleError<any>('viewDocument', null))
-      );
-  }
-
   uploadDocument(file: File, name: string, type: string): Observable<PaperDocument> {
     const url = `${environment.apiUrl}/student/paper/documents/upload`;
     const formData: FormData = new FormData();

@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { PaperDocument } from 'src/app/services/auth.service';
+import { DocumentService } from 'src/app/services/document.service';
 import { StudentService } from 'src/app/services/student.service';
 import { DocumentUploadDialogComponent } from '../document-upload-dialog/document-upload-dialog.component';
 
@@ -14,7 +15,7 @@ import { DocumentUploadDialogComponent } from '../document-upload-dialog/documen
 export class PaperDocumentListComponent implements OnChanges {
 
   constructor(private snackbar: MatSnackBar, private dialog: MatDialog,
-    private student: StudentService) { }
+    private document: DocumentService) { }
 
   @Input() requiredDocuments: PaperRequiredDocument[] = [];
   @Input() documents: PaperDocument[] = [];
@@ -161,7 +162,7 @@ export class PaperDocumentListComponent implements OnChanges {
 
     const id = mapElement.lastId;
     const type = this.documents.find(doc => doc.id == id).mimeType;
-    this.student.getDocument(id).subscribe(data => {
+    this.document.getDocument(id).subscribe(data => {
       mapElement.actionPending = false;
       if(!data) {
         this.snackbar.open("A apărut o eroare.");
