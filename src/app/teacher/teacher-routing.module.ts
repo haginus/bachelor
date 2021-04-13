@@ -15,7 +15,7 @@ const routes: Routes = [
   { path: 'applications', component: TeacherApplicationsComponent, data: { title: "Cereri" }, canActivate: [ValidatedGuard] },
   { path: 'applications/:state', component: TeacherApplicationsComponent, data: { title: "Cereri" }, canActivate: [ValidatedGuard] },
   { path: 'applications/:state/:offerId', component: TeacherApplicationsComponent, data: { title: "Cereri" }, canActivate: [ValidatedGuard] },
-  { path: 'papers', component: TeacherPapersComponent, data: { title: "Cereri" }, canActivate: [ValidatedGuard] },
+  { path: 'papers', component: TeacherPapersComponent, data: { title: "Lucrări" }, canActivate: [ValidatedGuard] },
 ];
 
 @NgModule({

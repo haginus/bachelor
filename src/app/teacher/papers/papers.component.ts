@@ -1,9 +1,9 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTable } from '@angular/material/table';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { Paper } from 'src/app/services/auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
@@ -22,7 +22,7 @@ import { AreDocumentsUploaded, PaperDocumentEvent } from 'src/app/shared/paper-d
     ]),
   ],
 })
-export class TeacherPapersComponent implements OnInit {
+export class TeacherPapersComponent implements OnInit, OnDestroy {
 
   constructor(private teacher: TeacherService, private cd: ChangeDetectorRef, private dialog: MatDialog,
     private snackbar: MatSnackBar) { }
@@ -37,11 +37,18 @@ export class TeacherPapersComponent implements OnInit {
   paperNeedsAttentionMap: PaperNeedsAttentionMap = {};
 
   performedActions: BehaviorSubject<string> = new BehaviorSubject('');
+  paperSubscription: Subscription;
 
   @ViewChild('table') table: MatTable<Paper>;
 
   ngOnInit(): void {
-    this.teacher.getStudentPapers().subscribe(papers => {
+    this.paperSubscription = this.performedActions.pipe(
+      switchMap(action => {
+        this.isLoadingResults = true;
+        return this.teacher.getStudentPapers();
+      })
+    )
+   .subscribe(papers => {
       this.data = papers as Paper[];
       this.isLoadingResults = false;
     })
@@ -102,6 +109,9 @@ export class TeacherPapersComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.paperSubscription.unsubscribe();
+  }
 }
 
 interface PaperNeedsAttentionMap {
