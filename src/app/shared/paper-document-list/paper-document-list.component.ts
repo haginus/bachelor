@@ -138,7 +138,8 @@ export class PaperDocumentListComponent implements OnChanges {
         action,
         document,
         documentId,
-        paperId: this.paperId
+        paperId: this.paperId,
+        perspective: this.perspective
       },
       width: '100%',
       maxWidth: '500px'

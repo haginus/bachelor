@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { AuthService, Domain, Paper } from './auth.service';
+import { AuthService, Domain, Paper, PaperDocument } from './auth.service';
 import { OfferApplication } from './student.service';
 import { Topic } from './topics.service';
 
@@ -103,6 +103,21 @@ export class TeacherService {
         retry(3),
         catchError(this.handleError<Paper[]>('getStudentPapers', []))
       );
+  }
+
+  uploadDocument(paperId: number, perspective: 'teacher' | 'committee',
+    file: File, name: string, type: string): Observable<PaperDocument> {
+
+    const url = `${environment.apiUrl}/teacher/papers/documents/upload`;
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+    formData.append('name', name);
+    formData.append('type', type);
+    formData.append('paperId', String(paperId));
+    formData.append('perspective', perspective);
+    return this.http.post<PaperDocument>(url, formData, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError("uploadDocument", null))
+    );
   }
 
   private handleError<T>(operation = 'operation', result?: T) {

@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { PaperRequiredDocument, StudentService } from 'src/app/services/student.service';
+import { TeacherService } from 'src/app/services/teacher.service';
 
 @Component({
   selector: 'app-document-upload-dialog',
@@ -12,7 +13,8 @@ import { PaperRequiredDocument, StudentService } from 'src/app/services/student.
 export class DocumentUploadDialogComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: DocumentUploadDialogData, private student: StudentService,
-    private snackbar: MatSnackBar, private dialogRef: MatDialogRef<DocumentUploadDialogComponent>) { }
+  private teacher: TeacherService,
+  private snackbar: MatSnackBar, private dialogRef: MatDialogRef<DocumentUploadDialogComponent>) { }
 
   mode: 'signDocument' | 'uploadDocument';
   state: 'initial' | 'docDownloaded';
@@ -58,6 +60,9 @@ export class DocumentUploadDialogComponent implements OnInit {
       case 'student':
         ob = this.student.uploadDocument(file, this.data.document.name, type);
         break;
+      case 'teacher':
+        ob = this.teacher.uploadDocument(this.data.paperId, this.data.perspective, file, this.data.document.name, type);
+        break;
       default:
         ob = of(null);
     }
@@ -78,5 +83,6 @@ export interface DocumentUploadDialogData {
   document: PaperRequiredDocument,
   action: 'sign' | 'uploadCopy',
   documentId: number,
-  paperId: number
+  paperId: number;
+  perspective?: 'teacher';
 }
