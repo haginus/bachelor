@@ -11,6 +11,7 @@ import { TeacherOfferDialogComponent } from './dialogs/teacher-offer-dialog/teac
 import { SharedModule } from '../shared/shared.module';
 import { TeacherApplicationsComponent } from './pages/applications/applications.component';
 import { TeacherPapersComponent } from './papers/papers.component';
+import { TeacherCommitteesComponent } from './pages/committees/committees.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { TeacherPapersComponent } from './papers/papers.component';
     TeacherOffersComponent,
     TeacherOfferDialogComponent,
     TeacherApplicationsComponent,
-    TeacherPapersComponent
+    TeacherPapersComponent,
+    TeacherCommitteesComponent
   ],
   imports: [
     CommonModule,

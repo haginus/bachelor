@@ -95,6 +95,11 @@
                     <mat-icon mat-list-icon>description</mat-icon>
                     <div mat-line>Lucrări coordonate</div>
                 </a>
+                <div mat-subheader>Comisii</div>
+                <a mat-list-item class="nav-item" routerLink="teacher/committees" routerLinkActive="active">
+                    <mat-icon mat-list-icon>description</mat-icon>
+                    <div mat-line>Comisii</div>
+                </a>
             </mat-list>
             <!-- ADMIN -->
             <mat-list *ngIf="user?.type == 'admin'">

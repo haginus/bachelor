@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { AuthService, Domain, Paper, PaperDocument } from './auth.service';
+import { AuthService, Committee, Domain, Paper, PaperDocument } from './auth.service';
 import { OfferApplication } from './student.service';
 import { Topic } from './topics.service';
 
@@ -128,6 +128,16 @@ export class TeacherService {
       .pipe(
         map(_ => true),
         catchError(this.handleError<boolean>('removePaper', false))
+      );
+  }
+
+  getCommittees(): Observable<Committee[]> {
+    const url = `${environment.apiUrl}/teacher/committees`
+    return this.http
+      .get<Committee[]>(url, this.auth.getPrivateHeaders())
+      .pipe(
+        retry(3),
+        catchError(this.handleError<Committee[]>('getCommittees', []))
       );
   }
 

@@ -1,0 +1,43 @@
+<div fxLayout="row grid" fxLayoutGap="10px grid">
+    <div *ngFor="let committee of committees" fxFlex="100" fxFlex.gt-xs="50">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>{{ committee.name }}</mat-card-title>
+                <mat-card-subtitle>
+                    {{ committee.papers.length }}
+                    {{ committee.papers.length == 1 ? 'lucrare' : 'lucrări' }}
+                </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-list>
+                    <mat-list-item>
+                        <div mat-line>Domenii</div>
+                        <div mat-line>
+                            <ng-container *ngFor="let domain of committee.domains; let isLast = last">
+                                {{ domain.name }}
+                                <ng-container *ngIf="!isLast">, </ng-container>
+                            </ng-container>
+                        </div>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <div mat-line>Membri</div>
+                        <div mat-line class="white-space-initial iterating">
+                            <span *ngFor="let member of committee.members; let isLast = last">
+                                {{ member.user.lastName }} {{ member.user.firstName }}
+                                <span *ngIf="member.role == 'president'">(președinte)</span>
+                                <span *ngIf="member.role == 'member'">(membru)</span>
+                                <span *ngIf="member.role == 'secretary'">(secretar)</span>
+                            </span>
+                        </div>
+                    </mat-list-item>
+                </mat-list>
+            </mat-card-content>
+            <mat-card-actions align="end">
+                <button mat-raised-button color="primary">
+                    <span>Lucrări </span>
+                    <mat-icon>navigate_next</mat-icon>
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>
