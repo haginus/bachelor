@@ -6,7 +6,7 @@ import { TeacherOffersComponent } from './pages/offers/offers.component';
 import { TeacherSetupComponent } from './pages/setup/setup.component';
 import { TeacherComponent } from './teacher.component';
 import { TeacherApplicationsComponent } from './pages/applications/applications.component'; 
-import { TeacherPapersComponent } from './papers/papers.component';
+import { TeacherPapersComponent } from './pages/papers/papers.component';
 import { TeacherCommitteesComponent } from './pages/committees/committees.component';
 
 const routes: Routes = [
