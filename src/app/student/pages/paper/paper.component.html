@@ -14,7 +14,7 @@
                 {{paper.teacher.firstName}} {{paper.teacher.lastName}}</p>
         </div>
         <div class="paper-header-actions">
-            <button mat-icon-button>
+            <button mat-icon-button [disabled]="!canUploadSecretaryFiles">
                 <mat-icon>mode</mat-icon>
             </button>
         </div>
@@ -34,13 +34,22 @@
     </div>
 
     <!-- TIP CARD - STUDENT EXTRA DATA EDIT -->
-    <div class="tip-card success" *ngIf="studentExtraData && !isWaitingForDocumentGeneration">
-        <mat-icon class="tip-icon">done</mat-icon>
+    <div class="tip-card" [class.success]="areDocumentsUploaded"
+        *ngIf="studentExtraData && !isWaitingForDocumentGeneration && !deadlinePassed">
+        <mat-icon class="tip-icon">
+            {{ areDocumentsUploaded ? 'done_all' : 'done' }}
+        </mat-icon>
         <div class="tip-card-content">
-            {{ 'STUDENT.PAPER.DOCUMENTS_GENERATED_MESSAGE' | translate }}
+            <ng-container *ngIf="!areDocumentsUploaded">
+                {{ 'STUDENT.PAPER.DOCUMENTS_GENERATED_MESSAGE' | translate }}
+                Aveți documente de completat.
+            </ng-container>
+            <ng-container *ngIf="areDocumentsUploaded">
+                Ați încărcat toate documentele.
+            </ng-container>
         </div>
         <div class="tip-card-action">
-            <button mat-button (click)="editStudentExtraData()">
+            <button mat-button (click)="editStudentExtraData()" *ngIf="canUploadSecretaryFiles">
             {{ 'STUDENT.PAPER.CHANGE_DATA' | translate }}
             </button>
         </div>
@@ -54,12 +63,24 @@
         <mat-progress-bar mode="query" color="primary"></mat-progress-bar>
     </div>
 
+    <!-- TIP CARD - Deadline Passed -->
+    <div class="tip-card severe" *ngIf="deadlinePassed">
+        <mat-icon class="tip-icon">priority_high</mat-icon>
+        <div class="tip-card-content">
+            Perioada de încărcare a documententelor s-a încheiat. <br>
+            Nu ați încărcat documentele la timp.
+        </div>
+    </div>
+
     <mat-list class="document-list">
         <div mat-subheader>{{ 'STUDENT.PAPER.DOCUMENTS_HEADER' | translate }}</div>
         <app-paper-document-list *ngIf="!isLoadingInitialData" [paperId]="paper.id"
             [requiredDocuments]="requiredDocuments"
-            [documents]="paper.documents" perspective="student"
+            [documents]="paper.documents"
+            [sessionSettings]="sessionSettings"
+            perspective="student"
             (documentEvents)="handleDocumentEvents($event)"
+            (areDocumentsUploaded)="handleAreDocumentsUploaded($event)"
         ></app-paper-document-list>
     </mat-list>
 </mat-card>

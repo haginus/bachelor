@@ -42,6 +42,10 @@
         background: #4caf50;
     }
 
+    &.severe {
+        background: #e53935;
+    }
+
     &.isGenerating {
         position: relative;
         background-color: #03a9f4;
