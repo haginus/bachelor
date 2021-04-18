@@ -23,6 +23,7 @@ import { SessionSettingsComponent } from './pages/session-settings/session-setti
 import { CommitteesComponent } from './pages/committees/committees.component';
 import { CommitteeDialogComponent } from './dialogs/committee-dialog/committee-dialog.component';
 import { PaperAssignComponent } from './pages/paper-assign/paper-assign.component';
+import { AdminPapersComponent } from './pages/papers/papers.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { PaperAssignComponent } from './pages/paper-assign/paper-assign.componen
     SessionSettingsComponent,
     CommitteesComponent,
     CommitteeDialogComponent,
-    PaperAssignComponent
+    PaperAssignComponent,
+    AdminPapersComponent
   ],
   imports: [
     CommonModule,

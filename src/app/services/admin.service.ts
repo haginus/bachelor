@@ -216,10 +216,24 @@ export class AdminService {
 
   // Papers 
 
-  getPapers(filter: any): Observable<Paper[]> {
-    const url = `${environment.apiUrl}/admin/papers`;
-    return this.http.post<Paper[]>(url, { filter }, this.auth.getPrivateHeaders()).pipe(
-      catchError(this.handleError<Paper[]>('getPapers', []))
+  getPapers(sort: string = 'id', order: string = 'ASC', page?: number, pageSize?: number,
+    filter?: GetPapersFilter, minified?: boolean): Observable<PaperQueryResult> {
+    
+    let url = `${environment.apiUrl}/admin/papers?sort=${sort}&order=${order}`;
+    if(page != undefined && pageSize) {
+      url += `&page=${page}&pageSize=${pageSize}`;
+    }
+    if(filter?.assigned != undefined) {
+      url += `&assigned=${filter.assigned}`;
+    }
+    if(filter?.assignedTo != undefined) {
+      url += `&assignedTo=${filter.assignedTo}`;
+    }
+    if(minified == true) {
+      url += `&minified=1`;
+    }
+    return this.http.get<PaperQueryResult>(url, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError<PaperQueryResult>('getPapers', { rows: [], count: 0 }))
     );
   }
 
@@ -257,5 +271,17 @@ export interface TeacherQueryResult {
 
 export interface TopicQueryResult {
   rows: Topic[],
+  count: number
+}
+
+export interface GetPapersFilter {
+  /** If paper is assigned to any committee */
+  assigned?: boolean;
+  /** ID of committee where the paper has been assigned */
+  assignedTo?: number
+}
+
+export interface PaperQueryResult {
+  rows: Paper[],
   count: number
 }

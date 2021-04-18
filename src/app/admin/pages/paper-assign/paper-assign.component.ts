@@ -61,16 +61,16 @@ export class PaperAssignComponent implements OnInit {
 
   private getLeftPapers() {
     this.isLoadingAssignedPapers = true;
-    this.admin.getPapers({ committeeId: this.committeeId}).subscribe(papers => {
-      this.assignedPappers = papers;
+    this.admin.getPapers(undefined, undefined, null, null, { assignedTo: this.committeeId }, true).subscribe(papers => {
+      this.assignedPappers = papers.rows;
       this.isLoadingAssignedPapers = false;
     })
   }
 
   private getRightPapers() {
     this.isLoadingOtherPapers = true;
-    this.admin.getPapers({ committeeId: null }).subscribe(papers => {
-      this.otherPapers = papers;
+    this.admin.getPapers(undefined, undefined, null, null, { assigned: false }, true).subscribe(papers => {
+      this.otherPapers = papers.rows;
       this.isLoadingOtherPapers = false;
     })
   }

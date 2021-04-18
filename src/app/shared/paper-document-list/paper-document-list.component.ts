@@ -20,7 +20,7 @@ export class PaperDocumentListComponent implements OnChanges {
   @Input() requiredDocuments: PaperRequiredDocument[] = [];
   @Input() documents: PaperDocument[] = [];
   // In what quality is the viewer of this list
-  @Input() perspective: 'student' | 'teacher' | 'committee' = 'student';
+  @Input() perspective: 'student' | 'teacher' | 'committee' | 'admin' = 'student';
   // Paper ID (needed for teacher / committee to know where to upload the document)
   @Input() paperId: number;
   /** Session Settings needed to determine whether the user can upload certain docs. */
