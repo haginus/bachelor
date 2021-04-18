@@ -2,9 +2,9 @@ import { Component, DoCheck, EventEmitter, Input, OnChanges, OnInit, Output, Sim
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { PaperDocument } from 'src/app/services/auth.service';
+import { PaperDocument, SessionSettings } from 'src/app/services/auth.service';
 import { DocumentService } from 'src/app/services/document.service';
-import { StudentService } from 'src/app/services/student.service';
+import { PaperDocumentCategory, PaperDocumentTypes, PaperDocumentUploadBy } from 'src/app/services/student.service';
 import { DocumentUploadDialogComponent } from '../document-upload-dialog/document-upload-dialog.component';
 
 @Component({
@@ -23,6 +23,8 @@ export class PaperDocumentListComponent implements OnChanges {
   @Input() perspective: 'student' | 'teacher' | 'committee' = 'student';
   // Paper ID (needed for teacher / committee to know where to upload the document)
   @Input() paperId: number;
+  /** Session Settings needed to determine whether the user can upload certain docs. */
+  @Input() sessionSettings: SessionSettings;
   // Emit events when documents change (signed / copy uploaded)
   @Output() documentEvents = new EventEmitter<PaperDocumentEvent>();
   // Output variable that tells whether all the documents are uploaded (by uploader and category)
@@ -33,6 +35,23 @@ export class PaperDocumentListComponent implements OnChanges {
   }
 
   documentMap: DocumentMap = {}
+
+  /** Function to check if a we are in the submission period for a certain category. */
+  private _checkSubmissionDates(category: PaperDocumentCategory): boolean {
+    if(!this.sessionSettings) {
+      return true;
+    }
+    let today: number = new Date().setHours(0, 0, 0, 0);
+    let startDate: number, endDate: number;
+    if(category == 'secretary_files') {
+      startDate = new Date(this.sessionSettings.fileSubmissionStartDate).setHours(0, 0, 0, 0);
+      endDate = new Date(this.sessionSettings.fileSubmissionEndDate).setHours(0, 0, 0, 0);
+    } else if(category == 'paper_files') {
+      startDate = new Date(this.sessionSettings.fileSubmissionStartDate).setHours(0, 0, 0, 0);
+      endDate = new Date(this.sessionSettings.paperSubmissionEndDate).setHours(0, 0, 0, 0);
+    }
+    return startDate <= today && today <= endDate;
+  } 
 
   private _computeNextAction(doc: DocumentMapElement): DocumentAction {
     const isGenerated = doc.actualTypes.generated == true;
@@ -92,7 +111,9 @@ export class PaperDocumentListComponent implements OnChanges {
       })
       let lastId = currentDocuments.length == 0 ? null : currentDocuments.map(doc => doc.id).reduce((max, id) => (max < id) ? id : max);
       let doc = { requiredTypes: requiredDoc.types, actualTypes, title: requiredDoc.title, lastId,
-        uploadBy: requiredDoc.uploadBy, category: requiredDoc.category };
+        uploadBy: requiredDoc.uploadBy, category: requiredDoc.category, canChange: true };
+      
+      doc.canChange = this._checkSubmissionDates(doc.category);
       doc['nextAction'] = this._computeNextAction(doc);
       documentMap[docName] = doc;
     });
@@ -102,11 +123,28 @@ export class PaperDocumentListComponent implements OnChanges {
 
   private _generateAreDocumentsUploaded(): void {
     let areDocumentsUploaded: AreDocumentsUploaded = {
-      byCategory: {},
+      byCategory: {
+        secretary_files: true,
+        paper_files: true
+      },
       byUploader: {
         student: true,
         teacher: true,
         committee: true
+      },
+      byUploaderCategory: {
+        student: {
+          secretary_files: true,
+          paper_files: true
+        },
+        teacher: {
+          secretary_files: true,
+          paper_files: true
+        },
+        committee: {
+          secretary_files: true,
+          paper_files: true
+        }
       }
     }
     let docNames = Object.keys(this.documentMap);
@@ -126,6 +164,7 @@ export class PaperDocumentListComponent implements OnChanges {
         if(!doc.actualTypes[type]) {
           areDocumentsUploaded.byUploader[uploader] = false;
           areDocumentsUploaded.byCategory[doc.category] = false;
+          areDocumentsUploaded.byUploaderCategory[uploader][doc.category] = false;
         }
       });
     });
@@ -196,35 +235,30 @@ interface DocumentMap {
   [name: string]: DocumentMapElement
 }
 
-type UploadBy = 'student' | 'teacher' | 'committee';
+
 
 interface DocumentMapElement {
   title: string,
-  category: string,
+  category: PaperDocumentCategory,
   requiredTypes: PaperDocumentTypes,
   actualTypes: PaperDocumentTypes,
   lastId: number,
   actionPending?: boolean,
   nextAction?: DocumentAction,
-  uploadBy: UploadBy;
+  uploadBy: PaperDocumentUploadBy;
+  canChange: boolean;
 }
 
 type DocumentAction = 'sign' | 'upload'  | 'view' | null;
 
-export interface PaperDocumentTypes {
-  generated?: boolean,
-  signed?: boolean,
-  copy?: boolean
-}
-
 export interface PaperRequiredDocument {
   title: string,
   name: string,
-  category: string,
+  category: PaperDocumentCategory,
   types: PaperDocumentTypes,
   acceptedMimeTypes: string,
   acceptedExtensions: string[],
-  uploadBy: UploadBy;
+  uploadBy: PaperDocumentUploadBy;
 }
 
 export interface PaperDocumentEvent {
@@ -234,9 +268,14 @@ export interface PaperDocumentEvent {
 
 export interface AreDocumentsUploaded {
   byCategory: {
-    [name: string]: boolean
+    [name in PaperDocumentCategory]: boolean
   };
   byUploader: {
-    [name in UploadBy]: boolean
+    [name in PaperDocumentUploadBy]: boolean
+  },
+  byUploaderCategory: {
+    [name in PaperDocumentUploadBy]: {
+      [name in PaperDocumentCategory]: boolean
+    }
   }
 }

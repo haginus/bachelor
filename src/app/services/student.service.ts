@@ -181,14 +181,17 @@ export interface PaperDocumentTypes {
   copy?: boolean
 }
 
+export type PaperDocumentUploadBy = 'student' | 'teacher' | 'committee';
+export type PaperDocumentCategory = 'secretary_files' | 'paper_files';
+
 export interface PaperRequiredDocument {
   title: string,
   name: string,
-  category: string,
+  category: PaperDocumentCategory,
   types: PaperDocumentTypes,
   acceptedMimeTypes: string,
   acceptedExtensions: string[],
-  uploadBy: 'student' | 'teacher' | 'committee'
+  uploadBy: PaperDocumentUploadBy
 }
 
 export interface StudentExtraData {

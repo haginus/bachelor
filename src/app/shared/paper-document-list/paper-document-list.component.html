@@ -29,7 +29,7 @@
         matTooltip="Ștergeți documentul"
         (click)="deleteDocument(documentMap[document.name])"
         *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].uploadBy == perspective"
-        [disabled]="documentMap[document.name].actionPending">
+        [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange">
         <mat-icon>history</mat-icon>
     </button>
     <button 
@@ -43,14 +43,14 @@
         mat-stroked-button
         *ngIf="documentMap[document.name].nextAction == 'sign'"
         (click)="openDocumentDialog('sign', document.name, documentMap[document.name].lastId)"
-        [disabled]="documentMap[document.name].actionPending">
+        [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange">
         {{ 'STUDENT.PAPER.SIGN_DOCUMENT' | translate }}
     </button>
     <button 
         mat-stroked-button
         *ngIf="documentMap[document.name].nextAction == 'upload'"
         (click)="openDocumentDialog('uploadCopy', document.name)"
-        [disabled]="documentMap[document.name].actionPending">
+        [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange">
         {{ 'STUDENT.PAPER.UPLOAD_DOCUMENT' | translate }}
     </button>
 </mat-list-item>
