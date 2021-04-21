@@ -27,6 +27,16 @@ export class AdminService {
       );
   }
 
+  getStudentUser(id: number): Observable<UserData> {
+    const url = `${environment.apiUrl}/admin/student?id=${id}`;
+    return this.http
+      .get<UserData>(url, this.auth.getPrivateHeaders())
+      .pipe(
+        retry(3),
+        catchError(this.handleError<UserData>('getStudentUser', null))
+      );
+  }
+
   addStudent(firstName: string, lastName: string, CNP: string, email: string,
     group: string, specializationId: number, identificationCode: string, promotion: string,
     studyForm: string, fundingForm: string, matriculationYear: string): Observable<UserData | null> {
