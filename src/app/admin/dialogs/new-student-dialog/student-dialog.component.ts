@@ -19,6 +19,7 @@ export class StudentDialogComponent implements OnInit {
   loadingDomains: boolean = true;;
   domains: Domain[];
   chosenDomain: Domain;
+  isLoadingData: boolean = false;
 
   ngOnInit(): void {
     if(this.data.mode == 'create') {
@@ -40,6 +41,14 @@ export class StudentDialogComponent implements OnInit {
     if(this.data.mode == 'view') {
       this.studentForm.disable();
     }
+    if(this.data.data == null && this.data.userId) {
+      this.isLoadingData = true;
+      this.admin.getStudentUser(this.data.userId).subscribe(data => {
+        this.data.data = data;
+        this.setControlValues();
+        this.isLoadingData = false;
+      });
+    }
   }
 
   studentForm = new FormGroup({
@@ -58,6 +67,21 @@ export class StudentDialogComponent implements OnInit {
   });
 
   get specializationId() { return this.studentForm.get("specializationId") };
+
+  private setControlValues() {
+    this.studentForm.get("firstName").setValue(this.data.data.firstName);
+    this.studentForm.get("lastName").setValue(this.data.data.lastName);
+    this.studentForm.get("CNP").setValue(this.data.data.CNP);
+    this.studentForm.get("email").setValue(this.data.data.email);
+    this.studentForm.get("domainId").setValue(this.data.data.student.domainId);
+    this.studentForm.get("specializationId").setValue(this.data.data.student.specializationId);
+    this.studentForm.get("group").setValue(this.data.data.student.group);
+    this.studentForm.get("identificationCode").setValue(this.data.data.student.identificationCode);
+    this.studentForm.get("promotion").setValue(this.data.data.student.promotion);
+    this.studentForm.get("matriculationYear").setValue(this.data.data.student.matriculationYear);
+    this.studentForm.get("studyForm").setValue(this.data.data.student.studyForm);
+    this.studentForm.get("fundingForm").setValue(this.data.data.student.fundingForm);
+  }
 
   private getControlValues() {
     const firstName = this.studentForm.get("firstName").value;
@@ -98,5 +122,6 @@ export class StudentDialogComponent implements OnInit {
 
 export interface StudentDialogData {
   mode: "view" | "create" | "edit";
-  data?: UserData
+  data?: UserData,
+  userId: number
 }

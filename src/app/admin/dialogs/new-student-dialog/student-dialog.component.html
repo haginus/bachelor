@@ -1,3 +1,4 @@
+<app-loading *ngIf="isLoadingData"></app-loading>
 <h2 mat-dialog-title *ngIf="data.mode == 'create'">Adăugați student</h2>
 <h2 mat-dialog-title *ngIf="data.mode == 'edit'">Editați student</h2>
 <h2 mat-dialog-title *ngIf="data.mode == 'view'">Vizualizare student</h2>
@@ -66,11 +67,11 @@
             <!-- View mode -->
             <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50" *ngIf="data.mode == 'view'">
                 <mat-label>Domeniu</mat-label>
-                <input matInput disabled type="text" [value]="data.data.student.domain.name">
+                <input matInput disabled type="text" [value]="data.data?.student.domain.name">
             </mat-form-field>
             <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50" *ngIf="data.mode == 'view'">
                 <mat-label>Programul de studii</mat-label>
-                <input matInput disabled type="text" [value]="data.data.student.specialization?.name">
+                <input matInput disabled type="text" [value]="data.data?.student.specialization?.name">
             </mat-form-field>
 
             <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
