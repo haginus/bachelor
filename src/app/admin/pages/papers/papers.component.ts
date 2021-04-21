@@ -10,6 +10,7 @@ import { startWith, switchMap } from 'rxjs/operators';
 import { AdminService } from 'src/app/services/admin.service';
 import { Paper } from 'src/app/services/auth.service';
 import { AreDocumentsUploaded, PaperDocumentEvent } from 'src/app/shared/paper-document-list/paper-document-list.component';
+import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
 
 @Component({
   selector: 'app-papers',
@@ -84,6 +85,16 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
         this.snackbar.open("A apărut o eroare.");
       }
       paper.isLoading = false;
+    })
+  }
+
+  openStudentDialog(id: number, event: any) {
+    event.stopPropagation();
+    this.dialog.open(StudentDialogComponent, {
+      data: {
+        userId: id,
+        mode: 'view'
+      }
     })
   }
 
