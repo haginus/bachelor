@@ -246,6 +246,7 @@ export interface Paper {
   title: string,
   description: string,
   type: "bachelor" | "master",
+  isValid: boolean | null,
   teacher?: UserDataMin,
   teacherId: number,
   student?: UserDataMin,

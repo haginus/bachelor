@@ -32,7 +32,7 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
   expandedPaper: Paper | null;
   resultsLength: number;
   isLoadingResults: boolean = true;
-  data: Paper[] = [];
+  data: ExtendedPaper[] = [];
 
 
   performedActions: BehaviorSubject<string> = new BehaviorSubject('');
@@ -58,7 +58,7 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
       }),
     )
    .subscribe(papers => {
-      this.data = papers.rows;
+      this.data = papers.rows as ExtendedPaper[];
       this.resultsLength = papers.count;
       this.isLoadingResults = false;
     })
@@ -68,14 +68,28 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
     this.performedActions.next('refresh');
   }
 
-  handleDocumentEvents(event: PaperDocumentEvent, paperId: number) {
-
-  }
-
-  handleAreDocumentsUploadedEvent(event: AreDocumentsUploaded, paper: Paper) {
-    //this.paperNeedsAttentionMap[paper.id] = !event.byUploader.teacher;
-    // Detect changes so that the new value is reflected it the DOM
+  handleAreDocumentsUploadedEvent(event: AreDocumentsUploaded, paper: ExtendedPaper) {
+    paper.documentsUploaded = event.byUploader.student;
+    // Detect changes so that the new value is reflected in the DOM
     this.cd.detectChanges();
   }
 
+  validatePaper(paper: ExtendedPaper, validate: boolean) {
+    paper.isLoading = true;
+    this.admin.validatePaper(paper.id, validate).subscribe(result => {
+      if(result) {
+        paper.isValid = validate;
+        this.snackbar.open(validate ? "Lucrare validată" : "Lucrare invalidată" );
+      } else {
+        this.snackbar.open("A apărut o eroare.");
+      }
+      paper.isLoading = false;
+    })
+  }
+
+}
+
+interface ExtendedPaper extends Paper {
+  documentsUploaded: boolean;
+  isLoading: boolean;
 }

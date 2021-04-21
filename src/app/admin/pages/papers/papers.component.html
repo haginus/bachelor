@@ -13,9 +13,20 @@
         <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let row">
-                <mat-icon *ngIf="true" class="status-icon done"
-                matTooltip="Lucrare acceptată"
-                >done</mat-icon>
+                <ng-container *ngIf="!row.isLoading">
+                    <mat-icon *ngIf="row.isValid == null" class="status-icon warn"
+                    matTooltip="Necesită validare/invalidare"
+                    >pending_actions</mat-icon>
+                    <mat-icon *ngIf="row.isValid == true" class="status-icon done"
+                    matTooltip="Lucrare validată"
+                    >done</mat-icon>
+                    <mat-icon *ngIf="row.isValid == false" class="status-icon severe"
+                    matTooltip="Lucrare invalidată"
+                    >close</mat-icon>
+                </ng-container>
+                <ng-container *ngIf="row.isLoading">
+                    <mat-spinner diameter="24"></mat-spinner>
+                </ng-container>
             </td>
         </ng-container>
 
@@ -61,18 +72,22 @@
                 <div class="paper-detail" [@detailExpand]="paper == expandedPaper ? 'expanded' : 'collapsed'">
                     <div class="paper-header">
                         <div class="paper-description">{{paper.description}}</div>
-                        <div class="actions">
-                            <button mat-icon-button>
-                                <mat-icon>more_vert</mat-icon>
-                            </button>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px" class="paper-actions"
+                        *ngIf="paper.isValid == null">
+                        <div [matTooltip]="!paper.documentsUploaded ? 'Studentul nu a încărcat toate documentele.' : ''">
+                            <button mat-raised-button color="primary"
+                            (click)="validatePaper(paper, true)"
+                            [disabled]="!paper.documentsUploaded || paper.isLoading">Validați lucrarea</button>
                         </div>
+                        <button mat-button [disabled]="paper.isLoading"
+                        (click)="validatePaper(paper, false)">Invalidați lucrarea</button>
                     </div>
                     <mat-list class="document-list">
                         <div mat-subheader>Documente</div>
                         <app-paper-document-list [paperId]="paper.id"
                             [requiredDocuments]="paper.requiredDocuments"
                             [documents]="paper.documents" perspective="admin"
-                            (documentEvents)="handleDocumentEvents($event, paper.id)"
                             (areDocumentsUploaded)="handleAreDocumentsUploadedEvent($event, paper)"
                         ></app-paper-document-list>
                     </mat-list>

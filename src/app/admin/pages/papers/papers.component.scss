@@ -21,6 +21,9 @@ table {
     &.warn {
         color: #f57c00;
     }
+    &.severe {
+        color: #f44336;
+    }
 }
 
 .paper-detail {
@@ -33,6 +36,11 @@ table {
             color: #616161;
         }
     }
+
+    .paper-actions {
+        margin-top: 16px;
+    }
+
     .document-list {
         padding-top: 8px;
         margin: 0 -16px;

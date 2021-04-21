@@ -237,6 +237,15 @@ export class AdminService {
     );
   }
 
+  /** Validate/Invalidate a paper by its ID. */
+  validatePaper(paperId: number, validate: boolean): Observable<boolean> {
+    const url = `${environment.apiUrl}/admin/papers/validate`;
+    return this.http.post<any>(url, { paperId, validate }, this.auth.getPrivateHeaders()).pipe(
+      map(_ => true),
+      catchError(this.handleError<boolean>('getPapers', false))
+    );
+  }
+
   // Session Settings 
 
   changeSessionSettings(settings: SessionSettings): Observable<SessionSettings> {
