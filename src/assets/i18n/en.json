@@ -170,6 +170,7 @@
             "SIGN_DOCUMENT": "Sign",
             "VIEW_DOCUMENT": "View",
             "UPLOAD_DOCUMENT": "Upload",
+            "CAN_BE_UPLOADED_BY_STUDENT": "Can be uploaded by student",
             "CAN_BE_UPLOADED_BY_TEACHER": "Can be uploaded by teacher",
             "CAN_BE_UPLOADED_BY_COMMITTEE": "Can be uploaded by committee"
         },

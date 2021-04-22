@@ -170,6 +170,7 @@
             "SIGN_DOCUMENT": "Semnați",
             "VIEW_DOCUMENT": "Vizualizați",
             "UPLOAD_DOCUMENT": "Încărcați",
+            "CAN_BE_UPLOADED_BY_STUDENT": "Se încarcă de către student",
             "CAN_BE_UPLOADED_BY_TEACHER": "Se încarcă de către profesor",
             "CAN_BE_UPLOADED_BY_COMMITTEE": "Se încarcă de către comisie"
         },
