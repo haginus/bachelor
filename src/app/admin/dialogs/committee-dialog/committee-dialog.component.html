@@ -14,7 +14,11 @@
             <mat-form-field appearance="outline" fxFlex="100">
                 <mat-label>Domenii</mat-label>
                 <mat-select formControlName="domains" multiple>
-                    <mat-option *ngFor="let domain of domains | async" [value]="domain.id">{{domain.name}}</mat-option>
+                    <mat-option *ngFor="let domain of domains | async" [value]="domain.id">
+                        <ng-container>{{domain.name}}</ng-container>
+                        <ng-container *ngIf="domain.type == 'bachelor'"> (Licență)</ng-container>
+                        <ng-container *ngIf="domain.type == 'master'"> (Master)</ng-container>
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
