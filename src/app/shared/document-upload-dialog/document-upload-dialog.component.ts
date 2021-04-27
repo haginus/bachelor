@@ -62,6 +62,7 @@ export class DocumentUploadDialogComponent implements OnInit {
         ob = this.student.uploadDocument(file, this.data.document.name, type);
         break;
       case 'teacher':
+      case 'committee':
         ob = this.teacher.uploadDocument(this.data.paperId, this.data.perspective, file, this.data.document.name, type);
         break;
       default:
