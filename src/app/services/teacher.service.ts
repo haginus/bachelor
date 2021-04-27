@@ -141,6 +141,15 @@ export class TeacherService {
       );
   }
 
+  getCommittee(id: number): Observable<Committee> {
+    const url = `${environment.apiUrl}/teacher/committees/${id}`
+    return this.http
+      .get<Committee>(url, this.auth.getPrivateHeaders())
+      .pipe(
+        catchError(this.handleError<Committee>('getCommittee', null))
+      );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       return of(result as T);

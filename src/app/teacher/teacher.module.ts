@@ -12,6 +12,7 @@ import { SharedModule } from '../shared/shared.module';
 import { TeacherApplicationsComponent } from './pages/applications/applications.component';
 import { TeacherPapersComponent } from './pages/papers/papers.component';
 import { TeacherCommitteesComponent } from './pages/committees/committees.component';
+import { TeacherCommitteePapersComponent } from './pages/committee-papers/committee-papers.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { TeacherCommitteesComponent } from './pages/committees/committees.compon
     TeacherOfferDialogComponent,
     TeacherApplicationsComponent,
     TeacherPapersComponent,
-    TeacherCommitteesComponent
+    TeacherCommitteesComponent,
+    TeacherCommitteePapersComponent
   ],
   imports: [
     CommonModule,

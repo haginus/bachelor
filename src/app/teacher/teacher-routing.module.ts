@@ -8,6 +8,7 @@ import { TeacherComponent } from './teacher.component';
 import { TeacherApplicationsComponent } from './pages/applications/applications.component'; 
 import { TeacherPapersComponent } from './pages/papers/papers.component';
 import { TeacherCommitteesComponent } from './pages/committees/committees.component';
+import { TeacherCommitteePapersComponent } from './pages/committee-papers/committee-papers.component';
 
 const routes: Routes = [
   { path: '', component: TeacherComponent },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'applications/:state/:offerId', component: TeacherApplicationsComponent, data: { title: "Cereri" }, canActivate: [ValidatedGuard] },
   { path: 'papers', component: TeacherPapersComponent, data: { title: "Lucrări" }, canActivate: [ValidatedGuard] },
   { path: 'committees', component: TeacherCommitteesComponent, data: { title: "Comisiile dvs." }, canActivate: [ValidatedGuard] },
+  { path: 'committees/:id', component: TeacherCommitteePapersComponent, canActivate: [ValidatedGuard] },
 ];
 
 @NgModule({
