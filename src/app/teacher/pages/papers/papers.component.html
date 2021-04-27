@@ -75,7 +75,9 @@
                         <div mat-subheader>Documente</div>
                         <app-paper-document-list [paperId]="paper.id"
                             [requiredDocuments]="paper.requiredDocuments"
-                            [documents]="paper.documents" perspective="teacher"
+                            [documents]="paper.documents"
+                            [canEdit]="paper.isValid == null"
+                            perspective="teacher"
                             (documentEvents)="handleDocumentEvents($event, paper.id)"
                             (areDocumentsUploaded)="handleAreDocumentsUploadedEvent($event, paper)"
                         ></app-paper-document-list>

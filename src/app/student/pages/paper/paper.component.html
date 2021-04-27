@@ -20,57 +20,75 @@
         </div>
     </div>
 
-    <!-- TIP CARD - NO STUDENT EXTRA DATA -->
-    <div class="tip-card warning" *ngIf="studentExtraData == null && !isWaitingForDocumentGeneration">
-        <mat-icon class="tip-icon">warning_amber</mat-icon>
-        <div class="tip-card-content">
-            {{ 'STUDENT.PAPER.FILL_IN_EXTRA_DATA_MESSAGE' | translate }}
+    <ng-container *ngIf="paper.isValid == null">
+        <!-- TIP CARD - NO STUDENT EXTRA DATA -->
+        <div class="tip-card warning" *ngIf="studentExtraData == null && !isWaitingForDocumentGeneration">
+            <mat-icon class="tip-icon">warning_amber</mat-icon>
+            <div class="tip-card-content">
+                {{ 'STUDENT.PAPER.FILL_IN_EXTRA_DATA_MESSAGE' | translate }}
+            </div>
+            <div class="tip-card-action">
+                <button mat-button (click)="editStudentExtraData()">
+                    {{ 'STUDENT.PAPER.FILL_IN' | translate }}
+                </button>
+            </div>
         </div>
-        <div class="tip-card-action">
-            <button mat-button (click)="editStudentExtraData()">
-                {{ 'STUDENT.PAPER.FILL_IN' | translate }}
-            </button>
-        </div>
-    </div>
 
-    <!-- TIP CARD - STUDENT EXTRA DATA EDIT -->
-    <div class="tip-card" [class.success]="areDocumentsUploaded"
-        *ngIf="studentExtraData && !isWaitingForDocumentGeneration && !deadlinePassed">
-        <mat-icon class="tip-icon">
-            {{ areDocumentsUploaded ? 'done_all' : 'done' }}
-        </mat-icon>
-        <div class="tip-card-content">
-            <ng-container *ngIf="!areDocumentsUploaded">
-                {{ 'STUDENT.PAPER.DOCUMENTS_GENERATED_MESSAGE' | translate }}
-                Aveți documente de completat.
-            </ng-container>
-            <ng-container *ngIf="areDocumentsUploaded">
-                Ați încărcat toate documentele.
-            </ng-container>
+        <!-- TIP CARD - STUDENT EXTRA DATA EDIT -->
+        <div class="tip-card" [class.success]="areDocumentsUploaded"
+            *ngIf="studentExtraData && !isWaitingForDocumentGeneration && !deadlinePassed">
+            <mat-icon class="tip-icon">
+                {{ areDocumentsUploaded ? 'done_all' : 'done' }}
+            </mat-icon>
+            <div class="tip-card-content">
+                <ng-container *ngIf="!areDocumentsUploaded">
+                    {{ 'STUDENT.PAPER.DOCUMENTS_GENERATED_MESSAGE' | translate }}
+                    Aveți documente de completat.
+                </ng-container>
+                <ng-container *ngIf="areDocumentsUploaded">
+                    Ați încărcat toate documentele.
+                </ng-container>
+            </div>
+            <div class="tip-card-action">
+                <button mat-button (click)="editStudentExtraData()" *ngIf="canUploadSecretaryFiles">
+                {{ 'STUDENT.PAPER.CHANGE_DATA' | translate }}
+                </button>
+            </div>
         </div>
-        <div class="tip-card-action">
-            <button mat-button (click)="editStudentExtraData()" *ngIf="canUploadSecretaryFiles">
-            {{ 'STUDENT.PAPER.CHANGE_DATA' | translate }}
-            </button>
-        </div>
-    </div>
 
-    <!-- TIP CARD - Waiting document generation -->
-    <div class="tip-card isGenerating" *ngIf="isWaitingForDocumentGeneration">
-        <div class="tip-card-content">
-            {{ 'STUDENT.PAPER.DOCUMENTS_GENERATING_MESSAGE' | translate }}
+        <!-- TIP CARD - Waiting document generation -->
+        <div class="tip-card isGenerating" *ngIf="isWaitingForDocumentGeneration">
+            <div class="tip-card-content">
+                {{ 'STUDENT.PAPER.DOCUMENTS_GENERATING_MESSAGE' | translate }}
+            </div>
+            <mat-progress-bar mode="query" color="primary"></mat-progress-bar>
         </div>
-        <mat-progress-bar mode="query" color="primary"></mat-progress-bar>
-    </div>
-
-    <!-- TIP CARD - Deadline Passed -->
-    <div class="tip-card severe" *ngIf="deadlinePassed">
-        <mat-icon class="tip-icon">priority_high</mat-icon>
-        <div class="tip-card-content">
-            Perioada de încărcare a documententelor s-a încheiat. <br>
-            Nu ați încărcat documentele la timp.
+         <!-- TIP CARD - Deadline Passed -->
+        <div class="tip-card severe" *ngIf="deadlinePassed">
+            <mat-icon class="tip-icon">priority_high</mat-icon>
+            <div class="tip-card-content">
+                Perioada de încărcare a documententelor s-a încheiat. <br>
+                Nu ați încărcat documentele la timp.
+            </div>
         </div>
-    </div>
+    </ng-container>
+    <ng-container *ngIf="paper.isValid == true">
+        <div class="tip-card success">
+            <mat-icon class="tip-icon">done_all</mat-icon>
+            <div class="tip-card-content">
+                Lucrarea dvs. a fost validată de către secretariat.
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="paper.isValid == false">
+        <div class="tip-card severe">
+            <mat-icon class="tip-icon">priority_high</mat-icon>
+            <div class="tip-card-content">
+                Lucrarea dvs. a fost invalidată de către secretariat.
+            </div>
+        </div>
+    </ng-container>
+   
 
     <mat-list class="document-list">
         <div mat-subheader>{{ 'STUDENT.PAPER.DOCUMENTS_HEADER' | translate }}</div>
@@ -79,6 +97,7 @@
             [documents]="paper.documents"
             [sessionSettings]="sessionSettings"
             perspective="student"
+            [canEdit]="paper.isValid == null"
             (documentEvents)="handleDocumentEvents($event)"
             (areDocumentsUploaded)="handleAreDocumentsUploaded($event)"
         ></app-paper-document-list>

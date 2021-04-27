@@ -23,6 +23,8 @@ export class PaperDocumentListComponent implements OnChanges {
   @Input() perspective: 'student' | 'teacher' | 'committee' | 'admin' = 'student';
   // Paper ID (needed for teacher / committee to know where to upload the document)
   @Input() paperId: number;
+  /** Whether the user can upload/remove documents. */
+  @Input() canEdit: boolean = true;
   /** Session Settings needed to determine whether the user can upload certain docs. */
   @Input() sessionSettings: SessionSettings;
   // Emit events when documents change (signed / copy uploaded)
@@ -62,7 +64,7 @@ export class PaperDocumentListComponent implements OnChanges {
     const needsSigned = doc.requiredTypes.signed == true;
     const needsUploaded = doc.requiredTypes.copy == true;
 
-    const canUpload = doc.uploadBy == this.perspective;
+    const canUpload = doc.uploadBy == this.perspective && this.canEdit;
 
     // Only 'generated' and 'signed' can be required at once. 'copy' must be required separately
 
@@ -113,7 +115,7 @@ export class PaperDocumentListComponent implements OnChanges {
       let doc = { requiredTypes: requiredDoc.types, actualTypes, title: requiredDoc.title, lastId,
         uploadBy: requiredDoc.uploadBy, category: requiredDoc.category, canChange: true };
       
-      doc.canChange = this._checkSubmissionDates(doc.category);
+      doc.canChange = this.canEdit && this._checkSubmissionDates(doc.category);
       doc['nextAction'] = this._computeNextAction(doc);
       documentMap[docName] = doc;
     });
