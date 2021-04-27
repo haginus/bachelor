@@ -253,7 +253,9 @@ export interface Paper {
   documents: PaperDocument[],
   committee?: Committee,
   topics?: Topic[],
-  requiredDocuments?: PaperRequiredDocument[]
+  requiredDocuments?: PaperRequiredDocument[],
+  grades: PaperGrade[],
+  averageGrade: number
 }
 
 export interface PaperDocument {
@@ -261,6 +263,14 @@ export interface PaperDocument {
   name: string,
   mimeType: string,
   type: 'generated' | 'signed' | 'copy'
+}
+
+export interface PaperGrade {
+  forPaper: number,
+  forPresentation: number,
+  teacher: {
+    user: UserDataMin
+  }
 }
 
 export interface SessionSettings {

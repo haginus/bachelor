@@ -16,6 +16,8 @@ import { PaperDocumentListComponent } from './paper-document-list/paper-document
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { DocumentUploadDialogComponent } from "./document-upload-dialog/document-upload-dialog.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { PaperGradeTableComponent } from './paper-grade-table/paper-grade-table.component';
+import { MatTableModule } from "@angular/material/table";
 
 
 @NgModule({
@@ -24,7 +26,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
         CommonDialogComponent,
         ApplicationListComponent,
         DocumentUploadDialogComponent,
-        PaperDocumentListComponent
+        PaperDocumentListComponent,
+        PaperGradeTableComponent
     ],
     imports: [
         CommonModule,
@@ -38,7 +41,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
         MatProgressSpinnerModule,
         FlexLayoutModule,
         MatExpansionModule,
-        TranslateModule
+        TranslateModule,
+        MatTableModule
     ],
     exports: [
         LoadingComponent,
@@ -48,7 +52,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
         MatExpansionModule,
         TranslateModule,
         PaperDocumentListComponent,
-        DocumentUploadDialogComponent
+        DocumentUploadDialogComponent,
+        PaperGradeTableComponent
     ]
   })
   export class SharedModule { }
