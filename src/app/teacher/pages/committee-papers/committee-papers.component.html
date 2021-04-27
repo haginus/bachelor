@@ -55,6 +55,15 @@
                         <mat-icon>email</mat-icon>
                         <a target="_blank" href="mailto:{{paper.student.email}}">{{paper.student.email}}</a>
                     </div>
+                    <ng-container *ngIf="gradingAllowed">
+                        <div fxLayout="row" fxLayoutAlign="center">
+                            <button mat-raised-button color="primary"
+                            *ngIf="paperNeedsAttentionMap[paper.id] == 'needsGrade'">
+                                Notați lucrarea
+                            </button>
+                        </div>
+                        <app-paper-grade-table [paper]="paper"></app-paper-grade-table>
+                    </ng-container>
                     <mat-list class="document-list">
                         <div mat-subheader>Documente</div>
                         <app-paper-document-list [paperId]="paper.id"

@@ -268,6 +268,7 @@ export interface PaperDocument {
 export interface PaperGrade {
   forPaper: number,
   forPresentation: number,
+  teacherId: number;
   teacher: {
     user: UserDataMin
   }

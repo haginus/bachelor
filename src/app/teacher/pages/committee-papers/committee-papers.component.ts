@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Paper } from 'src/app/services/auth.service';
-import { BehaviorSubject, merge, Subscription } from 'rxjs';
+import { AuthService, Committee, Paper, UserData } from 'src/app/services/auth.service';
+import { BehaviorSubject, combineLatest, merge, Subscription } from 'rxjs';
 import { MatTable } from '@angular/material/table';
 import { switchMap } from 'rxjs/operators';
 import { TeacherService } from 'src/app/services/teacher.service';
@@ -24,13 +24,16 @@ import { AreDocumentsUploaded } from 'src/app/shared/paper-document-list/paper-d
 export class TeacherCommitteePapersComponent implements OnInit {
 
   constructor(private teacher: TeacherService, private route: ActivatedRoute, private router: Router,
-    private cd: ChangeDetectorRef) { }
+    private cd: ChangeDetectorRef, private auth: AuthService) { }
 
   displayedColumns: string[] = ['status', 'title', 'type', 'student', 'teacher'];
   expandedPaper: Paper | null;
   resultsLength: number;
   isLoadingResults: boolean = true;
   data: Paper[] = [];
+  committee: Committee;
+  gradingAllowed: boolean = false;
+  user: UserData;
 
   // Map to store whether paper needs attention.
   paperNeedsAttentionMap: PaperNeedsAttentionMap = {};
@@ -40,8 +43,10 @@ export class TeacherCommitteePapersComponent implements OnInit {
   @ViewChild('table') table: MatTable<Paper>;
 
   ngOnInit(): void {
-    this.paperSubscription = this.route.params.pipe(
-      switchMap(params => {
+    this.paperSubscription = combineLatest(this.route.params, this.auth.getSessionSettings(), this.auth.getUserData()).pipe(
+      switchMap(([params, settings, userData]) => {
+        this.gradingAllowed = settings.allowGrading;
+        this.user = userData;
         this.isLoadingResults = true;
         return this.teacher.getCommittee(+params.id);
       })
@@ -50,6 +55,7 @@ export class TeacherCommitteePapersComponent implements OnInit {
       if(committee == null) {
         this.router.navigate(['teacher', 'committees']);
       } else {
+        this.committee = committee;
         this.data = committee.papers;
         this.isLoadingResults = false;
       }
@@ -60,12 +66,25 @@ export class TeacherCommitteePapersComponent implements OnInit {
     if(!event.byUploader.committee) {
       this.paperNeedsAttentionMap[paper.id] = 'needsDocUpload';
     } else {
-      // needs grade check
-      this.paperNeedsAttentionMap[paper.id] = 'needsGrade';
-
+      // Check if the user has not given a grade
+      if(!this._checkPaperGraded(paper)) {
+        this.paperNeedsAttentionMap[paper.id] = 'needsGrade';
+      } else {
+        this.paperNeedsAttentionMap[paper.id] = null;
+      }
     }
     // Detect changes so that the new value is reflected it the DOM
     this.cd.detectChanges();
+  }
+
+  private _checkPaperGraded(paper: Paper): boolean {
+    const member = this.committee.members.find(member => member.teacherId == this.user.teacher.id);
+    // Return true if user is secretary (they don't need to grade)
+    if(member.role == 'secretary') {
+      return true;
+    }
+    // Return true if teacher has a grade given to this paper
+    return paper.grades.findIndex(grade => grade.teacherId == this.user.teacher.id) >= 0;
   }
 
 }
