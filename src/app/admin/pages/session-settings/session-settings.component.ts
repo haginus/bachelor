@@ -35,6 +35,7 @@ export class SessionSettingsComponent implements OnInit {
     "fileSubmissionStartDate": new FormControl(null, [Validators.required]),
     "fileSubmissionEndDate": new FormControl(null, [Validators.required]),
     "paperSubmissionEndDate": new FormControl(null, [Validators.required]),
+    "allowGrading": new FormControl(null, [Validators.required]),
   }, {
     validators: [dateValidator]
   });

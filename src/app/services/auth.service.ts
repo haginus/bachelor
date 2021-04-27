@@ -280,7 +280,8 @@ export interface SessionSettings {
   applyEndDate: string,
   fileSubmissionStartDate: string,
   fileSubmissionEndDate: string,
-  paperSubmissionEndDate: string
+  paperSubmissionEndDate: string,
+  allowGrading: boolean
 }
 
 export interface Committee {
