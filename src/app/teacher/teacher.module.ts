@@ -13,6 +13,7 @@ import { TeacherApplicationsComponent } from './pages/applications/applications.
 import { TeacherPapersComponent } from './pages/papers/papers.component';
 import { TeacherCommitteesComponent } from './pages/committees/committees.component';
 import { TeacherCommitteePapersComponent } from './pages/committee-papers/committee-papers.component';
+import { GradePaperComponent } from './dialogs/grade-paper/grade-paper.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { TeacherCommitteePapersComponent } from './pages/committee-papers/commit
     TeacherApplicationsComponent,
     TeacherPapersComponent,
     TeacherCommitteesComponent,
-    TeacherCommitteePapersComponent
+    TeacherCommitteePapersComponent,
+    GradePaperComponent
   ],
   imports: [
     CommonModule,
