@@ -9,9 +9,14 @@
                 <mat-icon *ngIf="paperNeedsAttentionMap[row.id] == 'needsGrade'" class="status-icon warn"
                 matTooltip="Acordați o notă"
                 >grading</mat-icon>
+                <mat-icon *ngIf="paperNeedsAttentionMap[row.id] == null" class="status-icon done"
+                matTooltip="Ați notat această lucrare"
+                >grade</mat-icon>
                 <mat-icon *ngIf="paperNeedsAttentionMap[row.id] == 'needsDocUpload'" class="status-icon warn"
                 matTooltip="Aveți documente de încărcat"
                 >description</mat-icon>
+                <mat-spinner diameter="24" *ngIf="paperNeedsAttentionMap[row.id] == 'loading'"
+                class="status-icon"></mat-spinner>
             </td>
         </ng-container>
 
@@ -58,7 +63,8 @@
                     <ng-container *ngIf="gradingAllowed">
                         <div fxLayout="row" fxLayoutAlign="center">
                             <button mat-raised-button color="primary"
-                            *ngIf="paperNeedsAttentionMap[paper.id] == 'needsGrade'">
+                            *ngIf="paperNeedsAttentionMap[paper.id] == 'needsGrade'"
+                            (click)="gradePaper(paper)">
                                 Notați lucrarea
                             </button>
                         </div>

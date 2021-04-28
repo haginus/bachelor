@@ -7,6 +7,8 @@ import { switchMap } from 'rxjs/operators';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AreDocumentsUploaded } from 'src/app/shared/paper-document-list/paper-document-list.component';
+import { MatDialog } from '@angular/material/dialog';
+import { GradePaperComponent } from '../../dialogs/grade-paper/grade-paper.component';
 
 
 @Component({
@@ -24,7 +26,7 @@ import { AreDocumentsUploaded } from 'src/app/shared/paper-document-list/paper-d
 export class TeacherCommitteePapersComponent implements OnInit {
 
   constructor(private teacher: TeacherService, private route: ActivatedRoute, private router: Router,
-    private cd: ChangeDetectorRef, private auth: AuthService) { }
+    private cd: ChangeDetectorRef, private auth: AuthService, private dialog: MatDialog) { }
 
   displayedColumns: string[] = ['status', 'title', 'type', 'student', 'teacher'];
   expandedPaper: Paper | null;
@@ -87,8 +89,28 @@ export class TeacherCommitteePapersComponent implements OnInit {
     return paper.grades.findIndex(grade => grade.teacherId == this.user.teacher.id) >= 0;
   }
 
+  gradePaper(paper: Paper) {
+    const dialogRef = this.dialog.open(GradePaperComponent);
+
+    let sub = dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        const { forPaper, forPresentation } = result;
+        this.paperNeedsAttentionMap[paper.id] = 'loading';
+        let gradeSub = this.teacher.gradePaper(paper.id, forPaper, forPresentation).subscribe(result => {
+          if(result) {
+            paper.grades.push({ forPaper, forPresentation, teacherId: this.user.teacher.id, teacher: { user: <any>this.user } });
+          }
+          this.paperNeedsAttentionMap[paper.id] = null;
+          this.cd.detectChanges();
+          gradeSub.unsubscribe();
+        })
+      }
+      sub.unsubscribe();
+    })
+  }
+
 }
 
 interface PaperNeedsAttentionMap {
-  [id: number]: 'needsGrade' | 'needsDocUpload'
+  [id: number]: 'needsGrade' | 'needsDocUpload' | 'loading';
 }

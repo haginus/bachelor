@@ -131,6 +131,17 @@ export class TeacherService {
       );
   }
 
+  gradePaper(paperId: number, forPaper: number, forPresentation: number): Observable<boolean> {
+    const url = `${environment.apiUrl}/teacher/papers/grade`;
+    const data = { paperId, forPaper, forPresentation };
+    return this.http
+      .post<any>(url, data, this.auth.getPrivateHeaders())
+      .pipe(
+        map(_ => true),
+        catchError(this.handleError<boolean>('gradePaper', false))
+      );
+  }
+
   getCommittees(): Observable<Committee[]> {
     const url = `${environment.apiUrl}/teacher/committees`
     return this.http
