@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="paper.grades" >
+<table mat-table [dataSource]="paper.grades" #table>
     <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Profesor </th>
         <td mat-cell *matCellDef="let row"> {{row.teacher?.user?.lastName}} {{row.teacher?.user?.firstName}} </td>

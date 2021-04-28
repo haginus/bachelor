@@ -1,20 +1,23 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Paper } from 'src/app/services/auth.service';
+import { Component, Input, OnChanges, ViewChild } from '@angular/core';
+import { MatTable } from '@angular/material/table';
+import { Paper, PaperGrade } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-paper-grade-table',
   templateUrl: './paper-grade-table.component.html',
   styleUrls: ['./paper-grade-table.component.scss']
 })
-export class PaperGradeTableComponent implements OnInit {
+export class PaperGradeTableComponent implements OnChanges {
 
   constructor() { }
 
   displayedColumns = ['name', 'forPaper', 'forPresentation', 'average'];
 
   @Input() paper: Paper;
+  @ViewChild('table') table: MatTable<PaperGrade>;
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
+    this.table?.renderRows();
   }
 
   getAverageForPaper() {
@@ -34,6 +37,7 @@ export class PaperGradeTableComponent implements OnInit {
   }
 
   getAverage() {
+    this.table?.renderRows();
     return (this.getAverageForPaper() + this.getAverageForPresentation()) / 2;
   }
 
