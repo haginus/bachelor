@@ -32,6 +32,16 @@ export class DocumentService {
         catchError(this.handleError<any>('deleteDocument', false))
       );
   }
+  
+  getCommitteeDocument(committeeId: number, documentName: CommitteeDocument) {
+    const url = `${environment.apiUrl}/documents/committee/${documentName}?committeeId=${committeeId}`;
+    const options = this.auth.getPrivateHeaders();
+    return this.http
+      .get<ArrayBuffer>(url, {...options, responseType: 'arraybuffer' as 'json'})
+      .pipe(
+        catchError(this.handleError<ArrayBuffer>('getCommitteeDocument', null))
+      );
+  }
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
@@ -51,3 +61,5 @@ export class DocumentService {
     };
   }
 }
+
+export type CommitteeDocument = 'catalog' | 'final_catalog';

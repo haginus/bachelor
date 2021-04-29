@@ -2,6 +2,16 @@
     <div class="loading-shade" *ngIf="isLoadingResults">
         <mat-spinner></mat-spinner>
     </div>
+    <mat-toolbar color="white">
+        <button mat-raised-button color="primary" *ngIf="hasGenerationRights"
+        (click)="generateCommitteeCatalog()">Descărcați catalogul</button>
+        <button mat-raised-button color="primary" *ngIf="hasGenerationRights"
+        (click)="generateCommitteeFinalCatalog()">Descărcați catalogul final</button>
+        <span class="toolbar-spacer"></span>
+        <button mat-icon-button (click)="refreshResults()">
+            <mat-icon>refresh</mat-icon>
+        </button>
+    </mat-toolbar>
     <table mat-table [dataSource]="data" multiTemplateDataRows #table>
         <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef></th>

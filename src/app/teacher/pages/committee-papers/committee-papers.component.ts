@@ -9,6 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AreDocumentsUploaded } from 'src/app/shared/paper-document-list/paper-document-list.component';
 import { MatDialog } from '@angular/material/dialog';
 import { GradePaperComponent } from '../../dialogs/grade-paper/grade-paper.component';
+import { CommitteeDocument, DocumentService } from 'src/app/services/document.service';
 
 
 @Component({
@@ -26,7 +27,8 @@ import { GradePaperComponent } from '../../dialogs/grade-paper/grade-paper.compo
 export class TeacherCommitteePapersComponent implements OnInit {
 
   constructor(private teacher: TeacherService, private route: ActivatedRoute, private router: Router,
-    private cd: ChangeDetectorRef, private auth: AuthService, private dialog: MatDialog) { }
+    private cd: ChangeDetectorRef, private auth: AuthService, private dialog: MatDialog,
+    private documentService: DocumentService) { }
 
   displayedColumns: string[] = ['status', 'title', 'type', 'student', 'teacher'];
   expandedPaper: Paper | null;
@@ -36,6 +38,7 @@ export class TeacherCommitteePapersComponent implements OnInit {
   committee: Committee;
   gradingAllowed: boolean = false;
   user: UserData;
+  hasGenerationRights: boolean = false;
 
   // Map to store whether paper needs attention.
   paperNeedsAttentionMap: PaperNeedsAttentionMap = {};
@@ -60,9 +63,16 @@ export class TeacherCommitteePapersComponent implements OnInit {
         this.committee = committee;
         this.data = committee.papers;
         this.isLoadingResults = false;
+        // Check if user has rights to generate committee documents
+        let president = this.committee.members.find(member => member.role == 'president');
+        let secretary = this.committee.members.find(member => member.role == 'secretary');
+        let teacherId = this.user.teacher.id;
+        this.hasGenerationRights = teacherId == president?.teacherId || teacherId == secretary?.teacherId;
       }
     })
   }
+
+  refreshResults() { }
 
   handleAreDocumentsUploadedEvent(event: AreDocumentsUploaded, paper: Paper) {
     if(!event.byUploader.committee) {
@@ -107,6 +117,41 @@ export class TeacherCommitteePapersComponent implements OnInit {
       }
       sub.unsubscribe();
     })
+  }
+
+  private downloadDocument = (buffer: ArrayBuffer, documentName: CommitteeDocument) => {
+    const blob = new Blob([buffer], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    let anchor = document.createElement("a");
+    let downloadTitle = this.committee.name;
+    if(documentName == 'catalog') {
+      downloadTitle += '-CATALOG-COMISIE'
+    } else if(documentName == 'final_catalog') {
+      downloadTitle += '-CATALOG-FINAL';
+    }
+    anchor.download = downloadTitle + '.pdf';
+    anchor.href = url;
+    anchor.click();
+  }
+
+  generateCommitteeCatalog() {
+    this.isLoadingResults = true;
+    this.documentService.getCommitteeDocument(this.committee.id, 'catalog').subscribe(buffer => {
+      if(buffer) {
+        this.downloadDocument(buffer, 'catalog');
+      }
+      this.isLoadingResults = false;
+    });
+  }
+
+  generateCommitteeFinalCatalog() {
+    this.isLoadingResults = true;
+    this.documentService.getCommitteeDocument(this.committee.id, 'final_catalog').subscribe(buffer => {
+      if(buffer) {
+        this.downloadDocument(buffer, 'final_catalog');
+      }
+      this.isLoadingResults = false;
+    });
   }
 
 }
