@@ -224,6 +224,16 @@ export class AdminService {
     );
   }
 
+  generateCommitteeDocument(documentName: 'committee_compositions') {
+    const url = `${environment.apiUrl}/admin/committees/documents/${documentName}`;
+    const options = this.auth.getPrivateHeaders();
+    return this.http
+      .get<ArrayBuffer>(url, {...options, responseType: 'arraybuffer' as 'json'})
+      .pipe(
+        catchError(this.handleError<ArrayBuffer>('generateCommitteeDocument', null))
+      );
+  }
+
   // Papers 
 
   getPapers(sort: string = 'id', order: string = 'ASC', page?: number, pageSize?: number,

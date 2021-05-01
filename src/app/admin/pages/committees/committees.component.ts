@@ -1,11 +1,13 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AdminService } from 'src/app/services/admin.service';
 import { Committee, Domain, Paper, UserDataMin } from 'src/app/services/auth.service';
+import { DocumentService } from 'src/app/services/document.service';
 import { CommitteeDialogComponent } from '../../dialogs/committee-dialog/committee-dialog.component';
 
 @Component({
@@ -15,7 +17,8 @@ import { CommitteeDialogComponent } from '../../dialogs/committee-dialog/committ
 })
 export class CommitteesComponent implements OnInit {
 
-  constructor(private admin: AdminService, private dialog: MatDialog) { }
+  constructor(private admin: AdminService, private dialog: MatDialog, private document: DocumentService,
+    private snackbar: MatSnackBar) { }
 
   displayedColumns: string[] = ['name', 'domains', 'president', 'secretary', 'members', 'paperNumber', 'actions'];
   resultsLength: number;
@@ -93,6 +96,18 @@ export class CommitteesComponent implements OnInit {
 
   refreshResults() {
     this.performedActions.next("refresh");
+  }
+
+  generateCommitteeDocument(documentName: 'committee_compositions') {
+    let sbRef = this.snackbar.open('Se generează documentul...');
+    this.admin.generateCommitteeDocument(documentName).subscribe(doc => {
+      if(doc) {
+        this.document.viewDocument(doc, 'application/pdf');
+        sbRef.dismiss();
+      } else {
+        this.snackbar.open('A apărut o eroare.');
+      }
+    })
   }
 
 }
