@@ -13,6 +13,12 @@ export class DocumentService {
 
   constructor(private auth: AuthService, private http: HttpClient, private snackbar: MatSnackBar) { }
 
+  viewDocument(data: ArrayBuffer, type: string) {
+    const blob = new Blob([data], { type });
+    const url = window.URL.createObjectURL(blob);
+    window.open(url);
+  }
+
   getDocument(id: number): Observable<ArrayBuffer> {
     const url = `${environment.apiUrl}/documents/view?id=${id}`;
     const options = this.auth.getPrivateHeaders();
