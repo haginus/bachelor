@@ -85,6 +85,7 @@
                         <button mat-button [disabled]="paper.isLoading"
                         (click)="validatePaper(paper, false)">Invalidați lucrarea</button>
                     </div>
+                    <app-paper-grade-table [paper]="paper" *ngIf="paper.isValid"></app-paper-grade-table>
                     <mat-list class="document-list">
                         <div mat-subheader>Documente</div>
                         <app-paper-document-list [paperId]="paper.id"
