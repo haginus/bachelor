@@ -108,7 +108,13 @@ export class TeacherCommitteePapersComponent implements OnInit {
         this.paperNeedsAttentionMap[paper.id] = 'loading';
         let gradeSub = this.teacher.gradePaper(paper.id, forPaper, forPresentation).subscribe(result => {
           if(result) {
-            paper.grades.push({ forPaper, forPresentation, teacherId: this.user.teacher.id, teacher: { user: <any>this.user } });
+            let oldGrade = paper.grades.find(grade => grade.teacherId == this.user.teacher.id);
+            if(oldGrade) {
+              oldGrade.forPaper = forPaper;
+              oldGrade.forPresentation = forPresentation;
+            } else {
+              paper.grades.push({ forPaper, forPresentation, teacherId: this.user.teacher.id, teacher: { user: <any>this.user } });
+            }
           }
           this.paperNeedsAttentionMap[paper.id] = null;
           this.cd.detectChanges();

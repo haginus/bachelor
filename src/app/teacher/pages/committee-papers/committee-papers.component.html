@@ -77,6 +77,11 @@
                             (click)="gradePaper(paper)">
                                 Notați lucrarea
                             </button>
+                            <button mat-raised-button color="primary"
+                            *ngIf="paperNeedsAttentionMap[paper.id] == null"
+                            (click)="gradePaper(paper)">
+                                Schimbați nota
+                            </button>
                         </div>
                         <app-paper-grade-table [paper]="paper"></app-paper-grade-table>
                     </ng-container>
