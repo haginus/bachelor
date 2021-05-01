@@ -193,6 +193,7 @@ export interface UserData {
   id: number,
   firstName: string,
   lastName: string,
+  title?: string,
   fullName: string,
   CNP: string,
   email: string,
@@ -222,6 +223,8 @@ export interface UserDataMin {
   id: number,
   firstName: string,
   lastName: string,
+  title?: string,
+  fullName?: string,
   email?: string
 }
 

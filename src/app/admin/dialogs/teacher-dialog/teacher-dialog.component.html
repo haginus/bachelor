@@ -4,6 +4,16 @@
 <mat-dialog-content class="mat-typography" *ngIf="data.mode == 'edit' || data.mode == 'create'">
     <form [formGroup]="teacherForm">
         <mat-form-field appearance="outline">
+            <mat-label>Titlu</mat-label>
+            <mat-select formControlName="title">
+                <mat-option value="Prof.dr.">Prof.dr.</mat-option>
+                <mat-option value="Conf.dr.">Conf.dr.</mat-option>
+                <mat-option value="Lect.dr.">Lect.dr.</mat-option>
+                <mat-option value="Asist.dr.">Asist.dr.</mat-option>
+                <mat-option value="Asist.(det.) drd.">Asist.(det.) drd.</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
             <mat-label>Nume</mat-label>
             <input matInput type="text" formControlName="lastName">
         </mat-form-field>
@@ -25,6 +35,10 @@
 <mat-dialog-content *ngIf="data.mode =='view'">
     <mat-list>
         <div mat-subheader>Date personale</div>
+        <mat-list-item>
+            <div mat-line>Titlu</div>
+            <div mat-line>{{data.data.title}}</div>
+        </mat-list-item>
         <mat-list-item>
             <div mat-line>Nume</div>
             <div mat-line>{{data.data.lastName}}</div>

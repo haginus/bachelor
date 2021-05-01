@@ -27,28 +27,30 @@ export class AdminTeacherDialogConmonent implements OnInit {
   teacherForm = new FormGroup({
     'firstName': new FormControl(this.data.data?.firstName, [Validators.required]),
     'lastName': new FormControl(this.data.data?.lastName, [Validators.required]),
+    'title': new FormControl(this.data.data?.title, [Validators.required]),
     'CNP': new FormControl(this.data.data?.CNP, [Validators.required, Validators.minLength(13), Validators.maxLength(13)]),
     'email': new FormControl({ value: this.data.data?.email, disabled: true }, [Validators.email, Validators.required]),
   });
 
   private getControlValues() {
+    const title = this.teacherForm.get("title").value;
     const firstName = this.teacherForm.get("firstName").value;
     const lastName = this.teacherForm.get("lastName").value;
     const CNP = this.teacherForm.get("CNP").value;
     const email = this.teacherForm.get("email").value;
 
-    return { firstName, lastName, CNP, email };
+    return { title, firstName, lastName, CNP, email };
   }
 
   addTeacher() {
-    const { firstName, lastName, CNP, email } = this.getControlValues();
-    return this.admin.addTeacher(firstName, lastName, CNP, email);
+    const { title, firstName, lastName, CNP, email } = this.getControlValues();
+    return this.admin.addTeacher(title, firstName, lastName, CNP, email);
   }
 
   editTeacher() {
-    const { firstName, lastName, CNP, email } = this.getControlValues();
+    const { title, firstName, lastName, CNP } = this.getControlValues();
     const id = this.data.data.id;
-    return this.admin.editTeacher(id, firstName, lastName, CNP);
+    return this.admin.editTeacher(id, title, firstName, lastName, CNP);
   }
 
 }
