@@ -19,6 +19,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { PaperGradeTableComponent } from './paper-grade-table/paper-grade-table.component';
 import { MatTableModule } from "@angular/material/table";
 import { FaqComponent } from './faq/faq.component';
+import { SessionInfoComponent } from './session-info/session-info.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { FaqComponent } from './faq/faq.component';
         DocumentUploadDialogComponent,
         PaperDocumentListComponent,
         PaperGradeTableComponent,
-        FaqComponent
+        FaqComponent,
+        SessionInfoComponent
     ],
     imports: [
         CommonModule,
@@ -56,7 +58,8 @@ import { FaqComponent } from './faq/faq.component';
         PaperDocumentListComponent,
         DocumentUploadDialogComponent,
         PaperGradeTableComponent,
-        FaqComponent
+        FaqComponent,
+        SessionInfoComponent
     ]
   })
   export class SharedModule { }

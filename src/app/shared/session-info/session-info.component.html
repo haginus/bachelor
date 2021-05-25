@@ -1,0 +1,22 @@
+<mat-card *ngIf="sessionSettings">
+    <mat-card-header>
+        <h3 mat-card-title>{{'STUDENT.DASHBOARD.PLATFORM_TITLE' | translate}}</h3>
+        <mat-card-subtitle>{{'STUDENT.DASHBOARD.SESSION_NAME' | translate:{ name: sessionSettings?.sessionName } }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-list>
+            <mat-list-item>
+                <div mat-line>{{'STUDENT.DASHBOARD.APPLY_PERIOD' | translate}}</div>
+                <div mat-line>{{sessionSettings.applyStartDate | date:"dd.MM.yyyy"}} - {{sessionSettings.applyEndDate | date:"dd.MM.yyyy"}}</div>
+            </mat-list-item>
+            <mat-list-item>
+                <div mat-line>{{'STUDENT.DASHBOARD.FILE_SUBMISSION_PERIOD' | translate}}</div>
+                <div mat-line>{{sessionSettings.fileSubmissionStartDate | date:"dd.MM.yyyy"}} - {{sessionSettings.fileSubmissionEndDate | date:"dd.MM.yyyy"}}</div>
+            </mat-list-item>
+            <mat-list-item>
+                <div mat-line>{{'STUDENT.DASHBOARD.TURN_IN_DEADLINE' | translate}}</div>
+                <div mat-line>{{sessionSettings.paperSubmissionEndDate | date:"dd.MM.yyyy"}}</div>
+            </mat-list-item>
+        </mat-list>
+    </mat-card-content>
+</mat-card>
