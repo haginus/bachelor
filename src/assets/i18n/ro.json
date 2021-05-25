@@ -177,7 +177,7 @@
         "EXTRA_DATA_EDITOR": {
             "HEADER": "Completați datele necesare",
             "FILL_IN_ROMANIAN": "",
-            "PARENT_INITIAL_ERROR": "Prima literă trebuie să fie majusculă, iar a doua minusculă."
+            "PARENT_INITIAL_ERROR": "Prima literă trebuie să fie majusculă, iar a doua minusculă, urmate de punct. Se acceptă maximum 3 inițiale separate prin spațiu."
         },
         "DOCUMENT_UPLOADER": {
             "HEADER_SIGN": "Semnați documentul",
