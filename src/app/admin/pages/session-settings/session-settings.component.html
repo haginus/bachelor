@@ -43,7 +43,12 @@
                 <mat-hint>Data până la care studenții și profesorii pot depune lucrarea, respectiv referatul.</mat-hint>
                 <mat-error>Termenul limită pentru depunerea lucrărilor nu poate fi mai devreme de data începerii depunerilor de documente!</mat-error>
             </mat-form-field>
-            <mat-checkbox formControlName="allowGrading">Permiteți notarea de către comisii</mat-checkbox>
+            <mat-list fxFlex="100">
+                <mat-list-item>
+                    <div mat-line>Permiteți notarea de către comisii</div>
+                    <mat-slide-toggle formControlName="allowGrading"></mat-slide-toggle>
+                </mat-list-item>
+            </mat-list>
         </div>
         <div fxLayout="column" fxLayoutAlign="center center" class="form-actions">
             <button mat-raised-button color="primary" (click)="saveSettings()" [disabled]="settingsForm.invalid">Salvați setările</button>
