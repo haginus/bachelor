@@ -1,0 +1,10 @@
+[
+    {
+        "question": "Ce se întâmplă în momentul în care accept o ofertă?",
+        "answer": "Odată ce acceptați o ofertă, se va crea o asociere între dumneavoastră și student sub forma unei lucrări.\nPuteți accesa lucrarea în meniul „Lucrări coordonate”."
+    },
+    {
+        "question": "Pot renunța la o lucrare cu un student?",
+        "answer": "Da, numai dvs. puteți efectua această acțiune.\nDin meniu, selectați „Lucrări coordonate”, apăsați pe lucrarea la care care doriți să renunțați, apăsați pe iconița cu trei puncte și selectați „Rupeți asocierea”.\nStudentul va putea apoi să își caute alt profesor."
+    }
+]
