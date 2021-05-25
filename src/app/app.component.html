@@ -103,6 +103,10 @@
             </mat-list>
             <!-- ADMIN -->
             <mat-list *ngIf="user?.type == 'admin'">
+                <a mat-list-item class="nav-item" routerLink="admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    <mat-icon mat-list-icon>home</mat-icon>
+                    <div mat-line>Panou de bord</div>
+                </a>
                 <div mat-subheader>Utilizatori</div>
                 <a mat-list-item class="nav-item" routerLink="admin/students" routerLinkActive="active">
                     <mat-icon mat-list-icon>people</mat-icon>

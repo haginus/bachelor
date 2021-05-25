@@ -14,6 +14,16 @@ export class AdminService {
 
   constructor(private http: HttpClient, private auth: AuthService, private snackbar: MatSnackBar) { }
 
+  getStats(): Observable<Statistic[]> {
+    const url = `${environment.apiUrl}/admin/stats`;
+    return this.http
+      .get<Statistic[]>(url, this.auth.getPrivateHeaders())
+      .pipe(
+        retry(3),
+        catchError(this.handleError<Statistic[]>('getStats', []))
+      );
+  }
+
   // Students
 
   getStudentUsers(sort: string = 'id', order: string = 'ASC', page: number = 0, pageSize: number = 20):
@@ -313,4 +323,11 @@ export interface GetPapersFilter {
 export interface PaperQueryResult {
   rows: Paper[],
   count: number
+}
+
+export interface Statistic {
+  title: string;
+  content: string | number;
+  extra?: string;
+  sectionPath: string;
 }
