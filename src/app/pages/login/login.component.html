@@ -4,57 +4,27 @@
         <div class="image-container flex-container align-center logo">
             <img src="assets/img/fmi-logo.png"/>
         </div>
-        <mat-tab-group mat-align-tabs="center">
-            <mat-tab label="Student">
-                <div class="tab-container">
-                    <form [formGroup]="loginForm">
-                        <mat-form-field appearance="outline">
-                            <mat-label>E-mail</mat-label>
-                            <input matInput type="email" formControlName="email">
-                        </mat-form-field>
-                        <mat-form-field appearance="outline">
-                            <mat-label>Parolă</mat-label>
-                            <input matInput type="password" formControlName="password">
-                        </mat-form-field>
-                        <div class="flex-container align-center">
-                            <button mat-raised-button color="accent" [disabled]="loginForm.invalid || loading" (click)="signIn()">Autentificare</button>
-                        </div>
-                    </form>
-                    <mat-divider class="divider"></mat-divider>
-                        
-                    <div class="flex-container align-center">
-                        <button mat-stroked-button>
-                            <img class="button-icon" src="assets/img/oauth-microsoft.png">
-                            <span>Autentificare cu Office365</span>
-                        </button>
-                    </div>
+        <div class="form-container">
+            <form [formGroup]="loginForm">
+                <mat-form-field appearance="outline">
+                    <mat-label>E-mail</mat-label>
+                    <input matInput type="email" formControlName="email">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Parolă</mat-label>
+                    <input matInput type="password" formControlName="password">
+                </mat-form-field>
+                <div class="flex-container align-center">
+                    <button mat-raised-button color="accent" [disabled]="loginForm.invalid || loading" (click)="signIn()">Autentificare</button>
                 </div>
-            </mat-tab>
-            <mat-tab label="Profesor">
-                <div class="tab-container">
-                    <form [formGroup]="loginForm">
-                        <mat-form-field appearance="outline">
-                            <mat-label>E-mail</mat-label>
-                            <input matInput type="email" formControlName="email">
-                        </mat-form-field>
-                        <mat-form-field appearance="outline">
-                            <mat-label>Parolă</mat-label>
-                            <input matInput type="password" formControlName="password">
-                        </mat-form-field>
-                        <div class="flex-container align-center">
-                            <button mat-raised-button color="accent" [disabled]="loginForm.invalid">Autentificare</button>
-                        </div>
-                    </form>
-                    <mat-divider class="divider"></mat-divider>
-                        
-                    <div class="flex-container align-center">
-                        <button mat-stroked-button>
-                            <img class="button-icon" src="assets/img/oauth-google.png">
-                            <span>Autentificare cu GSuite</span>
-                        </button>
-                    </div>
-                </div>
-            </mat-tab>
-        </mat-tab-group>
+            </form>
+            <mat-divider class="divider"></mat-divider>
+                
+            <div class="flex-container align-center">
+                <button mat-button>
+                    <span>Ați uitat parola?</span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
