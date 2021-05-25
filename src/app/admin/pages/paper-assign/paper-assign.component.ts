@@ -69,7 +69,8 @@ export class PaperAssignComponent implements OnInit {
 
   private getRightPapers() {
     this.isLoadingOtherPapers = true;
-    this.admin.getPapers(undefined, undefined, null, null, { assigned: false }, true).subscribe(papers => {
+    this.admin.getPapers(undefined, undefined, null, null, 
+        { assigned: false, forCommittee: this.committeeId }, true).subscribe(papers => {
       this.otherPapers = papers.rows;
       this.isLoadingOtherPapers = false;
     })

@@ -259,6 +259,12 @@ export class AdminService {
     if(filter?.assignedTo != undefined) {
       url += `&assignedTo=${filter.assignedTo}`;
     }
+    if(filter?.forCommittee != undefined) {
+      url += `&forCommittee=${filter.forCommittee}`;
+    }
+    if(filter?.isValid != undefined) {
+      url += `&isValid=${filter.isValid}`;
+    }
     if(minified == true) {
       url += `&minified=1`;
     }
@@ -317,7 +323,11 @@ export interface GetPapersFilter {
   /** If paper is assigned to any committee */
   assigned?: boolean;
   /** ID of committee where the paper has been assigned */
-  assignedTo?: number
+  assignedTo?: number;
+  /** ID of committee that can take the papers for grading. */
+  forCommittee?: number;
+  /** If papers must be valid. */
+  isValid?: boolean;
 }
 
 export interface PaperQueryResult {
