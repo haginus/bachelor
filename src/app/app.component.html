@@ -76,6 +76,11 @@
             </mat-list>
             <!-- TEACHER -->
             <mat-list *ngIf="user?.type == 'teacher'">
+                <div mat-subheader>{{'DRAWER.INFO_HEADER' | translate}}</div>
+                <a mat-list-item class="nav-item" routerLink="teacher" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    <mat-icon mat-list-icon>lightbulb</mat-icon>
+                    <div mat-line>{{'DRAWER.INFO_AND_QUESTIONS' | translate}}</div>
+                </a>
                 <div mat-subheader>Oferte</div>
                 <a mat-list-item class="nav-item" routerLink="teacher/offers" routerLinkActive="active">
                     <mat-icon mat-list-icon>stars</mat-icon>
