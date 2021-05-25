@@ -1,0 +1,14 @@
+[
+    {
+        "question": "De ce unii profesori nu apar în listă?",
+        "answer": "Profesorii cărora le puteți cere asocierea sunt scrict aceia care au oferte pentru domeniul dumneavoastră de studiu.\nÎn cazul în care nu vedeți un profesor în lista completă, este posibil ca acesta să nu fi inclus oferte pentru domeniul la care studiați."
+    },
+    {
+        "question": "Ce se întâmplă când un profesor îmi acceptă cererea?",
+        "answer": "În momentul în care un profesor vă acceptă cererea de asociere, restul cererilor pe care le-ați trimis se șterg și deveniți asociat cu acel profesor.\nVeți vedea în meniul aplicației secțiunea „Lucrarea mea”, unde va fi nevoie să încărcați documentele necesare la înscrierea pentru susținerea lucrării dvs."
+    },
+    {
+        "question": "Pot schimba profesorul coordonator dacă m-am răzgândit?",
+        "answer": "Da, însă această acțiune poate fi inițiată doar de către profesorul cu care v-ați asociat. Contactați-l pe acesta pentru a retrage asocierea cu dvs."
+    }
+]
