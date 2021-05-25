@@ -3,7 +3,7 @@
 </div>
 
 <mat-toolbar *ngIf="committee" class="committee-toolbar">
-    <button mat-icon-button routerLink="/admin/committees">
+    <button mat-icon-button (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
     </button>
     <div class="committee-info">
