@@ -2,7 +2,7 @@
 <mat-dialog-content class="mat-typography">
     <p>
         Încărcați un fișier .csv cu următoarele coloane: <br> 
-        <i>prenume, nume, CNP, e-mail</i></p>
+        <i>TITLU,NUME,PRENUME,CNP,EMAIL</i></p>
     <form>
         <div class="form-group flex-container align-center">
             <div [hidden]="loading">
@@ -10,6 +10,9 @@
                 <input type="file" id="file" (change)="handleFileInput($event.target)">
             </div>
             <mat-spinner [diameter]="36" *ngIf="loading"></mat-spinner>
+        </div>
+        <div class="flex-container align-center" *ngIf="!loading">
+            <a class="link" href="/assets/example-csv/teachers.csv" target="_blank">Descărcați un exemplu</a>
         </div>
     </form>
 </mat-dialog-content>

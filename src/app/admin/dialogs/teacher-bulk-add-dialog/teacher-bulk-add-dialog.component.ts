@@ -21,9 +21,7 @@ export class AdminTeacherBulkAddDialogComponent implements OnInit {
     const file: File = target.files[0];
     this.loading = true;
     this.admin.addTeachersBulk(file).subscribe(res => {
-      if(res == null) {
-        this.snackbar.open("A apărut o eroare.");
-      } else {
+      if(res) {
         this.snackbar.open(`Au fost adăugați ${res.addedTeachers}/${res.totalTeachers} profesori.`);
       }
       this.dialogRef.close(true);
