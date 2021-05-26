@@ -69,10 +69,12 @@ export class AdminService {
     );
   }
 
-  addStudentsBulk(file: File): Observable<any> {
+  addStudentsBulk(file: File, specializationId: number, studyForm: string): Observable<any> {
     const url = `${environment.apiUrl}/admin/students/add-bulk`;
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
+    formData.append('specializationId', specializationId.toString());
+    formData.append('studyForm', studyForm);
     return this.http.post<any>(url, formData, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("addStudentsBulk", null))
     );

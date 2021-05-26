@@ -1,15 +1,51 @@
 <h2 mat-dialog-title>Adăugare studenți din .CSV</h2>
 <mat-dialog-content class="mat-typography">
-    <p>
-        Încărcați un fișier .csv cu următoarele coloane: <br> 
-        <i>prenume, nume, CNP, e-mail, nume domeniu, tip domeniu (bachelor/master), grupă</i></p>
-    <form>
+    <form [formGroup]="studentForm">
+        <mat-form-field appearance="outline">
+            <mat-label>Programul de studii</mat-label>
+            <mat-select formControlName="specializationId">
+                <ng-container *ngFor="let domain of domains | async">
+                    <mat-option *ngFor="let specialization of domain.specializations" [value]="specialization.id">
+                        <span>{{specialization.name}}</span>
+                        <span> - Domeniul {{domain.name}} </span>
+                        <span>
+                            <ng-container *ngIf="domain.type == 'bachelor'">(licență)</ng-container>
+                            <ng-container *ngIf="domain.type == 'master'">(master)</ng-container>
+                        </span>
+                    </mat-option>
+                </ng-container>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Formă de studiu</mat-label>
+            <mat-select formControlName="studyForm">
+                <mat-option value="if">
+                    <span>Învățământ cu frecvență</span>
+                </mat-option>
+                <mat-option value="ifr">
+                    <span>Învățământ cu frecvență redusă</span>
+                </mat-option>
+                <mat-option value="id">
+                    <span>Învățământ la distanță</span>
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <p>
+            Încărcați un fișier .csv cu următoarele coloane: <br> 
+            <i>NUME,PRENUME,CNP,EMAIL,GRUPA,NUMAR_MATRICOL,PROMOTIE,FORMA_FINANTARE,AN_INMATRICULARE</i>
+        </p>
         <div class="form-group flex-container align-center">
             <div [hidden]="loading">
-                <label for="file" class="mat-raised-button">Încărcați</label>
-                <input type="file" id="file" (change)="handleFileInput($event.target)">
+                <label for="file" class="mat-raised-button"
+                    [class.disabled]="studentForm.invalid">Încărcați</label>
+                <input type="file" id="file"
+                    (change)="handleFileInput($event.target)"
+                    [disabled]="studentForm.invalid" accept=".csv"/>
             </div>
             <mat-spinner [diameter]="36" *ngIf="loading"></mat-spinner>
+        </div>
+        <div class="flex-container align-center" *ngIf="!loading">
+            <a class="link" href="/assets/example-csv/students.csv" target="_blank">Descărcați un exemplu</a>
         </div>
     </form>
 </mat-dialog-content>
