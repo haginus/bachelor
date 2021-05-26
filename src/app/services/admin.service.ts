@@ -300,7 +300,7 @@ export class AdminService {
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      this.snackbar.open("A apărut o eroare.");
+      this.snackbar.open(error.error?.message || "A apărut o eroare.");
       return of(result as T);
     };
   }
