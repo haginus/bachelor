@@ -8,8 +8,6 @@ import { MaterialModule } from './material.module';
 import { LoginComponent } from './pages/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { LoadingComponent } from './shared/loading/loading.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { ChangePasswordComponent } from './user-components/change-password/change-password.component';
 import { SharedModule } from './shared/shared.module'
@@ -26,7 +24,6 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [
     AppComponent,
     LoginComponent,
-    DashboardComponent,
     ChangePasswordComponent
   ],
   imports: [
