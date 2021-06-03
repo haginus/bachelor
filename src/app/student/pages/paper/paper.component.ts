@@ -32,6 +32,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   submissionStarted: boolean;
   areDocumentsUploaded: boolean;
   deadlinePassed: boolean = false;
+  canEditPaper: boolean;
 
   requiredDocuments: PaperRequiredDocument[] = []
 
@@ -60,6 +61,11 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
     this.canUploadSecretaryFiles = startDateSecretary <= today && today <= endDateSecretary;
     this.canUploadPaperFiles = startDateSecretary <= today && today <= endDatePaper;
     this.submissionStarted = today >= startDateSecretary;
+    
+    const paperCreatedAt = new Date(this.paper?.createdAt);
+    const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+    this.canEditPaper = (paperCreatedAt.getTime() + SEVEN_DAYS <= today || today + SEVEN_DAYS >= endDateSecretary) &&
+      today <= endDateSecretary;
   }
 
   ngOnInit(): void {

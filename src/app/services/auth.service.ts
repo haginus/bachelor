@@ -258,7 +258,8 @@ export interface Paper {
   topics?: Topic[],
   requiredDocuments?: PaperRequiredDocument[],
   grades: PaperGrade[],
-  averageGrade: number
+  averageGrade: number;
+  createdAt: string
 }
 
 export interface PaperDocument {
