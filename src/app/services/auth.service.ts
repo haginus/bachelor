@@ -292,6 +292,7 @@ export interface SessionSettings {
 export interface Committee {
   id: number,
   name: string,
+  finalGrades: boolean,
   domains: Domain[],
   members: CommitteeMember[],
   papers: Paper[]

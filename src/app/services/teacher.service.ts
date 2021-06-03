@@ -161,6 +161,16 @@ export class TeacherService {
       );
   }
 
+  markGradesAsFinal(committeeId: number): Observable<boolean> {
+    const url = `${environment.apiUrl}/teacher/committees/${committeeId}/mark-grades-final`;
+    return this.http
+      .post<any>(url, {}, this.auth.getPrivateHeaders())
+      .pipe(
+        map(_ => true),
+        catchError(this.handleError<boolean>('markGradesAsFinal', false))
+      );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       return of(result as T);

@@ -10,6 +10,8 @@ import { AreDocumentsUploaded } from 'src/app/shared/paper-document-list/paper-d
 import { MatDialog } from '@angular/material/dialog';
 import { GradePaperComponent } from '../../dialogs/grade-paper/grade-paper.component';
 import { CommitteeDocument, DocumentService } from 'src/app/services/document.service';
+import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -28,7 +30,7 @@ export class TeacherCommitteePapersComponent implements OnInit {
 
   constructor(private teacher: TeacherService, private route: ActivatedRoute, private router: Router,
     private cd: ChangeDetectorRef, private auth: AuthService, private dialog: MatDialog,
-    private documentService: DocumentService) { }
+    private documentService: DocumentService, private snackbar: MatSnackBar) { }
 
   displayedColumns: string[] = ['status', 'title', 'type', 'student', 'teacher'];
   expandedPaper: Paper | null;
@@ -158,6 +160,32 @@ export class TeacherCommitteePapersComponent implements OnInit {
       }
       this.isLoadingResults = false;
     });
+  }
+
+  markGradesAsFinal() {
+    let dialogRef = this.dialog.open(CommonDialogComponent, {
+      data: {
+        title: 'Atenție!',
+        content: 'Marcând notele drept finale, nu le veți mai putea modica.\nDe asemenea, studenții își vor putea vedea notele.',
+        actions: [
+          { name: 'Anulați', value: false },
+          { name: 'Continuați', value: true }
+        ]
+      }
+    });
+    let sub = dialogRef.afterClosed().subscribe(consent => {
+      if(consent) {
+        this.isLoadingResults = true;
+        this.teacher.markGradesAsFinal(this.committee.id).subscribe(res => {
+          if(res) {
+            this.committee.finalGrades = true;
+            this.snackbar.open("Note marcate drept finale.");
+          }
+          this.isLoadingResults = false;
+        })
+      }
+      sub.unsubscribe();
+    })
   }
 
 }

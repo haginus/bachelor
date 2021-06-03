@@ -1,12 +1,30 @@
+<mat-menu #documentGeneration="matMenu">
+    <ng-template matMenuContent>
+        <button mat-menu-item (click)="generateCommitteeCatalog()">
+            <mat-icon>description</mat-icon>
+            <span>Descărcați catalogul</span>
+        </button>
+        <button mat-menu-item (click)="generateCommitteeFinalCatalog()">
+            <mat-icon>description</mat-icon>
+            <span>Descărcați catalogul final</span>
+        </button>
+    </ng-template>
+</mat-menu>
+
 <div class="mat-elevation-z8 table-container">
     <div class="loading-shade" *ngIf="isLoadingResults">
         <mat-spinner></mat-spinner>
     </div>
     <mat-toolbar color="white">
-        <button mat-raised-button color="primary" *ngIf="hasGenerationRights"
-        (click)="generateCommitteeCatalog()">Descărcați catalogul</button>
-        <button mat-raised-button color="primary" *ngIf="hasGenerationRights"
-        (click)="generateCommitteeFinalCatalog()">Descărcați catalogul final</button>
+        <ng-container *ngIf="hasGenerationRights && gradingAllowed">
+            <button mat-raised-button color="warn" (click)="markGradesAsFinal()" [disabled]="committee.finalGrades">
+                {{ committee.finalGrades ? 'Note marcate drept finale' : 'Marcați notele drept finale' }}
+            </button>
+            <button mat-button [matMenuTriggerFor]="documentGeneration">
+                Descărcați cataloagele
+                <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+        </ng-container>
         <span class="toolbar-spacer"></span>
         <button mat-icon-button (click)="refreshResults()">
             <mat-icon>refresh</mat-icon>
