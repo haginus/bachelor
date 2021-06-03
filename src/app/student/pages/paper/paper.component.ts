@@ -7,6 +7,7 @@ import { switchMap } from 'rxjs/operators';
 import { AuthService, Paper, SessionSettings } from 'src/app/services/auth.service';
 import { StudentExtraData, StudentService, PaperRequiredDocument } from 'src/app/services/student.service';
 import { AreDocumentsUploaded, PaperDocumentEvent } from '../../../shared/paper-document-list/paper-document-list.component';
+import { EditPaperComponent } from '../../dialogs/edit-paper/edit-paper.component';
 import { StudentExtraDataEditorComponent } from '../../dialogs/student-extra-data-editor/student-extra-data-editor.component';
 
 @Component({
@@ -22,6 +23,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   paper: Paper = null;
   studentExtraData: StudentExtraData = null;
   isLoadingInitialData: boolean = true;
+  isLoadingData: boolean;
   isWaitingForDocumentGeneration = false;
   sessionSettings: SessionSettings;
   sessionSettingsSub: Subscription;
@@ -71,12 +73,14 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   }
 
   getData() {
+    this.isLoadingData = true;
     let subscription = combineLatest([this.student.getPaper(), this.student.getExtraData(), this.student.getPaperRequiredDocuments()])
       .subscribe(([paper, extraData, requiredDocuments]) => {
         this.paper = paper;
         this.requiredDocuments = requiredDocuments;
         this.studentExtraData = extraData;
         this.isLoadingInitialData = false;
+        this.isLoadingData = false;
         subscription.unsubscribe();
       });
   }
@@ -107,6 +111,18 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
           this.isWaitingForDocumentGeneration = false;
         })
       }
+    })
+  }
+
+  openEditDialog() {
+    let dialogRef = this.dialog.open(EditPaperComponent, {
+      data: this.paper
+    });
+    let sub = dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.getData();
+      }
+      sub.unsubscribe();
     })
   }
 }

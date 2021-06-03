@@ -1,0 +1,37 @@
+<app-loading class="in-dialog" color="primary" *ngIf="isLoadingQuery"></app-loading>
+<h2 mat-dialog-title>Editați lucrarea</h2>
+<mat-dialog-content>
+    <form [formGroup]="paperForm" fxLayout="row grid" fxLayoutGap="10px grid">
+        <mat-form-field appearance="outline" fxFlex="100">
+            <mat-label>Titlu</mat-label>
+            <input type="text" matInput formControlName="title"/>
+            <mat-error>Titlul trebui</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100">
+            <mat-label>Descriere</mat-label>
+            <textarea matInput type="text" formControlName="description"></textarea>
+            <mat-error></mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100">
+            <mat-label>Teme</mat-label>
+            <mat-chip-list #chipList>
+                <mat-chip *ngFor="let topic of selectedTopics" [selectable]="true" [removable]="true"
+                    (removed)="removeTopic(topic)">
+                    {{topic.name}}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Alegeți o temă nouă..." #topicInput formControlName="topics" [matAutocomplete]="auto"
+                    [matChipInputFor]="chipList">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTopic($event)">
+                <mat-option *ngFor="let topic of filteredTopics | async" [value]="topic">
+                    {{topic.name}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>    
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Anulați</button>
+    <button mat-button (click)="savePaper()" [disabled]="paperForm.invalid">Salvați</button>
+</mat-dialog-actions>

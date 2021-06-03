@@ -1,4 +1,4 @@
-<app-loading *ngIf="isLoadingInitialData" color="primary"></app-loading>
+<app-loading *ngIf="isLoadingInitialData || isLoadingData" color="primary"></app-loading>
 
 <mat-card class="paper-card" *ngIf="!isLoadingInitialData">
     <div class="paper-header">
@@ -19,7 +19,10 @@
                 {{paper.teacher.firstName}} {{paper.teacher.lastName}}</p>
         </div>
         <div class="paper-header-actions">
-            <button mat-icon-button [disabled]="!canUploadSecretaryFiles">
+            <button mat-icon-button
+                [disabled]="!canUploadSecretaryFiles"
+                (click)="openEditDialog()"
+            >
                 <mat-icon>mode</mat-icon>
             </button>
         </div>
