@@ -75,6 +75,11 @@
                     <div class="paper-header">
                         <div class="paper-description">{{paper.description}}</div>
                     </div>
+                    <div class="paper-topics">
+                        <span class="badge" *ngFor="let topic of paper.topics">
+                            {{topic.name}}
+                        </span>
+                    </div>
                     <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px" class="paper-actions"
                         *ngIf="paper.isValid == null">
                         <div [matTooltip]="!paper.documentsUploaded ? 'Studentul nu a încărcat toate documentele.' : ''">

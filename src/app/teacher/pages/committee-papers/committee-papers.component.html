@@ -66,6 +66,11 @@
                     <div class="paper-header">
                         <div class="paper-description">{{paper.description}}</div>
                     </div>
+                    <div class="paper-topics">
+                        <span class="badge" *ngFor="let topic of paper.topics">
+                            {{topic.name}}
+                        </span>
+                    </div>
                     <div class="contact-info">
                         <mat-icon>email</mat-icon>
                         <a target="_blank" href="mailto:{{paper.student.email}}">{{paper.student.email}}</a>

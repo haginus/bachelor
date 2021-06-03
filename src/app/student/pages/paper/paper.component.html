@@ -8,6 +8,11 @@
                 <span *ngIf="paper.type == 'bachelor'">{{ 'STUDENT.PAPER.BACHELOR_PAPER' | translate }}</span>
                 <span *ngIf="paper.type == 'master'">{{ 'STUDENT.PAPER.MASTER_PAPER' | translate }}</span>
             </h3>
+            <div class="paper-topics">
+                <span class="badge" *ngFor="let topic of paper.topics">
+                    {{topic.name}}
+                </span>
+            </div>
             <p class="paper-description">{{ paper.description }}</p>
             <p class="paper-teacher">
                 {{ 'STUDENT.PAPER.COORDINATING_TEACHER' | translate }}:
