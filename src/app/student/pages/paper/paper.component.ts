@@ -29,6 +29,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   sessionSettingsSub: Subscription;
   canUploadSecretaryFiles: boolean = true;
   canUploadPaperFiles: boolean = true;
+  submissionStarted: boolean;
   areDocumentsUploaded: boolean;
   deadlinePassed: boolean = false;
 
@@ -58,6 +59,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
 
     this.canUploadSecretaryFiles = startDateSecretary <= today && today <= endDateSecretary;
     this.canUploadPaperFiles = startDateSecretary <= today && today <= endDatePaper;
+    this.submissionStarted = today >= startDateSecretary;
   }
 
   ngOnInit(): void {

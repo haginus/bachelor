@@ -28,7 +28,17 @@
         </div>
     </div>
 
-    <ng-container *ngIf="paper.isValid == null">
+    <ng-container *ngIf="!submissionStarted">
+        <div class="tip-card" *ngIf="deadlinePassed">
+            <mat-icon class="tip-icon">info</mat-icon>
+            <div class="tip-card-content">
+                Veți putea începe încărcarea documentelor pe
+                {{ sessionSettings.fileSubmissionStartDate | date:"dd.MM.yyyy" }}.
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="paper.isValid == null && submissionStarted">
         <!-- TIP CARD - NO STUDENT EXTRA DATA -->
         <div class="tip-card warning" *ngIf="studentExtraData == null && !isWaitingForDocumentGeneration">
             <mat-icon class="tip-icon">warning_amber</mat-icon>
