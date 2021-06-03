@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { OfferApplication } from 'src/app/services/student.service';
+import { DOMAIN_TYPES } from 'src/app/util/constants';
 
 @Component({
   selector: 'app-application-list',
@@ -12,6 +13,8 @@ export class ApplicationListComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  DOMAIN_TYPES = DOMAIN_TYPES;
 
   @Input('mode') mode: 'student' | 'teacher';
   @Input('items') applications: OfferApplication[];

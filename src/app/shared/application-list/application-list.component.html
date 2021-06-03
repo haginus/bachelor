@@ -3,7 +3,7 @@
         <div class="header-content">
             <span>
                 {{ application.offer.domain.name }},
-                {{'DOMAIN_TYPES.' + application.offer.domain.type.toUpperCase() | translate | titlecase }}
+                {{ DOMAIN_TYPES[application.offer.domain.type] }}
             </span>
             <div class="offer-topics">
                 <span class="badge" *ngFor="let topic of application.offer.topics">{{topic.name}}</span>
@@ -12,41 +12,30 @@
         <div>
             <span class="badge">
                 {{application.offer.takenPlaces }} / {{application.offer.limit}}
-                {{ 'SHARED.APPLICATION_LIST.TAKEN_PLACES' | translate }}
-
+                Locuri ocupate
             </span>
         </div>
     </div>
     <mat-card-content>
         <mat-list>
             <mat-list-item *ngIf="mode == 'teacher'">
-                <div mat-line>
-                    {{ 'SHARED.APPLICATION_LIST.STUDENT' | translate }}
-                </div>
+                <div mat-line>Student</div>
                 <div mat-line>{{application.student.firstName}} {{application.student.lastName}}</div>
             </mat-list-item>
             <mat-list-item *ngIf="mode == 'student'">
-                <div mat-line>
-                    {{ 'SHARED.APPLICATION_LIST.TEACHER' | translate }}
-                </div>
+                <div mat-line>Profesor</div>
                 <div mat-line>{{application.offer.teacher.firstName}} {{application.offer.teacher.lastName}}</div>
             </mat-list-item>
             <mat-list-item>
-                <div mat-line>
-                    {{ 'SHARED.APPLICATION_LIST.TITLE' | translate }}
-                </div>
+                <div mat-line>Titlu</div>
                 <div mat-line>{{application.title}}</div>
             </mat-list-item>
             <mat-list-item>
-                <div mat-line>
-                    {{ 'SHARED.APPLICATION_LIST.DESCRIPTION' | translate }}
-                </div>
+                <div mat-line>Descriere</div>
                 <div mat-line class="nowrap">{{application.description}}</div>
             </mat-list-item>
             <mat-list-item *ngIf="application.usedTechnologies">
-                <div mat-line>
-                    {{ 'SHARED.APPLICATION_LIST.USED_TECHNOLOGIES' | translate }}
-                </div>
+                <div mat-line>Tehnologii folosite</div>
                 <div mat-line>{{application.usedTechnologies}}</div>
             </mat-list-item>
         </mat-list>
@@ -55,24 +44,24 @@
         <div *ngIf="application.accepted == null">
             <div *ngIf="mode == 'teacher'">
                 <button mat-button (click)="sendEvent('decline', application.id)">
-                    {{ 'SHARED.APPLICATION_LIST.DECLINE_APPLICATION' | translate }}
+                    Respingeți
                 </button>
                 <button mat-flat-button color="primary" (click)="sendEvent('accept', application.id)">
-                    {{ 'SHARED.APPLICATION_LIST.ACCEPT_APPLICATION' | translate }}
+                    Acceptați
                 </button>
             </div>
             <div *ngIf="mode == 'student'">
                 <button mat-button (click)="sendEvent('cancel', application.id)">
-                    {{ 'SHARED.APPLICATION_LIST.WITHDRAW_APPLICATION' | translate }}
+                    Retrageți cererea
                 </button>
             </div>
         </div>
         <div *ngIf="application.accepted != null">
             <button mat-button disabled *ngIf="application.accepted">
-                {{ 'SHARED.APPLICATION_LIST.APPLICATION_ACCEPTED' | translate }}
+                Acceptată
             </button>
             <button mat-button disabled *ngIf="application.accepted == false">
-                {{ 'SHARED.APPLICATION_LIST.APPLICATION_DECLINED' | translate }}
+                Respinsă
             </button>
         </div>
     </mat-card-actions>
@@ -82,7 +71,5 @@
     <div class="icon-container">
         <mat-icon>assignment</mat-icon>
     </div>
-    <h1>
-        {{ 'SHARED.APPLICATION_LIST.NO_RESULTS_MESSAGE' | translate }}
-    </h1>
+    <h1>Nu există cereri.</h1>
 </div>

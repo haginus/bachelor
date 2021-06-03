@@ -1,9 +1,9 @@
 <div mat-dialog-title>
     <h2 class="title" *ngIf="mode == 'signDocument'">
-        {{ 'STUDENT.DOCUMENT_UPLOADER.HEADER_SIGN' | translate }}
+        Semnați documentul
     </h2>
     <h2 class="title" *ngIf="mode == 'uploadDocument'">
-        {{ 'STUDENT.DOCUMENT_UPLOADER.HEADER_UPLOAD' | translate }}
+        Încărcați documentul
     </h2>
     <h3 class="subtitle">{{data.document.title}}</h3>
 </div>
@@ -11,40 +11,34 @@
 <mat-dialog-content class="mat-typography" *ngIf="mode == 'signDocument'">
     <div>
         <p>
-            {{ 'STUDENT.DOCUMENT_UPLOADER.STEPS' | translate }}: <br>
-            1. {{ 'STUDENT.DOCUMENT_UPLOADER.DOWNLOAD_GENERATED_DOCUMENT_STEP' | translate }}
+            Pași: <br>
+            1. Descărcați documentul generat.
         </p>
         <div class="button-container">
             <button mat-raised-button (click)="downloadDocument()"
             *ngIf="!isLoadingFile" class="icon-button">
                 <mat-icon>cloud_download</mat-icon>
-                <span>
-                    {{ 'STUDENT.DOCUMENT_UPLOADER.DOWNLOAD_DOCUMENT_BUTTON' | translate }}
-                </span>
+                <span>Descărcați documentul</span>
             </button>
             <mat-spinner [diameter]="36" *ngIf="isLoadingFile"></mat-spinner>
         </div>
         <p>
-            2. {{ 'STUDENT.DOCUMENT_UPLOADER.SIGN_DOCUMENT_STEP' | translate }}
+            2. Semnați documentul.
         </p>
         <p>
-            3. {{ 'STUDENT.DOCUMENT_UPLOADER.UPLOAD_DOCUMENT_STEP' | translate }} <br>
-            {{ 'STUDENT.DOCUMENT_UPLOADER.ACCEPTED_FILES' | translate }}:
+            3. Încărcați documentul semnat. <br>
+            Fișiere acceptate:
             {{ acceptedExtensions }}
         </p>
         <div fxLayout="row">
             <div [hidden]="isUploadingFile">
                 <label for="file" class="mat-raised-button icon-button" *ngIf="state == 'docDownloaded'">
                     <mat-icon>cloud_upload</mat-icon>
-                    <span>
-                        {{ 'STUDENT.DOCUMENT_UPLOADER.UPLOAD_DOCUMENT_BUTTON' | translate }}
-                    </span>
+                    <span>Încărcați documentul </span>
                 </label>
                 <button mat-raised-button *ngIf="state == 'initial'" class="icon-button" disabled>
                     <mat-icon>cloud_upload</mat-icon>
-                    <span>
-                        {{ 'STUDENT.DOCUMENT_UPLOADER.UPLOAD_DOCUMENT_BUTTON' | translate }}
-                    </span>
+                    <span>Încărcați documentul </span>
                 </button>
                 <input type="file" id="file" [accept]="data.document.acceptedMimeTypes" (change)="handleFileInput($event.target, 'signed')">     
             </div>
@@ -55,7 +49,7 @@
 
 <mat-dialog-content class="mat-typography" *ngIf="mode == 'uploadDocument'">
     <p>
-        {{ 'STUDENT.DOCUMENT_UPLOADER.ACCEPTED_FILES' | translate }}:
+        Fișiere acceptate:
         {{ acceptedExtensions }}
     </p>
     <div fxLayout="row">
@@ -63,7 +57,7 @@
             <label for="file" class="mat-raised-button icon-button">
                 <mat-icon>cloud_upload</mat-icon>
                 <span>
-                    {{ 'STUDENT.DOCUMENT_UPLOADER.UPLOAD_DOCUMENT_BUTTON' | translate }}
+                    Încărcați documentul
                 </span>
             </label>
             <input type="file" id="file" [accept]="data.document.acceptedMimeTypes" (change)="handleFileInput($event.target, 'copy')">     

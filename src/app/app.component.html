@@ -3,31 +3,19 @@
 </div>
 
 <mat-menu #userMenu="matMenu">
-    <button mat-menu-item [matMenuTriggerFor]="languageMenu">
-        <mat-icon>language</mat-icon>
-        <span>{{'TOOLBAR.LANGUAGE' | translate}}</span>
-    </button>
     <button mat-menu-item (click)="signOut()">
         <mat-icon>logout</mat-icon>
-        <span>{{'TOOLBAR.SIGN_OUT' | translate}}</span>
-    </button>
-</mat-menu>
-<mat-menu #languageMenu>
-    <button mat-menu-item (click)="changeLanguage('ro')">
-        <span>🇷🇴 Română</span>
-    </button>
-    <button mat-menu-item (click)="changeLanguage('en')">
-        <span>🇬🇧 English</span>
+        <span>Deconectare</span>
     </button>
 </mat-menu>
 
 <div class="flex-container fullscreen main-container" [hidden]="loading">
     <mat-toolbar *ngIf="!hideToolbar">
-        <button mat-icon-button matTooltip="{{'TOOLBAR.TOGGLE_MENU' | translate }}"
+        <button mat-icon-button matTooltip="Comutați meniul"
             *ngIf="!hideDrawer" (click)="drawer.toggle()">
             <mat-icon>menu</mat-icon>
         </button>
-        <span class="toolbar-title">{{ title | translate }}</span>
+        <span class="toolbar-title">{{ title }}</span>
         <span class="toolbar-spacer"></span>
         <button mat-button class="user-preview-container" [matMenuTriggerFor]="userMenu">
             <span class="user-name" fxHide.lt-sm>{{user?.firstName}} {{user?.lastName}}</span>
@@ -38,48 +26,48 @@
         <mat-drawer #drawer [mode]="drawerMode" class="main-drawer">
             <!-- STUDENT -->
             <mat-list *ngIf="user?.type == 'student' && user.student.paper == null">
-                <div mat-subheader>{{'DRAWER.INFO_HEADER' | translate}}</div>
+                <div mat-subheader>Informații</div>
                 <a mat-list-item class="nav-item" routerLink="student" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                     <mat-icon mat-list-icon>lightbulb</mat-icon>
-                    <div mat-line>{{'DRAWER.INFO_AND_QUESTIONS' | translate}}</div>
+                    <div mat-line>Informații și întrebări</div>
                 </a>
-                <div mat-subheader>{{'DRAWER.TEACHERS_HEADER' | translate}}</div>
+                <div mat-subheader>Profesori</div>
                 <a mat-list-item class="nav-item" routerLink="student/suggested-teachers" routerLinkActive="active">
                     <mat-icon mat-list-icon>stars</mat-icon>
-                    <div mat-line>{{'DRAWER.SUGGESTED_TEACHERS' | translate}}</div>
+                    <div mat-line>Profesori sugerați</div>
                 </a>
                 <a mat-list-item class="nav-item" routerLink="student/teachers" routerLinkActive="active">
                     <mat-icon mat-list-icon>school</mat-icon>
-                    <div mat-line>{{'DRAWER.ALL_TEACHERS' | translate}}</div>
+                    <div mat-line>Toți profesorii</div>
                 </a>
-                <div mat-subheader>{{'DRAWER.APPLICATIONS_HEADER' | translate}}</div>
+                <div mat-subheader>Cereri</div>
                 <a mat-list-item class="nav-item" routerLink="student/applications/pending" routerLinkActive="active">
                     <mat-icon mat-list-icon>assignment</mat-icon>
-                    <div mat-line>{{'DRAWER.PENDING_APPLICATIONS' | translate}}</div>
+                    <div mat-line>Cereri în așteptare</div>
                 </a>
                 <a mat-list-item class="nav-item" routerLink="student/applications/declined" routerLinkActive="active">
                     <mat-icon mat-list-icon>assignment_returned</mat-icon>
-                    <div mat-line>{{'DRAWER.DECLINED_APPLICATIONS' | translate}}</div>
+                    <div mat-line>Cereri respinse</div>
                 </a>
             </mat-list>
             <mat-list *ngIf="user?.type == 'student' && user.student.paper">
-                <div mat-subheader>{{'DRAWER.INFO_HEADER' | translate}}</div>
+                <div mat-subheader>Informații</div>
                 <a mat-list-item class="nav-item" routerLink="student" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                     <mat-icon mat-list-icon>lightbulb</mat-icon>
-                    <div mat-line>{{'DRAWER.INFO_AND_QUESTIONS' | translate}}</div>
+                    <div mat-line>Informații și întrebări</div>
                 </a>
-                <div mat-subheader>{{'DRAWER.ASSOCIATION_HEADER' | translate}}</div>
+                <div mat-subheader>Asociere</div>
                 <a mat-list-item class="nav-item" routerLink="student/paper" routerLinkActive="active">
                     <mat-icon mat-list-icon>stars</mat-icon>
-                    <div mat-line>{{'DRAWER.MY_PAPER' | translate}}</div>
+                    <div mat-line>Lucrarea mea</div>
                 </a>
             </mat-list>
             <!-- TEACHER -->
             <mat-list *ngIf="user?.type == 'teacher'">
-                <div mat-subheader>{{'DRAWER.INFO_HEADER' | translate}}</div>
+                <div mat-subheader>Informații</div>
                 <a mat-list-item class="nav-item" routerLink="teacher" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                     <mat-icon mat-list-icon>lightbulb</mat-icon>
-                    <div mat-line>{{'DRAWER.INFO_AND_QUESTIONS' | translate}}</div>
+                    <div mat-line>Informații și întrebări</div>
                 </a>
                 <div mat-subheader>Oferte</div>
                 <a mat-list-item class="nav-item" routerLink="teacher/offers" routerLinkActive="active">

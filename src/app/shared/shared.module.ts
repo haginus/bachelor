@@ -11,7 +11,6 @@ import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from "@angular/material/icon";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { MatExpansionModule } from '@angular/material/expansion';
-import { TranslateModule } from "@ngx-translate/core";
 import { PaperDocumentListComponent } from './paper-document-list/paper-document-list.component';
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { DocumentUploadDialogComponent } from "./document-upload-dialog/document-upload-dialog.component";
@@ -45,7 +44,6 @@ import { SessionInfoComponent } from './session-info/session-info.component';
         MatProgressSpinnerModule,
         FlexLayoutModule,
         MatExpansionModule,
-        TranslateModule,
         MatTableModule
     ],
     exports: [
@@ -54,7 +52,6 @@ import { SessionInfoComponent } from './session-info/session-info.component';
         ApplicationListComponent,
         FlexLayoutModule,
         MatExpansionModule,
-        TranslateModule,
         PaperDocumentListComponent,
         DocumentUploadDialogComponent,
         PaperGradeTableComponent,

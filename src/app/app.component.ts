@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer, MatDrawerMode } from '@angular/material/sidenav';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { combineLatest } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators'
 import { routerFadeAnimation } from './animations';
@@ -9,7 +8,7 @@ import { AuthService, SessionSettings, UserData } from './services/auth.service'
 
 
 const SideWidth = 800;
-const DefaultTitle = 'ROUTE_TITLES.DEFAULT';
+const DEFAULT_TITLE = 'Platformă de asociere';
 
 @Component({
   selector: 'app-root',
@@ -19,18 +18,12 @@ const DefaultTitle = 'ROUTE_TITLES.DEFAULT';
 })
 
 export class AppComponent implements OnInit {
-  title: string = DefaultTitle;
+  title: string = DEFAULT_TITLE;
   drawerMode: MatDrawerMode = "over";
   hideDrawer = false;
   hideToolbar = false;
 
-  constructor(private router: Router, private route: ActivatedRoute, private auth: AuthService,
-    public translate: TranslateService) { 
-      translate.setDefaultLang('ro');
-
-      let language = this.auth.getPreferredLanguage();
-      translate.use(language);
-    }
+  constructor(private router: Router, private route: ActivatedRoute, private auth: AuthService) { }
 
   user : UserData | undefined = undefined;
   sessionSettings: SessionSettings;
@@ -55,7 +48,7 @@ export class AppComponent implements OnInit {
       }
       this.hideDrawer = data.hideDrawer === true;
       this.hideToolbar = data.hideToolbar === true;
-      this.title = data.title != undefined ? data.title : DefaultTitle;
+      this.title = data.title != undefined ? data.title : DEFAULT_TITLE;
       if(this.hideDrawer) {
         this.drawer.close();
       } else if(this.drawerMode == 'side') {
@@ -81,14 +74,6 @@ export class AppComponent implements OnInit {
   signOut() {
     this.auth.signOut().subscribe(res => {
       this.router.navigate(['login']);
-    });
-  }
-
-  changeLanguage(language: string) {
-    this.loading = true;
-    this.translate.use(language).subscribe(_ => {
-      this.loading = false;
-      this.auth.setPreferredLanguage(language);
     });
   }
 

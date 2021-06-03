@@ -4,74 +4,76 @@
 
 <mat-horizontal-stepper labelPosition="bottom" linear #stepper (selectionChange)="selectionChange($event)" *ngIf="!loadingUser">
     <mat-step [stepControl]="validationForm" [editable]="false">
-        <ng-template matStepLabel>{{ 'STUDENT.SETUP.VALIDATION' | translate }}</ng-template>
+        <ng-template matStepLabel>Validare</ng-template>
         <form [formGroup]="validationForm">
-            <h2>{{ 'STUDENT.SETUP.DATA_VALIDATION' | translate }}</h2>
-            <div class="step-details">{{ 'STUDENT.SETUP.DATA_VALIDATION_SUBTITLE' | translate }}</div>
+            <h2>Validarea datelor</h2>
+            <div class="step-details">Asigurați-vă că datele de mai jos sunt corecte.</div>
             <mat-list *ngIf="user">
-                <div mat-subheader>{{ 'USER_DATA.PERSONAL_DATA' | translate }}</div>
+                <div mat-subheader>Date personale</div>
                 <mat-list-item>
-                    <div mat-line>{{ 'USER_DATA.LAST_NAME' | translate }}</div>
+                    <div mat-line>Nume</div>
                     <div mat-line>{{user.lastName}}</div>
                 </mat-list-item>
                 <mat-list-item>
-                    <div mat-line>{{ 'USER_DATA.FIRST_NAME' | translate }}</div>
+                    <div mat-line>Prenume</div>
                     <div mat-line>{{user.firstName}}</div>
                 </mat-list-item>
                 <mat-list-item>
-                    <div mat-line>{{ 'USER_DATA.CNP' | translate }}</div>
+                    <div mat-line>CNP</div>
                     <div mat-line>{{user.CNP}}</div>
                 </mat-list-item>
                 <mat-list-item>
-                    <div mat-line>{{ 'USER_DATA.STUDENT.IDENTIFICATION_CODE' | translate }}</div>
+                    <div mat-line>Număr matricol</div>
                     <div mat-line>{{user.student.identificationCode}}</div>
                 </mat-list-item>
                 <mat-divider inset></mat-divider>
-                <div mat-subheader>{{ 'USER_DATA.STUDENT.STUDY_FORMATION' | translate }}</div>
+                <div mat-subheader>Formațiune de studiu</div>
                 <mat-list-item>
-                    <div mat-line>{{ 'USER_DATA.STUDENT.STUDY_FORM' | translate }}</div>
+                    <div mat-line>Formă de învățământ</div>
                     <div mat-line>
-                        {{ 'STUDY_FORMS.' + (user.student.studyForm.toUpperCase()) | translate }}
+                        {{ STUDY_FORMS[user.student.studyForm] }}
                     </div>
                 </mat-list-item>
                 <mat-list-item>
-                    <div mat-line>{{ 'USER_DATA.STUDENT.DOMAIN' | translate }}</div>
+                    <div mat-line>Domeniu</div>
                     <div mat-line>{{user?.student?.domain?.name}}</div>
                 </mat-list-item>
                 <mat-list-item>
-                    <div mat-line>{{ 'USER_DATA.STUDENT.SPECIALIZATION' | translate }}</div>
+                    <div mat-line>Program de studiu</div>
                     <div mat-line>{{user?.student?.specialization?.name}}</div>
                 </mat-list-item>
                 <mat-list-item>
-                    <div mat-line>{{ 'USER_DATA.STUDENT.GROUP' | translate }}</div>
+                    <div mat-line>Grupă</div>
                     <div mat-line>{{user?.student?.group}}</div>
                 </mat-list-item>
                 <mat-list-item>
-                    <div mat-line>{{ 'USER_DATA.STUDENT.PROMOTION' | translate }}</div>
+                    <div mat-line>Promoție</div>
                     <div mat-line>{{user?.student?.promotion}}</div>
                 </mat-list-item>
                 <mat-list-item>
-                    <div mat-line>{{ 'USER_DATA.STUDENT.MATRICULATION_YEAR' | translate }}</div>
+                    <div mat-line>An de înmatriculare</div>
                     <div mat-line>{{user?.student?.matriculationYear}}</div>
                 </mat-list-item>
                 <mat-list-item>
-                    <div mat-line>{{ 'USER_DATA.STUDENT.FUNDING_FORM' | translate }}</div>
-                    <div mat-line>
-                        {{ 'FUNDING_FORMS.' + user.student.fundingForm.toUpperCase() | translate | titlecase}}
-                    </div>
+                    <div mat-line>Formă de finanțare</div>
+                    <div mat-line>{{ FUNDING_FORMS[user.student.fundingForm] | titlecase }}</div>
                 </mat-list-item>
             </mat-list>
-            <mat-checkbox formControlName="isValid" class="v-checkbox">{{ 'STUDENT.SETUP.DATA_CONFIRMATION_MESSAGE' | translate }}</mat-checkbox>
+            <mat-checkbox formControlName="isValid" class="v-checkbox">
+                Confirm că datele sunt corecte.
+            </mat-checkbox>
             <div class="flex-container align-end actions-container">
-                <button mat-raised-button matStepperNext [disabled]="validationForm.invalid">{{ 'STUDENT.SETUP.NEXT_STEP' | translate }}</button>
+                <button mat-raised-button matStepperNext [disabled]="validationForm.invalid">
+                    Pasul următor
+                </button>
             </div>
         </form>
     </mat-step>
     <mat-step [stepControl]="topicsForm" [editable]="false">
-        <ng-template matStepLabel>{{ 'STUDENT.SETUP.TOPICS' | translate }}</ng-template>
+        <ng-template matStepLabel>Teme</ng-template>
         <form [formGroup]="topicsForm">
-            <h2>{{ 'STUDENT.SETUP.FAVORITE_TOPICS' | translate }}</h2>
-            <div class="step-details">{{ 'STUDENT.SETUP.FAVORITE_TOPICS_SUBTITLE' | translate }}</div>
+            <h2>Teme preferate</h2>
+            <div class="step-details">Alegeți temele care vă atrag.</div>
 
             <mat-selection-list #topicSelect formControlName="selectedTopics">
                 <mat-list-option *ngFor="let topic of topics | async" [value]="topic.id">{{topic.name}}</mat-list-option>
@@ -79,20 +81,20 @@
         </form>
 
         <div class="flex-container align-end actions-container">
-            <button mat-raised-button matStepperNext [disabled]="topicsForm.invalid">{{ 'STUDENT.SETUP.NEXT_STEP' | translate }}</button>
+            <button mat-raised-button matStepperNext [disabled]="topicsForm.invalid">Pasul următor</button>
         </div>
     </mat-step>
     <mat-step [editable]="false">
-        <ng-template matStepLabel>{{ 'STUDENT.SETUP.DONE' | translate }}</ng-template>
+        <ng-template matStepLabel>Gata</ng-template>
         <div class="flex-container last-tab-container">
             <div *ngIf="loadingValidation">
                 <mat-spinner [diameter]="48"></mat-spinner>
-                <h3>{{ 'STUDENT.SETUP.VALIDATION_IN_PROGRESS' | translate }}</h3>
+                <h3>În curs de validare</h3>
             </div>
             <div *ngIf="!loadingValidation">
-                <h3>{{ 'STUDENT.SETUP.ERROR' | translate }}</h3>
-                <button mat-raised-button (click)="validateStudent()">{{ 'STUDENT.SETUP.RETRY' | translate }}</button>
-                <button mat-raised-button (click)="stepper.reset()">{{ 'STUDENT.SETUP.RETAKE_VALIDATION' | translate }}</button>
+                <h3>A apărut o eroare.</h3>
+                <button mat-raised-button (click)="validateStudent()">Reîncercați</button>
+                <button mat-raised-button (click)="stepper.reset()">Reluați validarea</button>
             </div>
         </div>
     </mat-step>

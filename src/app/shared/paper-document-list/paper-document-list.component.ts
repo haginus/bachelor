@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { PaperDocument, SessionSettings } from 'src/app/services/auth.service';
 import { DocumentService } from 'src/app/services/document.service';
 import { PaperDocumentCategory, PaperDocumentTypes, PaperDocumentUploadBy } from 'src/app/services/student.service';
+import { USER_TYPES } from 'src/app/util/constants';
 import { DocumentUploadDialogComponent } from '../document-upload-dialog/document-upload-dialog.component';
 
 @Component({
@@ -35,6 +36,8 @@ export class PaperDocumentListComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     this._generateDocumentMap();
   }
+
+  USER_TYPES = USER_TYPES;
 
   documentMap: DocumentMap = {}
 

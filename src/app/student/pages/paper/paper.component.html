@@ -5,8 +5,7 @@
         <div class="paper-header-content">
             <h1 class="paper-title">{{paper.title}}</h1>
             <h3 class="paper-type">
-                <span *ngIf="paper.type == 'bachelor'">{{ 'STUDENT.PAPER.BACHELOR_PAPER' | translate }}</span>
-                <span *ngIf="paper.type == 'master'">{{ 'STUDENT.PAPER.MASTER_PAPER' | translate }}</span>
+                Lucrare de {{PAPER_TYPES[paper.type]}}
             </h3>
             <div class="paper-topics">
                 <span class="badge" *ngFor="let topic of paper.topics">
@@ -15,7 +14,7 @@
             </div>
             <p class="paper-description">{{ paper.description }}</p>
             <p class="paper-teacher">
-                {{ 'STUDENT.PAPER.COORDINATING_TEACHER' | translate }}:
+                Profesor coordonator:
                 {{paper.teacher.firstName}} {{paper.teacher.lastName}}</p>
         </div>
         <div class="paper-header-actions">
@@ -43,11 +42,11 @@
         <div class="tip-card warning" *ngIf="studentExtraData == null && !isWaitingForDocumentGeneration">
             <mat-icon class="tip-icon">warning_amber</mat-icon>
             <div class="tip-card-content">
-                {{ 'STUDENT.PAPER.FILL_IN_EXTRA_DATA_MESSAGE' | translate }}
+                Pentru a genera documentele de la dosar, este necesar să completați date suplimentare.
             </div>
             <div class="tip-card-action">
                 <button mat-button (click)="editStudentExtraData()">
-                    {{ 'STUDENT.PAPER.FILL_IN' | translate }}
+                    Completați
                 </button>
             </div>
         </div>
@@ -60,7 +59,7 @@
             </mat-icon>
             <div class="tip-card-content">
                 <ng-container *ngIf="!areDocumentsUploaded">
-                    {{ 'STUDENT.PAPER.DOCUMENTS_GENERATED_MESSAGE' | translate }}
+                    Documente generate.
                     Aveți documente de completat.
                 </ng-container>
                 <ng-container *ngIf="areDocumentsUploaded">
@@ -69,7 +68,7 @@
             </div>
             <div class="tip-card-action">
                 <button mat-button (click)="editStudentExtraData()" *ngIf="canUploadSecretaryFiles">
-                {{ 'STUDENT.PAPER.CHANGE_DATA' | translate }}
+                    Modificați datele
                 </button>
             </div>
         </div>
@@ -77,7 +76,7 @@
         <!-- TIP CARD - Waiting document generation -->
         <div class="tip-card isGenerating" *ngIf="isWaitingForDocumentGeneration">
             <div class="tip-card-content">
-                {{ 'STUDENT.PAPER.DOCUMENTS_GENERATING_MESSAGE' | translate }}
+                Se generează documentele...
             </div>
             <mat-progress-bar mode="query" color="primary"></mat-progress-bar>
         </div>
@@ -109,7 +108,7 @@
    
 
     <mat-list class="document-list">
-        <div mat-subheader>{{ 'STUDENT.PAPER.DOCUMENTS_HEADER' | translate }}</div>
+        <div mat-subheader>Documente</div>
         <app-paper-document-list *ngIf="!isLoadingInitialData" [paperId]="paper.id"
             [requiredDocuments]="requiredDocuments"
             [documents]="paper.documents"

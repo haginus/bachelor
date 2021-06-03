@@ -6,6 +6,7 @@ import { combineLatest, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AuthService, Paper, SessionSettings } from 'src/app/services/auth.service';
 import { StudentExtraData, StudentService, PaperRequiredDocument } from 'src/app/services/student.service';
+import { PAPER_TYPES } from 'src/app/util/constants';
 import { AreDocumentsUploaded, PaperDocumentEvent } from '../../../shared/paper-document-list/paper-document-list.component';
 import { EditPaperComponent } from '../../dialogs/edit-paper/edit-paper.component';
 import { StudentExtraDataEditorComponent } from '../../dialogs/student-extra-data-editor/student-extra-data-editor.component';
@@ -20,6 +21,8 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   constructor(private dialog: MatDialog, private student: StudentService, private snackbar: MatSnackBar,
     private auth: AuthService, private cd: ChangeDetectorRef) { }
 
+  PAPER_TYPES = PAPER_TYPES;
+  
   paper: Paper = null;
   studentExtraData: StudentExtraData = null;
   isLoadingInitialData: boolean = true;

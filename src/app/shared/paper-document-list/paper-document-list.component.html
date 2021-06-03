@@ -6,22 +6,22 @@
     <div mat-line>{{document.title}}</div>
     <div mat-line>
         <span *ngIf="documentMap[document.name].nextAction == null || documentMap[document.name].nextAction == 'upload'">
-            {{ 'STUDENT.PAPER.MISSING_DOCUMENT' | translate }}
+            Document lipsă
             <span *ngIf="documentMap[document.name].uploadBy != perspective">
-                | {{ 'STUDENT.PAPER.CAN_BE_UPLOADED_BY_' + documentMap[document.name].uploadBy | uppercase | translate }}
+                | Se încarcă de către {{ USER_TYPES[documentMap[document.name].uploadBy] }}
             </span>
         </span>
         <span *ngIf="documentMap[document.name].nextAction == 'sign'">
-            {{ 'STUDENT.PAPER.DOCUMENT_NEEDS_SIGNATURE' | translate }}
+            Necesită semnătură
         </span>
         <span *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].actualTypes.generated && !documentMap[document.name].requiredTypes.signed">
-            {{ 'STUDENT.PAPER.GENERATED_DOCUMENT' | translate }}
+            Document generat
         </span>
         <span *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].actualTypes.signed">
-            {{ 'STUDENT.PAPER.SIGNED_DOCUMENT' | translate }}
+            Document semnat
         </span>
         <span *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].actualTypes.copy">
-            {{ 'STUDENT.PAPER.UPLOADED_DOCUMENT' | translate }}
+            Document încărcat
         </span>
     </div>
     <button class="left-button"
@@ -36,21 +36,24 @@
         mat-stroked-button
         *ngIf="documentMap[document.name].nextAction == 'view'"
         (click)="viewDocument(documentMap[document.name])"
-        [disabled]="documentMap[document.name].actionPending">
-        {{ 'STUDENT.PAPER.VIEW_DOCUMENT' | translate }}
+        [disabled]="documentMap[document.name].actionPending"
+    >
+        Vizualizați
     </button>
     <button 
         mat-stroked-button
         *ngIf="documentMap[document.name].nextAction == 'sign'"
         (click)="openDocumentDialog('sign', document.name, documentMap[document.name].lastId)"
-        [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange">
-        {{ 'STUDENT.PAPER.SIGN_DOCUMENT' | translate }}
+        [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange"
+    >
+        Semnați
     </button>
     <button 
         mat-stroked-button
         *ngIf="documentMap[document.name].nextAction == 'upload'"
         (click)="openDocumentDialog('uploadCopy', document.name)"
-        [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange">
-        {{ 'STUDENT.PAPER.UPLOAD_DOCUMENT' | translate }}
+        [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange"
+    >
+        Încărcați
     </button>
 </mat-list-item>

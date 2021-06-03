@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService, UserData } from 'src/app/services/auth.service';
 import { Topic, TopicsService } from 'src/app/services/topics.service';
+import { FUNDING_FORMS, STUDY_FORMS } from 'src/app/util/constants';
 
 @Component({
   selector: 'student-setup',
@@ -21,6 +22,9 @@ export class StudentSetupComponent implements OnInit, OnDestroy {
 
 
   user!: UserData;
+
+  STUDY_FORMS = STUDY_FORMS;
+  FUNDING_FORMS = FUNDING_FORMS;
 
   ngOnInit(): void {
     this.userObservable = this.userService.getUserData().subscribe(user => {
