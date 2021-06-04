@@ -19,7 +19,7 @@
         </div>
         <div class="paper-header-actions">
             <button mat-icon-button
-                [disabled]="!canEditPaper"
+                [disabled]="!canEditPaper || paper.isValid != null"
                 (click)="openEditDialog()"
             >
                 <mat-icon>mode</mat-icon>
@@ -93,9 +93,16 @@
         <div class="tip-card success">
             <mat-icon class="tip-icon">done_all</mat-icon>
             <div class="tip-card-content">
-                Lucrarea dvs. a fost validată de către secretariat.
+                <ng-container *ngIf="paper.committee">
+                    Lucrarea dvs. a fost validată de către secretariat 
+                    și atribuită la {{paper.committee.name}}.
+                </ng-container>
+                <ng-container *ngIf="!paper.committee">
+                    Lucrarea dvs. a fost validată de către secretariat.
+                </ng-container>   
             </div>
         </div>
+        <app-paper-grade-table *ngIf="paper.committee?.finalGrades" [paper]="paper"></app-paper-grade-table>
     </ng-container>
     <ng-container *ngIf="paper.isValid == false">
         <div class="tip-card severe">
