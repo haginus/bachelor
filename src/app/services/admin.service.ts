@@ -247,7 +247,7 @@ export class AdminService {
     );
   }
 
-  generateCommitteeDocument(documentName: 'committee_compositions') {
+  generateCommitteeDocument(documentName: 'committee_compositions' | 'committee_students') {
     const url = `${environment.apiUrl}/admin/committees/documents/${documentName}`;
     const options = this.auth.getPrivateHeaders();
     return this.http

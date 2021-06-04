@@ -98,7 +98,7 @@ export class CommitteesComponent implements OnInit {
     this.performedActions.next("refresh");
   }
 
-  generateCommitteeDocument(documentName: 'committee_compositions') {
+  generateCommitteeDocument(documentName: 'committee_compositions' | 'committee_students') {
     let sbRef = this.snackbar.open('Se generează documentul...');
     this.admin.generateCommitteeDocument(documentName).subscribe(doc => {
       if(doc) {
