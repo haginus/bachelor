@@ -1,5 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, map, take, tap } from 'rxjs/operators';
@@ -12,7 +13,7 @@ import { Topic } from './topics.service';
 })
 export class AuthService {
 
-  constructor(private http: HttpClient, private router: Router) { 
+  constructor(private http: HttpClient, private router: Router, private snackbar: MatSnackBar) { 
     if(this.isSignedIn()) {
       this.getUserData().subscribe(res => {
         this.userDataSource.next(res);
@@ -53,7 +54,7 @@ export class AuthService {
         this.userDataSource.next((res as any).user);
         return res
       }),
-      catchError(this.handleError('signInWithEmailAndPassword'))
+      catchError(this.handleAuthError('signInWithEmailAndPassword'))
     );
   }
 
@@ -66,7 +67,7 @@ export class AuthService {
         this.userDataSource.next((res as any).user);
         return res
       }),
-      catchError(this.handleError('signInWithTokenAndChangePassword'))
+      catchError(this.handleAuthError('signInWithTokenAndChangePassword'))
     );
   }
 
@@ -74,6 +75,13 @@ export class AuthService {
     this.removeToken();
     this.loginState.next(false);
     return of(true);
+  }
+
+  sendResetPasswordEmail(email: string) {
+    const url = `${environment.apiUrl}/auth/reset-password`;
+    return this.http.post<boolean>(url, { email }).pipe(
+      catchError(this.handleError('sendResetPasswordEmail', false))
+    );
   }
 
   getPrivateHeaders() {
@@ -171,8 +179,15 @@ export class AuthService {
     };
   }
 
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+      this.snackbar.open(error.error?.message || "A apărut o eroare.");
+      return of(result as T);
+    };
+  }
 
-  private handleError(result?: any) {
+
+  private handleAuthError(result?: any) {
     return (error: HttpErrorResponse): Observable<AuthResponse> => {
       if (error.status == 401) {
         return of({ error: error.error.error } as AuthResponse);

@@ -22,6 +22,12 @@ export class LoginComponent implements OnInit {
     'password': new FormControl(null, [Validators.minLength(6), Validators.required]),
   });
 
+  forgotPasswordForm = new FormGroup({
+    'email': new FormControl(null, [Validators.email, Validators.required]),
+  });
+
+  view: 'login' | 'forgotPassword' = 'login';
+
   signIn() {
     const email = this.loginForm.get('email')?.value;
     const password = this.loginForm.get('password')?.value;
@@ -34,6 +40,17 @@ export class LoginComponent implements OnInit {
         this.router.navigate([res.user.type]);
       }
     })
+  }
+
+  sendForgotPasswordEmail() {
+    const email = this.forgotPasswordForm.get('email')?.value;
+    this.loading = true;
+    this.auth.sendResetPasswordEmail(email).subscribe(result => {
+      this.loading = false;
+      if(result) {
+        this.snackBar.open("E-mail de resetare a parolei a fost trimis.");
+      }
+    });
   }
 
   private handleError(err: string) {

@@ -5,7 +5,7 @@
             <img src="assets/img/fmi-logo.png"/>
         </div>
         <div class="form-container">
-            <form [formGroup]="loginForm">
+            <form [formGroup]="loginForm" *ngIf="view == 'login'">
                 <mat-form-field appearance="outline">
                     <mat-label>E-mail</mat-label>
                     <input matInput type="email" formControlName="email">
@@ -15,14 +15,33 @@
                     <input matInput type="password" formControlName="password">
                 </mat-form-field>
                 <div class="flex-container align-center">
-                    <button mat-raised-button color="accent" [disabled]="loginForm.invalid || loading" (click)="signIn()">Autentificare</button>
+                    <button mat-raised-button color="accent" [disabled]="loginForm.invalid || loading"
+                    (click)="signIn()">Autentificare</button>
+                </div>
+            </form>
+            <form [formGroup]="forgotPasswordForm" *ngIf="view == 'forgotPassword'">
+                <mat-form-field appearance="outline">
+                    <mat-label>E-mail</mat-label>
+                    <input matInput type="email" formControlName="email">
+                </mat-form-field>
+                <div class="flex-container align-center">
+                    <button mat-raised-button color="accent"
+                    [disabled]="forgotPasswordForm.invalid || loading"
+                    (click)="sendForgotPasswordEmail()">Trimiteți e-mail de resetare</button>
                 </div>
             </form>
             <mat-divider class="divider"></mat-divider>
                 
             <div class="flex-container align-center">
-                <button mat-button>
+                <button mat-button *ngIf="view == 'login'"
+                    (click)="view = 'forgotPassword'"
+                >
                     <span>Ați uitat parola?</span>
+                </button>
+                <button mat-button *ngIf="view == 'forgotPassword'"
+                    (click)="view = 'login'"
+                >
+                    <span>Înapoi la autentificare</span>
                 </button>
             </div>
         </div>
