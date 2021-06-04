@@ -191,6 +191,17 @@ export class AdminService {
     );
   }
 
+  deleteTopic(id: number, moveId: number): Observable<boolean> {
+    const url = `${environment.apiUrl}/admin/topics/delete`;
+    return this.http
+      .post<boolean>(url, { id, moveId }, this.auth.getPrivateHeaders())
+      .pipe(
+        map(_ => true),
+        catchError(this.handleError<boolean>('deleteTopic', false)
+      )
+    );
+  }
+
   // Committees
 
   getCommittees(): Observable<Committee[]> {

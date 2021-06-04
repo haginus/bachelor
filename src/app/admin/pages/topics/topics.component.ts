@@ -81,11 +81,22 @@ export class AdminTopicsComponent implements OnInit, AfterViewInit {
       if(topic) {
         this.performedActions.next('editTopic');
       }
-    })
+    });
   }
 
   deleteTopic(id: number) {
-    
+    let dialogRef = this.dialog.open(AdminTopicDialogComponent, {
+      data: {
+        mode: 'delete',
+        topic: this.data.find(topic => topic.id == id)
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.performedActions.next('deleteTopic');
+      }
+    });
   }
 
   refreshResults() {

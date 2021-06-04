@@ -2,8 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { map } from 'rxjs/operators';
 import { AdminService } from 'src/app/services/admin.service';
-import { Topic } from 'src/app/services/topics.service';
+import { Topic, TopicsService } from 'src/app/services/topics.service';
 
 @Component({
   selector: 'app-topic-dialog',
@@ -13,7 +14,8 @@ import { Topic } from 'src/app/services/topics.service';
 export class AdminTopicDialogComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: TopicDialogData, private admin: AdminService,
-    private dialogRef: MatDialogRef<AdminTopicDialogComponent>, private snackbar: MatSnackBar) { }
+    private dialogRef: MatDialogRef<AdminTopicDialogComponent>, private snackbar: MatSnackBar,
+    private topicsService: TopicsService) { }
 
   isLoading = false;
   remainingTopics = []
@@ -27,6 +29,20 @@ export class AdminTopicDialogComponent implements OnInit {
   })
 
   ngOnInit(): void {
+    if(this.data.mode == 'delete') {
+      let sub = this.topicsService.getTopics().pipe(
+        map(topics => {
+          let idx = topics.findIndex(topic => topic.id == this.data.topic.id);
+          if(idx >= 0) {
+            topics.splice(idx, 1);
+          }
+          return topics;
+        })
+      ).subscribe(topics => {
+        this.remainingTopics = topics;
+        sub.unsubscribe();
+      });
+    }
   }
 
   get topicName() { return this.editTopicForm.get("name") }
@@ -61,7 +77,16 @@ export class AdminTopicDialogComponent implements OnInit {
   }
 
   deleteTopic() {
-    
+    const id = this.data.topic.id;
+    const moveId = this.deleteTopicForm.get('moveTo').value;
+    this.isLoading = true;
+    this.admin.deleteTopic(id, moveId).subscribe(res => {
+      if(res) {
+        this.snackbar.open("Temă ștearsă.");
+        this.dialogRef.close(res);
+      }
+      this.isLoading = false;
+    });
   }
 
 }

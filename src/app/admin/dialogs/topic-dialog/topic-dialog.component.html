@@ -13,12 +13,12 @@
     </form>
 </mat-dialog-content>
 <mat-dialog-content class="mat-typography" *ngIf="data.mode == 'delete'">
-    <p>Este nevoie să transferați studenții din acest domeniu (dacă există) către alt domeniu.</p>
+    <p>Este nevoie să transferați ofertele și lucrările ce conțin această temă (dacă există) către altă temă.</p>
     <form [formGroup]="deleteTopicForm">
         <mat-form-field appearance="outline">
-            <mat-label>Mutați studenții în</mat-label>
+            <mat-label>Mutați în</mat-label>
             <mat-select formControlName="moveTo">
-                <mat-option *ngFor="let domain of remainingTopics" [value]="domain.id">{{ domain.name }}</mat-option>
+                <mat-option *ngFor="let topic of remainingTopics" [value]="topic.id">{{ topic.name }}</mat-option>
             </mat-select>
         </mat-form-field>
     </form>
