@@ -247,6 +247,13 @@ export class AdminService {
     );
   }
 
+  autoAssignCommitteePapers(): Observable<AutoAssignCommitteePapersResult> {
+    const url = `${environment.apiUrl}/admin/committees/auto-assign-papers`;
+    return this.http.post<AutoAssignCommitteePapersResult>(url, {}, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError<AutoAssignCommitteePapersResult>('autoAssignCommitteePapers', { success: false }))
+    );
+  }
+
   generateCommitteeDocument(documentName: 'committee_compositions' | 'committee_students') {
     const url = `${environment.apiUrl}/admin/committees/documents/${documentName}`;
     const options = this.auth.getPrivateHeaders();
@@ -346,6 +353,12 @@ export interface GetPapersFilter {
 export interface PaperQueryResult {
   rows: Paper[],
   count: number
+}
+
+export interface AutoAssignCommitteePapersResult {
+  success: boolean;
+  assignedPapers?: number;
+  totalPapers?: number;
 }
 
 export interface Statistic {

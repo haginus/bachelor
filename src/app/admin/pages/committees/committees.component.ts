@@ -8,6 +8,7 @@ import { switchMap } from 'rxjs/operators';
 import { AdminService } from 'src/app/services/admin.service';
 import { Committee, Domain, Paper, UserDataMin } from 'src/app/services/auth.service';
 import { DocumentService } from 'src/app/services/document.service';
+import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
 import { CommitteeDialogComponent } from '../../dialogs/committee-dialog/committee-dialog.component';
 
 @Component({
@@ -92,6 +93,30 @@ export class CommitteesComponent implements OnInit {
         this.performedActions.next('deleteCommittee');
       }
     })
+  }
+
+  autoAssign() {
+    const dialogDef = this.dialog.open(CommonDialogComponent, {
+      data: {
+        title: 'Atribuire automată lucrări',
+        content: 'Folosiți această funcție pentru a atribui automat lucrările de licență care nu sunt încă atrubuite unei comisii.',
+        actions: [
+          { name: 'Anulați', value: false },
+          { name: 'Atribuiți automat', value: true }
+        ]
+      }
+    });
+    dialogDef.afterClosed().subscribe(result => {
+      if(result) {
+        this.isLoadingResults = true;
+        this.admin.autoAssignCommitteePapers().subscribe(result => {
+          if(result.success) {
+            this.snackbar.open(`Au fost atribuite ${result.assignedPapers} din ${result.totalPapers} lucrări.`);
+          }
+          this.performedActions.next('autoAssign');
+        });
+      }
+    });
   }
 
   refreshResults() {
