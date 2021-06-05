@@ -28,12 +28,26 @@
 
 <div class="mat-elevation-z8 table-container">
     <mat-toolbar color="white">
-        <button mat-raised-button color="accent" (click)="addCommittee()">Adăugați comisie</button>
-        <button mat-raised-button color="accent" (click)="autoAssign()">Atribuire automată</button>
-        <button mat-button [matMenuTriggerFor]="documentGeneration">
-            Generați documente
-            <mat-icon>arrow_drop_down</mat-icon>
-        </button>
+        <div fxHide.lt-sm>
+            <button mat-raised-button color="accent" (click)="addCommittee()">Adăugați comisie</button>
+            <button mat-raised-button color="accent" (click)="autoAssign()">Atribuire automată</button>
+            <button mat-button [matMenuTriggerFor]="documentGeneration">
+                Generați documente
+                <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+        </div>
+        <div fxHide fxShow.lt-sm>
+            <button mat-mini-fab (click)="addCommittee()">
+                <mat-icon>add</mat-icon>
+            </button>
+            <button mat-mini-fab (click)="autoAssign()">
+                <mat-icon>assignment</mat-icon>
+            </button>
+            <button mat-button [matMenuTriggerFor]="documentGeneration">
+                Generați documente
+                <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+        </div>
         <span class="toolbar-spacer"></span>
         <button mat-icon-button (click)="refreshResults()">
             <mat-icon>refresh</mat-icon>
