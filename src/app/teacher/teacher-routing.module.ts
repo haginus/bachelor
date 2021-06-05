@@ -11,7 +11,7 @@ import { TeacherCommitteesComponent } from './pages/committees/committees.compon
 import { TeacherCommitteePapersComponent } from './pages/committee-papers/committee-papers.component';
 
 const routes: Routes = [
-  { path: '', component: TeacherComponent },
+  { path: '', component: TeacherComponent, canActivate: [ValidatedGuard] },
   { path: 'setup', component: TeacherSetupComponent, data: { hideDrawer: true, title: "Validare" }, canActivate: [NotValidatedGuard] },
   { path: 'offers', component: TeacherOffersComponent, data: { title: "Ofertele dvs." }, canActivate: [ValidatedGuard] },
   { path: 'applications', component: TeacherApplicationsComponent, data: { title: "Cereri" }, canActivate: [ValidatedGuard] },
