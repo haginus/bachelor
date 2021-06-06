@@ -40,16 +40,13 @@ export class StudentService {
       );
   }
 
-  applyToOffer(offerId, application: OfferApplication): Observable<PostResponse> {
+  applyToOffer(offerId: number, application: OfferApplication): Observable<PostResponse> {
     const url = `${environment.apiUrl}/student/teacher-offers/apply`;
     return this.http.post(url, { offerId, ...application }, this.auth.getPrivateHeaders()).pipe(
       map(res => {
         return { success: true } as PostResponse
       }),
-      catchError(err => {
-        let error = (err as any).error as string
-        return of({ error })
-      })
+      catchError(this.handleError<PostResponse>('applyToOffer', { error: ''}))
     );
   }
 
@@ -140,6 +137,7 @@ export class StudentService {
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
+      this.snackbar.open(error?.error.message || 'A apărut o eroare.');
       return of(result as T);
     };
   }

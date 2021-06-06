@@ -15,9 +15,9 @@ export class OfferApplicationSenderComponent implements OnInit {
     private student: StudentService, private snackbar: MatSnackBar) { }
 
   applicationForm = new FormGroup({
-    "title": new FormControl(null, [Validators.required, Validators.minLength(3), Validators.maxLength(128)]),
-    "description": new FormControl(null, [Validators.required, Validators.minLength(5), Validators.maxLength(1024)]),
-    "usedTechnologies": new FormControl(null)
+    "title": new FormControl(null, [Validators.required, Validators.minLength(3), Validators.maxLength(256)]),
+    "description": new FormControl(null, [Validators.required, Validators.minLength(64), Validators.maxLength(1024)]),
+    "usedTechnologies": new FormControl(null, [Validators.maxLength(256)])
   })
 
   isLoadingQuery = false;
@@ -38,20 +38,7 @@ export class OfferApplicationSenderComponent implements OnInit {
     let application: OfferApplication = this._getFormAplication();
     this.isLoadingQuery = true;
     this.student.applyToOffer(this.offerId, application).subscribe(result => {
-      if(result.error) {
-        switch(result.error) {
-          case "BUSY_OFFER":
-            this.snackbar.open("Eroare: Oferta este și-a atins limita.");
-            this.closeFailure();
-            break;
-          case "ALREADY_APPLIED":
-            this.snackbar.open("Eroare: Ați aplicat deja la această ofertă.");
-            this.closeSuccess();
-            break;
-          default:
-            this.snackbar.open("A apărut o eroare.");
-        }
-      } else {
+      if(result.success) {
         this.snackbar.open("Cerere trimisă.");
         this.closeSuccess();
       }
