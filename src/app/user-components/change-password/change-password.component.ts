@@ -38,24 +38,10 @@ export class ChangePasswordComponent implements OnInit {
     this.loading = true;
     this.auth.signInWithTokenAndChangePassword(this.token, password, confirmPassword).subscribe(res => {
       this.loading = false;
-      if(res.error) {
-        this.handleError(res.error);
-      } else {
+      if(!res.error) {
         this.router.navigate(["dashboard"]);
       }
-    })
-  }
-
-  private handleError(err: string) {
-    let msg;
-    switch(err) {
-      case 'INVALID_CODE':
-        msg = 'Cod de activare greșit.';
-        break;
-      default:
-        msg = 'A apărut o eroare. Reîncercați.';
-    }
-    this.snackBar.open(msg);
+    });
   }
 
   static foreignKeyValidator: ValidatorFn = (control: FormGroup): ValidationErrors | null => {

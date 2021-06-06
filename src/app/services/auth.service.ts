@@ -189,11 +189,8 @@ export class AuthService {
 
   private handleAuthError(result?: any) {
     return (error: HttpErrorResponse): Observable<AuthResponse> => {
-      if (error.status == 401) {
-        return of({ error: error.error.error } as AuthResponse);
-      } else {
-        return of({ error: "OTHER" });
-      }
+      this.snackbar.open(error.error?.message || "A apărut o eroare.");
+      return of({ error: error.error.name } as AuthResponse);
     };
   }
 }

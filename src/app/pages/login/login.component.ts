@@ -56,25 +56,14 @@ export class LoginComponent implements OnInit {
   private handleError(err: string) {
     const emailControl = this.loginForm.get('email');
     const passwordControl = this.loginForm.get('password');;
-    let msg;
     switch(err) {
       case 'EMAIL_NOT_FOUND':
-        msg = 'E-mailul nu există.';
         emailControl?.setErrors({"notExists": true});
         break;
       case 'WRONG_PASSWORD':
-        msg = 'Parolă incorectă.';
         passwordControl?.setErrors({"wrong": true});
         break;
-      case 'NOT_ACTIVATED':
-        msg = 'Contul nu este activat. Verificați-vă e-mailul.';
-        break;
-      default:
-        msg = 'A apărut o eroare. Reîncercați.';
     }
-    this.snackBar.open(msg);
   }
-
-
 
 }
