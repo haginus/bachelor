@@ -62,7 +62,7 @@
 
 
         <ng-container matColumnDef="committee">
-            <th mat-header-cell *matHeaderCellDef> Comisie </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="committeeId"> Comisie </th>
             <td mat-cell *matCellDef="let row">
                 <ng-container *ngIf="row.committee">{{ row.committee.name }}</ng-container>
                 <ng-container *ngIf="!row.committee">Neatribuit</ng-container>
