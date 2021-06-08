@@ -8,8 +8,26 @@
             <mat-icon>delete</mat-icon>
             <span>Ștergeți comisia</span>
         </button>
+        <button mat-menu-item [matMenuTriggerFor]="committeeCatalogGenerationMenu" [matMenuTriggerData]="{id: id}">
+            <mat-icon>description</mat-icon>
+            <span>Generați documente</span>
+        </button>
     </ng-template>
 </mat-menu>
+
+<mat-menu #committeeCatalogGenerationMenu="matMenu">
+    <ng-template matMenuContent let-id="id">
+        <button mat-menu-item (click)="getCommitteeDocument(id, 'catalog')">
+            <mat-icon>description</mat-icon>
+            <span>Generați catalogul</span>
+        </button>
+        <button mat-menu-item (click)="getCommitteeDocument(id, 'final_catalog')">
+            <mat-icon>description</mat-icon>
+            <span>Generați catalogul final</span>
+        </button>
+    </ng-template>
+</mat-menu>
+
 
 <mat-menu #documentGeneration="matMenu">
     <ng-template matMenuContent>

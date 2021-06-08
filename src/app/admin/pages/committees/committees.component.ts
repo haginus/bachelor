@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AdminService } from 'src/app/services/admin.service';
 import { Committee, Domain, Paper, UserDataMin } from 'src/app/services/auth.service';
-import { DocumentService } from 'src/app/services/document.service';
+import { CommitteeDocument, DocumentService } from 'src/app/services/document.service';
 import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
 import { CommitteeDialogComponent } from '../../dialogs/committee-dialog/committee-dialog.component';
 
@@ -93,6 +93,14 @@ export class CommitteesComponent implements OnInit {
         this.performedActions.next('deleteCommittee');
       }
     })
+  }
+
+  getCommitteeDocument(committeeId: number, documentName: CommitteeDocument) {
+    let sbRef = this.snackbar.open('Se generează documentul...');
+    this.document.getCommitteeDocument(committeeId, documentName).subscribe(document => {
+      this.document.viewDocument(document, 'application/pdf');
+      sbRef.dismiss();
+    });
   }
 
   autoAssign() {
