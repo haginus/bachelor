@@ -316,6 +316,16 @@ export class AdminService {
     );
   }
 
+  getFinalReport(): Observable<ArrayBuffer> {
+    const url = `${environment.apiUrl}/admin/session/report`;
+    const options = this.auth.getPrivateHeaders();
+    return this.http
+      .get<any>(url, {...options, responseType: 'arraybuffer' as 'json'})
+      .pipe(
+        catchError(this.handleError<any>('getFinalReport', null))
+      );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       this.snackbar.open(error.error?.message || "A apărut o eroare.");

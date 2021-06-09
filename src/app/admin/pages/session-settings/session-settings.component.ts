@@ -4,6 +4,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AdminService } from 'src/app/services/admin.service';
 import { AuthService, SessionSettings } from 'src/app/services/auth.service';
+import { DocumentService } from 'src/app/services/document.service';
 
 @Component({
   selector: 'app-session-settings',
@@ -12,7 +13,8 @@ import { AuthService, SessionSettings } from 'src/app/services/auth.service';
 })
 export class SessionSettingsComponent implements OnInit {
 
-  constructor(private auth: AuthService, private admin: AdminService, private snackbar: MatSnackBar) { }
+  constructor(private auth: AuthService, private admin: AdminService, private document: DocumentService,
+    private snackbar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.auth.getSessionSettings().subscribe(settings => {
@@ -51,6 +53,16 @@ export class SessionSettingsComponent implements OnInit {
         this.snackbar.open("Setări salvate.");
       }
       this.isLoadingSettings = false;
+    })
+  }
+
+  getFinalReport() {
+    let sbRef = this.snackbar.open('Se generează raportul... Acest lucru poate dura ceva.', null, { duration: null });
+    this.admin.getFinalReport().subscribe(buffer => {
+      if(buffer) {
+        this.document.downloadDocument(buffer, 'Raport final.zip', 'application/zip');
+      }
+      sbRef.dismiss();
     })
   }
 }
