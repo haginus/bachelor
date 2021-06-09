@@ -127,19 +127,15 @@ export class TeacherCommitteePapersComponent implements OnInit {
     })
   }
 
-  private downloadDocument = (buffer: ArrayBuffer, documentName: CommitteeDocument) => {
-    const blob = new Blob([buffer], { type: 'application/pdf' });
-    const url = window.URL.createObjectURL(blob);
-    let anchor = document.createElement("a");
+  private downloadDocument(buffer: ArrayBuffer, documentName: CommitteeDocument) {
     let downloadTitle = this.committee.name;
     if(documentName == 'catalog') {
       downloadTitle += '-CATALOG-COMISIE'
     } else if(documentName == 'final_catalog') {
       downloadTitle += '-CATALOG-FINAL';
     }
-    anchor.download = downloadTitle + '.pdf';
-    anchor.href = url;
-    anchor.click();
+    downloadTitle += '.pdf';
+    this.documentService.downloadDocument(buffer, downloadTitle, 'application/pdf');
   }
 
   generateCommitteeCatalog() {

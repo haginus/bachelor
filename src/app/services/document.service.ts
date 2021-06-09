@@ -19,6 +19,15 @@ export class DocumentService {
     window.open(url);
   }
 
+  downloadDocument(buffer: ArrayBuffer, downloadTitle: string, type: string) {
+    const blob = new Blob([buffer], { type });
+    const url = window.URL.createObjectURL(blob);
+    let anchor = document.createElement("a");
+    anchor.download = downloadTitle;
+    anchor.href = url;
+    anchor.click();
+  }
+
   getDocument(id: number): Observable<ArrayBuffer> {
     const url = `${environment.apiUrl}/documents/view?id=${id}`;
     const options = this.auth.getPrivateHeaders();
