@@ -16,7 +16,7 @@ const routes: Routes = [
   { path: 'teachers', component: AdminTeachersComponent },
   { path: 'domains', component: AdminDomainsComponent },
   { path: 'topics', component: AdminTopicsComponent },
-  { path: 'session', component: SessionSettingsComponent, data: { title: 'Setări sesiune de asociere' } },
+  { path: 'session', component: SessionSettingsComponent, data: { title: 'Setări sesiune de examinare' } },
   { path: 'papers', component: AdminPapersComponent, data: { title: 'Lucrări' } },
   { path: 'committees', component: CommitteesComponent, data: { title: 'Comisii' } },
   { path: 'committees/:committeeId/assign-papers', component: PaperAssignComponent, data: { title: 'Atribuire lucrări' } }
