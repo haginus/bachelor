@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, FormGroupDirective, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
 import { Observable } from 'rxjs';
 import { AdminService } from 'src/app/services/admin.service';
 import { Domain, UserData, Committee, CommitteeMember  } from 'src/app/services/auth.service';
@@ -17,9 +18,10 @@ export class CommitteeDialogComponent implements OnInit {
     private dialog: MatDialogRef<CommitteeDialogComponent>) { }
 
   isLoading: boolean = false;
-  domains: Observable<Domain[]> = this.admin.getDomains();
+  domains: Domain[];
   teachers: UserData[];
   filteredTeachers: UserData[];
+  selectedDomainType: string = null;
 
   teacherNameMatcher = new TeacherNameMatcher();
 
@@ -33,6 +35,9 @@ export class CommitteeDialogComponent implements OnInit {
   get formMembers() { return this.editCommitteeForm.get("members") as FormArray }
 
   ngOnInit(): void {
+    this.admin.getDomains().subscribe(domains => {
+      this.domains = domains;
+    })
     // Add some empty fields at creation
     if (this.data.mode == 'create') {
       this.addMember({ role: 'president', teacherId: null, user: { firstName: null, lastName: null, id: null } }, true);
@@ -46,6 +51,7 @@ export class CommitteeDialogComponent implements OnInit {
       this.data.data.members.forEach(member => this.addMember(member));
       // Add domains to form - map domain to object to just id and set control value to the array
       let domainIds = this.data.data.domains.map(domain => domain.id);
+      this.selectedDomainType = this.data.data.domains[0]?.type;
       this.editCommitteeForm.get("domains").setValue(domainIds);
     }
 
@@ -54,6 +60,15 @@ export class CommitteeDialogComponent implements OnInit {
       this.teachers = result.rows;
       this.filteredTeachers = this._filterTeachers(null);
     });
+  }
+
+  handleDomainChange(event: MatSelectChange) {
+    const domainIds: number[] = event.value;
+    if(domainIds.length > 0) {
+      this.selectedDomainType = this.domains.find(domain => domain.id == domainIds[0]).type;
+    } else {
+      this.selectedDomainType = null;
+    }
   }
 
   // If committeeCreation is true, the function will init empty fields

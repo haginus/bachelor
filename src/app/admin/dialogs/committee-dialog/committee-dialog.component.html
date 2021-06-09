@@ -13,13 +13,16 @@
             </mat-form-field>
             <mat-form-field appearance="outline" fxFlex="100">
                 <mat-label>Domenii</mat-label>
-                <mat-select formControlName="domains" multiple>
-                    <mat-option *ngFor="let domain of domains | async" [value]="domain.id">
+                <mat-select formControlName="domains" multiple (selectionChange)="handleDomainChange($event)">
+                    <mat-option *ngFor="let domain of domains"
+                        [value]="domain.id"
+                        [disabled]="selectedDomainType != null && selectedDomainType != domain.type">
                         <ng-container>{{domain.name}}</ng-container>
                         <ng-container *ngIf="domain.type == 'bachelor'"> (Licență)</ng-container>
                         <ng-container *ngIf="domain.type == 'master'"> (Master)</ng-container>
                     </mat-option>
                 </mat-select>
+                <mat-hint>Puteți selecta numai domenii de același tip.</mat-hint>
             </mat-form-field>
         </div>
         <div formArrayName="members">
