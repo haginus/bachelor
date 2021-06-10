@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, Subscription } from 'rxjs';
 import { AdminService } from 'src/app/services/admin.service';
 import { Domain, UserData } from 'src/app/services/auth.service';
+import { CNPValidator } from 'src/app/validators/CNP-validator';
 
 @Component({
   selector: 'app-admin-teacher-dialog',
@@ -28,7 +29,7 @@ export class AdminTeacherDialogConmonent implements OnInit {
     'firstName': new FormControl(this.data.data?.firstName, [Validators.required]),
     'lastName': new FormControl(this.data.data?.lastName, [Validators.required]),
     'title': new FormControl(this.data.data?.title, [Validators.required]),
-    'CNP': new FormControl(this.data.data?.CNP, [Validators.required, Validators.minLength(13), Validators.maxLength(13)]),
+    'CNP': new FormControl(this.data.data?.CNP, [CNPValidator]),
     'email': new FormControl({ value: this.data.data?.email, disabled: true }, [Validators.email, Validators.required]),
   });
 

@@ -4,7 +4,7 @@
 <mat-dialog-content class="mat-typography" *ngIf="data.mode == 'edit' || data.mode == 'create'">
     <form [formGroup]="teacherForm">
         <mat-form-field appearance="outline">
-            <mat-label>Titlu</mat-label>
+            <mat-label>Titlu *</mat-label>
             <mat-select formControlName="title">
                 <mat-option value="Prof.dr.">Prof.dr.</mat-option>
                 <mat-option value="Conf.dr.">Conf.dr.</mat-option>
@@ -14,11 +14,11 @@
             </mat-select>
         </mat-form-field>
         <mat-form-field appearance="outline">
-            <mat-label>Nume</mat-label>
+            <mat-label>Nume *</mat-label>
             <input matInput type="text" formControlName="lastName">
         </mat-form-field>
         <mat-form-field appearance="outline">
-            <mat-label>Prenume</mat-label>
+            <mat-label>Prenume *</mat-label>
             <input matInput type="text" formControlName="firstName">
         </mat-form-field>
         <mat-form-field appearance="outline">
@@ -26,7 +26,7 @@
             <input matInput type="text" formControlName="CNP">
         </mat-form-field>
         <mat-form-field appearance="outline">
-            <mat-label>E-mail</mat-label>
+            <mat-label>E-mail *</mat-label>
             <input matInput type="email" formControlName="email">
             <mat-hint *ngIf="data.mode == 'edit'">E-mailul nu poate fi modificat.</mat-hint>
         </mat-form-field>

@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, Subscription } from 'rxjs';
 import { AdminService } from 'src/app/services/admin.service';
 import { Domain, UserData } from 'src/app/services/auth.service';
+import { CNPValidator } from 'src/app/validators/CNP-validator';
 
 @Component({
   selector: 'app-student-dialog',
@@ -54,7 +55,7 @@ export class StudentDialogComponent implements OnInit {
   studentForm = new FormGroup({
     'firstName': new FormControl(this.data.data?.firstName, [Validators.required]),
     'lastName': new FormControl(this.data.data?.lastName, [Validators.required]),
-    'CNP': new FormControl(this.data.data?.CNP, [Validators.required, Validators.minLength(13), Validators.maxLength(13)]),
+    'CNP': new FormControl(this.data.data?.CNP, [CNPValidator]),
     'identificationCode': new FormControl(this.data.data?.student?.identificationCode, [Validators.required]),
     'email': new FormControl({ value: this.data.data?.email, disabled: true }, [Validators.email, Validators.required]),
     'domainId': new FormControl({ value: this.data.data?.student?.domainId, disabled: true }, [Validators.required]),
