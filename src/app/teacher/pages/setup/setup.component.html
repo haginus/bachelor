@@ -11,6 +11,10 @@
             <mat-list *ngIf="user">
                 <div mat-subheader>Date personale</div>
                 <mat-list-item>
+                    <div mat-line>Titlu academic</div>
+                    <div mat-line>{{user.title || 'Nu a fost introdus.'}}</div>
+                </mat-list-item>
+                <mat-list-item>
                     <div mat-line>Nume</div>
                     <div mat-line>{{user.lastName}}</div>
                 </mat-list-item>
@@ -20,7 +24,7 @@
                 </mat-list-item>
                 <mat-list-item>
                     <div mat-line>CNP</div>
-                    <div mat-line>{{user.CNP}}</div>
+                    <div mat-line>{{user.CNP || 'Nu a fost introdus.'}}</div>
                 </mat-list-item>
             </mat-list>
             <mat-checkbox formControlName="isValid" class="v-checkbox">Confirm că datele sunt corecte.</mat-checkbox>
