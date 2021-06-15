@@ -10,5 +10,9 @@
     {
         "question": "Pot schimba profesorul coordonator dacă m-am răzgândit?",
         "answer": "Da, însă această acțiune poate fi inițiată doar de către profesorul cu care v-ați asociat. Contactați-l pe acesta pentru a retrage asocierea cu dvs."
+    },
+    {
+        "question": "De ce nu-mi pot edita lucrarea?",
+        "answer": "Va trebui să așteptați cel puțin 7 zile după ce profesorul coordonator v-a acceptat cererea de asociere pentru a vă edita lucrarea.\nÎn cazul în care termenul de predare este mai aproape de 7 zile, veți putea edita lucrarea oricum."
     }
 ]
