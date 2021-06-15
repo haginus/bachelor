@@ -6,3 +6,13 @@
 .white-space-initial {
     white-space: initial!important;
 }
+
+.no-results-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .hero-icon {
+        margin-bottom: 16px;
+    }
+}
