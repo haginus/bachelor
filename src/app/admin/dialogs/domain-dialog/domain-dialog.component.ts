@@ -69,7 +69,6 @@ export class AdminDomainDialogComponent implements OnInit {
         this.snackbar.open("Domeniu salvat.");
         this.dialogRef.close(res);
       } else {
-        this.snackbar.open("A apărut o eroare.");
         this.isLoading = false;
       }
     });
@@ -85,7 +84,6 @@ export class AdminDomainDialogComponent implements OnInit {
         this.snackbar.open("Domeniu salvat.");
         this.dialogRef.close(res);
       } else {
-        this.snackbar.open("A apărut o eroare.");
         this.isLoading = false;
       }
     });
@@ -100,7 +98,6 @@ export class AdminDomainDialogComponent implements OnInit {
         this.snackbar.open("Domeniu șters.");
         this.dialogRef.close(res);
       } else {
-        this.snackbar.open("A apărut o eroare.");
         this.isLoading = false;
       }
     })

@@ -55,7 +55,6 @@ export class AdminTopicDialogComponent implements OnInit {
         this.snackbar.open("Temă salvată.");
         this.dialogRef.close(res);
       } else {
-        this.snackbar.open("A apărut o eroare.");
         this.isLoading = false;
       }
     });
@@ -70,7 +69,6 @@ export class AdminTopicDialogComponent implements OnInit {
         this.snackbar.open("Temă salvată.");
         this.dialogRef.close(res);
       } else {
-        this.snackbar.open("A apărut o eroare.");
         this.isLoading = false;
       }
     });

@@ -32,7 +32,6 @@ export class StudentsBulkAddDialogComponent implements OnInit {
     const { specializationId, studyForm } = this.studentForm.value;
     this.admin.addStudentsBulk(file, specializationId, studyForm).subscribe(res => {
       if(res == null) {
-        this.snackbar.open("A apărut o eroare.");
       } else {
         this.snackbar.open(`Au fost adăugați ${res.addedStudents}/${res.totalStudents} studenți.`);
       }
