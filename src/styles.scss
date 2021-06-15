@@ -207,3 +207,12 @@ app-loading.in-dialog {
         text-align: center;
     }
 }
+
+.subtle-link {
+    color: #616161;
+    text-decoration: none;
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+    }
+}
