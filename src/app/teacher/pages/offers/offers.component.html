@@ -20,8 +20,8 @@
     <mat-spinner [diameter]="48"></mat-spinner>
 </div>
 
-<div class="results" *ngIf="!isLoadingOffers && offers.length">
-    <div class="col-2" *ngFor="let offer of offers">
+<div class="results" *ngIf="!isLoadingOffers && offers.length" fxLayout="row grid" fxLayoutGap="1rem grid">
+    <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.gt-md="33" *ngFor="let offer of offers">
         <mat-card class="offer-card">
             <div class="offer-card-header">
                 <div class="header-content">

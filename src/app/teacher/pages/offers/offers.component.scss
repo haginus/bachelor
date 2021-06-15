@@ -8,11 +8,12 @@ mat-toolbar {
 
 
 .results {
-    padding: 8px;
+    padding: 1rem;
 }
 
 .offer-card {
-    width: calc(100% - 48px);
+    width: 100%;
+    box-sizing: border-box;
     margin: 0 auto;
     margin-bottom: 16px;
     overflow: hidden;
