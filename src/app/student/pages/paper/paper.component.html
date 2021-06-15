@@ -15,7 +15,10 @@
             <p class="paper-description">{{ paper.description }}</p>
             <p class="paper-teacher">
                 Profesor coordonator:
-                {{paper.teacher.firstName}} {{paper.teacher.lastName}}</p>
+                <a class="subtle-link" href="mailto:{{ paper.teacher.email }}" target="_blank">
+                    {{paper.teacher.firstName}} {{paper.teacher.lastName}}
+                </a>
+            </p>
         </div>
         <div class="paper-header-actions">
             <button mat-icon-button
