@@ -79,8 +79,6 @@ export class AdminStudentsComponent implements OnInit, AfterViewInit {
           if (res) {
             this.snackbar.open("Student adăugat.");
             this.performedActions.next("studentAdded");
-          } else {
-            this.snackbar.open("A apărut o eroare.");
           }
         })
       }
@@ -111,8 +109,6 @@ export class AdminStudentsComponent implements OnInit, AfterViewInit {
           if (res) {
             this.snackbar.open("Student editat.");
             this.performedActions.next("studentEdited");
-          } else {
-            this.snackbar.open("A apărut o eroare.");
           }
         })
       }
@@ -130,8 +126,6 @@ export class AdminStudentsComponent implements OnInit, AfterViewInit {
           if (res != null) {
             this.snackbar.open("Student șters.");
             this.performedActions.next("studentDeleted");
-          } else {
-            this.snackbar.open("A apărut o eroare.");
           }
         })
       }

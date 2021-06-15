@@ -137,8 +137,6 @@ export class CommitteesComponent implements OnInit {
       if(doc) {
         this.document.viewDocument(doc, 'application/pdf');
         sbRef.dismiss();
-      } else {
-        this.snackbar.open('A apărut o eroare.');
       }
     })
   }

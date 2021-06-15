@@ -92,7 +92,6 @@ export class PaperAssignComponent implements OnInit {
           resolve();
         }
         else {
-          this.snackbar.open("A apărut o eroare.");
           reject();
         }
       })

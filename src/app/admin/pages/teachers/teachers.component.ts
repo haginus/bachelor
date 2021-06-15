@@ -78,8 +78,6 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
           if (res) {
             this.snackbar.open("Profesor adăugat.");
             this.performedActions.next("teacherAdded");
-          } else {
-            this.snackbar.open("A apărut o eroare.");
           }
         })
       }
@@ -110,8 +108,6 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
           if (res) {
             this.snackbar.open("Profesor editat.");
             this.performedActions.next("teacherEdited");
-          } else {
-            this.snackbar.open("A apărut o eroare.");
           }
         })
       }
@@ -129,9 +125,7 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
           if (res != null) {
             this.snackbar.open("Profesor șters.");
             this.performedActions.next("teacherDeleted");
-          } else {
-            this.snackbar.open("A apărut o eroare.");
-          }
+          } 
         })
       }
     })

@@ -81,8 +81,6 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
       if(result) {
         paper.isValid = validate;
         this.snackbar.open(validate ? "Lucrare validată" : "Lucrare invalidată" );
-      } else {
-        this.snackbar.open("A apărut o eroare.");
       }
       paper.isLoading = false;
     })

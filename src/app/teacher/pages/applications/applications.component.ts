@@ -67,7 +67,6 @@ export class TeacherApplicationsComponent implements OnInit, OnDestroy {
       if(res) {
         this.snackbar.open("Cerere respinsă.");
       } else {
-        this.snackbar.open("A apărut o eroare.");
         application.accepted = null;
       }
     })
@@ -80,7 +79,6 @@ export class TeacherApplicationsComponent implements OnInit, OnDestroy {
       if(res) {
         this.snackbar.open("Cerere acceptată.");
       } else {
-        this.snackbar.open("A apărut o eroare.");
         application.accepted = null;
       }
     })

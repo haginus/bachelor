@@ -61,7 +61,6 @@ export class StudentApplicationsComponent implements OnInit {
       if(res) {
         this.snackbar.open("Cerere retrasă.");
       } else {
-        this.snackbar.open("A apărut o eroare.");
         if(application) {
           this.applications.splice(idx, 0, application);
         }
