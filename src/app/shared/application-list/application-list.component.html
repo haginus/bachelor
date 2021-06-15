@@ -67,9 +67,7 @@
     </mat-card-actions>
 </mat-card>
 
-<div class="no-results" *ngIf="applications?.length == 0">
-    <div class="icon-container">
-        <mat-icon>assignment</mat-icon>
-    </div>
-    <h1>Nu există cereri.</h1>
+<div class="no-results-container" *ngIf="applications?.length == 0">
+    <mat-icon class="hero-icon">assignment</mat-icon>
+    <h2>Nu există cereri.</h2>
 </div>
