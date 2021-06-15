@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormGroupDirective, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AdminService } from 'src/app/services/admin.service';
 import { AuthService, SessionSettings } from 'src/app/services/auth.service';
 import { DocumentService } from 'src/app/services/document.service';
+import { NewSessionDialogComponent } from '../../dialogs/new-session-dialog/new-session-dialog.component';
 
 @Component({
   selector: 'app-session-settings',
@@ -14,7 +16,7 @@ import { DocumentService } from 'src/app/services/document.service';
 export class SessionSettingsComponent implements OnInit {
 
   constructor(private auth: AuthService, private admin: AdminService, private document: DocumentService,
-    private snackbar: MatSnackBar) { }
+    private snackbar: MatSnackBar, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.auth.getSessionSettings().subscribe(settings => {
@@ -64,6 +66,18 @@ export class SessionSettingsComponent implements OnInit {
       }
       sbRef.dismiss();
     })
+  }
+
+  newSession() {
+    let dialogRef = this.dialog.open(NewSessionDialogComponent);
+    let sub = dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.sessionSettings = result;
+        this.settingsForm.setValue(this.sessionSettings);
+        this.snackbar.open('S-a trecut la o nouă sesiune.');
+      }
+      sub.unsubscribe();
+    });
   }
 }
 

@@ -24,6 +24,7 @@ import { CommitteesComponent } from './pages/committees/committees.component';
 import { CommitteeDialogComponent } from './dialogs/committee-dialog/committee-dialog.component';
 import { PaperAssignComponent } from './pages/paper-assign/paper-assign.component';
 import { AdminPapersComponent } from './pages/papers/papers.component';
+import { NewSessionDialogComponent } from './dialogs/new-session-dialog/new-session-dialog.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { AdminPapersComponent } from './pages/papers/papers.component';
     CommitteesComponent,
     CommitteeDialogComponent,
     PaperAssignComponent,
-    AdminPapersComponent
+    AdminPapersComponent,
+    NewSessionDialogComponent
   ],
   imports: [
     CommonModule,

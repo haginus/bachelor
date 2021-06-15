@@ -1,0 +1,28 @@
+<app-loading class="in-dialog" color="primary" *ngIf="isLoading"></app-loading>
+<h2 mat-dialog-title>Treceți la o nouă sesiune</h2>
+<mat-dialog-content>
+    <p>
+        <b>Atenție!</b><br>
+        <span>
+            Trecerea la o nouă sesiune va șterge următoarele date din platformă:
+        </span>
+    </p>
+    <ul>
+        <li>Toți studenții și lucrările acestora</li>
+        <li>Toate ofertele profesorilor</li>
+        <li>Toate comisiile create</li>
+    </ul>
+    <p>Asigurați-vă că ați descărcat întâi raportul final al sesiunii.</p>
+    <p>Pentru a confima, reintroduceți parola contului dvs.</p>
+    <form [formGroup]="actionConfirmForm">
+        <mat-form-field appearance="outline">
+            <mat-label>Parolă</mat-label>
+            <input matInput type="password" formControlName="password">
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Anulați</button>
+    <button mat-button color="warn" (click)="confirmAction()"
+        [disabled]="actionConfirmForm.invalid">Confirmați</button>
+</mat-dialog-actions>

@@ -326,6 +326,18 @@ export class AdminService {
       );
   }
 
+  beginNewSession(password: string): Observable<SessionSettings> {
+    const url = `${environment.apiUrl}/admin/session/new`;
+    return this.http.post<SessionSettings>(url, { password }, this.auth.getPrivateHeaders()).pipe(
+      map(settings => {
+        // Update the session settings in the state of the app
+        this.auth.sessionSettingsSource.next(settings);
+        return settings;
+      }),
+      catchError(this.handleError<SessionSettings>('beginNewSession', null))
+    );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       this.snackbar.open(error.error?.message || "A apărut o eroare.");
