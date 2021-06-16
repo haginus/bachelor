@@ -7,15 +7,30 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './pages/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
+import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { ChangePasswordComponent } from './user-components/change-password/change-password.component';
-import { SharedModule } from './shared/shared.module'
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatPaginatorIntlRo } from './providers/mat-paginator-intl-ro';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
+import { CommonComponentsModule } from './common-components.module';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 const materialDeps = [
-  MatSidenavModule
+  MatSidenavModule,
+  MatListModule,
+  MatIconModule,
+  MatToolbarModule,
+  MatMenuModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatSnackBarModule,
+  MatButtonModule
 ]
 
 @NgModule({
@@ -31,7 +46,7 @@ const materialDeps = [
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedModule,
+    CommonComponentsModule,
     ...materialDeps
   ],
   providers: [

@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { LoadingComponent } from "./loading/loading.component";
 import { CommonDialogComponent } from './common-dialog/common-dialog.component';
 import { MatDialogModule } from "@angular/material/dialog";
 import { CommonModule } from "@angular/common";
@@ -46,7 +45,6 @@ const deps = [
 
 @NgModule({
     declarations: [
-        LoadingComponent,
         CommonDialogComponent,
         ApplicationListComponent,
         DocumentUploadDialogComponent,
@@ -60,7 +58,6 @@ const deps = [
         ...deps
     ],
     exports: [
-        LoadingComponent,
         CommonDialogComponent,
         ApplicationListComponent,
         FlexLayoutModule,

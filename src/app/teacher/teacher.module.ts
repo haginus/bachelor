@@ -17,6 +17,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
+import { CommonComponentsModule } from '../common-components.module';
 
 const materialDeps = [
   MatStepperModule,
@@ -43,6 +44,7 @@ const materialDeps = [
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    CommonComponentsModule,
     ...materialDeps
   ]
 })

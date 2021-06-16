@@ -29,6 +29,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { CommonComponentsModule } from '../common-components.module';
 
 const materialDeps = [
   MatPaginatorModule,
@@ -67,6 +68,7 @@ const materialDeps = [
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    CommonComponentsModule,
     ...materialDeps
   ]
 })
