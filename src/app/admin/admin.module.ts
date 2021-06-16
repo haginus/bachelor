@@ -7,7 +7,6 @@ import { AdminStudentsComponent } from './pages/students/students.component';
 import { StudentDialogComponent } from './dialogs/new-student-dialog/student-dialog.component';
 import { StudentsBulkAddDialogComponent } from './dialogs/students-bulk-add-dialog/students-bulk-add-dialog.component';
 import { StudentDeleteDialogComponent } from './dialogs/student-delete-dialog/student-delete-dialog.component';
-import { MaterialModule } from '../material.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminTeacherDialogConmonent } from './dialogs/teacher-dialog/teacher-dialog.component';
@@ -25,6 +24,18 @@ import { CommitteeDialogComponent } from './dialogs/committee-dialog/committee-d
 import { PaperAssignComponent } from './pages/paper-assign/paper-assign.component';
 import { AdminPapersComponent } from './pages/papers/papers.component';
 import { NewSessionDialogComponent } from './dialogs/new-session-dialog/new-session-dialog.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSortModule } from '@angular/material/sort';
+
+const materialDeps = [
+  MatPaginatorModule,
+  DragDropModule,
+  MatSelectModule,
+  MatAutocompleteModule,
+  MatSortModule
+]
 
 @NgModule({
   declarations: [
@@ -51,11 +62,10 @@ import { NewSessionDialogComponent } from './dialogs/new-session-dialog/new-sess
   imports: [
     CommonModule,
     AdminRoutingModule,
-    MaterialModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    DragDropModule
+    ...materialDeps
   ]
 })
 export class AdminModule { }

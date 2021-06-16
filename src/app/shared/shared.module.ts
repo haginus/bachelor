@@ -19,7 +19,30 @@ import { PaperGradeTableComponent } from './paper-grade-table/paper-grade-table.
 import { MatTableModule } from "@angular/material/table";
 import { FaqComponent } from './faq/faq.component';
 import { SessionInfoComponent } from './session-info/session-info.component';
+import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
 
+const deps = [
+    MatProgressBarModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    MatCardModule,
+    MatListModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    FlexLayoutModule,
+    MatExpansionModule,
+    MatTableModule,
+    MatToolbarModule,
+    MatMenuModule,
+    MatFormFieldModule,
+    MatInputModule
+]
 
 @NgModule({
     declarations: [
@@ -34,17 +57,7 @@ import { SessionInfoComponent } from './session-info/session-info.component';
     ],
     imports: [
         CommonModule,
-        MatProgressBarModule,
-        MatDialogModule,
-        MatButtonModule,
-        MatCardModule,
-        MatListModule,
-        MatIconModule,
-        MatTooltipModule,
-        MatProgressSpinnerModule,
-        FlexLayoutModule,
-        MatExpansionModule,
-        MatTableModule
+        ...deps
     ],
     exports: [
         LoadingComponent,
@@ -56,7 +69,8 @@ import { SessionInfoComponent } from './session-info/session-info.component';
         DocumentUploadDialogComponent,
         PaperGradeTableComponent,
         FaqComponent,
-        SessionInfoComponent
+        SessionInfoComponent,
+        ...deps
     ]
   })
   export class SharedModule { }

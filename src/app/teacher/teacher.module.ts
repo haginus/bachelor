@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { TeacherRoutingModule } from './teacher-routing.module';
 import { TeacherComponent } from './teacher.component';
 import { TeacherSetupComponent } from './pages/setup/setup.component';
-import { MaterialModule } from '../material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TeacherOffersComponent } from './pages/offers/offers.component';
 import { TeacherOfferDialogComponent } from './dialogs/teacher-offer-dialog/teacher-offer-dialog.component';
@@ -14,7 +13,17 @@ import { TeacherPapersComponent } from './pages/papers/papers.component';
 import { TeacherCommitteesComponent } from './pages/committees/committees.component';
 import { TeacherCommitteePapersComponent } from './pages/committee-papers/committee-papers.component';
 import { GradePaperComponent } from './dialogs/grade-paper/grade-paper.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatChipsModule } from '@angular/material/chips';
 
+const materialDeps = [
+  MatStepperModule,
+  MatSelectModule,
+  MatAutocompleteModule,
+  MatChipsModule
+]
 
 @NgModule({
   declarations: [
@@ -33,8 +42,8 @@ import { GradePaperComponent } from './dialogs/grade-paper/grade-paper.component
     TeacherRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule,
-    SharedModule
+    SharedModule,
+    ...materialDeps
   ]
 })
 export class TeacherModule { }
