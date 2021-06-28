@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -9,11 +10,22 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
-  constructor(private auth: AuthService, private router: Router, private snackBar: MatSnackBar) { }
+  constructor(private auth: AuthService, private router: Router, private snackBar: MatSnackBar,
+    private route: ActivatedRoute) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.routeSub = this.route.queryParams.subscribe(params => {
+      this.nextRoute = params.next;
+    });
+  }
+  
+  ngOnDestroy(): void {
+    this.routeSub.unsubscribe();
+  }
+
+  routeSub: Subscription;
 
   loading: boolean = false;
 
@@ -28,6 +40,8 @@ export class LoginComponent implements OnInit {
 
   view: 'login' | 'forgotPassword' = 'login';
 
+  nextRoute: string = null;
+
   signIn() {
     const email = this.loginForm.get('email')?.value;
     const password = this.loginForm.get('password')?.value;
@@ -37,7 +51,11 @@ export class LoginComponent implements OnInit {
         this.handleError(res.error);
         this.loading = false;
       } else {
-        this.router.navigate([res.user.type]);
+        if(this.nextRoute) {
+          this.router.navigateByUrl(this.nextRoute);
+        } else {
+          this.router.navigate([res.user.type]);
+        }
       }
     })
   }
