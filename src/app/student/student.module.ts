@@ -17,6 +17,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 const materialDeps = [
@@ -24,7 +25,8 @@ const materialDeps = [
   MatButtonToggleModule,
   MatSelectModule,
   MatAutocompleteModule,
-  MatChipsModule
+  MatChipsModule,
+  MatCheckboxModule
 ]
 
 @NgModule({
