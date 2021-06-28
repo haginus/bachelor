@@ -12,14 +12,14 @@ import { StudentExtraData } from 'src/app/services/student.service';
 export class StudentExtraDataEditorComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) private dialogData: StudentExtraData, private auth: AuthService,
-    private dialog: MatDialogRef<StudentExtraDataEditorComponent> ) {
+    private dialog: MatDialogRef<StudentExtraDataEditorComponent>) {
     this.studentExtraData = this.dialogData;
   }
 
   studentExtraData: StudentExtraData;
   userData: UserData;
   isSavingData: boolean = false;
-  
+
   studentDataForm = new FormGroup({
     "birthLastName": new FormControl(null, [Validators.required, Validators.maxLength(128)]),
     "parentInitial": new FormControl(null, [Validators.required, Validators.pattern(/^[A-Z](a-z)?\.( [A-Z][a-z]?\.){0,2}$/)]),
@@ -46,6 +46,37 @@ export class StudentExtraDataEditorComponent implements OnInit {
       "apartment": new FormControl(null),
     })
   })
+
+  mockData = {
+    address: {
+      street: "Ale. Libertății",
+      streetNumber: "56",
+      county: 'Tulcea',
+      locality: 'Mun. Tulcea',
+      building: null,
+      stair: null,
+      floor: null,
+      apartment: null,
+    },
+    birthLastName: "Iordănescu",
+    citizenship: "Român",
+    civilState: "not_married",
+    dateOfBirth: "1998-06-03",
+    ethnicity: "Român",
+    fatherName: "Marian",
+    landline: "0341466859",
+    mobilePhone: "0764070525",
+    motherName: "Liliana",
+    parentInitial: "A.",
+    personalEmail: "iordanescu.a@gmail.com",
+    placeOfBirthCountry: "România",
+    placeOfBirthCounty: "Tulcea",
+    placeOfBirthLocality: "Mun. Tulcea"
+  }
+
+  setMock() {
+    this.studentDataForm.setValue(this.mockData)
+  }
 
   ngOnInit(): void {
     this.auth.userData.subscribe(data => {

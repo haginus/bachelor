@@ -3,7 +3,7 @@
     <div class="message">Se salveză datele...</div>
 </div>
 
-<h2 mat-dialog-title>Completați datele necesare</h2>
+<h2 mat-dialog-title (click)="setMock()">Completați datele necesare</h2>
 
 <mat-dialog-content class="mat-typography">
         <form [formGroup]="studentDataForm">
