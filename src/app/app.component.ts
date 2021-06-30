@@ -49,6 +49,7 @@ export class AppComponent implements OnInit {
       this.hideDrawer = data.hideDrawer === true;
       this.hideToolbar = data.hideToolbar === true;
       this.title = data.title != undefined ? data.title : DEFAULT_TITLE;
+      document.title = data.role ? data.role.toUpperCase() + ' - ' + this.title : this.title;
       if(this.hideDrawer) {
         this.drawer.close();
       } else if(this.drawerMode == 'side') {
