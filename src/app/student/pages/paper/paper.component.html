@@ -93,7 +93,7 @@
         </div>
     </ng-container>
     <ng-container *ngIf="paper.isValid == true">
-        <div class="tip-card success">
+        <div class="tip-card success" *ngIf="!paper.committee || !paper.committee.finalGrades">
             <mat-icon class="tip-icon">done_all</mat-icon>
             <div class="tip-card-content">
                 <ng-container *ngIf="paper.committee">
@@ -105,7 +105,12 @@
                 </ng-container>   
             </div>
         </div>
-        <app-paper-grade-table *ngIf="paper.committee?.finalGrades" [paper]="paper"></app-paper-grade-table>
+        <div class="tip-card success" *ngIf="paper.committee?.finalGrades">
+            <mat-icon class="tip-icon">star</mat-icon>
+            <div class="tip-card-content">
+                Ați obținut nota {{ paper.gradeAverage | number:"1.2-2" }}.  
+            </div>
+        </div>
     </ng-container>
     <ng-container *ngIf="paper.isValid == false">
         <div class="tip-card severe">
