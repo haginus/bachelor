@@ -270,7 +270,7 @@ export interface Paper {
   topics?: Topic[],
   requiredDocuments?: PaperRequiredDocument[],
   grades: PaperGrade[],
-  averageGrade: number;
+  gradeAverage: number;
   createdAt: string
 }
 
