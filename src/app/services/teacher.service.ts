@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -12,7 +13,7 @@ import { Topic } from './topics.service';
 })
 export class TeacherService {
 
-  constructor(private http: HttpClient, private auth: AuthService) { }
+  constructor(private http: HttpClient, private auth: AuthService, private snackbar: MatSnackBar) { }
 
   getDomains(): Observable<Domain[]> {
     const url = `${environment.apiUrl}/teacher/domains`;
@@ -173,6 +174,7 @@ export class TeacherService {
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
+      this.snackbar.open(error.error?.message || "A apărut o eroare.");
       return of(result as T);
     };
   }
