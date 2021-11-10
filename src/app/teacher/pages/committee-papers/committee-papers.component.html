@@ -93,15 +93,15 @@
                         <mat-icon>email</mat-icon>
                         <a target="_blank" href="mailto:{{paper.student.email}}">{{paper.student.email}}</a>
                     </div>
-                    <ng-container *ngIf="gradingAllowed">
+                    <ng-container *ngIf="gradingAllowed || committee.finalGrades">
                         <div fxLayout="row" fxLayoutAlign="center">
                             <button mat-raised-button color="primary"
-                            *ngIf="paperNeedsAttentionMap[paper.id] == 'needsGrade'"
+                            *ngIf="paperNeedsAttentionMap[paper.id] == 'needsGrade' && !committee.finalGrades"
                             (click)="gradePaper(paper)">
                                 Notați lucrarea
                             </button>
                             <button mat-raised-button color="primary"
-                            *ngIf="paperNeedsAttentionMap[paper.id] == null"
+                            *ngIf="paperNeedsAttentionMap[paper.id] == null && !committee.finalGrades"
                             (click)="gradePaper(paper)">
                                 Schimbați nota
                             </button>
