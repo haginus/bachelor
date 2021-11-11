@@ -35,9 +35,9 @@ export class TeacherService {
       );
   }
 
-  addOffer(domainId: number, topicIds: number[], limit: number): Observable<Offer> {
+  addOffer(domainId: number, topicIds: number[], limit: number, description: string): Observable<Offer> {
     const url = `${environment.apiUrl}/teacher/offers/add`;
-    const data = { domainId, topicIds, limit };
+    const data = { domainId, topicIds, limit, description };
     return this.http
       .post<Offer>(url, data, this.auth.getPrivateHeaders())
       .pipe(
@@ -45,9 +45,9 @@ export class TeacherService {
       );
   }
 
-  editOffer(id: number, domainId: number, topicIds: number[], limit: number): Observable<Offer> {
+  editOffer(id: number, domainId: number, topicIds: number[], limit: number, description: string): Observable<Offer> {
     const url = `${environment.apiUrl}/teacher/offers/edit`;
-    const data = { id, domainId, topicIds, limit };
+    const data = { id, domainId, topicIds, limit, description };
     return this.http
       .post<Offer>(url, data, this.auth.getPrivateHeaders())
       .pipe(
@@ -184,7 +184,8 @@ export interface Offer {
   id: number
   takenPlaces: number
   limit: number
-  topics: Topic[]
+  topics: Topic[],
+  description: string,
   domainId: number,
   pendingApplications: number
   domain: Domain

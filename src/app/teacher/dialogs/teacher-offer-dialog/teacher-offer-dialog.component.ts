@@ -89,11 +89,13 @@ export class TeacherOfferDialogComponent implements OnInit {
   offerForm = new FormGroup({
     "domainId": new FormControl(this.data.offer?.domainId, [Validators.required]),
     "topics": new FormControl(null),
-    "limit": new FormControl(this.data.offer?.limit, [Validators.required, Validators.min(1)])
+    "limit": new FormControl(this.data.offer?.limit, [Validators.required, Validators.min(1)]),
+    "description": new FormControl(this.data.offer?.description, [Validators.maxLength(1024)])
   })
 
   get domainId() { return this.offerForm.get("domainId") }
   get limit() { return this.offerForm.get("limit") }
+  get description() { return this.offerForm.get("description") }
 
   ngOnInit(): void {
     if(this.data.offer) {
@@ -129,8 +131,9 @@ export class TeacherOfferDialogComponent implements OnInit {
       switchMap(topics => {
         let topicIds = this.selectedTopics.filter(topic => topic.id != 0).map(topic => topic.id);
         topicIds = topicIds.concat(topics.map(topic => topic.id)); // get IDs for newly added topics
-        return isEdit ? this.teacher.editOffer(this.data.offer.id, this.domainId.value, topicIds, this.limit.value) :
-          this.teacher.addOffer(this.domainId.value, topicIds, this.limit.value);
+        return isEdit ? 
+          this.teacher.editOffer(this.data.offer.id, this.domainId.value, topicIds, this.limit.value, this.description.value) :
+          this.teacher.addOffer(this.domainId.value, topicIds, this.limit.value, this.description.value);
       })
     ).subscribe(res => {
       if(res) {
