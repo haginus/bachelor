@@ -216,3 +216,9 @@ app-loading.in-dialog {
         text-decoration: underline;
     }
 }
+
+.mat-list.condense {
+    .mat-list-item {
+        height: 56px!important;
+    }
+}
