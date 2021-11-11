@@ -24,6 +24,10 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
+import { UserSnippetComponent } from './user-snippet/user-snippet.component';
+import { UserProfileEditorComponent } from './user-profile-editor/user-profile-editor.component';
+import { ReactiveFormsModule } from "@angular/forms";
+import { ApiUrlPipe } from "../pipes/api-url";
 
 const deps = [
     MatProgressBarModule,
@@ -41,7 +45,8 @@ const deps = [
     MatToolbarModule,
     MatMenuModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    ReactiveFormsModule
 ]
 
 @NgModule({
@@ -53,7 +58,8 @@ const deps = [
         PaperDocumentListComponent,
         PaperGradeTableComponent,
         FaqComponent,
-        SessionInfoComponent
+        SessionInfoComponent,
+        ApiUrlPipe
     ],
     imports: [
         CommonModule,
@@ -70,6 +76,8 @@ const deps = [
         PaperGradeTableComponent,
         FaqComponent,
         SessionInfoComponent,
+        UserSnippetComponent,
+        UserProfileEditorComponent,
         ...deps
     ]
   })
