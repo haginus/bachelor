@@ -18,10 +18,7 @@
     </div>
     <mat-card-content>
         <mat-list>
-            <mat-list-item *ngIf="mode == 'teacher'">
-                <div mat-line>Student</div>
-                <div mat-line>{{application.student.firstName}} {{application.student.lastName}}</div>
-            </mat-list-item>
+            <app-user-snippet [user]="application.student">Student</app-user-snippet>
             <mat-list-item *ngIf="mode == 'student'">
                 <div mat-line>Profesor</div>
                 <div mat-line>{{application.offer.teacher.firstName}} {{application.offer.teacher.lastName}}</div>
