@@ -90,7 +90,8 @@
                         </span>
                     </div>
                     <div class="contact-info">
-                        <app-user-snippet [user]="paper.student"></app-user-snippet>
+                        <app-user-snippet [user]="paper.student">Student</app-user-snippet>
+                        <app-user-snippet [user]="paper.teacher">Profesor coordonator</app-user-snippet>
                     </div>
                     <ng-container *ngIf="gradingAllowed || committee.finalGrades">
                         <div fxLayout="row" fxLayoutAlign="center">

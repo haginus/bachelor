@@ -46,35 +46,39 @@ export class TeacherCommitteePapersComponent implements OnInit {
   paperNeedsAttentionMap: PaperNeedsAttentionMap = {};
 
   paperSubscription: Subscription;
+  performedActions: BehaviorSubject<string> = new BehaviorSubject('');
 
   @ViewChild('table') table: MatTable<Paper>;
 
   ngOnInit(): void {
-    this.paperSubscription = combineLatest(this.route.params, this.auth.getSessionSettings(), this.auth.getUserData()).pipe(
-      switchMap(([params, settings, userData]) => {
-        this.gradingAllowed = settings.allowGrading;
-        this.user = userData;
-        this.isLoadingResults = true;
-        return this.teacher.getCommittee(+params.id);
-      })
-    )
-   .subscribe(committee => {
-      if(committee == null) {
-        this.router.navigate(['teacher', 'committees']);
-      } else {
-        this.committee = committee;
-        this.data = committee.papers;
-        this.isLoadingResults = false;
-        // Check if user has rights to generate committee documents
-        let president = this.committee.members.find(member => member.role == 'president');
-        let secretary = this.committee.members.find(member => member.role == 'secretary');
-        let teacherId = this.user.teacher.id;
-        this.hasGenerationRights = teacherId == president?.teacherId || teacherId == secretary?.teacherId;
-      }
-    })
+    this.paperSubscription = 
+      combineLatest([this.route.params, this.auth.getSessionSettings(), this.auth.getUserData(), this.performedActions]).pipe(
+        switchMap(([params, settings, userData]) => {
+          this.gradingAllowed = settings.allowGrading;
+          this.user = userData;
+          this.isLoadingResults = true;
+          return this.teacher.getCommittee(+params.id);
+        })
+      )
+      .subscribe(committee => {
+        if(committee == null) {
+          this.router.navigate(['teacher', 'committees']);
+        } else {
+          this.committee = committee;
+          this.data = committee.papers;
+          this.isLoadingResults = false;
+          // Check if user has rights to generate committee documents
+          let president = this.committee.members.find(member => member.role == 'president');
+          let secretary = this.committee.members.find(member => member.role == 'secretary');
+          let teacherId = this.user.teacher.id;
+          this.hasGenerationRights = teacherId == president?.teacherId || teacherId == secretary?.teacherId;
+        }
+      });
   }
 
-  refreshResults() { }
+  refreshResults() {
+    this.performedActions.next("refresh");
+  }
 
   handleAreDocumentsUploadedEvent(event: AreDocumentsUploaded, paper: Paper) {
     if(!event.byUploader.committee) {
