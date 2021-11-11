@@ -1,10 +1,12 @@
 import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer, MatDrawerMode } from '@angular/material/sidenav';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators'
 import { routerFadeAnimation } from './animations';
 import { AuthService, SessionSettings, UserData } from './services/auth.service';
+import { UserProfileEditorComponent } from './shared/user-profile-editor/user-profile-editor.component';
 
 
 const SideWidth = 800;
@@ -23,7 +25,8 @@ export class AppComponent implements OnInit {
   hideDrawer = false;
   hideToolbar = false;
 
-  constructor(private router: Router, private route: ActivatedRoute, private auth: AuthService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private auth: AuthService,
+    private dialog: MatDialog) { }
 
   user : UserData | undefined = undefined;
   sessionSettings: SessionSettings;
@@ -75,6 +78,10 @@ export class AppComponent implements OnInit {
     this.auth.signOut().subscribe(res => {
       this.router.navigate(['login']);
     });
+  }
+
+  editProfile() {
+    this.dialog.open(UserProfileEditorComponent);
   }
 
   prepareRoute(outlet: RouterOutlet) {

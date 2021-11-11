@@ -3,6 +3,10 @@
 </div>
 
 <mat-menu #userMenu="matMenu">
+    <button mat-menu-item (click)="editProfile()">
+        <mat-icon>person</mat-icon>
+        <span>Profilul dvs.</span>
+    </button>
     <button mat-menu-item (click)="signOut()">
         <mat-icon>logout</mat-icon>
         <span>Deconectare</span>
