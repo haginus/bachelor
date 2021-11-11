@@ -35,8 +35,8 @@ export class UserProfileEditorComponent implements OnInit {
 
   resetForm() {
     this.profileForm.setValue({
-      bio: this.userProfile?.bio,
-      website: this.userProfile?.website
+      bio: this.userProfile?.bio || '',
+      website: this.userProfile?.website || ''
     });
     this.profilePictureFile = null;
     this.base64Photo = null;
