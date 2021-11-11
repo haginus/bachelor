@@ -1,0 +1,54 @@
+
+<mat-menu #menu="matMenu">
+  <div (click)="$event.stopPropagation()" class="user-card" *ngIf="user">
+      <div class="user-card-header">
+        <div class="profile-picture">
+          <mat-icon *ngIf="!user.profile?.picture">person</mat-icon>
+          <img *ngIf="user.profile?.picture" src="{{ user.profile.picture | apiUrl }}" />
+        </div>
+        <div class="header-text">
+          <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+        </div>
+      </div>
+      <mat-list class="condense">
+        <mat-list-item>
+          <mat-icon mat-list-icon>mail</mat-icon>
+          <div mat-line>E-mail</div>
+          <div mat-line>
+            <a class="link" href="mailto:{{ user.email }}" target="_blank">
+              {{ user.email }}
+            </a>
+          </div>
+        </mat-list-item>
+        <mat-list-item *ngIf="user.profile?.website">
+          <mat-icon mat-list-icon>language</mat-icon>
+          <div mat-line>Website</div>
+          <div mat-line>
+            <a class="link" [href]="user.profile.website" target="_blank">
+              {{ user.profile.website }}
+            </a>
+          </div>
+        </mat-list-item>
+        <mat-list-item class="auto-height" *ngIf="user.profile?.bio">
+          <mat-icon mat-list-icon>article</mat-icon>
+          <div mat-line>Bio</div>
+          <div mat-line>
+            {{ user.profile.bio }}
+          </div>
+        </mat-list-item>
+      </mat-list>
+  </div>
+</mat-menu>
+
+<div class="user-snippet" [matMenuTriggerFor]="menu">
+  <div class="profile-picture">
+    <mat-icon *ngIf="!user.profile?.picture">person</mat-icon>
+    <img *ngIf="user.profile?.picture" src="{{ user.profile.picture | apiUrl }}" />
+  </div>
+  <div class="text">
+    <div class="first-line">{{ user.firstName }} {{ user.lastName }}</div>
+    <div>
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

@@ -59,6 +59,7 @@ const deps = [
         PaperGradeTableComponent,
         FaqComponent,
         SessionInfoComponent,
+        UserSnippetComponent,
         ApiUrlPipe
     ],
     imports: [

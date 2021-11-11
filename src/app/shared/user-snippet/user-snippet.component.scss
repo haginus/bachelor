@@ -1,0 +1,91 @@
+.profile-picture {
+  background: #eeeeee;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  overflow: hidden;
+  position: relative;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  img {
+    width: 100%;
+    object-fit: cover;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 0 0;
+  }
+}
+
+.user-snippet {
+  display: inline-flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 8px;
+  cursor: pointer;
+  border-radius: 4px;
+
+  &:hover {
+    background: #eeeeee;
+  }
+
+  .text {
+    margin-left: 8px;
+    .first-line {
+      font-weight: 500;
+    }
+  }
+}
+
+.user-card {
+  min-width: 280px;
+  box-sizing: border-box;
+  a.link {
+    font-weight: 500;
+  }
+  .user-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 16px;
+    padding-bottom: 0;
+    .profile-picture {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 8px;
+
+      mat-icon {
+        font-size: 36px;
+        width: 36px;
+        height: 36px;
+      }
+    }
+    h2 {
+      margin: 0;
+    }
+  }
+  .mat-list-icon {
+    color: rgba(0, 0, 0, 0.54);
+  }
+  .mat-list-item.auto-height {
+    height: auto!important;
+    .mat-line {
+      white-space: normal;
+    }
+    .mat-list-item-content {
+      align-items: flex-start;
+    }
+  }
+}
+
