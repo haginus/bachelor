@@ -167,6 +167,25 @@ export class AuthService {
     );
   }
 
+  editProfile(picture: File, bio: string, website: string): Observable<Profile> {
+    const url = `${environment.apiUrl}/auth/profile`;
+    const formData: FormData = new FormData();
+    if(picture) {
+      formData.append('picture', picture, picture.name);
+    }
+    formData.append('bio', bio);
+    formData.append('website', website);
+    return this.http.patch<Profile>(url, formData, this.getPrivateHeaders()).pipe(
+      tap(profile => {
+        this.userData.pipe(take(1)).subscribe(user => { // change 
+          (user as UserData).profile = profile;
+          this.userDataSource.next(user);
+        });
+      }),
+      catchError(this.handleError("editProfile", null))
+    );
+  }
+
   private handleUserError(result?: any) {
     return (error: HttpErrorResponse): Observable<UserData | undefined> => {
       if(result == "getUserData") {
@@ -201,6 +220,12 @@ interface AuthResponse {
   error?: string
 }
 
+export interface Profile {
+  bio: string,
+  website: string,
+  picture: string,
+}
+
 export interface UserData {
   id: number,
   firstName: string,
@@ -228,7 +253,8 @@ export interface UserData {
   },
   teacher?: {
     id: number
-  }
+  },
+  profile?: Profile,
 }
 
 export interface UserDataMin {
@@ -237,7 +263,8 @@ export interface UserDataMin {
   lastName: string,
   title?: string,
   fullName?: string,
-  email?: string
+  email?: string,
+  profile?: Profile,
 }
 
 export interface Domain {
