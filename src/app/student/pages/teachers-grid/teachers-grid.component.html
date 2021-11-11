@@ -62,12 +62,17 @@
                         <div class="offer-actions">
                             <button mat-stroked-button 
                             [disabled]="!!offer.hasApplied || offer.takenPlaces == offer.limit || !canApply"
-                            (click)="applyOffer(offer.id)">
+                            (click)="applyOffer(offer)">
                                 <span *ngIf="offer.hasApplied">
                                     Aplicat
                                 </span>
                                 <span *ngIf="!offer.hasApplied && offer.takenPlaces < offer.limit">
-                                    Aplicați
+                                    <span *ngIf="offer.description">
+                                        Detalii
+                                    </span>
+                                    <span *ngIf="!offer.description">
+                                        Aplicați
+                                    </span>
                                 </span>
                                 <span *ngIf="!offer.hasApplied && offer.takenPlaces == offer.limit">
                                     Ocupat

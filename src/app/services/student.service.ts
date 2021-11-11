@@ -158,7 +158,8 @@ export interface Offer {
   topics: Topic[]
   domainId: number,
   domain?: Domain,
-  teacher?: UserDataMin
+  teacher?: UserDataMin,
+  description: string,
 }
 
 export interface OfferApplication {

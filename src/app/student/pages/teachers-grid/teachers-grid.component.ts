@@ -5,8 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, map, switchMap } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
-import { GetTeacherOffersFilters, StudentService, TeacherOffers } from 'src/app/services/student.service';
+import { GetTeacherOffersFilters, Offer, StudentService, TeacherOffers } from 'src/app/services/student.service';
 import { Topic, TopicsService } from 'src/app/services/topics.service';
+import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
 import { OfferApplicationSenderComponent } from '../../dialogs/offer-application-sender/offer-application-sender.component';
 
 @Component({
@@ -94,20 +95,36 @@ export class StundentTeachersGridComponent implements OnInit, OnDestroy {
     });
   }
 
-  applyOffer(id: number) {
+  applyOffer(offer: Offer, skipDescription = false) {
+    if(offer.description && !skipDescription) {
+      const detailsRef = this.dialog.open(CommonDialogComponent, {
+        data: {
+          title: "Detalii ofertă",
+          content: offer.description,
+          actions: [
+            {
+              name: "Aplicați",
+              value: true,
+            }
+          ]
+        }
+      });
+      detailsRef.afterClosed().subscribe(result => {
+        if(result) {
+          this.applyOffer(offer, true);
+        }
+      });
+      return;
+    }
     const dialogRef = this.dialog.open(OfferApplicationSenderComponent, {
-      data: id
+      data: offer.id
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
-        let teacherIdx = this.teachers.findIndex(teacher => teacher.offers.findIndex(offer => offer.id == id) >= 0);
-        if(teacherIdx >= 0) {
-          let offerIdx = this.teachers[teacherIdx].offers.findIndex(offer => offer.id == id);
-          this.teachers[teacherIdx].offers[offerIdx].hasApplied = true;
-        }
+        offer.hasApplied = true;
       }
-    })
+    });
   }
 
   ngOnDestroy() {
