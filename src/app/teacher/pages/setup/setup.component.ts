@@ -36,7 +36,7 @@ export class TeacherSetupComponent implements OnInit {
   });
 
   selectionChange(ev:StepperSelectionEvent) {
-    if(ev.selectedIndex == 1) {
+    if(ev.selectedIndex == 2) {
       this.validateTeacher();
     }
   }

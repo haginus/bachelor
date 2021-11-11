@@ -49,7 +49,7 @@ export class StudentSetupComponent implements OnInit, OnDestroy {
   topics: Observable<Topic[]> = this.topicsService.getTopics();
 
   selectionChange(ev:StepperSelectionEvent) {
-    if(ev.selectedIndex == 2) {
+    if(ev.selectedIndex == 3) {
       this.validateStudent();
     }
   }

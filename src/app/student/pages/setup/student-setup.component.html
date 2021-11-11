@@ -84,6 +84,12 @@
             <button mat-raised-button matStepperNext [disabled]="topicsForm.invalid">Pasul următor</button>
         </div>
     </mat-step>
+    <mat-step>
+        <ng-template matStepLabel>Profil</ng-template>
+        <h2>Profilul dvs.</h2>
+        <div class="step-details">Completați-vă profilul pentru mai multă vizibilitate pe platformă.</div>
+        <app-user-profile-editor [showReset]="false" (profileSaved)="stepper.next()"></app-user-profile-editor>
+    </mat-step>
     <mat-step [editable]="false">
         <ng-template matStepLabel>Gata</ng-template>
         <div class="flex-container last-tab-container">
