@@ -12,4 +12,10 @@ export class UserSnippetComponent {
 
   @Input() user: UserDataMin;
 
+  makeLink(url: string) {
+    if(url.startsWith('http')) {
+      return url;
+    }
+    return '//' + url;
+  }
 }

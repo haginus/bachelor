@@ -24,7 +24,7 @@
           <mat-icon mat-list-icon>language</mat-icon>
           <div mat-line>Website</div>
           <div mat-line>
-            <a class="link" [href]="user.profile.website" target="_blank">
+            <a class="link" [href]="makeLink(user.profile.website)" target="_blank">
               {{ user.profile.website }}
             </a>
           </div>
