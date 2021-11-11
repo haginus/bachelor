@@ -90,8 +90,7 @@
                         </span>
                     </div>
                     <div class="contact-info">
-                        <mat-icon>email</mat-icon>
-                        <a target="_blank" href="mailto:{{paper.student.email}}">{{paper.student.email}}</a>
+                        <app-user-snippet [user]="paper.student"></app-user-snippet>
                     </div>
                     <ng-container *ngIf="gradingAllowed || committee.finalGrades">
                         <div fxLayout="row" fxLayoutAlign="center">
