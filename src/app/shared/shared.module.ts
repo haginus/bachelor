@@ -60,6 +60,7 @@ const deps = [
         FaqComponent,
         SessionInfoComponent,
         UserSnippetComponent,
+        UserProfileEditorComponent,
         ApiUrlPipe
     ],
     imports: [

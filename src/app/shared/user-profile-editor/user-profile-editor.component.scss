@@ -1,0 +1,60 @@
+.profile-header {
+  display: flex;
+  justify-content: center;
+
+  .profile-picture {
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    background: #eeeeee;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+
+    img {
+      object-fit: cover;
+      width: 100%;
+      min-height: 100%;
+    }
+
+    .change-photo {
+      position: absolute;
+      inset: 0 0 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.56);
+      z-index: 2;
+
+      .text {
+        text-align: center;
+      }
+      display: none;
+    }
+
+    &.no-photo .change-photo {
+      background: none;
+      display: flex;
+    }
+
+    &:hover .change-photo {
+      display: flex;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0 0 0 0;
+    }
+  }
+}
+
+form {
+  padding: 16px 0;
+}
+
+button + button {
+  margin-left: 8px;
+}
