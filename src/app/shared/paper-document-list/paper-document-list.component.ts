@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { PaperDocument, SessionSettings } from 'src/app/services/auth.service';
 import { DocumentService } from 'src/app/services/document.service';
 import { PaperDocumentCategory, PaperDocumentTypes, PaperDocumentUploadBy } from 'src/app/services/student.service';
-import { USER_TYPES } from 'src/app/util/constants';
+import { USER_TYPES } from 'src/app/lib/constants';
 import { DocumentUploadDialogComponent } from '../document-upload-dialog/document-upload-dialog.component';
 
 @Component({

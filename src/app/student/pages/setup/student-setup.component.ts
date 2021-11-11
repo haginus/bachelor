@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService, UserData } from 'src/app/services/auth.service';
 import { Topic, TopicsService } from 'src/app/services/topics.service';
-import { FUNDING_FORMS, STUDY_FORMS } from 'src/app/util/constants';
+import { FUNDING_FORMS, STUDY_FORMS } from 'src/app/lib/constants';
 
 @Component({
   selector: 'student-setup',
