@@ -44,6 +44,10 @@
                     <div mat-line>Locuri ocupate</div>
                     <div mat-line>{{ offer.takenPlaces }} / {{ offer.limit }}</div>
                 </mat-list-item>
+                <mat-list-item *ngIf="offer.description">
+                    <div mat-line>Descriere</div>
+                    <div mat-line>{{ offer.description }}</div>
+                </mat-list-item>
             </mat-list>
             <div class="offer-card-footer">
                 <a class="card-action" [routerLink]="['/teacher', 'applications', 'pending', offer.id]">
