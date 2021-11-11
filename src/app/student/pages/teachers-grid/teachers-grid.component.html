@@ -41,14 +41,12 @@
 
     <div class="results">
         <mat-card class="teacher-card" *ngFor="let teacher of teachers">
-            <mat-card-header>
-                <mat-card-title>{{teacher.firstName}} {{teacher.lastName}}</mat-card-title>
-                <mat-card-subtitle>
-                    {{ teacher.offers.length }}
-                    <span *ngIf="teacher.offers.length == 1">ofertă</span>
-                    <span *ngIf="teacher.offers.length != 1">oferte</span>
-                </mat-card-subtitle>
-            </mat-card-header>
+            <app-user-snippet [user]="teacher" class="teacher-snippet">
+                <span>{{ teacher.offers.length }} </span>
+                <span *ngIf="teacher.offers.length == 1">ofertă</span>
+                <span *ngIf="teacher.offers.length != 1">oferte</span>
+            </app-user-snippet>
+            <mat-card-header></mat-card-header>
             <mat-card-content>
                 <mat-divider></mat-divider>
                 <div *ngFor="let offer of teacher.offers">

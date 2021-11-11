@@ -93,6 +93,12 @@
     margin: 0 auto 16px auto;
     padding-bottom: 0;
     overflow: hidden;
+
+    app-user-snippet {
+        margin-top: -8px;
+        margin-bottom: 8px;
+        display: block;
+    }
 }
 
 .teacher-offer {
