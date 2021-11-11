@@ -59,8 +59,13 @@
                     <div mat-line>{{ FUNDING_FORMS[user.student.fundingForm] | titlecase }}</div>
                 </mat-list-item>
             </mat-list>
-            <mat-checkbox formControlName="isValid" class="v-checkbox">
+            <mat-checkbox formControlName="isValid" class="v-checkbox wrap">
                 Confirm că datele sunt corecte.
+            </mat-checkbox>
+            <br>
+            <mat-checkbox formControlName="hasAgreed" class="v-checkbox wrap">
+                Sunt de acord ca datele mele personale să fie folosite de facultate în scopul
+                operării acestei platforme.
             </mat-checkbox>
             <div class="flex-container align-end actions-container">
                 <button mat-raised-button matStepperNext [disabled]="validationForm.invalid">

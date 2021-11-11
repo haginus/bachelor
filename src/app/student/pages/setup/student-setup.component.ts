@@ -38,7 +38,8 @@ export class StudentSetupComponent implements OnInit, OnDestroy {
   }
 
   validationForm = new FormGroup({
-    'isValid': new FormControl(null, [Validators.requiredTrue])
+    'isValid': new FormControl(null, [Validators.requiredTrue]),
+    'hasAgreed': new FormControl(null, [Validators.requiredTrue])
   });
 
   topicsForm = new FormGroup({
