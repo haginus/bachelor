@@ -298,7 +298,8 @@ export interface Paper {
   requiredDocuments?: PaperRequiredDocument[],
   grades: PaperGrade[],
   gradeAverage: number;
-  createdAt: string
+  createdAt: string;
+  submitted: boolean;
 }
 
 export interface PaperDocument {

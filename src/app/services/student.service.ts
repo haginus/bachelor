@@ -94,6 +94,16 @@ export class StudentService {
       );
   }
 
+  submitPaper(submit: boolean): Observable<boolean> {
+    const url = `${environment.apiUrl}/student/paper/submit`
+    return this.http
+      .post<any>(url, { submit }, this.auth.getPrivateHeaders())
+      .pipe(
+        map(_ => true),
+        catchError(this.handleError<boolean>('submitPaper', false))
+      );
+  }
+
   getExtraData(): Observable<StudentExtraData> {
     const url = `${environment.apiUrl}/student/extra-data`
     return this.http

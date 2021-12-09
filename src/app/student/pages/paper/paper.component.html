@@ -27,6 +27,34 @@
         </div>
     </div>
 
+    <div class="tip-card translucent session-card" 
+        [ngClass]="{warning: !paper.submitted, success: paper.submitted}"
+        *ngIf="!deadlinePassed">
+        <mat-icon class="tip-icon">
+            {{ paper.submitted ? 'check_circle' : 'announcement' }}
+        </mat-icon>
+        <div class="tip-card-content">
+            <h3>Sesiunea {{ sessionSettings.sessionName }}</h3>
+            <div *ngIf="!paper.submitted && canUploadPaperFiles">
+                Momentan nu participați în această sesiune de finalizare a studiilor. <br>
+                Vă puteți înscrie până la <b>{{ sessionSettings.paperSubmissionEndDate | date:"dd.MM.yyyy" }}.</b>
+            </div>
+            <div *ngIf="!paper.submitted && !canUploadPaperFiles">
+                Nu v-ați înscris în această sesiune. <br>
+                Termenul limită de înscriere a trecut.
+            </div>
+            <div *ngIf="paper.submitted">
+                Sunteți înscris în această sesiune de finalizare a studiilor.
+            </div>
+        </div>
+        <div class="tip-card-action">
+            <button mat-button *ngIf="!paper.submitted && canUploadPaperFiles"
+                (click)="submitPaper(true)">Înscriere</button>
+            <button mat-button *ngIf="paper.submitted && canUploadPaperFiles"
+                (click)="submitPaper(false)">Retragere</button>
+        </div>
+    </div>
+
     <ng-container *ngIf="!submissionStarted">
         <div class="tip-card" *ngIf="deadlinePassed">
             <mat-icon class="tip-icon">info</mat-icon>

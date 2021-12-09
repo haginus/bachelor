@@ -136,4 +136,15 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
       sub.unsubscribe();
     })
   }
+
+  submitPaper(submit: boolean) {
+    this.isLoadingData = true;
+    this.student.submitPaper(submit).subscribe(result => {
+      if(result) {
+        this.getData();
+      } else {
+        this.isLoadingData = false;
+      }
+    });
+  }
 }
