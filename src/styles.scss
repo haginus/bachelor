@@ -107,6 +107,18 @@ mat-icon {
     background: #78909c;
     box-sizing: border-box;
 
+    &.translucent {
+        background: #eeeeee;
+        border-radius: 4px;
+        &.warning {
+            background: #ffc107e0;
+        }
+    }
+
+    &.severe {
+        background: #e53935;
+    }
+
     &.warning {
         background: #ff9800;
     }
