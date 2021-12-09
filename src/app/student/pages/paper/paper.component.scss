@@ -31,13 +31,6 @@
 }
 
 .tip-card {
-    display: flex;
-    margin: 0 -24px;
-    padding: 0 16px;
-    height: 64px;
-    align-items: center;
-    background: #78909c;
-
     &.warning {
         background: #ff9800;
     }
