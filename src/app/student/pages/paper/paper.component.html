@@ -50,7 +50,7 @@
         <div class="tip-card-action">
             <button mat-button *ngIf="!paper.submitted && canUploadPaperFiles"
                 (click)="submitPaper(true)">Înscriere</button>
-            <button mat-button *ngIf="paper.submitted && canUploadPaperFiles"
+            <button mat-button *ngIf="paper.submitted && canUploadPaperFiles && paper.isValid == null"
                 (click)="submitPaper(false)">Retragere</button>
         </div>
     </div>
