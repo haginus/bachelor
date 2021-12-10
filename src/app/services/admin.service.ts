@@ -285,6 +285,12 @@ export class AdminService {
     if(filter?.isValid != undefined) {
       url += `&isValid=${filter.isValid}`;
     }
+    if(filter?.isNotValid != undefined) {
+      url += `&isValid=${filter.isNotValid}`;
+    }
+    if(filter?.submitted != undefined) {
+      url += `&submitted=${filter.submitted}`;
+    }
     if(minified == true) {
       url += `&minified=1`;
     }
@@ -370,6 +376,10 @@ export interface GetPapersFilter {
   forCommittee?: number;
   /** If papers must be valid. */
   isValid?: boolean;
+  /** If papers must not be valid. */
+  isNotValid?: boolean;
+  /** If papers must be submitted. */
+  submitted?: boolean;
 }
 
 export interface PaperQueryResult {
