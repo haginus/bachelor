@@ -55,10 +55,11 @@
                             <span *ngFor="let topic of offer.topics" class="badge">{{ topic.name }} </span>
                         </div>
                         <div class="offer-places"
+                        *ngIf="offer.limit != offer.takenPlaces"
                         [class.low]="offer.takenPlaces / offer.limit < 0.35"
                         [class.mid]="offer.takenPlaces / offer.limit >= 0.35"
                         [class.high]="offer.takenPlaces / offer.limit > 0.75"
-                        >{{offer.takenPlaces}} / {{offer.limit}}</div>
+                        >{{offer.limit - offer.takenPlaces}} locuri</div>
                         <div class="offer-actions">
                             <button mat-stroked-button 
                             [disabled]="!!offer.hasApplied || offer.takenPlaces == offer.limit || !canApply"
