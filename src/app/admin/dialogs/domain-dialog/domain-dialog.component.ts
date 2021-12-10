@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PAPER_TYPES } from 'src/app/lib/constants';
 import { AdminService } from 'src/app/services/admin.service';
 import { Domain, DomainSpecialization } from 'src/app/services/auth.service';
 
@@ -20,8 +21,11 @@ export class AdminDomainDialogComponent implements OnInit {
   editDomainForm = new FormGroup({
     "name": new FormControl(this.data.domain?.name, [Validators.required]),
     "type": new FormControl(this.data.domain?.type, [Validators.required]),
+    "paperType": new FormControl(this.data.domain?.paperType, [Validators.required]),
     "specializations": new FormArray([])
   });
+
+  PAPER_TYPES = PAPER_TYPES;
 
   get formSpecializations() { return this.editDomainForm.get("specializations") as FormArray }
 
@@ -101,6 +105,14 @@ export class AdminDomainDialogComponent implements OnInit {
         this.isLoading = false;
       }
     })
+  }
+
+  get domainType() {
+    return this.editDomainForm.get("type");
+  }
+
+  get paperType() {
+    return this.editDomainForm.get("paperType");
   }
 
 }

@@ -10,13 +10,30 @@
             <mat-label>Nume domeniu</mat-label>
             <input matInput type="text" formControlName="name">
         </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Tip</mat-label>
-            <mat-select formControlName="type">
-                <mat-option value="bachelor">Licență</mat-option>
-                <mat-option value="master">Master</mat-option>
-            </mat-select>
-        </mat-form-field>
+        <div fxLayout="row" fxLayoutGap="5px">
+            <mat-form-field appearance="outline" fxFlex="50">
+                <mat-label>Tip</mat-label>
+                <mat-select formControlName="type" (valueChange)="paperType.setValue(null)">
+                    <mat-option value="bachelor">Licență</mat-option>
+                    <mat-option value="master">Master</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="50">
+                <mat-label>Tip lucrare</mat-label>
+                <mat-select formControlName="paperType">
+                    <mat-option value="bachelor" *ngIf="domainType.value == 'bachelor'">
+                        Lucrare de {{ PAPER_TYPES['bachelor'] }}
+                    </mat-option>
+                    <mat-option value="diploma" *ngIf="domainType.value == 'bachelor'">
+                        Lucrare de {{ PAPER_TYPES['diploma'] }}
+                    </mat-option>
+                    <mat-option value="master" *ngIf="domainType.value == 'master'">
+                        Lucrare de {{ PAPER_TYPES['master'] }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        
         <div formArrayName="specializations">
             <h3>Programe de studii</h3>
             <div *ngFor="let specialization of formSpecializations.controls; let i = index">

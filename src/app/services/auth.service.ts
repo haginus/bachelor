@@ -267,10 +267,14 @@ export interface UserDataMin {
   profile?: Profile,
 }
 
+export type DomainType = 'bachelor' | 'master';
+export type PaperType = 'bachelor' | 'diploma' | 'master';
+
 export interface Domain {
   id: number,
   name: string,
-  type: "bachelor" | "master",
+  type: DomainType,
+  paperType: PaperType,
   studentNumber?: number,
   offerNumber?: number,
   specializations: DomainSpecialization[]
@@ -287,7 +291,7 @@ export interface Paper {
   id: number,
   title: string,
   description: string,
-  type: "bachelor" | "master",
+  type: PaperType,
   isValid: boolean | null,
   teacher?: UserDataMin,
   teacherId: number,
