@@ -1,5 +1,6 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validator, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { take } from 'rxjs/operators';
 import { AuthService, Profile } from 'src/app/services/auth.service';
@@ -11,7 +12,8 @@ import { AuthService, Profile } from 'src/app/services/auth.service';
 })
 export class UserProfileEditorComponent implements OnInit {
 
-  constructor(private user: AuthService, private sb: MatSnackBar) { }
+  constructor(private user: AuthService, private sb: MatSnackBar,
+    @Optional() private dialog: MatDialogRef<UserProfileEditorComponent>) { }
 
   profileForm = new FormGroup({
     "bio": new FormControl(''),
@@ -52,6 +54,7 @@ export class UserProfileEditorComponent implements OnInit {
         this.userProfile = profile;
         this.resetForm();
         this.profileSaved.emit();
+        this.dialog?.close();
       }
     });
   }

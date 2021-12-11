@@ -33,6 +33,6 @@
 </form>
 
 <div fxLayout="row" fxLayoutAlign="end">
-  <button mat-button (click)="resetForm()" *ngIf="showReset" (disabled)="loading">Resetați</button>
-  <button mat-raised-button color="primary" (click)="saveProfile()" (disabled)="loading">Salvați profilul</button>
+  <button mat-button (click)="resetForm()" *ngIf="showReset" [disabled]="loading">Resetați</button>
+  <button mat-raised-button color="primary" (click)="saveProfile()" [disabled]="loading">Salvați profilul</button>
 </div>
