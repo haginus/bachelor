@@ -13,7 +13,11 @@ export class SignedInGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       if(!this.auth.isSignedIn()) {
-        this.router.navigate(['login'], { queryParams: { next: state.url } });
+        if(state.url && state.url != "/") {
+          this.router.navigate(['login'], { queryParams: { next: state.url } });
+        } else {
+          this.router.navigate(['login']);
+        }
       }
       return true;
   }
