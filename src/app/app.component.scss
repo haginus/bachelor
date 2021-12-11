@@ -39,3 +39,11 @@
     text-decoration: none;
     color: inherit;
 }
+
+.fixed {
+    position: fixed;
+    inset: 0 0 0 0;
+    z-index: 2;
+    background: white;
+    flex-direction: column;
+}

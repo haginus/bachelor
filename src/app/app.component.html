@@ -1,5 +1,12 @@
-<div class="flex-container fullscreen align-center v-align-center" *ngIf="loading">
+<div class="flex-container align-center v-align-center fixed" *ngIf="loading">
     <mat-spinner [diameter]="48"></mat-spinner>
+</div>
+
+<div class="flex-container align-center v-align-center fixed" *ngIf="backendDown">
+    <h2>Platforma este indisponibilă</h2>
+    <p>Dacă problema persistă, contactați administratorul.</p>
+    <p></p>
+    <button mat-raised-button color="primary" (click)="reloadApp()">Reîncercați</button>
 </div>
 
 <mat-menu #userMenu="matMenu">

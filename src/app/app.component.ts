@@ -31,6 +31,7 @@ export class AppComponent implements OnInit {
   user : UserData | undefined = undefined;
   sessionSettings: SessionSettings;
   loading = true;
+  backendDown = false;
 
   @ViewChild('drawer') drawer: MatDrawer;
 
@@ -63,6 +64,9 @@ export class AppComponent implements OnInit {
       this.loading = false;
       this.user = user;
       this.sessionSettings = settings;
+      if(settings == null) {
+        this.backendDown = true;
+      }
     });
   }
 
@@ -92,5 +96,9 @@ export class AppComponent implements OnInit {
       return outlet.activatedRoute;
     }
     return null;
+  }
+
+  reloadApp() {
+    window.location.reload();
   }
 }
