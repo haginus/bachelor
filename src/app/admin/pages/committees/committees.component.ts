@@ -132,7 +132,9 @@ export class CommitteesComponent implements OnInit {
   }
 
   generateCommitteeDocument(documentName: 'committee_compositions' | 'committee_students') {
-    let sbRef = this.snackbar.open('Se generează documentul...');
+    let sbRef = this.snackbar.open('Se generează documentul...', null, {
+      duration: null
+    });
     this.admin.generateCommitteeDocument(documentName).subscribe(doc => {
       if(doc) {
         this.document.viewDocument(doc, 'application/pdf');
