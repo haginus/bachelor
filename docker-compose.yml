@@ -25,4 +25,6 @@ services:
       wait $${!}; done;'"
 
 networks:
-  bachelor:
+  default:
+    external: true
+    name: bachelor
