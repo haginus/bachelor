@@ -58,9 +58,9 @@ export class AuthService {
     );
   }
 
-  signInWithTokenAndChangePassword(token: string, password: string, passwordConfirm): Observable<AuthResponse> {
+  signInWithTokenAndChangePassword(token: string, password: string): Observable<AuthResponse> {
     const url = `${environment.apiUrl}/auth/change-password-token`;
-    return this.http.post<AuthResponse>(url, { token, password, passwordConfirm }).pipe(
+    return this.http.post<AuthResponse>(url, { token, password }).pipe(
       map(res => {
         this.setToken((res as any).token);
         this.loginState.next(true);
@@ -68,6 +68,13 @@ export class AuthService {
         return res
       }),
       catchError(this.handleAuthError('signInWithTokenAndChangePassword'))
+    );
+  }
+
+  checkPasswordResetToken(token: string): Observable<{ email: string }> {
+    const url = `${environment.apiUrl}/auth/check-password-token`;
+    return this.http.post<{ email: string }>(url, { token }).pipe(
+      catchError(this.handleError("checkPasswordResetToken", { email: null }))
     );
   }
 

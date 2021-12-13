@@ -17,6 +17,7 @@ export class ChangePasswordComponent implements OnInit {
     private auth: AuthService, private snackBar: MatSnackBar) { }
 
   mode = "token";
+  userEmail: string = null;
   loading: boolean = false;
   token: string;
 
@@ -30,13 +31,21 @@ export class ChangePasswordComponent implements OnInit {
 
   ngOnInit(): void {
     this.token = this.route.snapshot.paramMap.get('token');
+    if(this.token) {
+      this.auth.checkPasswordResetToken(this.token).subscribe(res => {
+        if(res.email == null) {
+          this.router.navigate(['login']);
+        } else {
+          this.userEmail = res.email;
+        }
+      });
+    }
   }
 
   changePassword() {
     const password = this.changePasswordForm.get('password')?.value;
-    const confirmPassword = this.changePasswordForm.get('confirmPassword')?.value;
     this.loading = true;
-    this.auth.signInWithTokenAndChangePassword(this.token, password, confirmPassword).subscribe(res => {
+    this.auth.signInWithTokenAndChangePassword(this.token, password).subscribe(res => {
       this.loading = false;
       if(!res.error) {
         this.router.navigate(["dashboard"]);
