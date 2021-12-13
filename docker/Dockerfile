@@ -6,7 +6,6 @@ COPY . .
 RUN npm run build
 
 
-FROM nginx:latest AS ngi
+FROM nginx:1.20.2-alpine AS ngi
 COPY --from=build /dist/src/app/dist/bachelor /usr/share/nginx/html
-COPY /docker/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
