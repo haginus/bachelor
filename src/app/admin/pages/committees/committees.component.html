@@ -74,68 +74,72 @@
     <div class="loading-shade" *ngIf="isLoadingResults">
         <mat-spinner></mat-spinner>
     </div>
-    <table mat-table [dataSource]="data">
-        <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef> ID </th>
-            <td mat-cell *matCellDef="let row"> {{row.id}} </td>
-        </ng-container>
+    <div class="discrete-scroll">
+        <table mat-table [dataSource]="data">
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> ID </th>
+                <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef> Nume </th>
-            <td mat-cell *matCellDef="let row"> {{row.name}} </td>
-        </ng-container>
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Nume </th>
+                <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="domains">
-            <th mat-header-cell *matHeaderCellDef> Domenii </th>
-            <td mat-cell *matCellDef="let row">
-                <div class="iterating">
-                    <span *ngFor="let domain of row.domains">{{domain.name}}</span>
-                </div>
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="domains">
+                <th mat-header-cell *matHeaderCellDef> Domenii </th>
+                <td mat-cell *matCellDef="let row" class="wrap" style="min-width: 160px;">
+                    <div class="iterating">
+                        <wbr/>
+                        <span *ngFor="let domain of row.domains">{{domain.name}}</span>
+                    </div>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="president">
-            <th mat-header-cell *matHeaderCellDef> Președinte </th>
-            <td mat-cell *matCellDef="let row"> {{row.president?.lastName}} {{row.president?.firstName}} </td>
-        </ng-container>
+            <ng-container matColumnDef="president">
+                <th mat-header-cell *matHeaderCellDef> Președinte </th>
+                <td mat-cell *matCellDef="let row"> {{row.president?.lastName}} {{row.president?.firstName}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="secretary">
-            <th mat-header-cell *matHeaderCellDef> Secretar </th>
-            <td mat-cell *matCellDef="let row"> {{row.secretary?.lastName}} {{row.secretary?.firstName}} </td>
-        </ng-container>
+            <ng-container matColumnDef="secretary">
+                <th mat-header-cell *matHeaderCellDef> Secretar </th>
+                <td mat-cell *matCellDef="let row"> {{row.secretary?.lastName}} {{row.secretary?.firstName}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="members">
-            <th mat-header-cell *matHeaderCellDef> Membri </th>
-            <td mat-cell *matCellDef="let row">
-                <div class="iterating">
-                    <span *ngFor="let member of row.members">{{member.lastName}} {{member.firstName}}</span>
-                </div>
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="members">
+                <th mat-header-cell *matHeaderCellDef> Membri </th>
+                <td mat-cell *matCellDef="let row" class="wrap" style="min-width: 160px;">
+                    <div class="iterating">
+                        <wbr/>
+                        <span *ngFor="let member of row.members">{{member.lastName}} {{member.firstName}}</span>
+                    </div>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="paperNumber">
-            <th mat-header-cell *matHeaderCellDef>Număr lucrări</th>
-            <td mat-cell *matCellDef="let row">{{row.paperNumber}}</td>
-        </ng-container>
+            <ng-container matColumnDef="paperNumber">
+                <th mat-header-cell *matHeaderCellDef>Număr lucrări</th>
+                <td mat-cell *matCellDef="let row">{{row.paperNumber}}</td>
+            </ng-container>
 
-        <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Acțiuni</th>
-            <td mat-cell *matCellDef="let row">
-                <button mat-mini-fab color="primary" matTooltip="Atribuire lucrări"
-                    [routerLink]="[row.id, 'assign-papers']">
-                    <mat-icon>description</mat-icon>
-                </button>
-                <button mat-icon-button matTooltip="Mai multe" [matMenuTriggerFor]="committeeMenu" [matMenuTriggerData]="{id: row.id}">
-                    <mat-icon>more_vert</mat-icon>
-                </button>
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Acțiuni</th>
+                <td mat-cell *matCellDef="let row">
+                    <button mat-mini-fab color="primary" matTooltip="Atribuire lucrări"
+                        [routerLink]="[row.id, 'assign-papers']">
+                        <mat-icon>description</mat-icon>
+                    </button>
+                    <button mat-icon-button matTooltip="Mai multe" [matMenuTriggerFor]="committeeMenu" [matMenuTriggerData]="{id: row.id}">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-        <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="5" [hidden]="isLoadingResults">Nu există comisii.</td>
-        </tr>
-    </table>
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="5" [hidden]="isLoadingResults">Nu există comisii.</td>
+            </tr>
+        </table>
+    </div>
 </div>

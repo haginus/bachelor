@@ -161,6 +161,8 @@ mat-icon {
 }
 .table-container {
     position: relative;
+    overflow: hidden;
+    border-radius: 8px;
     
     .loading-shade {
         position: absolute;
@@ -177,6 +179,21 @@ mat-icon {
 
     .toolbar-spacer {
         flex: 1 1 auto;
+    }
+
+    table {
+        td, th {
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+
+        td.wrap {
+            white-space: normal;
+        }
+
+        td:not(:last-child), th:not(:last-child) {
+            padding-right: 8px;
+        }
     }
 }
 
@@ -241,3 +258,18 @@ app-loading.in-dialog {
         white-space: normal!important;
     }
 }
+
+.discrete-scroll {
+    overflow: auto;
+  
+    /* Webkit */
+    &::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      background: transparent;
+    }
+    /* Firefox */
+    scrollbar-width: thin;
+    /* MS */
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+  }

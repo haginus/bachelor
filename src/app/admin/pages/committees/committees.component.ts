@@ -107,7 +107,7 @@ export class CommitteesComponent implements OnInit {
     const dialogDef = this.dialog.open(CommonDialogComponent, {
       data: {
         title: 'Atribuire automată lucrări',
-        content: 'Folosiți această funcție pentru a atribui automat lucrările de licență care nu sunt încă atrubuite unei comisii.',
+        content: 'Folosiți această funcție pentru a atribui automat lucrările de licență care nu sunt încă atribuite unei comisii.',
         actions: [
           { name: 'Anulați', value: false },
           { name: 'Atribuiți automat', value: true }
