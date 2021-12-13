@@ -43,8 +43,7 @@
         <ng-container matColumnDef="type">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Tip </th>
             <td mat-cell *matCellDef="let row">
-                <ng-container *ngIf="row.type == 'bachelor'">Licență</ng-container>
-                <ng-container *ngIf="row.type == 'master'">Diserație</ng-container>
+                {{PAPER_TYPES[row.type]}}
             </td>
         </ng-container>
 

@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTable } from '@angular/material/table';
 import { BehaviorSubject, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { PAPER_TYPES } from 'src/app/lib/constants';
 import { Paper } from 'src/app/services/auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
@@ -40,6 +41,8 @@ export class TeacherPapersComponent implements OnInit, OnDestroy {
   paperSubscription: Subscription;
 
   @ViewChild('table') table: MatTable<Paper>;
+
+  PAPER_TYPES = PAPER_TYPES;
 
   ngOnInit(): void {
     this.paperSubscription = this.performedActions.pipe(

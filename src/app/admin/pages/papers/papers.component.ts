@@ -7,6 +7,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { BehaviorSubject, merge, Subscription } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
+import { PAPER_TYPES } from 'src/app/lib/constants';
 import { AdminService } from 'src/app/services/admin.service';
 import { Paper } from 'src/app/services/auth.service';
 import { AreDocumentsUploaded, PaperDocumentEvent } from 'src/app/shared/paper-document-list/paper-document-list.component';
@@ -42,6 +43,8 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
   @ViewChild('table') table: MatTable<Paper>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
+  PAPER_TYPES = PAPER_TYPES;
 
   ngOnInit() { }
 
