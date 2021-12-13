@@ -213,9 +213,7 @@ export class PaperDocumentListComponent implements OnChanges {
         return;
       }
       snackbarRef.dismiss();
-      const blob = new Blob([data], { type });
-      const url = window.URL.createObjectURL(blob);
-      window.open(url);
+      this.document.viewDocument(data, type);
     })
   }
 

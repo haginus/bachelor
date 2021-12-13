@@ -16,7 +16,12 @@ export class DocumentService {
   viewDocument(data: ArrayBuffer, type: string) {
     const blob = new Blob([data], { type });
     const url = window.URL.createObjectURL(blob);
-    window.open(url);
+    const windowRef = window.open(url);
+    if(!windowRef || windowRef.closed || typeof windowRef.closed == "undefined") { 
+      const sbRef = this.snackbar.open("Deschiderea documentului a fost blocată de browserul " +
+        "dvs. Asigurați-vă că permiteți ferestrele pop-up.", "Reîncercați");
+      sbRef.onAction().subscribe(() => this.viewDocument(data, type));
+    }
   }
 
   downloadDocument(buffer: ArrayBuffer, downloadTitle: string, type: string) {
@@ -34,7 +39,7 @@ export class DocumentService {
     return this.http
       .get<any>(url, {...options, responseType: 'arraybuffer' as 'json'})
       .pipe(
-        catchError(this.handleError<any>('viewDocument', null))
+        catchError(this.handleError<any>('getDocument', null))
       );
   }
 
