@@ -8,7 +8,7 @@
     <form [formGroup]="editDomainForm" autocomplete="off">
         <mat-form-field appearance="outline">
             <mat-label>Nume domeniu</mat-label>
-            <input matInput type="text" formControlName="name">
+            <input matInput type="text" formControlName="name" name="domainName">
         </mat-form-field>
         <div fxLayout="row" fxLayoutGap="5px">
             <mat-form-field appearance="outline" fxFlex="50">
@@ -36,24 +36,25 @@
         
         <div formArrayName="specializations">
             <h3>Programe de studii</h3>
-            <div *ngFor="let specialization of formSpecializations.controls; let i = index">
-                <div [formGroupName]="i" class="specialization-row">
-                    <div fxLayout="row" fxLayoutGap="5px">
-                        <mat-form-field appearance="outline" fxFlex="70">
-                            <mat-label>Nume program de studiu</mat-label>
-                            <input matInput type="text" formControlName="name">
-                        </mat-form-field>
-                        <mat-form-field appearance="outline" fxFlex="30">
-                            <mat-label>Ani de studiu</mat-label>
-                            <input matInput type="number" formControlName="studyYears" min="1">
-                        </mat-form-field>
-                    </div>
-                    <div [matTooltip]="specialization.get('studentNumber')?.value > 0 ? 'Mutați întâi studenții la alt program de studiu' : 'Ștergeți programul de studiu'">
-                        <button mat-icon-button (click)="$event.preventDefault(); removeSpecialization(i)"
-                            [disabled]="specialization.get('studentNumber')?.value > 0">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    </div>
+            <div *ngFor="let specialization of formSpecializations.controls; let i = index" 
+                [formGroupName]="i" 
+                class="specialization-row"
+            >
+                <div fxLayout="row" fxLayoutGap="5px" class="flex-spacer">
+                    <mat-form-field appearance="outline" fxFlex="70">
+                        <mat-label>Nume program de studiu</mat-label>
+                        <input matInput type="text" formControlName="name" name="specializationName">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" fxFlex="30">
+                        <mat-label>Ani de studiu</mat-label>
+                        <input matInput type="number" formControlName="studyYears" min="1">
+                    </mat-form-field>
+                </div>
+                <div [matTooltip]="specialization.get('studentNumber')?.value > 0 ? 'Mutați întâi studenții la alt program de studiu' : 'Ștergeți programul de studiu'">
+                    <button mat-icon-button (click)="$event.preventDefault(); removeSpecialization(i)"
+                        [disabled]="specialization.get('studentNumber')?.value > 0">
+                        <mat-icon>delete</mat-icon>
+                    </button>
                 </div>
             </div>
             <div fxLayout="column" fxLayoutAlign="center center">

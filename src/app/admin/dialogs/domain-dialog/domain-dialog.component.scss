@@ -20,8 +20,13 @@ mat-form-field {
 .specialization-row {
     display: flex;
     align-items: center;
+    width: 100%;
+
+    .flex-spacer {
+        min-width: 0;
+    }
 
     button {
-        margin-bottom: 15px;
+        margin-bottom: 22px;
     }
 }

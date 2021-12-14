@@ -7,25 +7,25 @@
         <div fxLayout="row grid" fxLayoutGap="10px grid">
             <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
                 <mat-label>Nume *</mat-label>
-                <input matInput type="text" formControlName="lastName">
+                <input matInput type="text" formControlName="lastName" name="studentLastName">
             </mat-form-field>
             <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
                 <mat-label>Prenume *</mat-label>
-                <input matInput type="text" formControlName="firstName">
+                <input matInput type="text" formControlName="firstName" name="studentFirstName">
             </mat-form-field>
             <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
                 <mat-label>CNP</mat-label>
-                <input matInput type="text" formControlName="CNP">
+                <input matInput type="text" formControlName="CNP" name="studentCNP">
                 <mat-error>CNP invalid.</mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
                 <mat-label>E-mail *</mat-label>
-                <input matInput type="email" formControlName="email">
+                <input matInput type="email" formControlName="email" name="studentEmail">
                 <mat-hint *ngIf="data.mode == 'edit'">E-mailul nu poate fi modificat.</mat-hint>
             </mat-form-field>
             <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
                 <mat-label>Număr matricol *</mat-label>
-                <input matInput type="text" formControlName="identificationCode">
+                <input matInput type="text" formControlName="identificationCode" name="studentIdentificationCode">
             </mat-form-field>
             <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
                 <mat-label>Forma de finanțare *</mat-label>
@@ -36,11 +36,11 @@
             </mat-form-field>
             <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
                 <mat-label>Grupă *</mat-label>
-                <input matInput type="text" formControlName="group">
+                <input matInput type="text" formControlName="group" name="studentGroup">
             </mat-form-field>
             <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
                 <mat-label>Promoție *</mat-label>
-                <input matInput type="text" formControlName="promotion">
+                <input matInput type="text" formControlName="promotion" name="studentPromotion">
             </mat-form-field>
             
             <!-- Edit mode -->
@@ -77,7 +77,7 @@
 
             <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
                 <mat-label>Anul înmatriculării *</mat-label>
-                <input matInput type="text" formControlName="matriculationYear">
+                <input matInput type="text" formControlName="matriculationYear" name="studentMatriculationYear">
             </mat-form-field>
             <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
                 <mat-label>Forma de învățământ *</mat-label>

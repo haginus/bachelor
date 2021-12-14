@@ -41,7 +41,8 @@ export class TeacherOffersComponent implements OnInit, OnDestroy {
       data: {
         mode: 'edit',
         offer: { ...offer }
-      }
+      },
+      minWidth: '60vw',
     })
 
     dialogRef.afterClosed().subscribe(res => {
@@ -56,7 +57,8 @@ export class TeacherOffersComponent implements OnInit, OnDestroy {
     let dialogRef = this.dialog.open(TeacherOfferDialogComponent, {
       data: {
         mode: 'create'
-      }
+      },
+      minWidth: '60vw',
     })
 
     dialogRef.afterClosed().subscribe(res => {

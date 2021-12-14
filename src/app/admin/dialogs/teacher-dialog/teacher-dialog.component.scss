@@ -2,8 +2,10 @@ mat-form-field {
     display: block;
 }
 
-mat-dialog-content {
-    min-width: 280px;
+@media (min-width: 550px) {
+    mat-dialog-content {
+        min-width: 280px;
+    }
 }
 
 .select-spinner {
