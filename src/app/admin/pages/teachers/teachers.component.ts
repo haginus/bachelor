@@ -23,7 +23,7 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
   }
 
-  displayedColumns: string[] = ['id', 'lastName', 'firstName', 'email', 'actions'];
+  displayedColumns: string[] = ['status', 'id', 'lastName', 'firstName', 'email', 'actions'];
   data: UserData[] = [];
 
   resultsLength = 0;

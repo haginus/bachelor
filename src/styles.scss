@@ -194,6 +194,26 @@ mat-icon {
         td:not(:last-child), th:not(:last-child) {
             padding-right: 8px;
         }
+
+        .mat-column-status {
+            width: 24px;
+            padding: 0 12px!important;
+        }
+
+        .status-icon {
+            cursor: default;
+            user-select: none;
+        
+            &.done {
+                color: #388e3c;
+            }
+            &.warn {
+                color: #f57c00;
+            }
+            &.severe {
+                color: #f44336;
+            }
+        }
     }
 }
 

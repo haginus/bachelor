@@ -11,21 +11,6 @@ table {
     height: 0px;
 }
 
-.status-icon {
-    cursor: default;
-    user-select: none;
-
-    &.done {
-        color: #388e3c;
-    }
-    &.warn {
-        color: #f57c00;
-    }
-    &.severe {
-        color: #f44336;
-    }
-}
-
 .paper-detail {
     overflow: hidden;
     .paper-header {
@@ -49,11 +34,6 @@ table {
 
 .paper-row td {
     border-bottom-width: 0;
-}
-
-.paper-row td:first-child {
-    width: 24px;
-    padding: 0 12px;
 }
 
 tr.paper-row:not(.expanded-row):hover {
