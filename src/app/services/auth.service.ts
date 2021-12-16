@@ -45,9 +45,9 @@ export class AuthService {
     return this.getToken() != null;
   }
 
-  signInWithEmailAndPassword(email: string, password: string) : Observable<AuthResponse> {
+  signInWithEmailAndPassword(email: string, password: string, captcha: string) : Observable<AuthResponse> {
     const url = `${environment.apiUrl}/auth/login`;
-    return this.http.post<AuthResponse>(url, { email, password }).pipe(
+    return this.http.post<AuthResponse>(url, { email, password, captcha }).pipe(
       map(res => {
         this.setToken((res as any).token);
         this.loginState.next(true);
@@ -84,9 +84,9 @@ export class AuthService {
     return of(true);
   }
 
-  sendResetPasswordEmail(email: string) {
+  sendResetPasswordEmail(email: string, captcha: string) {
     const url = `${environment.apiUrl}/auth/reset-password`;
-    return this.http.post<boolean>(url, { email }).pipe(
+    return this.http.post<boolean>(url, { email, captcha }).pipe(
       catchError(this.handleError('sendResetPasswordEmail', false))
     );
   }

@@ -13,6 +13,8 @@ import { SharedModule } from './shared/shared.module'
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatPaginatorIntlRo } from './providers/mat-paginator-intl-ro';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { RECAPTCHA_LANGUAGE, RECAPTCHA_SETTINGS, RecaptchaModule } from "ng-recaptcha";
+import { environment } from 'src/environments/environment';
 
 const materialDeps = [
   MatSidenavModule
@@ -32,11 +34,14 @@ const materialDeps = [
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    RecaptchaModule,
     ...materialDeps
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 4000 } },
-    { provide: MatPaginatorIntl, useClass: MatPaginatorIntlRo}
+    { provide: MatPaginatorIntl, useClass: MatPaginatorIntlRo},
+    { provide: RECAPTCHA_SETTINGS, useValue: { siteKey: environment.captchaKey, } },
+    { provide: RECAPTCHA_LANGUAGE, useValue: "ro-RO" },
   ],
   bootstrap: [AppComponent]
 })

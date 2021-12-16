@@ -14,8 +14,11 @@
                     <mat-label>Parolă</mat-label>
                     <input matInput type="password" formControlName="password">
                 </mat-form-field>
+                <div class="flex-container align-center captcha-container">
+                    <re-captcha (resolved)="solvedCaptcha($event)"></re-captcha>
+                </div>
                 <div class="flex-container align-center">
-                    <button mat-raised-button color="accent" [disabled]="loginForm.invalid || loading"
+                    <button mat-raised-button color="accent" [disabled]="loginForm.invalid || !captchaToken || loading"
                     (click)="signIn()">Autentificare</button>
                 </div>
             </form>
@@ -24,23 +27,22 @@
                     <mat-label>E-mail</mat-label>
                     <input matInput type="email" formControlName="email">
                 </mat-form-field>
+                <div class="flex-container align-center captcha-container">
+                    <re-captcha (resolved)="solvedCaptcha($event)"></re-captcha>
+                </div>
                 <div class="flex-container align-center">
                     <button mat-raised-button color="accent"
-                    [disabled]="forgotPasswordForm.invalid || loading"
+                    [disabled]="forgotPasswordForm.invalid || !captchaToken || loading"
                     (click)="sendForgotPasswordEmail()">Trimiteți e-mail de resetare</button>
                 </div>
             </form>
             <mat-divider class="divider"></mat-divider>
                 
             <div class="flex-container align-center">
-                <button mat-button *ngIf="view == 'login'"
-                    (click)="view = 'forgotPassword'"
-                >
+                <button mat-button *ngIf="view == 'login'" (click)="changeView('forgotPassword')">
                     <span>Ați uitat parola?</span>
                 </button>
-                <button mat-button *ngIf="view == 'forgotPassword'"
-                    (click)="view = 'login'"
-                >
+                <button mat-button *ngIf="view == 'forgotPassword'" (click)="changeView('login')">
                     <span>Înapoi la autentificare</span>
                 </button>
             </div>

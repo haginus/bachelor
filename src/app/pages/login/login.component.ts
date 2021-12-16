@@ -42,11 +42,22 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   nextRoute: string = null;
 
+  captchaToken: string = null;
+
+  solvedCaptcha(captchaToken: string) {
+    this.captchaToken = captchaToken;
+  }
+
+  changeView(view: 'login' | 'forgotPassword') {
+    this.view = view;
+    this.captchaToken = null;
+  }
+
   signIn() {
     const email = this.loginForm.get('email')?.value;
     const password = this.loginForm.get('password')?.value;
     this.loading = true;
-    this.auth.signInWithEmailAndPassword(email, password).subscribe(res => {
+    this.auth.signInWithEmailAndPassword(email, password, this.captchaToken).subscribe(res => {
       if(res.error) {
         this.handleError(res.error);
         this.loading = false;
@@ -63,7 +74,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   sendForgotPasswordEmail() {
     const email = this.forgotPasswordForm.get('email')?.value;
     this.loading = true;
-    this.auth.sendResetPasswordEmail(email).subscribe(result => {
+    this.auth.sendResetPasswordEmail(email, this.captchaToken).subscribe(result => {
       this.loading = false;
       if(result) {
         this.snackBar.open("E-mail de resetare a parolei a fost trimis.");
