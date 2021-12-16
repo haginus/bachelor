@@ -47,3 +47,6 @@ Thumbs.db
 
 # Certbot
 /docker/certbot
+
+# compose 
+docker-compose.override.yml
