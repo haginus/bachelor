@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { RecaptchaComponent } from 'ng-recaptcha';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
@@ -43,6 +44,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   nextRoute: string = null;
 
   captchaToken: string = null;
+
+  @ViewChild('captcha') captchaComponent: RecaptchaComponent;
 
   solvedCaptcha(captchaToken: string) {
     this.captchaToken = captchaToken;
@@ -93,6 +96,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         passwordControl?.setErrors({"wrong": true});
         break;
     }
+    this.captchaComponent.reset();
   }
 
 }
