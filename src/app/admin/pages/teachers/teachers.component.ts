@@ -131,6 +131,14 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
     })
   }
 
+  resendActivationCode(teacherId: number) {
+    this.admin.resendUserActivationCode(teacherId).subscribe(result => {
+      if(result) {
+        this.snackbar.open("Link de activare trimis.");
+      }
+    });
+  }
+
   refreshResults() {
     this.performedActions.next("refresh");
   }

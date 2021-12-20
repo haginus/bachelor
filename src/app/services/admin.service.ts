@@ -126,6 +126,13 @@ export class AdminService {
     );
   }
 
+  resendUserActivationCode(id: number): Observable<any> {
+    const url = `${environment.apiUrl}/admin/users/resend-activation-code`;
+    return this.http.post<any>(url, { id }, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError("resendUserActivationCode", null))
+    );
+  }
+
   getDomains(extraDetails?: boolean): Observable<Domain[]> {
     let url = `${environment.apiUrl}/admin/domains`;
     if(extraDetails) url += `/extra`;
