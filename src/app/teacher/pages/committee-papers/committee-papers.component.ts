@@ -12,6 +12,7 @@ import { GradePaperComponent } from '../../dialogs/grade-paper/grade-paper.compo
 import { CommitteeDocument, DocumentService } from 'src/app/services/document.service';
 import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PAPER_TYPES } from 'src/app/lib/constants';
 
 
 @Component({
@@ -47,6 +48,8 @@ export class TeacherCommitteePapersComponent implements OnInit {
 
   paperSubscription: Subscription;
   performedActions: BehaviorSubject<string> = new BehaviorSubject('');
+
+  PAPER_TYPES = PAPER_TYPES;
 
   @ViewChild('table') table: MatTable<Paper>;
 
