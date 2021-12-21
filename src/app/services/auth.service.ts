@@ -104,7 +104,7 @@ export class AuthService {
   userData = this.userDataSource.asObservable();
 
   getUserData() : Observable<UserData | undefined> {
-    const url = `${environment.apiUrl}/user/info`;
+    const url = `${environment.apiUrl}/auth/user`;
     return this.http.get<UserData>(url, this.getPrivateHeaders()).pipe(
       catchError(this.handleUserError('getUserData'))
     );
