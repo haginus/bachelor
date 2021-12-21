@@ -32,10 +32,44 @@
             <button mat-icon-button (click)="refreshResults()">
                 <mat-icon>refresh</mat-icon>
             </button>
-            <button mat-icon-button>
-                <mat-icon>more_vert</mat-icon>
+            <button mat-icon-button (click)="toggleFilters()" [color]="showFilters ? 'primary' : ''">
+                <mat-icon>filter_list</mat-icon>
             </button>
         </mat-toolbar>
+        <div class="table-filters" *ngIf="showFilters">
+            <div class="filter-header">
+                <span class="text">Filtrați după</span>
+                <button mat-button (click)="studentFilter.reset()">Resetați</button>
+            </div>
+            <form [formGroup]="studentFilter" fxLayout="row grid" fxLayoutGap="10px 0px grid">
+                <mat-form-field appearance="outline" fxFlex="50">
+                    <mat-label>Domeniu</mat-label>
+                    <mat-select formControlName="domainId" (valueChange)="handleFilterDomainChange($event)" name="domainId">
+                        <mat-option [value]="null">-- Oricare --</mat-option>
+                        <mat-option *ngFor="let domain of domains" [value]="domain.id">
+                            {{ domain.name }}, {{ DOMAIN_TYPES[domain.type] | titlecase }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="50">
+                    <mat-label>Program de studiu</mat-label>
+                    <mat-select formControlName="specializationId" name="specializationId">
+                        <mat-option [value]="null">-- Oricare --</mat-option>
+                        <mat-option *ngFor="let specialization of domainSpecializations" [value]="specialization.id">
+                            {{ specialization.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="50">
+                    <mat-label>Grupă</mat-label>
+                    <input matInput type="number" formControlName="group" name="group"/>
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="50">
+                    <mat-label>Promoție</mat-label>
+                    <input matInput type="number" formControlName="promotion" name="promotion"/>
+                </mat-form-field>
+            </form>
+        </div>
         <div class="loading-shade" *ngIf="isLoadingResults">
             <mat-spinner></mat-spinner>
         </div>

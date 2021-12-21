@@ -26,9 +26,16 @@ export class AdminService {
 
   // Students
 
-  getStudentUsers(sort: string = 'id', order: string = 'ASC', page: number = 0, pageSize: number = 20):
+  getStudentUsers(sort: string = 'id', order: string = 'ASC', page: number = 0, pageSize: number = 20, filters?: StudentQueryFilters):
     Observable<StudentQueryResult> {
-    const url = `${environment.apiUrl}/admin/students?sort=${sort}&order=${order}&page=${page}&pageSize=${pageSize}`;
+    let url = `${environment.apiUrl}/admin/students?sort=${sort}&order=${order}&page=${page}&pageSize=${pageSize}`;
+    if(filters) {
+      Object.keys(filters).forEach(filterKey => {
+        if(filters[filterKey]) {
+          url += `&${filterKey}=${filters[filterKey]}`;
+        }
+      });
+    }
     return this.http
       .get<StudentQueryResult>(url, this.auth.getPrivateHeaders(),)
       .pipe(
@@ -357,6 +364,13 @@ export class AdminService {
       return of(result as T);
     };
   }
+}
+
+export interface StudentQueryFilters {
+  domainId: number;
+  specializationId: number;
+  group: number;
+  promotion: number;
 }
 
 export interface StudentQueryResult {

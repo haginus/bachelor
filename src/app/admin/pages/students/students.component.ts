@@ -1,13 +1,15 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject, merge, Observable, of as observableOf } from 'rxjs';
-import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
+import { DOMAIN_TYPES } from 'src/app/lib/constants';
 import { AdminService } from 'src/app/services/admin.service';
-import { UserData } from 'src/app/services/auth.service';
+import { Domain, UserData } from 'src/app/services/auth.service';
 import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
 import { StudentDeleteDialogComponent } from '../../dialogs/student-delete-dialog/student-delete-dialog.component';
 import { StudentsBulkAddDialogComponent } from '../../dialogs/students-bulk-add-dialog/students-bulk-add-dialog.component';
@@ -30,6 +32,18 @@ export class AdminStudentsComponent implements OnInit, AfterViewInit {
   isLoadingResults = true;
   isRateLimitReached = false;
 
+  domains: Domain[];
+
+  studentFilter = new FormGroup({
+    domainId: new FormControl(null),
+    specializationId: new FormControl({ value: null, disabled: true }),
+    group: new FormControl(null),
+    promotion: new FormControl(null)
+  });
+
+  showFilters = false;
+
+  DOMAIN_TYPES = DOMAIN_TYPES;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -40,15 +54,17 @@ export class AdminStudentsComponent implements OnInit, AfterViewInit {
   constructor(private admin: AdminService, private dialog: MatDialog, private snackbar: MatSnackBar) { }
 
   ngAfterViewInit() {
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-
-    merge(this.sort.sortChange, this.paginator.page, this.performedActions)
+    const filterChanges = this.studentFilter.valueChanges.pipe(debounceTime(500));
+    merge(this.sort.sortChange, filterChanges).subscribe(() => this.paginator.pageIndex = 0);
+    
+    merge(this.sort.sortChange, this.paginator.page, filterChanges, this.performedActions)
       .pipe(
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
+          const filters = this.studentFilter.value;
           return this.admin.getStudentUsers(
-            this.sort.active, this.sort.direction.toUpperCase(), this.paginator.pageIndex, this.paginator.pageSize);
+            this.sort.active, this.sort.direction.toUpperCase(), this.paginator.pageIndex, this.paginator.pageSize, filters);
         }),
         map(data => {
           // Flip flag to show that loading has finished.
@@ -64,6 +80,8 @@ export class AdminStudentsComponent implements OnInit, AfterViewInit {
           return observableOf([]);
         })
       ).subscribe(data => this.data = data);
+
+    this.admin.getDomains().subscribe(domains => this.domains = domains);
   }
 
   openNewStudentDialog() {
@@ -151,6 +169,32 @@ export class AdminStudentsComponent implements OnInit, AfterViewInit {
         this.performedActions.next("bulkAdd");
       }
     })
+  }
+
+  get domainSpecializations() {
+    const domainId = this.studentFilter.get("domainId").value;
+    if(!domainId) return [];
+    const domain = this.domains.find(domain => domain.id == domainId);
+    return domain.specializations;
+  }
+  
+  handleFilterDomainChange(value: number) {
+    const specializationControl = this.studentFilter.get("specializationId");
+    if(value) {
+      specializationControl.setValue(null);
+      specializationControl.enable();
+    } else {
+      specializationControl.disable();
+    }
+  }
+
+  toggleFilters() {
+    if(this.showFilters) {
+      if(this.studentFilter.dirty) {
+        this.studentFilter.reset();
+      }
+    }
+    this.showFilters = !this.showFilters;
   }
 
 }

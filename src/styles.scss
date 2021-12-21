@@ -181,6 +181,22 @@ mat-icon {
         flex: 1 1 auto;
     }
 
+    .table-filters {
+        padding: 16px;
+        padding-bottom: 0;
+        .filter-header {
+            display: flex;
+            align-items: center;
+            padding-bottom: 12px;
+            .text {
+                color: rgba(0, 0, 0, 0.54);
+                font-weight: 500;
+                flex: 1;
+            }
+            
+        }
+    }
+
     table {
         td, th {
             white-space: nowrap;
