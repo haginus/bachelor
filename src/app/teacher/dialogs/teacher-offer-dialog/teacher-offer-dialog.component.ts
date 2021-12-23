@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
 import { Domain } from 'src/app/services/auth.service';
@@ -88,7 +88,7 @@ export class TeacherOfferDialogComponent implements OnInit {
 
   offerForm = new FormGroup({
     "domainId": new FormControl(this.data.offer?.domainId, [Validators.required]),
-    "topics": new FormControl(null),
+    "topics": new FormControl(null, [topicsNotEmptyValidator(this.selectedTopics)]),
     "limit": new FormControl(this.data.offer?.limit, [Validators.required, Validators.min(1)]),
     "description": new FormControl(this.data.offer?.description, [Validators.maxLength(1024)])
   })
@@ -152,9 +152,19 @@ export class TeacherOfferDialogComponent implements OnInit {
 
   private _normalize = (str: string) => str.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
+  get topicsControl() {
+    return this.offerForm.get("topics");
+  }
 }
 
+export function topicsNotEmptyValidator(topicsArray: Topic[]): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const len = topicsArray.length;
+    console.log(len == 0 ? { topicsEmpty: true } : null)
 
+    return len == 0 ? { topicsEmpty: true } : null;
+  };
+}
 
 export interface TeacherOfferDialogData {
   mode: 'create' | 'edit',
