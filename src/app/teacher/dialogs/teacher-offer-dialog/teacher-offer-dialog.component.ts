@@ -160,8 +160,6 @@ export class TeacherOfferDialogComponent implements OnInit {
 export function topicsNotEmptyValidator(topicsArray: Topic[]): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const len = topicsArray.length;
-    console.log(len == 0 ? { topicsEmpty: true } : null)
-
     return len == 0 ? { topicsEmpty: true } : null;
   };
 }
