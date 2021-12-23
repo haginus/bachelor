@@ -28,18 +28,14 @@
                 </mat-chip>
                 <input placeholder="Temă nouă..." #topicInput formControlName="topics" [matAutocomplete]="auto"
                     [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    (matChipInputTokenEnd)="addTopic($event)" [matChipInputAddOnBlur]="true"/>
+                    (matChipInputTokenEnd)="addTopic($event)" (blur)="handleTopicBlur($event, topicInput.value)"/>
             </mat-chip-list>
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTopic($event)">
                 <mat-option *ngFor="let topic of filteredTopics | async" [value]="topic">
                     {{topic.name}}
                 </mat-option>
             </mat-autocomplete>
-            <mat-hint>
-                <span [style]="{ color: topicsControl.invalid && topicsControl.touched ? 'red' : 'unset'}">
-                    Adăugați o temă înscriind numele și apăsând <b>Virgulă</b> sau <b>Enter.</b>
-                </span>
-            </mat-hint>
+            <mat-hint>Adăugați o temă înscriind numele și apăsând <b>Virgulă</b> sau <b>Enter.</b></mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline">

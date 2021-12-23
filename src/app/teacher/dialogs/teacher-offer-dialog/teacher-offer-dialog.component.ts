@@ -52,10 +52,18 @@ export class TeacherOfferDialogComponent implements OnInit {
     }
 
     if ((value || '').trim()) {
-      this.selectedTopics.push({ id: 0, name: value.trim() });
+      this.addTopicInternal(value);
     }
 
     this.offerForm.get("topics").setValue(null);
+  }
+
+  private addTopicInternal(value: string) {
+    value = value.trim();
+    const exists = !!this.selectedTopics.find(topic => topic.name == value);
+    if(!exists) {
+      this.selectedTopics.push({ id: 0, name: value });
+    }
   }
 
   selectedTopic(event: MatAutocompleteSelectedEvent): void {
@@ -88,7 +96,7 @@ export class TeacherOfferDialogComponent implements OnInit {
 
   offerForm = new FormGroup({
     "domainId": new FormControl(this.data.offer?.domainId, [Validators.required]),
-    "topics": new FormControl(null, [topicsNotEmptyValidator(this.selectedTopics)]),
+    "topics": new FormControl(null),
     "limit": new FormControl(this.data.offer?.limit, [Validators.required, Validators.min(1)]),
     "description": new FormControl(this.data.offer?.description, [Validators.maxLength(1024)])
   })
@@ -99,13 +107,14 @@ export class TeacherOfferDialogComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.data.offer) {
-      this.selectedTopics = this.data.offer.topics;
+      this.selectedTopics = [...this.data.offer.topics];
       this.offerForm.get("limit").setValidators([Validators.required, Validators.min(this.data.offer.takenPlaces)]);
       this.offerForm.get("limit").updateValueAndValidity(); // ensure user can't change limit below taken places
     }
     this.topicService.getTopics().subscribe(topics => {
-      this.remainingTopics = topics;
-    })
+      this.remainingTopics = 
+        topics.filter(topic => !this.selectedTopics.find(t => t.id == topic.id));
+    });
     this.domainSubscription = this.teacher.getDomains().subscribe(domains => {
       this.domains = domains;
       this.isLoadingDomains = false;
@@ -150,18 +159,20 @@ export class TeacherOfferDialogComponent implements OnInit {
     })
   }
 
+  handleTopicBlur(event: FocusEvent, value: string) {
+    if((event.relatedTarget as any)?.tagName == 'MAT-OPTION') return;
+    if ((value || '').trim()) {
+      this.addTopicInternal(value);
+    }
+    this.topicInput.nativeElement.value = '';
+    this.offerForm.get("topics").setValue(null);
+  }
+
   private _normalize = (str: string) => str.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
   get topicsControl() {
     return this.offerForm.get("topics");
   }
-}
-
-export function topicsNotEmptyValidator(topicsArray: Topic[]): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const len = topicsArray.length;
-    return len == 0 ? { topicsEmpty: true } : null;
-  };
 }
 
 export interface TeacherOfferDialogData {
