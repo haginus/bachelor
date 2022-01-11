@@ -5,11 +5,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { BehaviorSubject, merge, Observable, of as observableOf } from 'rxjs';
 import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { DOMAIN_TYPES } from 'src/app/lib/constants';
 import { AdminService } from 'src/app/services/admin.service';
-import { Domain, UserData } from 'src/app/services/auth.service';
+import { AuthService, Domain, UserData } from 'src/app/services/auth.service';
 import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
 import { StudentDeleteDialogComponent } from '../../dialogs/student-delete-dialog/student-delete-dialog.component';
 import { StudentsBulkAddDialogComponent } from '../../dialogs/students-bulk-add-dialog/students-bulk-add-dialog.component';
@@ -21,6 +22,8 @@ import { StudentsBulkAddDialogComponent } from '../../dialogs/students-bulk-add-
 })
 export class AdminStudentsComponent implements OnInit, AfterViewInit {
 
+  constructor(private admin: AdminService, private auth: AuthService, private router: Router,
+    private dialog: MatDialog, private snackbar: MatSnackBar) { }
 
   ngOnInit(): void {
   }
@@ -50,8 +53,6 @@ export class AdminStudentsComponent implements OnInit, AfterViewInit {
 
   performedActions: BehaviorSubject<string> = new BehaviorSubject(''); // put in merge to force update after student edit
 
-
-  constructor(private admin: AdminService, private dialog: MatDialog, private snackbar: MatSnackBar) { }
 
   ngAfterViewInit() {
     const filterChanges = this.studentFilter.valueChanges.pipe(debounceTime(500));
@@ -156,6 +157,14 @@ export class AdminStudentsComponent implements OnInit, AfterViewInit {
         this.snackbar.open("Link de activare trimis.");
       }
     });
+  }
+
+  impersonateStudent(teacherId: number) {
+    this.auth.impersonateUser(teacherId).subscribe(result => {
+      if(!result.error) {
+        this.router.navigate(['student']);
+      }
+    })
   }
 
   refreshResults() {

@@ -10,6 +10,10 @@
 </div>
 
 <mat-menu #userMenu="matMenu">
+    <button mat-menu-item (click)="release()" *ngIf="user?.isImpersonated">
+        <mat-icon>undo</mat-icon>
+        <span>Opriți impersonarea</span>
+    </button>
     <button mat-menu-item (click)="editProfile()">
         <mat-icon>person</mat-icon>
         <span>Profilul dvs.</span>
@@ -30,7 +34,8 @@
         <span class="toolbar-spacer"></span>
         <button mat-button class="user-preview-container" [matMenuTriggerFor]="userMenu">
             <span class="user-name" fxHide.lt-sm>{{user?.firstName}} {{user?.lastName}}</span>
-            <mat-icon>person</mat-icon>
+            <mat-icon *ngIf="!user?.isImpersonated">person</mat-icon>
+            <mat-icon *ngIf="user?.isImpersonated">people</mat-icon>
         </button>
     </mat-toolbar>
     <mat-drawer-container class="drawer-container">

@@ -3,10 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
+import { Router } from '@angular/router';
 import { BehaviorSubject, merge, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { AdminService } from 'src/app/services/admin.service';
-import { UserData } from 'src/app/services/auth.service';
+import { AuthService, UserData } from 'src/app/services/auth.service';
 import { AdminTeacherBulkAddDialogComponent } from '../../dialogs/teacher-bulk-add-dialog/teacher-bulk-add-dialog.component';
 import { AdminTeacherDeleteDialogComponent } from '../../dialogs/teacher-delete-dialog/teacher-delete-dialog.component';
 import { AdminTeacherDialogConmonent } from '../../dialogs/teacher-dialog/teacher-dialog.component';
@@ -18,7 +19,8 @@ import { AdminTeacherDialogConmonent } from '../../dialogs/teacher-dialog/teache
 })
 export class AdminTeachersComponent implements OnInit, AfterViewInit {
 
-  constructor(private admin: AdminService, private dialog: MatDialog, private snackbar: MatSnackBar) { }
+  constructor(private admin: AdminService, private auth: AuthService, private router: Router,
+    private dialog: MatDialog, private snackbar: MatSnackBar) { }
 
   ngOnInit(): void {
   }
@@ -91,7 +93,6 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
         data: this.data.find(student => student.id == studentId)
       }
     });
-
   }
 
   editTeacher(studentId: number) {
@@ -137,6 +138,14 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
         this.snackbar.open("Link de activare trimis.");
       }
     });
+  }
+
+  impersonateTeacher(teacherId: number) {
+    this.auth.impersonateUser(teacherId).subscribe(result => {
+      if(!result.error) {
+        this.router.navigate(['teacher']);
+      }
+    })
   }
 
   refreshResults() {

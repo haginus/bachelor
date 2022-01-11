@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute, private auth: AuthService,
     private dialog: MatDialog) { }
 
-  user : UserData | undefined = undefined;
+  user: UserData | undefined = undefined;
   sessionSettings: SessionSettings;
   loading = true;
   backendDown = false;
@@ -81,6 +81,14 @@ export class AppComponent implements OnInit {
   signOut() {
     this.auth.signOut().subscribe(res => {
       this.router.navigate(['login']);
+    });
+  }
+
+  release() {
+    this.auth.releaseUser().subscribe(res => {
+      if(!res.error) {
+        this.router.navigate(['admin']);
+      }
     });
   }
 

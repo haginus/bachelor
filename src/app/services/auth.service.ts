@@ -27,8 +27,6 @@ export class AuthService {
     })
   }
 
-  public loginState = new BehaviorSubject(this.isSignedIn());
-
   private setToken(token : string) {
     return localStorage.setItem('token', token);
   }
@@ -50,7 +48,6 @@ export class AuthService {
     return this.http.post<AuthResponse>(url, { email, password, captcha }).pipe(
       map(res => {
         this.setToken((res as any).token);
-        this.loginState.next(true);
         this.userDataSource.next((res as any).user);
         return res
       }),
@@ -63,11 +60,34 @@ export class AuthService {
     return this.http.post<AuthResponse>(url, { token, password }).pipe(
       map(res => {
         this.setToken((res as any).token);
-        this.loginState.next(true);
         this.userDataSource.next((res as any).user);
         return res
       }),
       catchError(this.handleAuthError('signInWithTokenAndChangePassword'))
+    );
+  }
+
+  impersonateUser(userId: number): Observable<AuthResponse> {
+    const url = `${environment.apiUrl}/auth/impersonate`;
+    return this.http.post<AuthResponse>(url, { userId }, this.getPrivateHeaders()).pipe(
+      map(res => {
+        this.setToken((res as any).token);
+        this.userDataSource.next((res as any).user);
+        return res;
+      }),
+      catchError(this.handleAuthError('impersonateUser'))
+    );
+  }
+
+  releaseUser(): Observable<AuthResponse> {
+    const url = `${environment.apiUrl}/auth/release`;
+    return this.http.post<AuthResponse>(url, {}, this.getPrivateHeaders()).pipe(
+      map(res => {
+        this.setToken((res as any).token);
+        this.userDataSource.next((res as any).user);
+        return res;
+      }),
+      catchError(this.handleAuthError('releaseUser'))
     );
   }
 
@@ -80,7 +100,6 @@ export class AuthService {
 
   signOut() : Observable<boolean> {
     this.removeToken();
-    this.loginState.next(false);
     return of(true);
   }
 
@@ -243,6 +262,7 @@ export interface UserData {
   email: string,
   validated: boolean,
   type: "student" | "teacher" | "admin",
+  isImpersonated: boolean,
   student?: {
     id?: number,
     userId?: number,
