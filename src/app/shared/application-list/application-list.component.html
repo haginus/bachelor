@@ -27,13 +27,13 @@
                 <div mat-line>Titlu</div>
                 <div mat-line>{{application.title}}</div>
             </mat-list-item>
-            <mat-list-item>
+            <mat-list-item class="no-height">
                 <div mat-line>Descriere</div>
                 <div mat-line class="nowrap">{{application.description}}</div>
             </mat-list-item>
-            <mat-list-item *ngIf="application.usedTechnologies">
+            <mat-list-item *ngIf="application.usedTechnologies" class="no-height">
                 <div mat-line>Tehnologii folosite</div>
-                <div mat-line>{{application.usedTechnologies}}</div>
+                <div mat-line class="nowrap">{{application.usedTechnologies}}</div>
             </mat-list-item>
         </mat-list>
     </mat-card-content>
