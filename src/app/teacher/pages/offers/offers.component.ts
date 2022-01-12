@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { Offer, TeacherService } from 'src/app/services/teacher.service';
 import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
@@ -12,7 +13,7 @@ import { TeacherOfferDialogComponent } from '../../dialogs/teacher-offer-dialog/
 })
 export class TeacherOffersComponent implements OnInit, OnDestroy {
 
-  constructor(private teacher: TeacherService, private dialog: MatDialog) { }
+  constructor(private teacher: TeacherService, private dialog: MatDialog, private snackbar: MatSnackBar) { }
 
   offers: Offer[] = []
   offerSubscription: Subscription;
@@ -34,9 +35,7 @@ export class TeacherOffersComponent implements OnInit, OnDestroy {
     this.offerSubscription.unsubscribe();
   }
 
-  editOffer(id: number) {
-    const offer = this.offers.find(offer => offer.id == id);
-
+  editOffer(offer: Offer) {
     let dialogRef = this.dialog.open(TeacherOfferDialogComponent, {
       data: {
         mode: 'edit',
@@ -49,11 +48,10 @@ export class TeacherOffersComponent implements OnInit, OnDestroy {
       if(res) {
         this.getOffers();
       }
-    })
+    });
   }
 
   addOffer() {
-
     let dialogRef = this.dialog.open(TeacherOfferDialogComponent, {
       data: {
         mode: 'create'
@@ -68,24 +66,52 @@ export class TeacherOffersComponent implements OnInit, OnDestroy {
     })
   }
 
-  deleteOffer(id: number) {
+  deleteOffer(offer: Offer) {
+    if(offer.takenPlaces) {
+      let content = '';
+      let actions = [];
+      if(offer.takenPlaces >= offer.limit) {
+        content = "Oferta este deja inactivă - studenții nu mai pot trimite cereri noi, deoarece numărul de locuri limită setat a fost atins.";
+        actions.push({ name: "OK", value: false });
+      } else {
+        content = "Inactivați oferta setând limita de locuri la numărul actual de locuri ocupate.";
+        actions.push({ name: "Anulați", value: false });
+        actions.push({ name: "Mergeți la editare", value: true });
+      }
+      let dialogRef = this.dialog.open(CommonDialogComponent, {
+        data: {
+          title: "Ofertele cu cereri acceptate nu pot fi șterse",
+          content,
+          actions,
+        }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if(result) {
+          this.editOffer({...offer, limit: offer.takenPlaces});
+        }
+      })
+      return;
+    }
     let dialogRef = this.dialog.open(CommonDialogComponent, {
       data: {
         title: "Doriți să ștergeți această ofertă?",
         content: "Toate cererile în curs de la studenți vor fi revocate.",
         actions: [
-          {
-            name: "Anulați",
-            value: false
-          },
-          {
-            name: "Ștergeți",
-            value: true
-          }
+          { name: "Anulați", value: false },
+          { name: "Ștergeți", value: true }
         ]
       }
     });
-    dialogRef.afterClosed().subscribe(console.log)
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.teacher.deleteOffer(offer.id).subscribe(result => {
+          if(result) {
+            this.getOffers();
+            this.snackbar.open("Ofertă ștearsă.");
+          }
+        });
+      }
+    })
   }
 
 

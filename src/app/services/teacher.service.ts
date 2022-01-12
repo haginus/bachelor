@@ -55,6 +55,15 @@ export class TeacherService {
       );
   }
 
+  deleteOffer(id: number): Observable<boolean> {
+    const url = `${environment.apiUrl}/teacher/offers/delete`;
+    return this.http.post<any>(url, { id }, this.auth.getPrivateHeaders())
+      .pipe(
+        map(_ => true),
+        catchError(this.handleError<boolean>('deleteOffer', false))
+      );
+  }
+
   getApplications(offerId: number = null, state: 'accepted' | 'declined' | 'pending' = null):
   Observable<OfferApplication[]> {
     let url = `${environment.apiUrl}/teacher/applications?`;

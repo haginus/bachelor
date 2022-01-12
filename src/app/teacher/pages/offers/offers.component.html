@@ -1,10 +1,10 @@
 <mat-menu #offerMenu="matMenu">
-    <ng-template matMenuContent let-id="id">
-        <button mat-menu-item (click)="editOffer(id)">
+    <ng-template matMenuContent let-offer="offer">
+        <button mat-menu-item (click)="editOffer(offer)">
             <mat-icon>mode</mat-icon>
             <span>Editați oferta</span>
         </button>
-        <button mat-menu-item (click)="deleteOffer(id)">
+        <button mat-menu-item (click)="deleteOffer(offer)">
             <mat-icon>delete</mat-icon>
             <span>Ștergeți oferta</span>
         </button>
@@ -34,7 +34,7 @@
                         <span class="badge" *ngFor="let topic of offer.topics">{{ topic.name }}</span>
                     </div>
                 </div>
-                <button mat-icon-button [matMenuTriggerFor]="offerMenu" [matMenuTriggerData]="{id: offer.id}">
+                <button mat-icon-button [matMenuTriggerFor]="offerMenu" [matMenuTriggerData]="{offer: offer}">
                     <mat-icon>more_vert</mat-icon>
                 </button>
             </div>
