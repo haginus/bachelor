@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
@@ -24,8 +24,8 @@ export class EditPaperComponent implements OnInit {
   }
 
   paperForm = new FormGroup({
-    "title": new FormControl(this.paper.title),
-    "description": new FormControl(this.paper.description),
+    "title": new FormControl(this.paper.title, [Validators.required, Validators.minLength(3), Validators.maxLength(256)]),
+    "description": new FormControl(this.paper.description, [Validators.required, Validators.minLength(64), Validators.maxLength(1024)]),
     "topics": new FormControl('')
   });
 
