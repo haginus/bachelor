@@ -1,0 +1,46 @@
+:host {
+  position: relative;
+  display: block;
+}
+
+mat-dialog-content {
+  padding: 0!important;
+}
+
+form {
+  margin-top: 16px!important;
+  .actions {
+    margin-bottom: -16px;
+  }
+}
+
+.student-scroll {
+  height: 200px;
+  overflow: scroll;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 0!important;
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.paper-snippet {
+  margin-top: 8px;
+  padding: 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+
+  h2 {
+    margin-bottom: 0px;
+  }
+  
+  .paper-description {
+    color: #616161;
+  }
+}
+
+.dialog-buttons {
+  margin-bottom: -16px;
+  button + button {
+    margin-left: 8px;
+  }
+}

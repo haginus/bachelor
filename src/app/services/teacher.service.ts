@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { AuthService, Committee, Domain, Paper, PaperDocument } from './auth.service';
+import { AuthService, Committee, Domain, Paper, PaperDocument, UserData } from './auth.service';
 import { OfferApplication } from './student.service';
 import { Topic } from './topics.service';
 
@@ -112,6 +112,32 @@ export class TeacherService {
       .pipe(
         retry(3),
         catchError(this.handleError<Paper[]>('getStudentPapers', []))
+      );
+  }
+
+  addPaper(studentId: number, title: string, description: string, topicIds: number[]): Observable<Paper> {
+    const url = `${environment.apiUrl}/teacher/papers/add`;
+    const data = { studentId, title, description, topicIds };
+    return this.http.post<Paper>(url, data, this.auth.getPrivateHeaders())
+      .pipe(
+        catchError(this.handleError<Paper>('addPaper', null))
+      )
+  }
+
+  getStudents(name?: string, domainId?: number): Observable<UserData[]> {
+    let url = `${environment.apiUrl}/teacher/students`;
+    if(name) {
+      url += `?name=${name}`;
+    }
+    if(domainId) {
+      if(!name) url += '?';
+      else url += '&';
+      url += `domainId=${domainId}`;
+    }
+    return this.http
+      .get<UserData[]>(url, this.auth.getPrivateHeaders())
+      .pipe(
+        catchError(this.handleError<UserData[]>('getStudents', []))
       );
   }
 

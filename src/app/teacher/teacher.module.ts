@@ -18,6 +18,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { AddPaperComponent } from './dialogs/add-paper/add-paper.component';
 
 const materialDeps = [
   MatStepperModule,
@@ -37,7 +38,8 @@ const materialDeps = [
     TeacherPapersComponent,
     TeacherCommitteesComponent,
     TeacherCommitteePapersComponent,
-    GradePaperComponent
+    GradePaperComponent,
+    AddPaperComponent
   ],
   imports: [
     CommonModule,

@@ -6,10 +6,12 @@ import { MatTable } from '@angular/material/table';
 import { BehaviorSubject, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { PAPER_TYPES } from 'src/app/lib/constants';
-import { Paper } from 'src/app/services/auth.service';
+import { canApply } from 'src/app/lib/utils';
+import { AuthService, Paper } from 'src/app/services/auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
 import { AreDocumentsUploaded, PaperDocumentEvent } from 'src/app/shared/paper-document-list/paper-document-list.component';
+import { AddPaperComponent } from '../../dialogs/add-paper/add-paper.component';
 
 @Component({
   selector: 'app-papers',
@@ -26,7 +28,7 @@ import { AreDocumentsUploaded, PaperDocumentEvent } from 'src/app/shared/paper-d
 export class TeacherPapersComponent implements OnInit, OnDestroy {
 
   constructor(private teacher: TeacherService, private cd: ChangeDetectorRef, private dialog: MatDialog,
-    private snackbar: MatSnackBar) { }
+    private snackbar: MatSnackBar, private auth: AuthService) { }
 
   displayedColumns: string[] = ['status', 'title', 'type', 'student', 'committee'];
   expandedPaper: Paper | null;
@@ -39,6 +41,8 @@ export class TeacherPapersComponent implements OnInit, OnDestroy {
 
   performedActions: BehaviorSubject<string> = new BehaviorSubject('');
   paperSubscription: Subscription;
+  sessionSettingsSubscription: Subscription;
+  canAddPapers: boolean = true;
 
   @ViewChild('table') table: MatTable<Paper>;
 
@@ -54,7 +58,11 @@ export class TeacherPapersComponent implements OnInit, OnDestroy {
    .subscribe(papers => {
       this.data = papers as Paper[];
       this.isLoadingResults = false;
-    })
+    });
+
+    this.sessionSettingsSubscription = this.auth.getSessionSettings().subscribe(settings => {
+      this.canAddPapers = canApply(settings);
+    });
   }
 
   refreshResults() {
@@ -69,6 +77,16 @@ export class TeacherPapersComponent implements OnInit, OnDestroy {
     this.paperNeedsAttentionMap[paper.id] = !event.byUploader.teacher;
     // Detect changes so that the new value is reflected it the DOM
     this.cd.detectChanges();
+  }
+
+  addPaper() {
+    const dialogRef = this.dialog.open(AddPaperComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.refreshResults();
+      }
+    });
   }
 
   removePaper(paper: Paper) {
@@ -114,6 +132,7 @@ export class TeacherPapersComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.paperSubscription.unsubscribe();
+    this.sessionSettingsSubscription.unsubscribe();
   }
 }
 
