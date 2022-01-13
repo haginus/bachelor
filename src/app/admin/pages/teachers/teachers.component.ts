@@ -25,8 +25,8 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
   }
 
-  displayedColumns: string[] = ['status', 'id', 'lastName', 'firstName', 'email', 'actions'];
-  data: UserData[] = [];
+  displayedColumns: string[] = ['status', 'id', 'lastName', 'firstName', 'email', 'offerNumber', 'paperNumber', 'actions'];
+  data: UserDataExtented[] = [];
 
   resultsLength = 0;
   isLoadingResults = true;
@@ -57,7 +57,7 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
           this.isRateLimitReached = false;
           this.resultsLength = data.count;
 
-          return data.rows;
+          return data.rows as UserDataExtented[];
         }),
         catchError(() => {
           this.isLoadingResults = false;
@@ -160,6 +160,12 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
       }
     })
   }
+}
 
-
+interface UserDataExtented extends UserData {
+  teacher: {
+    id: number;
+    offerNumber: number;
+    paperNumber: number;
+  }
 }
