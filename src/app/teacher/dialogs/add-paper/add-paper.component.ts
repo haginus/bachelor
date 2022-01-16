@@ -29,7 +29,7 @@ export class AddPaperComponent implements OnInit {
 
   paperForm = new FormGroup({
     title: new FormControl("", [Validators.required]),
-    description: new FormControl("", [Validators.required, Validators.minLength(32), Validators.maxLength(1024)]),
+    description: new FormControl("", [Validators.required, Validators.minLength(64), Validators.maxLength(1024)]),
     topics: new FormControl(""),
     topicIds: new FormControl([], [Validators.required]),
   });
