@@ -29,6 +29,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 const materialDeps = [
   MatPaginatorModule,
@@ -36,7 +37,8 @@ const materialDeps = [
   MatSelectModule,
   MatAutocompleteModule,
   MatSortModule,
-  MatSlideToggleModule
+  MatSlideToggleModule,
+  MatButtonToggleModule,
 ]
 
 @NgModule({

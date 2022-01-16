@@ -1,5 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,7 +9,8 @@ import { MatTable } from '@angular/material/table';
 import { BehaviorSubject, merge, Subscription } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
 import { PAPER_TYPES } from 'src/app/lib/constants';
-import { AdminService } from 'src/app/services/admin.service';
+import { arrayMap } from 'src/app/lib/utils';
+import { AdminService, GetPapersFilter } from 'src/app/services/admin.service';
 import { Paper } from 'src/app/services/auth.service';
 import { AreDocumentsUploaded, PaperDocumentEvent } from 'src/app/shared/paper-document-list/paper-document-list.component';
 import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
@@ -45,20 +47,28 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   PAPER_TYPES = PAPER_TYPES;
+  showFilters: boolean = false;
+
+  paperFilterForm = new FormGroup({
+    //validity: new FormControl(['valid', 'notValid', 'nullValid']),
+    submitted: new FormControl(true),
+    assigned: new FormControl(null),
+    type: new FormControl(null)
+  });
 
   ngOnInit() { }
 
   ngAfterViewInit(): void {
+    const filterChanges = this.paperFilterForm.valueChanges;
+    merge(this.sort.sortChange, filterChanges).subscribe(() => this.paginator.pageIndex = 0);
 
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-
-    
-    this.paperSubscription = merge(this.sort.sortChange, this.paginator.page, this.performedActions).pipe(
+    this.paperSubscription = merge(this.sort.sortChange, this.paginator.page, filterChanges, this.performedActions).pipe(
       startWith({}),
       switchMap(() => {
         this.isLoadingResults = true;
+        const filter = this.parseFilter();
         return this.admin.getPapers(this.sort.active, this.sort.direction.toUpperCase(),
-          this.paginator.pageIndex, this.paginator.pageSize);
+          this.paginator.pageIndex, this.paginator.pageSize, filter);
       }),
     )
    .subscribe(papers => {
@@ -66,6 +76,21 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
       this.resultsLength = papers.count;
       this.isLoadingResults = false;
     })
+  }
+
+  parseFilter(): GetPapersFilter {
+    const filterForm = this.paperFilterForm.value;
+    const filter: GetPapersFilter = {};
+    if(filterForm.assigned != null) {
+      filter.assigned = filterForm.assigned;
+    }
+    if(filterForm.submitted != null) {
+      filter.submitted = filterForm.submitted;
+    }
+    if(filterForm.type != null) {
+      filter.type = filterForm.type;
+    }
+    return filter;
   }
 
   refreshResults() {
@@ -97,6 +122,21 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
         mode: 'view'
       }
     })
+  }
+
+  toggleFilters() {
+    if(this.showFilters && this.paperFilterForm.dirty) {
+      this.resetFilterForm();
+    }
+    this.showFilters = !this.showFilters;
+  }
+
+  resetFilterForm() {
+    this.paperFilterForm.setValue({
+      submitted: true,
+      assigned: null,
+      type: null
+    });
   }
 
 }

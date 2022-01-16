@@ -26,3 +26,10 @@ export function parseDate(dateStr: string) {
   return date;
 }
 
+export function arrayMap<T, K extends keyof any>(arr: T[], getKey: (item: T) => K) {
+  return arr.reduce((map, val) => {
+    map[getKey(val)] = val;
+    return map;
+  }, {} as Record<K, T>);
+}
+

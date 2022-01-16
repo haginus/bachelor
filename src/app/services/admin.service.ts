@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { AuthService, Domain, Paper, SessionSettings, UserData, Committee, CommitteeMember } from './auth.service';
+import { AuthService, Domain, Paper, SessionSettings, UserData, Committee, CommitteeMember, PaperType } from './auth.service';
 import { Topic } from './topics.service';
 
 @Injectable({
@@ -300,10 +300,13 @@ export class AdminService {
       url += `&isValid=${filter.isValid}`;
     }
     if(filter?.isNotValid != undefined) {
-      url += `&isValid=${filter.isNotValid}`;
+      url += `&isNotValid=${filter.isNotValid}`;
     }
     if(filter?.submitted != undefined) {
       url += `&submitted=${filter.submitted}`;
+    }
+    if(filter?.type != undefined) {
+      url += `&type=${filter.type}`;
     }
     if(minified == true) {
       url += `&minified=1`;
@@ -401,6 +404,8 @@ export interface GetPapersFilter {
   isNotValid?: boolean;
   /** If papers must be submitted. */
   submitted?: boolean;
+  /** Paper type */
+  type?: PaperType;
 }
 
 export interface PaperQueryResult {
