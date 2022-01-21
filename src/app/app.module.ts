@@ -15,16 +15,20 @@ import { MatPaginatorIntlRo } from './providers/mat-paginator-intl-ro';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { RECAPTCHA_LANGUAGE, RECAPTCHA_SETTINGS, RecaptchaModule } from "ng-recaptcha";
 import { environment } from 'src/environments/environment';
+import { ProblemReportComponent } from './components/problem-report/problem-report.component';
+import { MatSelectModule } from '@angular/material/select';
 
 const materialDeps = [
-  MatSidenavModule
+  MatSidenavModule,
+  MatSelectModule
 ]
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    ProblemReportComponent
   ],
   imports: [
     BrowserModule,

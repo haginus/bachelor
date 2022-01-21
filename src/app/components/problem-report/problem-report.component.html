@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>Raportați o problemă sau oferiți feedback</h2>
+<app-loading class="in-dialog" color="primary" *ngIf="isSendingMessage"></app-loading>
+<mat-dialog-content>
+  <form [formGroup]="problemReportForm" fxLayout="row grid" fxLayoutGap="10px grid">
+     <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Tip mesaj *</mat-label>
+        <mat-select formControlName="type">
+          <mat-option value="data">Inadvertențe ale datelor</mat-option>
+          <mat-option value="feedback">Feedback</mat-option>
+          <mat-option value="bug">Raportare de probleme tehnice</mat-option>
+          <mat-option value="question">Întrebări cu privire la platformă</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Descrieți *</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+        <mat-hint *ngIf="problemType.value == 'data'">
+          Precizați ce date sunt incorecte și valorile corecte ale acestora.
+        </mat-hint>
+        <mat-error>Descrierea trebuie să aibă între 16 și 1024 de caractere.</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>E-mail de contact *</mat-label>
+        <input type="email" matInput formControlName="email" />
+        <mat-error>Introduceți un e-mail valid.</mat-error>
+      </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Anulați</button>
+  <button mat-raised-button color="primary" (click)="sendForm()" [disabled]="problemReportForm.invalid">Trimiteți</button>
+</mat-dialog-actions>
