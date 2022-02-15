@@ -41,7 +41,8 @@ export class AdminStudentsComponent implements OnInit, AfterViewInit {
     domainId: new FormControl(null),
     specializationId: new FormControl({ value: null, disabled: true }),
     group: new FormControl(null),
-    promotion: new FormControl(null)
+    promotion: new FormControl(null),
+    email: new FormControl(null)
   });
 
   showFilters = false;

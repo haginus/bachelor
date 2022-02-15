@@ -374,6 +374,7 @@ export interface StudentQueryFilters {
   specializationId: number;
   group: number;
   promotion: number;
+  email: string;
 }
 
 export interface StudentQueryResult {

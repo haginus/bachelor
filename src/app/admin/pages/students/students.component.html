@@ -72,6 +72,10 @@
                     <mat-label>Promoție</mat-label>
                     <input matInput type="number" formControlName="promotion" name="promotion"/>
                 </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="50">
+                    <mat-label>E-mail</mat-label>
+                    <input matInput type="text" formControlName="email" name="student_email"/>
+                </mat-form-field>
             </form>
         </div>
         <div class="loading-shade" *ngIf="isLoadingResults">
@@ -146,7 +150,7 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
                 <tr class="mat-row" *matNoDataRow>
-                    <td class="mat-cell" colspan="7">Nu există studenți.</td>
+                    <td class="mat-cell" colspan="9">Nu există studenți.</td>
                 </tr>
             </table>
         </div>
