@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService, UserData } from 'src/app/services/auth.service';
 import { MiscService } from 'src/app/services/misc.service';
 
 @Component({
@@ -20,6 +20,7 @@ export class ProblemReportComponent implements OnInit, OnDestroy {
     type: new FormControl(this.data?.type, [Validators.required]),
     description: new FormControl(null, [Validators.required, Validators.minLength(16), Validators.maxLength(1024)]),
     email: new FormControl(this.data?.email, [Validators.required, Validators.email]),
+    fullName: new FormControl('', []),
   });
 
   get problemType() {
@@ -27,6 +28,7 @@ export class ProblemReportComponent implements OnInit, OnDestroy {
   }
 
   userDataSubscription: Subscription;
+  user: UserData;
   isSendingMessage: boolean = false;
 
   ngOnInit(): void {
@@ -35,7 +37,12 @@ export class ProblemReportComponent implements OnInit, OnDestroy {
     }
     if(!this.data?.email) {
       this.userDataSubscription = this.auth.userData.subscribe(user => {
-        this.problemReportForm.get("email").setValue(user.email);
+        this.user = user;
+        if(!user) {
+          this.problemReportForm.get("fullName").setValidators([Validators.required]);
+        } else {
+          this.problemReportForm.get("email").setValue(user.email);
+        }
       });
     }
   }
@@ -46,7 +53,12 @@ export class ProblemReportComponent implements OnInit, OnDestroy {
 
   sendForm() {
     this.isSendingMessage = true;
-    this.misc.sendProblemReport(this.problemReportForm.value).subscribe(result => {
+    this.problemType.enable();
+    const formValue = this.problemReportForm.value;
+    if(this.data?.type) {
+      this.problemType.disable();
+    }
+    this.misc.sendProblemReport(formValue).subscribe(result => {
       if(result) {
         this.dialog.close();
         this.snackbar.open("Mesajul a fost trimis. Ați primit o copie pe e-mail.");

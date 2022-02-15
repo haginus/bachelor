@@ -5,7 +5,7 @@
      <mat-form-field appearance="outline" fxFlex="100">
         <mat-label>Tip mesaj *</mat-label>
         <mat-select formControlName="type">
-          <mat-option value="data">Inadvertențe ale datelor</mat-option>
+          <mat-option value="data">Inadvertențe ale datelor sau probleme de logare</mat-option>
           <mat-option value="feedback">Feedback</mat-option>
           <mat-option value="bug">Raportare de probleme tehnice</mat-option>
           <mat-option value="question">Întrebări cu privire la platformă</mat-option>
@@ -18,6 +18,11 @@
           Precizați ce date sunt incorecte și valorile corecte ale acestora.
         </mat-hint>
         <mat-error>Descrierea trebuie să aibă între 16 și 1024 de caractere.</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100" *ngIf="!user">
+        <mat-label>Nume și prenume *</mat-label>
+        <input type="text" matInput formControlName="fullName" />
+        <mat-error>Introduceți numele întreg.</mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100">
         <mat-label>E-mail de contact *</mat-label>

@@ -111,10 +111,13 @@ export class AuthService {
   }
 
   getPrivateHeaders() {
+    let headers = new HttpHeaders();
+    const token = this.getToken();
+    if(token) {
+      headers = headers.append('Authorization', 'Bearer ' + token);
+    }
     return {
-      headers: new HttpHeaders({
-        Authorization: 'Bearer ' + this.getToken(),
-      }),
+      headers,
       withCredentials: false,
     };
   }
