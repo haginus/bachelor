@@ -1,6 +1,19 @@
 .main-drawer {
     cursor: default;
     min-width: 280px;
+    ::ng-deep .mat-drawer-inner-container {
+        display: flex;
+        flex-direction: column;
+        .scroll-menu {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .drawer-footer {
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            padding: 8px;
+        }
+    }
 }
 
 .main-container {

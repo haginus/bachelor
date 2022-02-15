@@ -4,6 +4,10 @@
     height: 100%;
 }
 
+.page-container {
+    flex-direction: column;
+}
+
 mat-form-field {
     width: 100%;
 }
@@ -33,4 +37,19 @@ mat-form-field {
 
 .captcha-container {
     margin-bottom: 16px;
+}
+
+.footer {
+    color: #757575;
+    text-align: center;
+    max-width: 430px;
+    margin-top: 8px;
+    span {
+        display: inline-block;
+    }
+    .link {
+        margin-top: 4px;
+        font-weight: 500;
+        cursor: pointer;
+    }
 }

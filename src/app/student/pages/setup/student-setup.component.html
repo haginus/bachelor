@@ -60,7 +60,8 @@
                 </mat-list-item>
             </mat-list>
             <mat-checkbox formControlName="isValid" class="v-checkbox wrap">
-                Confirm că datele sunt corecte.
+                <span>Confirm că datele sunt corecte. </span>
+                <a class="link" (click)="sendProblem($event)">Date incorecte?</a>
             </mat-checkbox>
             <br>
             <mat-checkbox formControlName="hasAgreed" class="v-checkbox wrap">

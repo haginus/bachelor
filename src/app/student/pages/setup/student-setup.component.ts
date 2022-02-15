@@ -6,6 +6,8 @@ import { Observable, Subscription } from 'rxjs';
 import { AuthService, UserData } from 'src/app/services/auth.service';
 import { Topic, TopicsService } from 'src/app/services/topics.service';
 import { FUNDING_FORMS, STUDY_FORMS } from 'src/app/lib/constants';
+import { MatDialog } from '@angular/material/dialog';
+import { ProblemReportComponent, ProblemReportDialogData } from 'src/app/components/problem-report/problem-report.component';
 
 @Component({
   selector: 'student-setup',
@@ -14,7 +16,8 @@ import { FUNDING_FORMS, STUDY_FORMS } from 'src/app/lib/constants';
 })
 export class StudentSetupComponent implements OnInit, OnDestroy {
 
-  constructor(private topicsService: TopicsService, private userService: AuthService, private router: Router) { }
+  constructor(private topicsService: TopicsService, private userService: AuthService, private router: Router,
+    private dialog: MatDialog) { }
 
   userObservable: any;
   loadingUser: boolean = true;
@@ -65,6 +68,15 @@ export class StudentSetupComponent implements OnInit, OnDestroy {
         this.router.navigate(['student']);
       }
     })
+  }
+
+  sendProblem(event: Event) {
+    event.preventDefault();
+    this.dialog.open<ProblemReportComponent, ProblemReportDialogData>(ProblemReportComponent, {
+      data: {
+        type: "data"
+      }
+    });
   }
 
   ngOnDestroy(): void {
