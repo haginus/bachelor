@@ -43,6 +43,7 @@ export class TeacherPapersComponent implements OnInit, OnDestroy {
   paperSubscription: Subscription;
   sessionSettingsSubscription: Subscription;
   canAddPapers: boolean = true;
+  canUploadDocuments: boolean = false;
 
   @ViewChild('table') table: MatTable<Paper>;
 
@@ -62,6 +63,7 @@ export class TeacherPapersComponent implements OnInit, OnDestroy {
 
     this.sessionSettingsSubscription = this.auth.getSessionSettings().subscribe(settings => {
       this.canAddPapers = canApply(settings);
+      this.canUploadDocuments = Date.now() >= new Date(settings.fileSubmissionStartDate).getTime();
     });
   }
 

@@ -28,7 +28,7 @@
                     <mat-icon *ngIf="!paperNeedsAttentionMap[row.id]" class="status-icon done"
                     matTooltip="Documente necesare încărcate"
                     >done</mat-icon>
-                    <mat-icon *ngIf="paperNeedsAttentionMap[row.id]" class="status-icon warn"
+                    <mat-icon *ngIf="paperNeedsAttentionMap[row.id] && canUploadDocuments" class="status-icon warn"
                     matTooltip="Necesită atenție"
                     >priority_high</mat-icon>
                 </td>
@@ -83,7 +83,7 @@
                             <app-paper-document-list [paperId]="paper.id"
                                 [requiredDocuments]="paper.requiredDocuments"
                                 [documents]="paper.documents"
-                                [canEdit]="paper.isValid == null"
+                                [canEdit]="paper.isValid == null && canUploadDocuments"
                                 perspective="teacher"
                                 (documentEvents)="handleDocumentEvents($event, paper.id)"
                                 (areDocumentsUploaded)="handleAreDocumentsUploadedEvent($event, paper)"
