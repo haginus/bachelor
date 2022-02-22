@@ -1,10 +1,22 @@
 [
-    {
-        "question": "Ce se întâmplă în momentul în care accept o ofertă?",
-        "answer": "Odată ce acceptați o ofertă, se va crea o asociere între dumneavoastră și student sub forma unei lucrări.\nPuteți accesa lucrarea în meniul „Lucrări coordonate”."
-    },
-    {
-        "question": "Pot renunța la o lucrare cu un student?",
-        "answer": "Da, numai dvs. puteți efectua această acțiune.\nDin meniu, selectați „Lucrări coordonate”, apăsați pe lucrarea la care care doriți să renunțați, apăsați pe iconița cu trei puncte și selectați „Rupeți asocierea”.\nStudentul va putea apoi să își caute alt profesor."
-    }
+  {
+    "question": "Ce este și cum adaug o ofertă?",
+    "answer": "Ofertele reprezintă disponibilitatea dumneavoastră de a coordona noi lucrări. La adăugarea unei oferte, puteți selecta studenții cărora vă adresați prin alegerea domeniului. Fiecare ofertă trebuie să aibă cel puțin o temă (o etichetă generală a lucrărilor pe care vreți să le coordonați; ex. Aplicații web). Dacă sunteți în căutarea unor teme mai specifice, puteți folosi câmpul de descriere al ofertei. De asemena, puteți seta numărul de locuri limită pentru o anumită ofertă - odată atinsă limita, studenții nu mai poi aplica la acea ofertă."
+  },
+  {
+    "question": "Cum adaug manual lucrări deja coordonate?",
+    "answer": "În cazul în care aveți deja o înțelegere cu un student care s-a concretizat în afara platformei, puteți adăuga lucrarea acestuia manual. În meniul „Lucrări coordonate” apăsați butonul „Adăugați o lucrare”. Va trebui să înscrieți titlul, descrierea și cel puțin o etichetă pentru lucrare. Mergând la pasul următor, va trebui să căutați și să alegeți studentul cu care sunteți asociat. În final veți vedea un ecran cu rezultatul, pe care îl puteți salva sau modifica întocându-vă la pașii anteriori."
+  },
+  {
+    "question": "Ce înseamnă iconița ❗️ din dreptul lucrărilor coordonate?",
+    "answer": "Această iconiță apare în cazul în care aveți de încărcat documente pentru lucrarea respectivă (precum referatul profesorului coordonator). În momentul în care ați încărcat toate documentele, aceasta se va transforma în ✔️. Aceste două iconițe au mai mult rolul de vă ajuta să indentificați rapid lucrările pentru care încă nu ați încărcat documentele necesare."
+  },
+  {
+    "question": "Ce se întâmplă în momentul în care accept o ofertă?",
+    "answer": "Odată ce acceptați o ofertă, se va crea o asociere între dumneavoastră și student sub forma unei lucrări.\nPuteți accesa lucrarea în meniul „Lucrări coordonate”."
+  },
+  {
+    "question": "Pot renunța la o lucrare cu un student?",
+    "answer": "Da, numai dvs. puteți efectua această acțiune.\nDin meniu, selectați „Lucrări coordonate”, apăsați pe lucrarea la care care doriți să renunțați, apăsați pe iconița cu trei puncte și selectați „Rupeți asocierea”.\nStudentul va putea apoi să își caute alt profesor."
+  }
 ]
