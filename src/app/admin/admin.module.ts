@@ -30,6 +30,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { TopicBulkDeleteDialogComponent } from './dialogs/topic-bulk-delete-dialog/topic-bulk-delete-dialog.component';
 
 const materialDeps = [
   MatPaginatorModule,
@@ -39,6 +41,7 @@ const materialDeps = [
   MatSortModule,
   MatSlideToggleModule,
   MatButtonToggleModule,
+  MatCheckboxModule
 ]
 
 @NgModule({
@@ -61,7 +64,8 @@ const materialDeps = [
     CommitteeDialogComponent,
     PaperAssignComponent,
     AdminPapersComponent,
-    NewSessionDialogComponent
+    NewSessionDialogComponent,
+    TopicBulkDeleteDialogComponent
   ],
   imports: [
     CommonModule,

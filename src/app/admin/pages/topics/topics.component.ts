@@ -1,11 +1,14 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { BehaviorSubject, merge, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { Selectable } from 'src/app/lib/models/Selectable';
 import { AdminService } from 'src/app/services/admin.service';
 import { Topic, TopicsService } from 'src/app/services/topics.service';
+import { TopicBulkDeleteDialogComponent } from '../../dialogs/topic-bulk-delete-dialog/topic-bulk-delete-dialog.component';
 import { AdminTopicDialogComponent } from '../../dialogs/topic-dialog/topic-dialog.component';
 
 @Component({
@@ -22,6 +25,9 @@ export class AdminTopicsComponent implements OnInit, AfterViewInit {
   isLoadingResults: boolean = true;
   isError: boolean = false;
   data: Topic[];
+  topicsSelectable = new Selectable<Topic>((topic) => topic.id);
+  selectableOpen: boolean = false;
+
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -45,12 +51,14 @@ export class AdminTopicsComponent implements OnInit, AfterViewInit {
         map(data => {
           this.isLoadingResults = false;
           this.resultsLength = data.count;
+          this.topicsSelectable.setCurrentPage(data.rows);
           return data.rows;
         }),
         catchError(() => {
           this.isLoadingResults = false;
           this.isError = true;
-          return of([]);
+          this.topicsSelectable.setCurrentPage([]);
+          return of([] as Topic[]);
         })
       ).subscribe(data => this.data = data);
   }
@@ -85,22 +93,48 @@ export class AdminTopicsComponent implements OnInit, AfterViewInit {
   }
 
   deleteTopic(id: number) {
+    const topic = this.data.find(topic => topic.id == id);
     let dialogRef = this.dialog.open(AdminTopicDialogComponent, {
       data: {
         mode: 'delete',
-        topic: this.data.find(topic => topic.id == id)
+        topic
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
         this.performedActions.next('deleteTopic');
+        this.topicsSelectable.toggleItem(topic, false);
       }
     });
   }
 
   refreshResults() {
     this.performedActions.next('refresh');
+  }
+
+  toggleSelectable() {
+    if(this.selectableOpen) {
+      this.displayedColumns = ['id', 'name', 'actions'];
+      this.topicsSelectable.reset();
+
+    } else {
+      this.displayedColumns = ['select', 'id', 'name', 'actions'];
+    }
+    this.selectableOpen = !this.selectableOpen;
+  }
+
+  bulkDelete() {
+    const dialogRef = this.dialog.open(TopicBulkDeleteDialogComponent, {
+      data: this.topicsSelectable.selectedItems
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.performedActions.next('deleteTopic');
+        this.toggleSelectable();
+      }
+    });
   }
 
 }

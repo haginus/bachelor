@@ -216,6 +216,17 @@ export class AdminService {
     );
   }
 
+  deleteTopics(ids: number[], moveId: number): Observable<boolean> {
+    const url = `${environment.apiUrl}/admin/topics/bulk-delete`;
+    return this.http
+      .post<boolean>(url, { ids, moveId }, this.auth.getPrivateHeaders())
+      .pipe(
+        map(_ => true),
+        catchError(this.handleError<boolean>('deleteTopic', false)
+      )
+    );
+  }
+
   // Committees
 
   getCommittees(): Observable<Committee[]> {

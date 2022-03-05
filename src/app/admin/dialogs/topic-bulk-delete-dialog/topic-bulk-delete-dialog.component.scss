@@ -1,0 +1,21 @@
+:host {
+  display: block;
+  position: relative;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.topic-list {
+  max-height: 20vh;
+  overflow: auto;
+  margin-bottom: 16px;
+
+  .topic {
+    padding: 12px 8px;
+    background: #eee;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+}
