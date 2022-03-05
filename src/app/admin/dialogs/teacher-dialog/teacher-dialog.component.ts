@@ -28,7 +28,7 @@ export class AdminTeacherDialogConmonent implements OnInit {
   teacherForm = new FormGroup({
     'firstName': new FormControl(this.data.data?.firstName, [Validators.required]),
     'lastName': new FormControl(this.data.data?.lastName, [Validators.required]),
-    'title': new FormControl(this.data.data?.title, [Validators.required]),
+    'title': new FormControl(this.data.data?.title),
     'CNP': new FormControl(this.data.data?.CNP, [CNPValidator]),
     'email': new FormControl({ value: this.data.data?.email, disabled: true }, [Validators.email, Validators.required]),
   });

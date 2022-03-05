@@ -4,8 +4,9 @@
 <mat-dialog-content class="mat-typography" *ngIf="data.mode == 'edit' || data.mode == 'create'">
     <form [formGroup]="teacherForm">
         <mat-form-field appearance="outline">
-            <mat-label>Titlu *</mat-label>
+            <mat-label>Titlu</mat-label>
             <mat-select formControlName="title">
+                <mat-option [value]="null">-- Fără titlu --</mat-option>
                 <mat-option value="Prof.dr.">Prof.dr.</mat-option>
                 <mat-option value="Conf.dr.">Conf.dr.</mat-option>
                 <mat-option value="Lect.dr.">Lect.dr.</mat-option>
@@ -38,7 +39,7 @@
         <div mat-subheader>Date personale</div>
         <mat-list-item>
             <div mat-line>Titlu</div>
-            <div mat-line>{{data.data.title}}</div>
+            <div mat-line>{{data.data.title || '-'}}</div>
         </mat-list-item>
         <mat-list-item>
             <div mat-line>Nume</div>
@@ -50,7 +51,7 @@
         </mat-list-item>
         <mat-list-item>
             <div mat-line>CNP</div>
-            <div mat-line>{{data.data.CNP}}</div>
+            <div mat-line>{{data.data.CNP || '-'}}</div>
         </mat-list-item>
         <mat-list-item>
             <div mat-line>E-mail</div>
