@@ -1,0 +1,17 @@
+version: '3.5'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./docker/nginx_slim:/etc/nginx/conf.d
+    expose:
+      - "80"
+
+networks:
+  default:
+    external: true
+    name: bachelor
