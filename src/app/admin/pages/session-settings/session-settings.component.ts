@@ -4,7 +4,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AdminService } from 'src/app/services/admin.service';
-import { AuthService, SessionSettings } from 'src/app/services/auth.service';
+import { AuthService, SessionSettings, SessionSettingsI } from 'src/app/services/auth.service';
 import { DocumentService } from 'src/app/services/document.service';
 import { NewSessionDialogComponent } from '../../dialogs/new-session-dialog/new-session-dialog.component';
 
@@ -22,10 +22,24 @@ export class SessionSettingsComponent implements OnInit {
     this.auth.getSessionSettings().subscribe(settings => {
       this.sessionSettings = settings;
       if(settings) {
-        this.settingsForm.setValue(this.sessionSettings);
+        this.setFormValue(settings);
       }
       this.isLoadingSettings = false;
     });
+  }
+
+  private setFormValue(sessionSettings: SessionSettings) {
+    const settings = {
+      sessionName: sessionSettings.sessionName,
+      currentPromotion: sessionSettings.currentPromotion,
+      applyStartDate: sessionSettings.applyStartDate,
+      applyEndDate: sessionSettings.applyEndDate,
+      fileSubmissionStartDate: sessionSettings.fileSubmissionStartDate,
+      fileSubmissionEndDate: sessionSettings.fileSubmissionEndDate,
+      paperSubmissionEndDate: sessionSettings.paperSubmissionEndDate,
+      allowGrading: sessionSettings.allowGrading
+    };
+    this.settingsForm.setValue(settings);
   }
 
   sessionSettings: SessionSettings = null;
@@ -46,7 +60,7 @@ export class SessionSettingsComponent implements OnInit {
   settingsFormMatcher = new SettingsFormErrorStateMatcher();
 
   saveSettings() {
-    const settings = this.settingsForm.value as SessionSettings;
+    const settings = new SessionSettings(this.settingsForm.value);
     this.isLoadingSettings = true;
     this.admin.changeSessionSettings(settings).subscribe(settings => {
       // If the update was successful

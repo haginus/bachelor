@@ -6,7 +6,7 @@ import { MatTable } from '@angular/material/table';
 import { BehaviorSubject, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { PAPER_TYPES } from 'src/app/lib/constants';
-import { canApply } from 'src/app/lib/utils';
+import { parseDate } from 'src/app/lib/utils';
 import { AuthService, Paper } from 'src/app/services/auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
@@ -62,8 +62,8 @@ export class TeacherPapersComponent implements OnInit, OnDestroy {
     });
 
     this.sessionSettingsSubscription = this.auth.getSessionSettings().subscribe(settings => {
-      this.canAddPapers = canApply(settings);
-      this.canUploadDocuments = Date.now() >= new Date(settings.fileSubmissionStartDate).getTime();
+      this.canAddPapers = settings.canApply();
+      this.canUploadDocuments = Date.now() >= parseDate(settings.fileSubmissionStartDate, settings.timezoneOffset).getTime();
     });
   }
 

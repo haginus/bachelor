@@ -46,16 +46,13 @@ export class PaperDocumentListComponent implements OnChanges {
     if(!this.sessionSettings) {
       return true;
     }
-    let today: number = new Date().setHours(0, 0, 0, 0);
-    let startDate: number, endDate: number;
     if(category == 'secretary_files') {
-      startDate = new Date(this.sessionSettings.fileSubmissionStartDate).setHours(0, 0, 0, 0);
-      endDate = new Date(this.sessionSettings.fileSubmissionEndDate).setHours(0, 0, 0, 0);
+      return this.sessionSettings.canUploadSecretaryFiles();
     } else if(category == 'paper_files') {
-      startDate = new Date(this.sessionSettings.fileSubmissionStartDate).setHours(0, 0, 0, 0);
-      endDate = new Date(this.sessionSettings.paperSubmissionEndDate).setHours(0, 0, 0, 0);
+      return this.sessionSettings.canUploadPaperFiles();
+    } else {
+      return true;
     }
-    return startDate <= today && today <= endDate;
   } 
 
   private _computeNextAction(doc: DocumentMapElement): DocumentAction {

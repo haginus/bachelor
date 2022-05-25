@@ -16,13 +16,23 @@ import { SessionSettings } from "../services/auth.service";
 //   })
 // }
 
-export function canApply(sessionSettings: SessionSettings) {
-  const now = Date.now();
-  return parseDate(sessionSettings.applyStartDate).getTime() <= now && now <= parseDate(sessionSettings.applyEndDate).getTime();
+export function inclusiveDate(dateStr: string | Date, timezoneOffset: number = 0) {
+  const date = parseDate(dateStr, timezoneOffset);
+  date.setDate(date.getDate() + 1);
+  return date;
 }
 
-export function parseDate(dateStr: string) {
-  const date = new Date(dateStr);
+export function parseDate(dateStr: string | Date, timezoneOffset: number = null) {
+  if(timezoneOffset == null) {
+    return new Date(dateStr);
+  }
+  const offset = Math.abs(timezoneOffset);
+  const hourOffset = ('' + Math.floor(offset / 60)).padStart(2, '0');
+  const minuteOffset = ('' + offset % 60).padStart(2, '0');
+  const sign = timezoneOffset > 0 ? '-' : '+';
+  const timezone = `UTC${sign}${hourOffset}${minuteOffset}`;
+  const date = new Date(`${dateStr} ${timezone}`);
+  console.log(dateStr, date);
   return date;
 }
 

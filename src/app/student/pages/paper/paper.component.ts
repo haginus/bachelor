@@ -10,6 +10,7 @@ import { PAPER_TYPES } from 'src/app/lib/constants';
 import { AreDocumentsUploaded, PaperDocumentEvent } from '../../../shared/paper-document-list/paper-document-list.component';
 import { EditPaperComponent } from '../../dialogs/edit-paper/edit-paper.component';
 import { StudentExtraDataEditorComponent } from '../../dialogs/student-extra-data-editor/student-extra-data-editor.component';
+import { inclusiveDate, parseDate } from 'src/app/lib/utils';
 
 @Component({
   selector: 'app-student-paper',
@@ -55,17 +56,16 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   }
 
   private _checkSubmissionPeriod(): void {
-    const today = new Date().setHours(0, 0, 0, 0);
-    const startDateSecretary = new Date(this.sessionSettings.fileSubmissionStartDate).setHours(0, 0, 0, 0);
-    const endDateSecretary = new Date(this.sessionSettings.fileSubmissionEndDate).setHours(0, 0, 0, 0);
+    const today = Date.now();
+    const to = this.sessionSettings.timezoneOffset;
+    const startDateSecretary = parseDate(this.sessionSettings.fileSubmissionStartDate, to).getTime();
+    const endDateSecretary = inclusiveDate(this.sessionSettings.fileSubmissionEndDate, to).getTime();
 
-    const endDatePaper = new Date(this.sessionSettings.paperSubmissionEndDate).setHours(0, 0, 0, 0);
-
-    this.canUploadSecretaryFiles = startDateSecretary <= today && today <= endDateSecretary;
-    this.canUploadPaperFiles = startDateSecretary <= today && today <= endDatePaper;
+    this.canUploadSecretaryFiles = this.sessionSettings.canUploadSecretaryFiles();
+    this.canUploadPaperFiles =this.sessionSettings.canUploadPaperFiles();
     this.submissionStarted = today >= startDateSecretary;
     
-    const paperCreatedAt = new Date(this.paper?.createdAt);
+    const paperCreatedAt = parseDate(this.paper?.createdAt.split('T').join(' '), to);
     const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
     this.canEditPaper = (paperCreatedAt.getTime() + SEVEN_DAYS <= today || today + SEVEN_DAYS >= endDateSecretary) &&
       today <= endDateSecretary;

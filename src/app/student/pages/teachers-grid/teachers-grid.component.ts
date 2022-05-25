@@ -55,10 +55,7 @@ export class StundentTeachersGridComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.auth.sessionSettings.pipe(
       map(settings => {
-        const today = new Date().getTime();
-        const start = new Date(settings.applyStartDate).getTime();
-        const end = new Date(settings.applyEndDate).getTime();
-        return start <= today && today <= end;
+        return settings.canApply();
       })
     ).subscribe(result => this.canApply = result);
 

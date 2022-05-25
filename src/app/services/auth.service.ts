@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, map, take, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { inclusiveDate, parseDate } from '../lib/utils';
 import { PaperRequiredDocument } from './student.service';
 import { Topic } from './topics.service';
 
@@ -137,7 +138,8 @@ export class AuthService {
 
   getSessionSettings(): Observable<SessionSettings> {
     const url = `${environment.apiUrl}/auth/session`;
-    return this.http.get<SessionSettings>(url).pipe(
+    return this.http.get<SessionSettingsI>(url).pipe(
+      map(settings => new SessionSettings(settings)),
       catchError((err, caught) => { 
         return of(null);
       })
@@ -352,7 +354,7 @@ export interface PaperGrade {
   }
 }
 
-export interface SessionSettings {
+export interface SessionSettingsI {
   sessionName: string, // name of the session
   currentPromotion: string,
   applyStartDate: string, // YYYY-MM-DD
@@ -360,7 +362,51 @@ export interface SessionSettings {
   fileSubmissionStartDate: string,
   fileSubmissionEndDate: string,
   paperSubmissionEndDate: string,
-  allowGrading: boolean
+  allowGrading: boolean,
+  timezoneOffset: number
+}
+
+export class SessionSettings implements SessionSettingsI {
+  public sessionName: string;
+  public currentPromotion: string;
+  public applyStartDate: string;
+  public applyEndDate: string;
+  public fileSubmissionStartDate: string;
+  public fileSubmissionEndDate: string;
+  public paperSubmissionEndDate: string;
+  public allowGrading: boolean;
+  public timezoneOffset: number;
+
+  constructor(sessionSettings: SessionSettingsI) {
+    this.sessionName = sessionSettings.sessionName;
+    this.currentPromotion = sessionSettings.currentPromotion;
+    this.applyStartDate = sessionSettings.applyStartDate;
+    this.applyEndDate = sessionSettings.applyEndDate;
+    this.fileSubmissionStartDate = sessionSettings.fileSubmissionStartDate;
+    this.fileSubmissionEndDate = sessionSettings.fileSubmissionEndDate;
+    this.paperSubmissionEndDate = sessionSettings.paperSubmissionEndDate;
+    this.allowGrading = sessionSettings.allowGrading;
+    this.timezoneOffset = sessionSettings.timezoneOffset;
+  }
+
+  public canApply(): boolean {
+    const startDate = parseDate(this.applyStartDate, this.timezoneOffset);
+    console.log('start date', startDate)
+    const endDate = inclusiveDate(this.applyEndDate, this.timezoneOffset);
+    return startDate.getTime() <= Date.now() && Date.now() <= endDate.getTime();
+  }
+
+  public canUploadSecretaryFiles() {
+    const startDate = parseDate(this.fileSubmissionStartDate, this.timezoneOffset);
+    const endDate = inclusiveDate(this.fileSubmissionEndDate, this.timezoneOffset);
+    return startDate.getTime() <= Date.now() && Date.now() <= endDate.getTime();
+  }
+
+  public canUploadPaperFiles() {
+    const startDate = parseDate(this.fileSubmissionStartDate, this.timezoneOffset);
+    const endDate = inclusiveDate(this.paperSubmissionEndDate, this.timezoneOffset);
+    return startDate.getTime() <= Date.now() && Date.now() <= endDate.getTime();
+  }
 }
 
 export interface Committee {
