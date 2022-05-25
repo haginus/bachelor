@@ -157,6 +157,8 @@
                 <button mat-icon-button matTooltip="Lăsați feedback" (click)="sendFeedback()">
                     <mat-icon>feedback</mat-icon>
                 </button>
+                <span class="flex-spacer"></span>
+                <em class="app-version" *ngIf="user?.type == 'admin'">v{{ appVersion }}</em>
             </div>
         </mat-drawer>
 

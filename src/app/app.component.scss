@@ -10,8 +10,15 @@
         }
 
         .drawer-footer {
+            display: flex;
             border-top: 1px solid rgba(0, 0, 0, 0.08);
             padding: 8px;
+            align-items: center;
+
+            .app-version {
+                color: #757575;
+                user-select: none;
+            }
         }
     }
 }

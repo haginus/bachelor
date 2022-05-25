@@ -4,6 +4,7 @@ import { MatDrawer, MatDrawerMode } from '@angular/material/sidenav';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators'
+import { environment } from 'src/environments/environment';
 import { routerFadeAnimation } from './animations';
 import { ProblemReportComponent } from './components/problem-report/problem-report.component';
 import { AuthService, SessionSettings, UserData } from './services/auth.service';
@@ -33,6 +34,7 @@ export class AppComponent implements OnInit {
   sessionSettings: SessionSettings;
   loading = true;
   backendDown = false;
+  appVersion = environment.appVersion;
 
   @ViewChild('drawer') drawer: MatDrawer;
 

@@ -2,10 +2,13 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import { version } from '../../package.json';
+
 export const environment = {
   production: false,
   apiUrl: "http://localhost:3000",
-  captchaKey: "6LcOV6YdAAAAAImFWD5zBvefQiIoDs65j5I4REdL"
+  captchaKey: "6LcOV6YdAAAAAImFWD5zBvefQiIoDs65j5I4REdL",
+  appVersion: version
 };
 
 /*
