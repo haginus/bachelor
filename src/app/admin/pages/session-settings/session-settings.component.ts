@@ -32,11 +32,11 @@ export class SessionSettingsComponent implements OnInit {
     const settings = {
       sessionName: sessionSettings.sessionName,
       currentPromotion: sessionSettings.currentPromotion,
-      applyStartDate: sessionSettings.applyStartDate,
-      applyEndDate: sessionSettings.applyEndDate,
-      fileSubmissionStartDate: sessionSettings.fileSubmissionStartDate,
-      fileSubmissionEndDate: sessionSettings.fileSubmissionEndDate,
-      paperSubmissionEndDate: sessionSettings.paperSubmissionEndDate,
+      applyStartDate: sessionSettings.applyStartDate.split('T')[0],
+      applyEndDate: sessionSettings.applyEndDate.split('T')[0],
+      fileSubmissionStartDate: sessionSettings.fileSubmissionStartDate.split('T')[0],
+      fileSubmissionEndDate: sessionSettings.fileSubmissionEndDate.split('T')[0],
+      paperSubmissionEndDate: sessionSettings.paperSubmissionEndDate.split('T')[0],
       allowGrading: sessionSettings.allowGrading
     };
     this.settingsForm.setValue(settings);

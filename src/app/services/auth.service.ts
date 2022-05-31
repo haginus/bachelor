@@ -363,7 +363,6 @@ export interface SessionSettingsI {
   fileSubmissionEndDate: string,
   paperSubmissionEndDate: string,
   allowGrading: boolean,
-  timezoneOffset: number
 }
 
 export class SessionSettings implements SessionSettingsI {
@@ -375,7 +374,6 @@ export class SessionSettings implements SessionSettingsI {
   public fileSubmissionEndDate: string;
   public paperSubmissionEndDate: string;
   public allowGrading: boolean;
-  public timezoneOffset: number;
 
   constructor(sessionSettings: SessionSettingsI) {
     this.sessionName = sessionSettings.sessionName;
@@ -386,25 +384,23 @@ export class SessionSettings implements SessionSettingsI {
     this.fileSubmissionEndDate = sessionSettings.fileSubmissionEndDate;
     this.paperSubmissionEndDate = sessionSettings.paperSubmissionEndDate;
     this.allowGrading = sessionSettings.allowGrading;
-    this.timezoneOffset = sessionSettings.timezoneOffset;
   }
 
   public canApply(): boolean {
-    const startDate = parseDate(this.applyStartDate, this.timezoneOffset);
-    console.log('start date', startDate)
-    const endDate = inclusiveDate(this.applyEndDate, this.timezoneOffset);
+    const startDate = parseDate(this.applyStartDate);
+    const endDate = inclusiveDate(this.applyEndDate);
     return startDate.getTime() <= Date.now() && Date.now() <= endDate.getTime();
   }
 
   public canUploadSecretaryFiles() {
-    const startDate = parseDate(this.fileSubmissionStartDate, this.timezoneOffset);
-    const endDate = inclusiveDate(this.fileSubmissionEndDate, this.timezoneOffset);
+    const startDate = parseDate(this.fileSubmissionStartDate);
+    const endDate = inclusiveDate(this.fileSubmissionEndDate);
     return startDate.getTime() <= Date.now() && Date.now() <= endDate.getTime();
   }
 
   public canUploadPaperFiles() {
-    const startDate = parseDate(this.fileSubmissionStartDate, this.timezoneOffset);
-    const endDate = inclusiveDate(this.paperSubmissionEndDate, this.timezoneOffset);
+    const startDate = parseDate(this.fileSubmissionStartDate);
+    const endDate = inclusiveDate(this.paperSubmissionEndDate);
     return startDate.getTime() <= Date.now() && Date.now() <= endDate.getTime();
   }
 }

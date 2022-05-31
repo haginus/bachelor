@@ -63,7 +63,7 @@ export class TeacherPapersComponent implements OnInit, OnDestroy {
 
     this.sessionSettingsSubscription = this.auth.getSessionSettings().subscribe(settings => {
       this.canAddPapers = settings.canApply();
-      this.canUploadDocuments = Date.now() >= parseDate(settings.fileSubmissionStartDate, settings.timezoneOffset).getTime();
+      this.canUploadDocuments = Date.now() >= parseDate(settings.fileSubmissionStartDate).getTime();
     });
   }
 
