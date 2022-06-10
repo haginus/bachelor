@@ -27,19 +27,38 @@
                     <mat-button-toggle [value]="null">Toate</mat-button-toggle>
                 </mat-button-toggle-group>
             </div>
-            <!-- <div fxFlex="50" fxFlex.lt-md="100">
-                <mat-button-toggle-group formControlName="validity" multiple>
+            <div fxFlex="50" fxFlex.lt-md="100">
+                <mat-button-toggle-group formControlName="validity">
                     <mat-button-toggle value="valid">Valide</mat-button-toggle>
                     <mat-button-toggle value="notValid">Invalide</mat-button-toggle>
                     <mat-button-toggle value="nullValid">Nevalidate</mat-button-toggle>
+                    <mat-button-toggle [value]="null">Toate</mat-button-toggle>
                   </mat-button-toggle-group>
-            </div> -->
+            </div>
             <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
                 <mat-label>Tip</mat-label>
                 <mat-select formControlName="type">
                     <mat-option [value]="null">--</mat-option>
                     <mat-option *ngFor="let type of PAPER_TYPES | keyvalue" [value]="type.key">
                         {{ type.value | titlecase }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+                <mat-label>Domeniu</mat-label>
+                <mat-select formControlName="domainId">
+                    <mat-option [value]="null">--</mat-option>
+                    <mat-option *ngFor="let domain of domains | async" [value]="domain.id">
+                        {{ domain.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+                <mat-label>Forma de învățământ</mat-label>
+                <mat-select formControlName="studyForm">
+                    <mat-option [value]="null">--</mat-option>
+                    <mat-option *ngFor="let type of STUDY_FORMS | keyvalue" [value]="type.key">
+                        {{ type.value }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>

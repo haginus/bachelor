@@ -319,6 +319,12 @@ export class AdminService {
     if(filter?.type != undefined) {
       url += `&type=${filter.type}`;
     }
+    if(filter?.domainId != undefined) {
+      url += `&domainId=${filter.domainId}`;
+    }
+    if(filter?.studyForm != undefined) {
+      url += `&studyForm=${filter.studyForm}`;
+    }
     if(minified == true) {
       url += `&minified=1`;
     }
@@ -426,6 +432,10 @@ export interface GetPapersFilter {
   submitted?: boolean;
   /** Paper type */
   type?: PaperType;
+  /** Student domain */
+  domainId?: number;
+  /** Student study form */
+  studyForm?: 'if' | 'id' | 'ifr';
 }
 
 export interface PaperQueryResult {

@@ -8,8 +8,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { BehaviorSubject, merge, Observable, of, Subscription } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
-import { PAPER_TYPES } from 'src/app/lib/constants';
-import { arrayMap } from 'src/app/lib/utils';
+import { PAPER_TYPES, STUDY_FORMS } from 'src/app/lib/constants';
 import { AdminService, GetPapersFilter } from 'src/app/services/admin.service';
 import { Paper } from 'src/app/services/auth.service';
 import { AreDocumentsUploaded, PaperDocumentEvent } from 'src/app/shared/paper-document-list/paper-document-list.component';
@@ -48,13 +47,17 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   PAPER_TYPES = PAPER_TYPES;
+  STUDY_FORMS = STUDY_FORMS;
+  domains = this.admin.getDomains();
   showFilters: boolean = false;
 
   paperFilterForm = new FormGroup({
-    //validity: new FormControl(['valid', 'notValid', 'nullValid']),
+    validity: new FormControl(null),
     submitted: new FormControl(true),
     assigned: new FormControl(null),
-    type: new FormControl(null)
+    type: new FormControl(null),
+    domainId: new FormControl(null),
+    studyForm: new FormControl(null),
   });
 
   ngOnInit() { }
@@ -90,6 +93,24 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
     }
     if(filterForm.type != null) {
       filter.type = filterForm.type;
+    }
+    if(filterForm.validity != null) {
+      if(filterForm.validity == 'valid') {
+        filter.isValid = true;
+      }
+      if(filterForm.validity == 'notValid') {
+        filter.isValid = false;
+      }
+      if(filterForm.validity == 'nullValid') {
+        filter.isValid = false;
+        filter.isNotValid = false;
+      }
+    }
+    if(filterForm.domainId != null) {
+      filter.domainId = filterForm.domainId;
+    }
+    if(filterForm.studyForm != null) {
+      filter.studyForm = filterForm.studyForm;
     }
     return filter;
   }
