@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Validați lucrarea</h2>
+
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="validatePaperForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Media generală a studentului</mat-label>
+      <input matInput type="text" formControlName="generalAverage">
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Anulați</button>
+  <button mat-button (click)="validate()" [disabled]="validatePaperForm.invalid">Validați</button>
+</mat-dialog-actions>

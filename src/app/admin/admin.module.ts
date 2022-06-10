@@ -32,6 +32,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TopicBulkDeleteDialogComponent } from './dialogs/topic-bulk-delete-dialog/topic-bulk-delete-dialog.component';
+import { PaperValidationDialogComponent } from './dialogs/paper-validation-dialog/paper-validation-dialog.component';
 
 const materialDeps = [
   MatPaginatorModule,
@@ -65,7 +66,8 @@ const materialDeps = [
     PaperAssignComponent,
     AdminPapersComponent,
     NewSessionDialogComponent,
-    TopicBulkDeleteDialogComponent
+    TopicBulkDeleteDialogComponent,
+    PaperValidationDialogComponent
   ],
   imports: [
     CommonModule,

@@ -328,11 +328,19 @@ export class AdminService {
   }
 
   /** Validate/Invalidate a paper by its ID. */
-  validatePaper(paperId: number, validate: boolean): Observable<boolean> {
+  validatePaper(paperId: number, validate: boolean, generalAverage?: number): Observable<boolean> {
     const url = `${environment.apiUrl}/admin/papers/validate`;
-    return this.http.post<any>(url, { paperId, validate }, this.auth.getPrivateHeaders()).pipe(
+    return this.http.post<any>(url, { paperId, validate, generalAverage }, this.auth.getPrivateHeaders()).pipe(
       map(_ => true),
-      catchError(this.handleError<boolean>('getPapers', false))
+      catchError(this.handleError<boolean>('validatePaper', false))
+    );
+  }
+
+  undoValidatePaper(paperId: number): Observable<boolean> {
+    const url = `${environment.apiUrl}/admin/papers/validate/undo`;
+    return this.http.post<any>(url, { paperId }, this.auth.getPrivateHeaders()).pipe(
+      map(_ => true),
+      catchError(this.handleError<boolean>('undoValidatePaper', false))
     );
   }
 

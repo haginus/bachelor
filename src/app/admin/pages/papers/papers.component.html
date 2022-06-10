@@ -130,6 +130,16 @@
                             <button mat-button [disabled]="paper.isLoading"
                             (click)="validatePaper(paper, false)">Invalidați lucrarea</button>
                         </div>
+                        <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px" class="paper-actions" *ngIf="paper.isValid != null">
+                            <div class="validation-result">
+                                <mat-icon *ngIf="paper.isValid" class="status-icon done">done</mat-icon>
+                                <mat-icon *ngIf="!paper.isValid" class="status-icon severe">close</mat-icon>
+                                <b>Lucrare {{ paper.isValid ? 'validată' : 'invalidată' }}</b>
+                            </div>
+                            <button mat-icon-button matTooltip="Reluați validarea" (click)="undoValidatePaper(paper)">
+                                <mat-icon>undo</mat-icon>
+                            </button>
+                        </div>
                         <app-paper-grade-table [paper]="paper" *ngIf="paper.isValid"></app-paper-grade-table>
                         <mat-list class="document-list">
                             <div mat-subheader>Documente</div>

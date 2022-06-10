@@ -24,6 +24,13 @@ table {
 
     .paper-actions {
         margin-top: 16px;
+        .validation-result {
+            display: flex;
+            align-items: center;
+            mat-icon {
+                margin-right: 8px;
+            }
+        }
     }
 
     .document-list {

@@ -6,7 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
-import { BehaviorSubject, merge, Subscription } from 'rxjs';
+import { BehaviorSubject, merge, Observable, of, Subscription } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
 import { PAPER_TYPES } from 'src/app/lib/constants';
 import { arrayMap } from 'src/app/lib/utils';
@@ -14,6 +14,7 @@ import { AdminService, GetPapersFilter } from 'src/app/services/admin.service';
 import { Paper } from 'src/app/services/auth.service';
 import { AreDocumentsUploaded, PaperDocumentEvent } from 'src/app/shared/paper-document-list/paper-document-list.component';
 import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
+import { PaperValidationDialogComponent } from '../../dialogs/paper-validation-dialog/paper-validation-dialog.component';
 
 @Component({
   selector: 'app-papers',
@@ -104,11 +105,37 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
   }
 
   validatePaper(paper: ExtendedPaper, validate: boolean) {
-    paper.isLoading = true;
-    this.admin.validatePaper(paper.id, validate).subscribe(result => {
+    let observable: Observable<boolean>;
+    if(validate) {
+      const dialog = this.dialog.open(PaperValidationDialogComponent);
+      observable = dialog.afterClosed().pipe(
+        switchMap(generalAverage => {
+          if(generalAverage) {
+            paper.isLoading = true;
+            return this.admin.validatePaper(paper.id, true, generalAverage);
+          }
+          return of(false);
+        })
+      );
+    } else {
+      paper.isLoading = true;
+      observable = this.admin.validatePaper(paper.id, false);
+    }
+    observable.subscribe(result => {
       if(result) {
         paper.isValid = validate;
         this.snackbar.open(validate ? "Lucrare validată" : "Lucrare invalidată" );
+      }
+      paper.isLoading = false;
+    });
+  }
+
+  undoValidatePaper(paper: ExtendedPaper) {
+    
+    this.admin.undoValidatePaper(paper.id).subscribe(result => {
+      if(result) {
+        paper.isValid = null;
+        this.snackbar.open("Validare anulată.");
       }
       paper.isLoading = false;
     })
