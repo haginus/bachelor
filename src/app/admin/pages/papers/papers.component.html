@@ -49,7 +49,7 @@
                 <mat-select formControlName="domainId">
                     <mat-option [value]="null">--</mat-option>
                     <mat-option *ngFor="let domain of domains | async" [value]="domain.id">
-                        {{ domain.name }}
+                        {{ domain.name }}, {{ DOMAIN_TYPES[domain.type] | titlecase }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>

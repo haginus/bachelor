@@ -8,7 +8,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { BehaviorSubject, merge, Observable, of, Subscription } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
-import { PAPER_TYPES, STUDY_FORMS } from 'src/app/lib/constants';
+import { DOMAIN_TYPES, PAPER_TYPES, STUDY_FORMS } from 'src/app/lib/constants';
 import { AdminService, GetPapersFilter } from 'src/app/services/admin.service';
 import { Paper } from 'src/app/services/auth.service';
 import { AreDocumentsUploaded, PaperDocumentEvent } from 'src/app/shared/paper-document-list/paper-document-list.component';
@@ -46,6 +46,7 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  DOMAIN_TYPES = DOMAIN_TYPES;
   PAPER_TYPES = PAPER_TYPES;
   STUDY_FORMS = STUDY_FORMS;
   domains = this.admin.getDomains();
