@@ -36,6 +36,7 @@ export class DocumentService {
   getDocument(id: number): Observable<ArrayBuffer> {
     const url = `${environment.apiUrl}/documents/view?id=${id}`;
     const options = this.auth.getPrivateHeaders();
+    options.headers.append('Cache-Control', 'no-store');
     return this.http
       .get<any>(url, {...options, responseType: 'arraybuffer' as 'json'})
       .pipe(
@@ -56,6 +57,7 @@ export class DocumentService {
   getCommitteeDocument(committeeId: number, documentName: CommitteeDocument) {
     const url = `${environment.apiUrl}/documents/committee/${documentName}?committeeId=${committeeId}`;
     const options = this.auth.getPrivateHeaders();
+    options.headers.append('Cache-Control', 'no-store');
     return this.http
       .get<ArrayBuffer>(url, {...options, responseType: 'arraybuffer' as 'json'})
       .pipe(
