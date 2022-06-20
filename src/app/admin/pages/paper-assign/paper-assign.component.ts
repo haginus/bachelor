@@ -1,10 +1,12 @@
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
+import { PAPER_TYPES } from 'src/app/lib/constants';
 import { AdminService } from 'src/app/services/admin.service';
 import { Paper, Committee } from 'src/app/services/auth.service';
 import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
@@ -30,6 +32,13 @@ export class PaperAssignComponent implements OnInit {
   assignedPappers: Paper[] = [];
   otherPapers: Paper[] = [];
   changesMade: boolean = false;
+
+  paperFilter = new FormGroup({
+    title: new FormControl(''),
+    type: new FormControl(null),
+  });
+
+  PAPER_TYPES = PAPER_TYPES;
 
   ngOnInit(): void {
     this.route.params.pipe(
@@ -70,12 +79,19 @@ export class PaperAssignComponent implements OnInit {
   }
 
   private getRightPapers() {
-    this.isLoadingOtherPapers = true;
-    this.admin.getPapers(undefined, undefined, null, null, 
-      { assigned: false, forCommittee: this.committeeId, submitted: true, isNotValid: false }, true).subscribe(papers => {
+    const filterChanges = this.paperFilter.valueChanges.pipe(debounceTime(500));
+    filterChanges.pipe(
+      startWith({}),
+      switchMap(() => { 
+        this.isLoadingOtherPapers = true;
+        const { title, type } = this.paperFilter.value;
+        return this.admin.getPapers(undefined, undefined, null, null, 
+        { assigned: false, forCommittee: this.committeeId, submitted: true, isNotValid: false, title, type }, true)
+      })
+    ).subscribe(papers => {
       this.otherPapers = papers.rows;
       this.isLoadingOtherPapers = false;
-    })
+    });
   }
 
   teacherIsInCommittee(teacherId: number): boolean {

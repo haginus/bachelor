@@ -32,11 +32,27 @@
             <div class="paper-box" *ngFor="let paper of assignedPappers" cdkDrag>
                 <ng-template *ngTemplateOutlet="paperTemplate; context: { paper: paper }"></ng-template>
             </div>
+            <div class="no-results" *ngIf="assignedPappers.length == 0">Nu există lucrări.</div>
         </div>
     </div>
 
     <div class="list-container" fxFlex="50">
         <h2>Alte lucrări</h2>
+        <mat-card class="filters" fxLayout="row grid" fxLayoutGap="10px grid" [formGroup]="paperFilter">
+            <mat-form-field appearance="outline" fxFlex="70">
+                <mat-label>Titlu lucrare</mat-label>
+                <input matInput formControlName="title" name="paperTitle">
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="30">
+                <mat-label>Tip</mat-label>
+                <mat-select formControlName="type" name="paperType">
+                    <mat-option [value]="null">--</mat-option>
+                    <mat-option *ngFor="let paperType of PAPER_TYPES | keyvalue" [value]="paperType.key">
+                        {{ paperType.value | titlecase }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-card>
         <div cdkDropList [cdkDropListData]="otherPapers" class="paper-list" cdkDropListSortingDisabled
         (cdkDropListDropped)="drop($event)">
             <div class="spinner-container" *ngIf="isLoadingOtherPapers">
@@ -46,6 +62,7 @@
                 [cdkDragDisabled]="teacherIsInCommittee(paper.teacherId)">
                 <ng-template *ngTemplateOutlet="paperTemplate; context: { paper: paper }"></ng-template>
             </div>
+            <div class="no-results" *ngIf="otherPapers.length == 0">Nu există lucrări.</div>
         </div>
     </div>
 </div>
