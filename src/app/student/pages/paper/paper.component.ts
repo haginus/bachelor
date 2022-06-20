@@ -58,7 +58,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   private _checkSubmissionPeriod(): void {
     const today = Date.now();
     const startDateSecretary = parseDate(this.sessionSettings.fileSubmissionStartDate).getTime();
-    const endDatePaper = inclusiveDate(this.sessionSettings.paperSubmissionEndDate).getTime();
+    const endDateSecretary = inclusiveDate(this.sessionSettings.paperSubmissionEndDate).getTime();
 
     this.canUploadSecretaryFiles = this.sessionSettings.canUploadSecretaryFiles();
     this.canUploadPaperFiles = this.sessionSettings.canUploadPaperFiles();
@@ -66,8 +66,8 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
     
     const paperCreatedAt = parseDate(this.paper?.createdAt);
     const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
-    this.canEditPaper = (paperCreatedAt.getTime() + SEVEN_DAYS <= today || today + SEVEN_DAYS >= endDatePaper) &&
-      today <= endDatePaper;
+    this.canEditPaper = (paperCreatedAt.getTime() + SEVEN_DAYS <= today || today + SEVEN_DAYS >= endDateSecretary) &&
+      today <= endDateSecretary;
   }
 
   ngOnInit(): void {
