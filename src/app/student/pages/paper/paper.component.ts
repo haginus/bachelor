@@ -58,7 +58,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   private _checkSubmissionPeriod(): void {
     const today = Date.now();
     const startDateSecretary = parseDate(this.sessionSettings.fileSubmissionStartDate).getTime();
-    const endDateSecretary = inclusiveDate(this.sessionSettings.paperSubmissionEndDate).getTime();
+    const endDateSecretary = inclusiveDate(this.sessionSettings.fileSubmissionEndDate).getTime();
 
     this.canUploadSecretaryFiles = this.sessionSettings.canUploadSecretaryFiles();
     this.canUploadPaperFiles = this.sessionSettings.canUploadPaperFiles();
