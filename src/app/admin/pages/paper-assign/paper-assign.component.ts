@@ -24,6 +24,7 @@ export class PaperAssignComponent implements OnInit {
   committeeId: number;
   committee: Committee;
   memberIds: number[]; // Array to keep member IDs, used to not allow papers from a teacher that is in this committee
+  isMasterCommittee: boolean = false;
 
   isLoadingCommittee: boolean = true;
   isLoadingAssignedPapers: boolean;
@@ -64,6 +65,7 @@ export class PaperAssignComponent implements OnInit {
     ).subscribe(committee => {
       this.committee = committee;
       this.memberIds = this.committee.members.map(m => m.teacherId);
+      this.isMasterCommittee = this.committee.domains.some(d => d.type == 'master');
       this.isLoadingCommittee = false;
       this.getLeftPapers();
       this.getRightPapers();

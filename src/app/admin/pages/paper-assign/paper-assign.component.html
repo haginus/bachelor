@@ -59,7 +59,7 @@
                 <mat-spinner diameter="36"></mat-spinner>
             </div>
             <div class="paper-box" *ngFor="let paper of otherPapers" cdkDrag
-                [cdkDragDisabled]="teacherIsInCommittee(paper.teacherId)">
+                [cdkDragDisabled]="!isMasterCommittee && teacherIsInCommittee(paper.teacherId)">
                 <ng-template *ngTemplateOutlet="paperTemplate; context: { paper: paper }"></ng-template>
             </div>
             <div class="no-results" *ngIf="otherPapers.length == 0">Nu există lucrări.</div>
@@ -76,6 +76,6 @@
     <div class="paper-authors">
         <div>Student: {{ paper.student?.lastName }} {{ paper.student?.firstName }}</div>
         <div>Profesor: {{ paper.teacher?.lastName }} {{ paper.teacher?.firstName }}</div>
-        <i *ngIf="teacherIsInCommittee(paper.teacherId)">Profesorul coordonator face parte din comisie.</i>
+        <i class="warn-text" *ngIf="teacherIsInCommittee(paper.teacherId)">Profesorul coordonator face parte din comisie.</i>
     </div>
 </ng-template>
