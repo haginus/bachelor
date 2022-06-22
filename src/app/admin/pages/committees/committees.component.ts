@@ -21,7 +21,7 @@ export class CommitteesComponent implements OnInit {
   constructor(private admin: AdminService, private dialog: MatDialog, private document: DocumentService,
     private snackbar: MatSnackBar) { }
 
-  displayedColumns: string[] = ['name', 'domains', 'president', 'secretary', 'members', 'paperNumber', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'domains', 'president', 'secretary', 'members', 'paperNumber', 'actions'];
   resultsLength: number;
   isLoadingResults: boolean = true;
   isError: boolean = false;

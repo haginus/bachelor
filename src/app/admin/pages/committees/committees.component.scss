@@ -20,7 +20,7 @@ td, th {
     width: auto;
 }
 
-tr th:first-child, tr td:first-child {
+tr th:nth-child(2), tr td:nth-child(2) {
     min-width: 100px;
 }
 
