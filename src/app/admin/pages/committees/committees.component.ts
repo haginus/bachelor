@@ -131,13 +131,17 @@ export class CommitteesComponent implements OnInit {
     this.performedActions.next("refresh");
   }
 
-  generateCommitteeDocument(documentName: 'committee_compositions' | 'committee_students') {
+  generateCommitteeDocument(documentName: 'committee_compositions' | 'committee_students' | 'committee_students_excel') {
     let sbRef = this.snackbar.open('Se generează documentul...', null, {
       duration: null
     });
     this.admin.generateCommitteeDocument(documentName).subscribe(doc => {
       if(doc) {
-        this.document.viewDocument(doc, 'application/pdf');
+        if(documentName == 'committee_students_excel') {
+          this.document.downloadDocument(doc, 'Repartizare comisii.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        } else {
+          this.document.viewDocument(doc, 'application/pdf');
+        }
         sbRef.dismiss();
       }
     })

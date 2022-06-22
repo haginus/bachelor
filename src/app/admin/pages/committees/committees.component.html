@@ -39,7 +39,12 @@
         <button mat-menu-item title="Repartizarea studenților pe comisii"
             (click)="generateCommitteeDocument('committee_students')">
             <mat-icon>description</mat-icon>
-            <span>Repartizarea studenților pe comisii</span>
+            <span>[PDF] Repartizarea studenților pe comisii</span>
+        </button>
+        <button mat-menu-item title="Repartizarea studenților pe comisii"
+            (click)="generateCommitteeDocument('committee_students_excel')">
+            <mat-icon>description</mat-icon>
+            <span>[Excel] Repartizarea studenților pe comisii</span>
         </button>
     </ng-template>
 </mat-menu>
