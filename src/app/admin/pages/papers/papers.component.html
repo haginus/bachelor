@@ -63,6 +63,16 @@
                 </mat-select>
             </mat-form-field>
         </form>
+        <form [formGroup]="paperFilterDebouncedForm" fxLayout="row grid" fxLayoutGap="10px grid" style="padding-top: 10px">
+            <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+                <mat-label>Titlu lucrare</mat-label>
+                <input matInput formControlName="title" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+                <mat-label>Nume student</mat-label>
+                <input matInput formControlName="studentName" />
+            </mat-form-field>
+        </form>
     </div>
     <div class="loading-shade" *ngIf="isLoadingResults">
         <mat-spinner></mat-spinner>

@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { BehaviorSubject, merge, Observable, of, Subscription } from 'rxjs';
-import { startWith, switchMap } from 'rxjs/operators';
+import { debounceTime, startWith, switchMap } from 'rxjs/operators';
 import { DOMAIN_TYPES, PAPER_TYPES, STUDY_FORMS } from 'src/app/lib/constants';
 import { AdminService, GetPapersFilter } from 'src/app/services/admin.service';
 import { Paper } from 'src/app/services/auth.service';
@@ -61,13 +61,19 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
     studyForm: new FormControl(null),
   });
 
+  paperFilterDebouncedForm = new FormGroup({
+    title: new FormControl(null),
+    studentName: new FormControl(null),
+  });
+
   ngOnInit() { }
 
   ngAfterViewInit(): void {
     const filterChanges = this.paperFilterForm.valueChanges;
+    const filterDebouncedChanges = this.paperFilterDebouncedForm.valueChanges.pipe(debounceTime(500));
     merge(this.sort.sortChange, filterChanges).subscribe(() => this.paginator.pageIndex = 0);
 
-    this.paperSubscription = merge(this.sort.sortChange, this.paginator.page, filterChanges, this.performedActions).pipe(
+    this.paperSubscription = merge(this.sort.sortChange, this.paginator.page, filterChanges, filterDebouncedChanges, this.performedActions).pipe(
       startWith({}),
       switchMap(() => {
         this.isLoadingResults = true;
@@ -85,6 +91,7 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
 
   parseFilter(): GetPapersFilter {
     const filterForm = this.paperFilterForm.value;
+    const filterDebouncedForm = this.paperFilterDebouncedForm.value;
     const filter: GetPapersFilter = {};
     if(filterForm.assigned != null) {
       filter.assigned = filterForm.assigned;
@@ -112,6 +119,12 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
     }
     if(filterForm.studyForm != null) {
       filter.studyForm = filterForm.studyForm;
+    }
+    if(filterDebouncedForm.title) {
+      filter.title = filterDebouncedForm.title;
+    }
+    if(filterDebouncedForm.studentName) {
+      filter.studentName = filterDebouncedForm.studentName;
     }
     return filter;
   }

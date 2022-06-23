@@ -328,6 +328,9 @@ export class AdminService {
     if(filter?.title != undefined) {
       url += `&title=${filter.title}`;
     }
+    if(filter?.studentName != undefined) {
+      url += `&studentName=${filter.studentName}`;
+    }
     if(minified == true) {
       url += `&minified=1`;
     }
@@ -441,6 +444,8 @@ export interface GetPapersFilter {
   studyForm?: 'if' | 'id' | 'ifr';
   /** Paper title */
   title?: string;
+  /** Student name */
+  studentName?: string;
 }
 
 export interface PaperQueryResult {
