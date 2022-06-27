@@ -56,4 +56,17 @@
     >
         Încărcați
     </button>
+    <button mat-icon-button [matMenuTriggerFor]="moreMenu" [matMenuTriggerData]="{document: document}" 
+        *ngIf="perspective == 'admin' && canEdit">
+        <mat-icon>more_vert</mat-icon>
+    </button>
 </mat-list-item>
+
+<mat-menu #moreMenu="matMenu">
+    <ng-template matMenuContent let-document="document">
+        <button mat-menu-item (click)="reuploadDocument(document)">
+            <mat-icon>upload</mat-icon>
+            <span>Reîncărcați documentul</span>
+        </button>
+    </ng-template>
+</mat-menu>

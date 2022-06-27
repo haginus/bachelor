@@ -6,7 +6,7 @@ import { PaperDocument, SessionSettings } from 'src/app/services/auth.service';
 import { DocumentService } from 'src/app/services/document.service';
 import { PaperDocumentCategory, PaperDocumentTypes, PaperDocumentUploadBy } from 'src/app/services/student.service';
 import { USER_TYPES } from 'src/app/lib/constants';
-import { DocumentUploadDialogComponent } from '../document-upload-dialog/document-upload-dialog.component';
+import { DocumentUploadDialogComponent, DocumentUploadDialogData } from '../document-upload-dialog/document-upload-dialog.component';
 
 @Component({
   selector: 'app-paper-document-list',
@@ -175,7 +175,7 @@ export class PaperDocumentListComponent implements OnChanges {
 
   openDocumentDialog(action: 'sign' | 'uploadCopy', documentName: string, documentId?: number) {
     const document = this.requiredDocuments.find(doc => doc.name == documentName);
-    let dialogRef = this.dialog.open(DocumentUploadDialogComponent, {
+    let dialogRef = this.dialog.open<DocumentUploadDialogComponent, DocumentUploadDialogData>(DocumentUploadDialogComponent, {
       data: {
         action,
         document,
@@ -193,6 +193,12 @@ export class PaperDocumentListComponent implements OnChanges {
         this._generateDocumentMap();
       }
     })
+  }
+
+  reuploadDocument(document: PaperRequiredDocument) {
+    const mapElement = this.documentMap[document.name];
+    const action = document.types['copy'] ? 'uploadCopy' : 'sign';
+    this.openDocumentDialog(action, document.name, mapElement.lastId);
   }
 
   viewDocument(mapElement: DocumentMapElement) {

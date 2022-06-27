@@ -154,7 +154,7 @@
                             <div [matTooltip]="!paper.documentsUploaded ? 'Studentul nu a încărcat toate documentele.' : ''">
                                 <button mat-raised-button color="primary"
                                 (click)="validatePaper(paper, true)"
-                                [disabled]="!paper.documentsUploaded || paper.isLoading">Validați lucrarea</button>
+                                [disabled]="paper.isLoading">Validați lucrarea</button>
                             </div>
                             <button mat-button [disabled]="paper.isLoading"
                             (click)="validatePaper(paper, false)">Invalidați lucrarea</button>
@@ -175,6 +175,7 @@
                             <app-paper-document-list [paperId]="paper.id"
                                 [requiredDocuments]="paper.requiredDocuments"
                                 [documents]="paper.documents" perspective="admin"
+                                [canEdit]="paper.isValid == null"
                                 (areDocumentsUploaded)="handleAreDocumentsUploadedEvent($event, paper)"
                             ></app-paper-document-list>
                         </mat-list>

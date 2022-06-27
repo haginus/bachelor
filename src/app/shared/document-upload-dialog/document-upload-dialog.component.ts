@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
+import { AdminService } from 'src/app/services/admin.service';
 import { DocumentService } from 'src/app/services/document.service';
 import { PaperRequiredDocument, StudentService } from 'src/app/services/student.service';
 import { TeacherService } from 'src/app/services/teacher.service';
@@ -14,8 +15,8 @@ import { TeacherService } from 'src/app/services/teacher.service';
 export class DocumentUploadDialogComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: DocumentUploadDialogData, private student: StudentService,
-  private teacher: TeacherService, private document: DocumentService,
-  private snackbar: MatSnackBar, private dialogRef: MatDialogRef<DocumentUploadDialogComponent>) { }
+    private document: DocumentService,
+    private snackbar: MatSnackBar, private dialogRef: MatDialogRef<DocumentUploadDialogComponent>) { }
 
   mode: 'signDocument' | 'uploadDocument';
   state: 'initial' | 'docDownloaded';
@@ -57,13 +58,16 @@ export class DocumentUploadDialogComponent implements OnInit {
     const file: File = target.files[0];
     this.isUploadingFile = true;
     let ob: Observable<any>;
-    switch(this.data.document.uploadBy) {
+    switch(this.data.perspective) {
       case 'student':
         ob = this.student.uploadDocument(file, this.data.document.name, type);
         break;
       case 'teacher':
       case 'committee':
-        ob = this.teacher.uploadDocument(this.data.paperId, this.data.perspective, file, this.data.document.name, type);
+        ob = this.document.uploadDocument(this.data.paperId, this.data.perspective, file, this.data.document.name, type);
+        break;
+      case 'admin':
+        ob = this.document.uploadDocument(this.data.paperId, this.data.perspective, file, this.data.document.name, type);
         break;
       default:
         ob = of(null);
@@ -86,5 +90,5 @@ export interface DocumentUploadDialogData {
   action: 'sign' | 'uploadCopy',
   documentId: number,
   paperId: number;
-  perspective?: 'teacher';
+  perspective?:  'student' | 'teacher' | 'committee' | 'admin';
 }
