@@ -327,7 +327,7 @@ export interface Paper {
   isValid: boolean | null,
   teacher?: UserDataMin,
   teacherId: number,
-  student?: UserDataMin,
+  student?: UserDataMin & { generalAverage?: number },
   documents: PaperDocument[],
   committee?: Committee,
   topics?: Topic[],

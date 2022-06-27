@@ -13,7 +13,7 @@ import { AdminService, GetPapersFilter } from 'src/app/services/admin.service';
 import { Paper } from 'src/app/services/auth.service';
 import { AreDocumentsUploaded, PaperDocumentEvent } from 'src/app/shared/paper-document-list/paper-document-list.component';
 import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
-import { PaperValidationDialogComponent } from '../../dialogs/paper-validation-dialog/paper-validation-dialog.component';
+import { PaperValidationDialogComponent, PaperValidationDialogData } from '../../dialogs/paper-validation-dialog/paper-validation-dialog.component';
 
 @Component({
   selector: 'app-papers',
@@ -141,11 +141,19 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
 
   validatePaper(paper: ExtendedPaper, validate: boolean) {
     let observable: Observable<boolean>;
+    let generalAverage: number;
     if(validate) {
-      const dialog = this.dialog.open(PaperValidationDialogComponent);
+      const dialog = this.dialog.open<PaperValidationDialogComponent, PaperValidationDialogData>(PaperValidationDialogComponent, {
+        data: {
+          areDocumentsUploaded: paper.documentsUploaded,
+          generalAverage: paper.student.generalAverage
+        }
+      });
+      
       observable = dialog.afterClosed().pipe(
-        switchMap(generalAverage => {
-          if(generalAverage) {
+        switchMap(average => {
+          if(average) {
+            generalAverage = average;
             paper.isLoading = true;
             return this.admin.validatePaper(paper.id, true, generalAverage);
           }
@@ -158,6 +166,7 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
     }
     observable.subscribe(result => {
       if(result) {
+        paper.student.generalAverage = generalAverage;
         paper.isValid = validate;
         this.snackbar.open(validate ? "Lucrare validată" : "Lucrare invalidată" );
       }
