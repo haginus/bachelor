@@ -93,21 +93,21 @@
                             <app-user-snippet [user]="paper.student">Student</app-user-snippet>
                             <app-user-snippet [user]="paper.teacher">Profesor coordonator</app-user-snippet>
                         </div>
-                        <ng-container *ngIf="gradingAllowed || committee.finalGrades">
+                        <ng-container *ngIf="member.role != 'secretary' && gradingAllowed && !committee.finalGrades">
                             <div fxLayout="row" fxLayoutAlign="center">
                                 <button mat-raised-button color="primary"
-                                *ngIf="paperNeedsAttentionMap[paper.id] == 'needsGrade' && !committee.finalGrades"
+                                *ngIf="paperNeedsAttentionMap[paper.id] == 'needsGrade'"
                                 (click)="gradePaper(paper)">
                                     Notați lucrarea
                                 </button>
                                 <button mat-raised-button color="primary"
-                                *ngIf="paperNeedsAttentionMap[paper.id] == null && !committee.finalGrades"
+                                *ngIf="paperNeedsAttentionMap[paper.id] == null"
                                 (click)="gradePaper(paper)">
                                     Schimbați nota
                                 </button>
                             </div>
-                            <app-paper-grade-table [paper]="paper"></app-paper-grade-table>
                         </ng-container>
+                        <app-paper-grade-table [paper]="paper" *ngIf="gradingAllowed || committee.finalGrades"></app-paper-grade-table>
                         <mat-list class="document-list">
                             <div mat-subheader>Documente</div>
                             <app-paper-document-list [paperId]="paper.id"

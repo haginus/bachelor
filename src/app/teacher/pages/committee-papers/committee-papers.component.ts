@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { AuthService, Committee, Paper, UserData } from 'src/app/services/auth.service';
+import { AuthService, Committee, CommitteeMember, Paper, UserData } from 'src/app/services/auth.service';
 import { BehaviorSubject, combineLatest, merge, Subscription } from 'rxjs';
 import { MatTable } from '@angular/material/table';
 import { switchMap } from 'rxjs/operators';
@@ -42,6 +42,7 @@ export class TeacherCommitteePapersComponent implements OnInit {
   gradingAllowed: boolean = false;
   user: UserData;
   hasGenerationRights: boolean = false;
+  member!: CommitteeMember;
 
   // Map to store whether paper needs attention.
   paperNeedsAttentionMap: PaperNeedsAttentionMap = {};
@@ -71,10 +72,8 @@ export class TeacherCommitteePapersComponent implements OnInit {
           this.data = committee.papers;
           this.isLoadingResults = false;
           // Check if user has rights to generate committee documents
-          let president = this.committee.members.find(member => member.role == 'president');
-          let secretary = this.committee.members.find(member => member.role == 'secretary');
-          let teacherId = this.user.teacher.id;
-          this.hasGenerationRights = teacherId == president?.teacherId || teacherId == secretary?.teacherId;
+          this.member = this.committee.members.find(member => member.teacherId == this.user.teacher.id);
+          this.hasGenerationRights = ['president', 'secretary'].includes(this.member.role);
         }
       });
   }
@@ -99,9 +98,8 @@ export class TeacherCommitteePapersComponent implements OnInit {
   }
 
   private _checkPaperGraded(paper: Paper): boolean {
-    const member = this.committee.members.find(member => member.teacherId == this.user.teacher.id);
     // Return true if user is secretary (they don't need to grade)
-    if(member.role == 'secretary') {
+    if(this.member.role == 'secretary') {
       return true;
     }
     // Return true if teacher has a grade given to this paper
