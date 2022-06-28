@@ -208,6 +208,10 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
       assigned: null,
       type: null
     });
+    this.paperFilterDebouncedForm.setValue({
+      title: null,
+      studentName: null
+    });
   }
 
 }
