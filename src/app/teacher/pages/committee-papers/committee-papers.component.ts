@@ -83,15 +83,12 @@ export class TeacherCommitteePapersComponent implements OnInit {
   }
 
   handleAreDocumentsUploadedEvent(event: AreDocumentsUploaded, paper: Paper) {
-    if(!event.byUploader.committee) {
+    if(this._checkPaperGraded(paper)) {
+      this.paperNeedsAttentionMap[paper.id] = null;
+    } else if(!event.byUploader.committee) {
       this.paperNeedsAttentionMap[paper.id] = 'needsDocUpload';
     } else {
-      // Check if the user has not given a grade
-      if(!this._checkPaperGraded(paper)) {
-        this.paperNeedsAttentionMap[paper.id] = 'needsGrade';
-      } else {
-        this.paperNeedsAttentionMap[paper.id] = null;
-      }
+      this.paperNeedsAttentionMap[paper.id] = 'needsGrade';
     }
     // Detect changes so that the new value is reflected it the DOM
     this.cd.detectChanges();

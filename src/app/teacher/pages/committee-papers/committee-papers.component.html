@@ -96,7 +96,7 @@
                         <ng-container *ngIf="member.role != 'secretary' && gradingAllowed && !committee.finalGrades">
                             <div fxLayout="row" fxLayoutAlign="center">
                                 <button mat-raised-button color="primary"
-                                *ngIf="paperNeedsAttentionMap[paper.id] == 'needsGrade'"
+                                *ngIf="paperNeedsAttentionMap[paper.id] != null"
                                 (click)="gradePaper(paper)">
                                     Notați lucrarea
                                 </button>
