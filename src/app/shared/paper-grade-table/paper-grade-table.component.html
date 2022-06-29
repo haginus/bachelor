@@ -9,19 +9,19 @@
     <ng-container matColumnDef="forPaper">
         <th mat-header-cell *matHeaderCellDef> Notă pentru lucrare </th>
         <td mat-cell *matCellDef="let row"> {{row.forPaper}} </td>
-        <td mat-footer-cell *matFooterCellDef><b>{{ getAverageForPaper() }}</b></td>
+        <td mat-footer-cell *matFooterCellDef><b>{{ getAverageForPaper() | fixed }}</b></td>
     </ng-container>
 
     <ng-container matColumnDef="forPresentation">
         <th mat-header-cell *matHeaderCellDef> Notă pentru prezentare </th>
         <td mat-cell *matCellDef="let row"> {{row.forPresentation}} </td>
-        <td mat-footer-cell *matFooterCellDef><b>{{ getAverageForPresentation() }}</b></td>
+        <td mat-footer-cell *matFooterCellDef><b>{{ getAverageForPresentation() | fixed }}</b></td>
     </ng-container>
 
     <ng-container matColumnDef="average">
         <th mat-header-cell *matHeaderCellDef> Medie </th>
-        <td mat-cell *matCellDef="let row"> {{ (row.forPaper + row.forPresentation) / 2 | number:'1.2-2'}} </td>
-        <td mat-footer-cell *matFooterCellDef><b>{{ getAverage() }}</b></td>
+        <td mat-cell *matCellDef="let row"> {{ (row.forPaper + row.forPresentation) / 2 | fixed }} </td>
+        <td mat-footer-cell *matFooterCellDef><b>{{ getAverage() | fixed }}</b></td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -26,7 +26,7 @@ export class PaperGradeTableComponent implements OnChanges {
     this.paper.grades.forEach(grade => {
       sum += grade.forPaper;
     });
-    return toFixedTruncate(sum / this.paper.grades.length, 2);
+    return sum / this.paper.grades.length;
   }
 
   getAverageForPresentation() {
@@ -34,12 +34,12 @@ export class PaperGradeTableComponent implements OnChanges {
     this.paper.grades.forEach(grade => {
       sum += grade.forPresentation;
     });
-    return toFixedTruncate(sum / this.paper.grades.length, 2);
+    return sum / this.paper.grades.length;
   }
 
   getAverage() {
     this.table?.renderRows();
-    return toFixedTruncate((this.getAverageForPaper() + this.getAverageForPresentation()) / 2, 2);
+    return (this.getAverageForPaper() + this.getAverageForPresentation()) / 2;
   }
 
 }

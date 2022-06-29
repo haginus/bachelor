@@ -28,6 +28,7 @@ import { UserSnippetComponent } from './user-snippet/user-snippet.component';
 import { UserProfileEditorComponent } from './user-profile-editor/user-profile-editor.component';
 import { ReactiveFormsModule } from "@angular/forms";
 import { ApiUrlPipe } from "../pipes/api-url";
+import { FixedPipePipe } from '../pipes/fixed.pipe';
 
 const deps = [
     MatProgressBarModule,
@@ -61,7 +62,8 @@ const deps = [
         SessionInfoComponent,
         UserSnippetComponent,
         UserProfileEditorComponent,
-        ApiUrlPipe
+        ApiUrlPipe,
+        FixedPipePipe
     ],
     imports: [
         CommonModule,
