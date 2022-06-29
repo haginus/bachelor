@@ -33,3 +33,9 @@ export function arrayMap<T, K extends keyof any>(arr: T[], getKey: (item: T) => 
   }, {} as Record<K, T>);
 }
 
+export function toFixedTruncate(number: number, digits: number) {
+  let re = new RegExp("(\\d+\\.\\d{" + digits + "})(\\d)");
+  let m = number.toString().match(re);
+  return m ? parseFloat(m[1]) : number.valueOf();
+};
+
