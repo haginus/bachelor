@@ -78,6 +78,14 @@
                         <div class="contact-info">
                             <app-user-snippet [user]="paper.student"></app-user-snippet>
                         </div>
+                        <div></div>
+                        <div class="grade-badge" *ngIf="paper.gradeAverage != null">
+                            <mat-icon>grade</mat-icon>
+                            <div class="text">
+                                <div class="first-line">Nota obținută</div>
+                                <div class="second-line">{{ paper.gradeAverage | number:'1.2-2' }}</div>
+                            </div>
+                        </div>
                         <mat-list class="document-list">
                             <div mat-subheader>Documente</div>
                             <app-paper-document-list [paperId]="paper.id"

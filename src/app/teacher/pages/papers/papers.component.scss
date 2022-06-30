@@ -55,3 +55,18 @@ tr.paper-row:not(.expanded-row):hover {
 tr.paper-row:not(.expanded-row):active {
     background: #efefef;
 }
+
+.grade-badge {
+    border: 1px solid #ddd;
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 8px;
+    border-radius: 12px;
+    mat-icon {
+        color: #616161;
+    }
+    .text {
+        margin-left: 8px;
+        line-height: 22px;
+    }
+}
