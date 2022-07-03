@@ -1,0 +1,26 @@
+<mat-card>
+  <h2 mat-card-title>Cataloage</h2>
+  <mat-list>
+    <mat-list-item>
+      <div mat-line>Generați catalogul final</div>
+      <div mat-line>Conține notele studenților din această sesiune</div>
+      <button mat-stroked-button (click)="getFinalCatalog('final')">Generați</button>
+    </mat-list-item>
+    <mat-list-item>
+      <div mat-line>Generați catalogul centralizator</div>
+      <div mat-line>Conține notele studenților din această sesiune care au fost declarați admiși</div>
+      <button mat-stroked-button (click)="getFinalCatalog('centralizing')">Generați</button>
+    </mat-list-item>
+  </mat-list>
+</mat-card>
+
+<mat-card>
+  <h2 mat-card-title>Raport sesiune</h2>
+  <mat-list>
+    <mat-list-item>
+      <div mat-line>Generați raport sesiune</div>
+      <div mat-line>Raportul cuprinde toate informațiile din platformă.</div>
+      <button mat-stroked-button (click)="getFinalReport()">Generați</button>
+    </mat-list-item>
+  </mat-list>
+</mat-card>

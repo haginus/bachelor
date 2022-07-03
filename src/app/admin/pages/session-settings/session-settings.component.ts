@@ -72,16 +72,6 @@ export class SessionSettingsComponent implements OnInit {
     })
   }
 
-  getFinalReport() {
-    let sbRef = this.snackbar.open('Se generează raportul... Acest lucru poate dura ceva.', null, { duration: null });
-    this.admin.getFinalReport().subscribe(buffer => {
-      if(buffer) {
-        this.document.downloadDocument(buffer, 'Raport final.zip', 'application/zip');
-      }
-      sbRef.dismiss();
-    })
-  }
-
   newSession() {
     let dialogRef = this.dialog.open(NewSessionDialogComponent);
     let sub = dialogRef.afterClosed().subscribe(result => {

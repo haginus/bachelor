@@ -380,6 +380,16 @@ export class AdminService {
       );
   }
 
+  getFinalCatalog(mode: string): Observable<ArrayBuffer> {
+    const url = `${environment.apiUrl}/documents/final_catalog?mode=${mode}`;
+    const options = this.auth.getPrivateHeaders();
+    return this.http
+      .get<any>(url, {...options, responseType: 'arraybuffer' as 'json'})
+      .pipe(
+        catchError(this.handleError<any>('getFinalCatalog', null))
+      );
+  }
+
   beginNewSession(password: string): Observable<SessionSettings> {
     const url = `${environment.apiUrl}/admin/session/new`;
     return this.http.post<SessionSettings>(url, { password }, this.auth.getPrivateHeaders()).pipe(
