@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AdminService } from 'src/app/services/admin.service';
+import { AdminService, FinalReportStatus } from 'src/app/services/admin.service';
 import { DocumentService } from 'src/app/services/document.service';
 
 @Component({
@@ -12,7 +12,10 @@ export class ReportsComponent implements OnInit {
 
   constructor(private document: DocumentService, private admin: AdminService, private snackbar: MatSnackBar) { }
 
+  finalReportStatus: FinalReportStatus; 
+
   ngOnInit(): void {
+    this.getFinalReportStatus();
   }
 
   getFinalCatalog(mode: string) {
@@ -24,13 +27,37 @@ export class ReportsComponent implements OnInit {
     });
   }
 
-  getFinalReport() {
+  getFinalReportStatus() {
+    this.admin.getFinalReportStatus().subscribe(status => {
+      this.finalReportStatus = status;
+    })
+  }
+
+  generateFinalReport() {
+    this.finalReportStatus.isGenerating = true;
     let sbRef = this.snackbar.open('Se generează raportul... Acest lucru poate dura ceva.', null, { duration: null });
-    this.admin.getFinalReport().subscribe(buffer => {
-      if(buffer) {
-        this.document.downloadDocument(buffer, 'Raport final.zip', 'application/zip');
-      }
+    this.admin.generateFinalReport().subscribe(_ => {
+      this.getFinalReportStatus();
       sbRef.dismiss();
+    });
+  }
+
+  getFinalReport() {
+    this.admin.getFinalReportLink().subscribe(link => {
+      if(link) {
+        window.open(link, "_blank");
+      }
+    });
+  }
+
+  get lastGeneratedOn() {
+    return new Date(this.finalReportStatus?.lastGeneratedOn).toLocaleDateString("ro", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
     });
   }
 

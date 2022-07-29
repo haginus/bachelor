@@ -370,13 +370,33 @@ export class AdminService {
     );
   }
 
-  getFinalReport(): Observable<ArrayBuffer> {
-    const url = `${environment.apiUrl}/admin/session/report`;
+  getFinalReportLink(): Observable<string> {
+    const url = `${environment.apiUrl}/admin/session/report/token`;
     const options = this.auth.getPrivateHeaders();
     return this.http
-      .get<any>(url, {...options, responseType: 'arraybuffer' as 'json'})
+      .get<{ token: string }>(url, this.auth.getPrivateHeaders())
       .pipe(
-        catchError(this.handleError<any>('getFinalReport', null))
+        map(result => `${environment.apiUrl}/admin/session/report/download?token=${result.token}`),
+        catchError(this.handleError<any>('getFinalReportLink', null))
+      );
+  }
+
+  getFinalReportStatus(): Observable<FinalReportStatus> {
+    const url = `${environment.apiUrl}/admin/session/report`;
+    return this.http
+      .get<FinalReportStatus>(url, this.auth.getPrivateHeaders())
+      .pipe(
+        catchError(this.handleError<any>('getFinalReportStatus', null))
+      );
+  }
+
+  generateFinalReport(): Observable<boolean> {
+    const url = `${environment.apiUrl}/admin/session/report`;
+    return this.http
+      .post<any>(url, {}, this.auth.getPrivateHeaders())
+      .pipe(
+        map(_ => true),
+        catchError(this.handleError<any>('generateFinalReport', false))
       );
   }
 
@@ -474,4 +494,11 @@ export interface Statistic {
   content: string | number;
   extra?: string;
   sectionPath: string;
+}
+
+export interface FinalReportStatus {
+  isGenerating: boolean;
+  progress: number;
+  lastGeneratedOn: number;
+  lastReportPath: string;
 }

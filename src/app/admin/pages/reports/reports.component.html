@@ -17,10 +17,30 @@
 <mat-card>
   <h2 mat-card-title>Raport sesiune</h2>
   <mat-list>
-    <mat-list-item>
+    <mat-list-item *ngIf="!finalReportStatus || (!finalReportStatus.lastGeneratedOn && !finalReportStatus.isGenerating)">
       <div mat-line>Generați raport sesiune</div>
       <div mat-line>Raportul cuprinde toate informațiile din platformă.</div>
-      <button mat-stroked-button (click)="getFinalReport()">Generați</button>
+      <button mat-stroked-button (click)="generateFinalReport()">Generați</button>
+    </mat-list-item>
+    <mat-list-item *ngIf="finalReportStatus?.isGenerating">
+      <div mat-line>Generați raport sesiune</div>
+      <div mat-line>Raportul este în curs de generare...</div>
+      <mat-spinner diameter="32"></mat-spinner>
+    </mat-list-item>
+    <mat-list-item *ngIf="finalReportStatus?.lastGeneratedOn && !finalReportStatus?.isGenerating">
+      <div mat-line>Descărcați raport sesiune</div>
+      <div mat-line>Ultima dată generat pe {{ lastGeneratedOn }}</div>
+      <button mat-stroked-button (click)="getFinalReport()">Descărcați</button>
+      <button mat-icon-button [matMenuTriggerFor]="regenerateMenu">
+        <mat-icon>more_vert</mat-icon>
+    </button>
     </mat-list-item>
   </mat-list>
 </mat-card>
+
+<mat-menu #regenerateMenu="matMenu">
+  <button mat-menu-item (click)="generateFinalReport()">
+    <mat-icon>save</mat-icon>
+    <span>Regenerați</span>
+  </button>
+</mat-menu>
