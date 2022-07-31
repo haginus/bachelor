@@ -204,9 +204,12 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
 
   resetFilterForm() {
     this.paperFilterForm.setValue({
+      validity: null,
       submitted: true,
       assigned: null,
-      type: null
+      type: null,
+      domainId: null,
+      studyForm: null
     });
     this.paperFilterDebouncedForm.setValue({
       title: null,
