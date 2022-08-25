@@ -29,7 +29,8 @@ export class PaperValidationDialogComponent implements OnInit {
   ngOnInit(): void { }
 
   validate() {
-    this.dialogRef.close(this.validatePaperForm.value["generalAverage"]);
+    let generalAverage = (this.validatePaperForm.value["generalAverage"] as string).replace(",", ".");
+    this.dialogRef.close(generalAverage);
   }
 
 }

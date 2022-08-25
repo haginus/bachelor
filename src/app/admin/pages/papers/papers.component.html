@@ -164,6 +164,7 @@
                                 <mat-icon *ngIf="paper.isValid" class="status-icon done">done</mat-icon>
                                 <mat-icon *ngIf="!paper.isValid" class="status-icon severe">close</mat-icon>
                                 <b>Lucrare {{ paper.isValid ? 'validată' : 'invalidată' }}</b>
+                                <b *ngIf="paper.isValid && paper.student?.generalAverage">&nbsp;(M.G. {{ paper.student.generalAverage }})</b>
                             </div>
                             <button mat-icon-button matTooltip="Reluați validarea" (click)="undoValidatePaper(paper)">
                                 <mat-icon>undo</mat-icon>
