@@ -268,25 +268,31 @@ export interface UserData {
   validated: boolean,
   type: "student" | "teacher" | "admin",
   isImpersonated: boolean,
-  student?: {
-    id?: number,
-    userId?: number,
-    domainId?: number,
-    specializationId?: number,
-    group: string,
-    domain: Domain,
-    specialization: DomainSpecialization,
-    promotion: string,
-    identificationCode: string, // cod matricol
-    studyForm: 'if' | 'id' | 'ifr',
-    matriculationYear: string,
-    fundingForm: 'budget' | 'tax',
-    paper: Paper
-  },
-  teacher?: {
-    id: number
-  },
+  student?: Student;
+  teacher?: Teacher;
   profile?: Profile,
+}
+
+export interface Student {
+  id?: number,
+  userId?: number,
+  domainId?: number,
+  specializationId?: number,
+  group: string,
+  domain: Domain,
+  specialization: DomainSpecialization,
+  promotion: string,
+  identificationCode: string, // cod matricol
+  studyForm: 'if' | 'id' | 'ifr',
+  matriculationYear: string,
+  fundingForm: 'budget' | 'tax',
+  paper: Paper;
+  user?: UserData;
+}
+
+export interface Teacher {
+  id: number;
+  user?: UserData;
 }
 
 export interface UserDataMin {
@@ -296,7 +302,9 @@ export interface UserDataMin {
   title?: string,
   fullName?: string,
   email?: string,
-  profile?: Profile,
+  profile?: Profile;
+  student?: Student;
+  teacher?: Teacher;
 }
 
 export type DomainType = 'bachelor' | 'master';

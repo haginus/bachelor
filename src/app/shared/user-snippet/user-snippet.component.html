@@ -20,6 +20,16 @@
             </a>
           </div>
         </mat-list-item>
+        <mat-list-item *ngIf="user.student?.group">
+          <mat-icon mat-list-icon>groups</mat-icon>
+          <div mat-line>Grupă</div>
+          <div mat-line>{{ user.student.group }}</div>
+        </mat-list-item>
+        <mat-list-item *ngIf="user.student?.specialization">
+          <mat-icon mat-list-icon>work_outline</mat-icon>
+          <div mat-line>Program de studiu</div>
+          <div mat-line>{{ user.student.specialization.name }}</div>
+        </mat-list-item>
         <mat-list-item *ngIf="user.profile?.website">
           <mat-icon mat-list-icon>language</mat-icon>
           <div mat-line>Website</div>
