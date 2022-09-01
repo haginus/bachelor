@@ -39,9 +39,16 @@
     height: 100%;
     border-radius: 0px;
     margin-right: -16px;
+    line-height: 16px;
 
     .user-name {
         margin-right: 8px;
+        display: inline-block;
+
+        :last-child {
+            margin-top: 4px;
+            color: #444;
+        }
     }
 }
 

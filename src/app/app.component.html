@@ -33,7 +33,10 @@
         <span class="toolbar-title">{{ title }}</span>
         <span class="toolbar-spacer"></span>
         <button mat-button class="user-preview-container" [matMenuTriggerFor]="userMenu">
-            <span class="user-name" fxHide.lt-sm>{{user?.firstName}} {{user?.lastName}}</span>
+            <div class="user-name" fxHide.lt-sm *ngIf="user">
+                <div>{{user.firstName}} {{user.lastName}}</div>
+                <div *ngIf="user.student">Gr. {{ user.student?.group }}</div>
+            </div>
             <mat-icon *ngIf="!user?.isImpersonated">person</mat-icon>
             <mat-icon *ngIf="user?.isImpersonated">people</mat-icon>
         </button>
