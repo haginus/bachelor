@@ -410,6 +410,18 @@ export class AdminService {
       );
   }
 
+  getReportFile<K extends keyof typeof REPORT_FILES>(reportName: K): Observable<{ report: ReportFile, buffer: ArrayBuffer }> {
+    const report = REPORT_FILES[reportName];
+    const url = `${environment.apiUrl}/admin/reports/${reportName}`;
+    const options = this.auth.getPrivateHeaders();
+    return this.http
+      .get<any>(url, {...options, responseType: 'arraybuffer' as 'json'})
+      .pipe(
+        map(buffer => ({ report, buffer })),
+        catchError(this.handleError<any>('getReportFile', null))
+      );
+  }
+
   beginNewSession(password: string): Observable<SessionSettings> {
     const url = `${environment.apiUrl}/admin/session/new`;
     return this.http.post<SessionSettings>(url, { password }, this.auth.getPrivateHeaders()).pipe(
@@ -501,4 +513,16 @@ export interface FinalReportStatus {
   progress: number;
   lastGeneratedOn: number;
   lastReportPath: string;
+}
+
+interface ReportFile {
+  name: string;
+  mimeType: string;
+}
+
+const REPORT_FILES = {
+  'paper_list': {
+    name: 'Lista lucrărilor',
+    mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  }
 }

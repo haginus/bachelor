@@ -27,6 +27,18 @@ export class ReportsComponent implements OnInit {
     });
   }
 
+  getReportFile(reportName: any, download = false) {
+    this.admin.getReportFile(reportName).subscribe(data => {
+      if(!data) return;
+      const { report, buffer } = data;
+      if(download) {
+        this.document.downloadDocument(buffer, report.name, report.mimeType);
+      } else {
+        this.document.viewDocument(buffer, report.mimeType);
+      }
+    });
+  }
+
   getFinalReportStatus() {
     this.admin.getFinalReportStatus().subscribe(status => {
       this.finalReportStatus = status;
