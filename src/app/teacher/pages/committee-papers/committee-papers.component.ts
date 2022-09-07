@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AuthService, Committee, CommitteeMember, Paper, UserData } from 'src/app/services/auth.service';
 import { BehaviorSubject, combineLatest, merge, Subscription } from 'rxjs';
-import { MatTable } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { switchMap } from 'rxjs/operators';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { CommitteeDocument, DocumentService } from 'src/app/services/document.se
 import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PAPER_TYPES } from 'src/app/lib/constants';
-
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-committee-papers',
@@ -27,17 +27,17 @@ import { PAPER_TYPES } from 'src/app/lib/constants';
     ]),
   ],
 })
-export class TeacherCommitteePapersComponent implements OnInit {
+export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
 
   constructor(private teacher: TeacherService, private route: ActivatedRoute, private router: Router,
     private cd: ChangeDetectorRef, private auth: AuthService, private dialog: MatDialog,
     private documentService: DocumentService, private snackbar: MatSnackBar) { }
 
-  displayedColumns: string[] = ['status', 'title', 'type', 'student', 'teacher'];
+  displayedColumns: string[] = ['status', 'id', 'title', 'type', 'student', 'teacher'];
   expandedPaper: Paper | null;
   resultsLength: number;
   isLoadingResults: boolean = true;
-  data: Paper[] = [];
+  dataSource: MatTableDataSource<Paper>;
   committee: Committee;
   gradingAllowed: boolean = false;
   user: UserData;
@@ -53,8 +53,10 @@ export class TeacherCommitteePapersComponent implements OnInit {
   PAPER_TYPES = PAPER_TYPES;
 
   @ViewChild('table') table: MatTable<Paper>;
+  @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit(): void {
+    this.dataSource = new MatTableDataSource([]);
     this.paperSubscription = 
       combineLatest([this.route.params, this.auth.getSessionSettings(), this.auth.getUserData(), this.performedActions]).pipe(
         switchMap(([params, settings, userData]) => {
@@ -69,13 +71,24 @@ export class TeacherCommitteePapersComponent implements OnInit {
           this.router.navigate(['teacher', 'committees']);
         } else {
           this.committee = committee;
-          this.data = committee.papers;
+          this.dataSource.data = committee.papers;
           this.isLoadingResults = false;
           // Check if user has rights to generate committee documents
           this.member = this.committee.members.find(member => member.teacherId == this.user.teacher.id);
           this.hasGenerationRights = ['president', 'secretary'].includes(this.member.role);
         }
       });
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sortingDataAccessor = (paper, property) => {
+      switch(property) {
+        case 'student': return paper.student.fullName;
+        case 'teacher': return paper.teacher.fullName;
+        default: return paper[property];
+      }
+    };
+    this.dataSource.sort = this.sort;
   }
 
   refreshResults() {

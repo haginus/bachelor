@@ -39,3 +39,6 @@ export function toFixedTruncate(number: number, digits: number) {
   return m ? parseFloat(m[1]) : number.valueOf();
 };
 
+export function copyObject<Type = Object>(object: Type): Type {
+  return JSON.parse(JSON.stringify(object));
+}

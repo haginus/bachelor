@@ -1,8 +1,9 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTable } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { PAPER_TYPES } from 'src/app/lib/constants';
@@ -25,16 +26,16 @@ import { AddPaperComponent } from '../../dialogs/add-paper/add-paper.component';
     ]),
   ],
 })
-export class TeacherPapersComponent implements OnInit, OnDestroy {
+export class TeacherPapersComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private teacher: TeacherService, private cd: ChangeDetectorRef, private dialog: MatDialog,
     private snackbar: MatSnackBar, private auth: AuthService) { }
 
-  displayedColumns: string[] = ['status', 'title', 'type', 'student', 'committee'];
+  displayedColumns: string[] = ['status', 'id', 'title', 'type', 'student', 'committee'];
   expandedPaper: Paper | null;
   resultsLength: number;
   isLoadingResults: boolean = true;
-  data: Paper[] = [];
+  dataSource: MatTableDataSource<Paper>;
 
   // Map to store whether paper needs attention.
   paperNeedsAttentionMap: PaperNeedsAttentionMap = {};
@@ -46,10 +47,12 @@ export class TeacherPapersComponent implements OnInit, OnDestroy {
   canUploadDocuments: boolean = false;
 
   @ViewChild('table') table: MatTable<Paper>;
+  @ViewChild(MatSort) sort: MatSort;
 
   PAPER_TYPES = PAPER_TYPES;
 
   ngOnInit(): void {
+    this.dataSource = new MatTableDataSource([]);
     this.paperSubscription = this.performedActions.pipe(
       switchMap(action => {
         this.isLoadingResults = true;
@@ -57,7 +60,7 @@ export class TeacherPapersComponent implements OnInit, OnDestroy {
       })
     )
    .subscribe(papers => {
-      this.data = papers as Paper[];
+      this.dataSource.data = papers;
       this.isLoadingResults = false;
     });
 
@@ -65,6 +68,17 @@ export class TeacherPapersComponent implements OnInit, OnDestroy {
       this.canAddPapers = settings.canApply();
       this.canUploadDocuments = Date.now() >= parseDate(settings.fileSubmissionStartDate).getTime();
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sortingDataAccessor = (paper, property) => {
+      switch (property) {
+        case 'student': return paper.student.fullName;
+        case 'committee': return paper.committee.name;
+        default: return paper[property];
+      }
+    };
+    this.dataSource.sort = this.sort;
   }
 
   refreshResults() {
@@ -123,8 +137,9 @@ export class TeacherPapersComponent implements OnInit, OnDestroy {
       this.snackbar.open(msg);
       // If delete was successful, remove paper from table
       if(result) {
-        let idx = this.data.findIndex(p => paper.id == p.id);
-        this.data.splice(idx, 1);
+        const data = this.dataSource.data;
+        let idx = data.findIndex(p => paper.id == p.id);
+        data.splice(idx, 1);
         this.table.renderRows();
       }
 

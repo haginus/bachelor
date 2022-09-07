@@ -19,13 +19,15 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AddPaperComponent } from './dialogs/add-paper/add-paper.component';
+import { MatSortModule } from '@angular/material/sort';
 
 const materialDeps = [
   MatStepperModule,
   MatSelectModule,
   MatAutocompleteModule,
   MatChipsModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatSortModule
 ]
 
 @NgModule({
