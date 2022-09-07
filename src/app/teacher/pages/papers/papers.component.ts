@@ -7,7 +7,7 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { PAPER_TYPES } from 'src/app/lib/constants';
-import { parseDate } from 'src/app/lib/utils';
+import { copyObject, parseDate } from 'src/app/lib/utils';
 import { AuthService, Paper } from 'src/app/services/auth.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
@@ -20,10 +20,11 @@ import { AddPaperComponent } from '../../dialogs/add-paper/add-paper.component';
   styleUrls: ['./papers.component.scss'],
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
+      state('collapsed, void', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
+      transition('expanded <=> void', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
+    ])
   ],
 })
 export class TeacherPapersComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -74,7 +75,7 @@ export class TeacherPapersComponent implements OnInit, OnDestroy, AfterViewInit 
     this.dataSource.sortingDataAccessor = (paper, property) => {
       switch (property) {
         case 'student': return paper.student.fullName;
-        case 'committee': return paper.committee.name;
+        case 'committee': return paper.committee?.name;
         default: return paper[property];
       }
     };
