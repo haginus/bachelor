@@ -111,6 +111,13 @@ export class AuthService {
     );
   }
 
+  signUp(requestData: Object, captcha: string) {
+    const url = `${environment.apiUrl}/auth/sign-up`;
+    return this.http.post<Object>(url, { ...requestData, captcha }).pipe(
+      catchError(this.handleError('signUp', null))
+    );
+  }
+
   getPrivateHeaders() {
     let headers = new HttpHeaders();
     const token = this.getToken();

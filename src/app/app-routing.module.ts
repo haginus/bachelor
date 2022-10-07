@@ -5,8 +5,14 @@ import { SignedInGuard } from './guards/signed-in.guard';
 import { LoginComponent } from './pages/login/login.component';
 import { ChangePasswordComponent } from './user-components/change-password/change-password.component';
 import { RoleGuard } from './guards/role.guard';
+import { SignUpComponent } from './pages/sign-up/sign-up.component';
 
 const routes: Routes = [
+  { path: 'sign-up',
+    component: SignUpComponent,
+    data: { hideDrawer: true, hideToolbar: true, animate: false },
+    canActivate: [NotSignedInGuard]
+  },
   { path: 'login',
     component: LoginComponent,
     data: { hideDrawer: true, hideToolbar: true, animate: false },

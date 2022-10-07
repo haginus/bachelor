@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { AuthService } from './auth.service';
+import { AuthService, Domain } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +27,15 @@ export class MiscService {
     return this.http.post<ProblemReport>(url, report, this.auth.getPrivateHeaders())
       .pipe(
         catchError(this.handleError<ProblemReport>('sendProblemReport', null))
+      );
+  }
+
+  getDomains(): Observable<Domain[]> {
+    let url = `${environment.apiUrl}/domains`;
+    return this.http
+      .get<Domain[]>(url, this.auth.getPrivateHeaders())
+      .pipe(
+        catchError(this.handleError<Domain[]>('getDomains', []))
       );
   }
 

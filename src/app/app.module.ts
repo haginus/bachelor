@@ -17,6 +17,7 @@ import { RECAPTCHA_LANGUAGE, RECAPTCHA_SETTINGS, RecaptchaModule } from "ng-reca
 import { environment } from 'src/environments/environment';
 import { ProblemReportComponent } from './components/problem-report/problem-report.component';
 import { MatSelectModule } from '@angular/material/select';
+import { SignUpComponent } from './pages/sign-up/sign-up.component';
 
 const materialDeps = [
   MatSidenavModule,
@@ -28,7 +29,8 @@ const materialDeps = [
     AppComponent,
     LoginComponent,
     ChangePasswordComponent,
-    ProblemReportComponent
+    ProblemReportComponent,
+    SignUpComponent
   ],
   imports: [
     BrowserModule,

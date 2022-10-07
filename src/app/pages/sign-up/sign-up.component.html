@@ -1,0 +1,97 @@
+<div class="login-container mat-elevation-z2">
+  <app-loading *ngIf="loading"></app-loading>
+  <div class="image-container flex-container align-center logo">
+    <img src="assets/img/fmi-logo.png" />
+  </div>
+  <div class="form-container">
+    <form [formGroup]="signUpForm">
+      <h2>Creare cont student</h2>
+      <div fxLayout="row grid" fxLayoutGap="10px grid">
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Nume *</mat-label>
+          <input matInput type="text" formControlName="lastName" name="studentLastName">
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Prenume *</mat-label>
+          <input matInput type="text" formControlName="firstName" name="studentFirstName">
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>CNP</mat-label>
+          <input matInput type="text" formControlName="CNP" name="studentCNP">
+          <mat-hint>În cazul în care nu aveți un CNP, lăsați necompletat.</mat-hint>
+          <mat-error>CNP invalid.</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>E-mail *</mat-label>
+          <input matInput type="email" formControlName="email" name="studentEmail">
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Număr matricol *</mat-label>
+          <input matInput type="text" formControlName="identificationCode" name="studentIdentificationCode">
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Forma de finanțare *</mat-label>
+          <mat-select formControlName="fundingForm">
+            <mat-option value="budget">Buget</mat-option>
+            <mat-option value="tax">Taxă</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Grupă *</mat-label>
+          <input matInput type="text" formControlName="group" name="studentGroup">
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Promoție *</mat-label>
+          <input matInput type="text" formControlName="promotion" name="studentPromotion">
+          <mat-hint>Anul în care ați absolvit</mat-hint>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Domeniu *</mat-label>
+          <mat-select formControlName="domainId">
+            <mat-option *ngFor="let domain of domains" [value]="domain.id">
+              <span>{{domain.name}}</span>
+              <span *ngIf="domain.type == 'bachelor'"> (Licență)</span>
+              <span *ngIf="domain.type == 'master'"> (Master)</span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Programul de studii *</mat-label>
+          <mat-select formControlName="specializationId">
+            <mat-option *ngFor="let specialization of chosenDomain?.specializations" [value]="specialization.id">
+              <span>{{specialization.name}}</span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Anul înmatriculării *</mat-label>
+          <input matInput type="text" formControlName="matriculationYear" name="studentMatriculationYear">
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Forma de învățământ *</mat-label>
+          <mat-select formControlName="studyForm">
+            <mat-option value="if">Învățământ cu frecvență</mat-option>
+            <mat-option value="ifr">Învățământ cu frecvență redusă</mat-option>
+            <mat-option value="id">Învățământ la distanță</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </form>
+    <div class="flex-container align-center captcha-container">
+      <re-captcha (resolved)="solvedCaptcha($event)"></re-captcha>
+    </div>
+    <div class="flex-container align-center">
+        <button mat-raised-button color="accent"
+        [disabled]="signUpForm.invalid || !captchaToken || loading"
+        (click)="signUp()">Înscriere</button>
+    </div>
+    <mat-divider class="divider"></mat-divider>
+    <div class="flex-container align-center">
+      <router-link routerLink="/login">
+        <button mat-button>
+          <span>Înapoi la autentificare</span>
+        </button>
+      </router-link>
+    </div>
+  </div>
+</div>

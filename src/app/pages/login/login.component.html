@@ -39,9 +39,17 @@
             <mat-divider class="divider"></mat-divider>
                 
             <div class="flex-container align-center">
-                <button mat-button *ngIf="view == 'login'" (click)="changeView('forgotPassword')">
-                    <span>Ați uitat parola?</span>
-                </button>
+                <div *ngIf="view == 'login'">
+                    <button mat-button  (click)="changeView('forgotPassword')">
+                        <span>Ați uitat parola?</span>
+                    </button>
+                    <router-link routerLink="/sign-up">
+                        <button mat-button>
+                            <span>Creare cont student</span>
+                        </button>
+                    </router-link>
+                </div>
+                
                 <button mat-button *ngIf="view == 'forgotPassword'" (click)="changeView('login')">
                     <span>Înapoi la autentificare</span>
                 </button>
