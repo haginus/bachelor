@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { AuthService, Domain, Paper, SessionSettings, UserData, Committee, CommitteeMember, PaperType } from './auth.service';
+import { AuthService, Domain, Paper, SessionSettings, UserData, Committee, CommitteeMember, PaperType, SignUpRequest } from './auth.service';
 import { Topic } from './topics.service';
 
 @Injectable({
@@ -420,6 +420,29 @@ export class AdminService {
         map(buffer => ({ report, buffer })),
         catchError(this.handleError<any>('getReportFile', null))
       );
+  }
+
+  getSignUpRequests(): Observable<SignUpRequest[]> {
+    const url = `${environment.apiUrl}/admin/sign-up-requests`;
+    return this.http.get<SignUpRequest[]>(url, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError<SignUpRequest[]>('getSignUpRequests', []))
+    );
+  }
+
+  declineSignUpRequest(id: number): Observable<boolean> {
+    const url = `${environment.apiUrl}/admin/sign-up-requests/${id}/decline`;
+    return this.http.post<any>(url, {}, this.auth.getPrivateHeaders()).pipe(
+      map(_ => true),
+      catchError(this.handleError<boolean>('declineSignUpRequest', false))
+    );
+  }
+
+  acceptSignUpRequest(id: number, additionalChanges: SignUpRequest): Observable<boolean> {
+    const url = `${environment.apiUrl}/admin/sign-up-requests/${id}/accept`;
+    return this.http.post<any>(url, additionalChanges, this.auth.getPrivateHeaders()).pipe(
+      map(_ => true),
+      catchError(this.handleError<boolean>('declineSignUpRequest', false))
+    );
   }
 
   beginNewSession(password: string): Observable<SessionSettings> {

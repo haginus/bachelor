@@ -111,9 +111,9 @@ export class AuthService {
     );
   }
 
-  signUp(requestData: Object, captcha: string) {
+  signUp(requestData: SignUpRequest, captcha: string) {
     const url = `${environment.apiUrl}/auth/sign-up`;
-    return this.http.post<Object>(url, { ...requestData, captcha }).pipe(
+    return this.http.post<SignUpRequest>(url, { ...requestData, captcha }).pipe(
       catchError(this.handleError('signUp', null))
     );
   }
@@ -331,7 +331,8 @@ export interface DomainSpecialization {
   id: number,
   name: string,
   studyYears: number,
-  studentNumber?: number
+  studentNumber?: number;
+  domainId?: number;
 }
 
 export interface Paper {
@@ -433,4 +434,20 @@ export interface CommitteeMember {
   teacherId: number,
   role: 'president' | 'secretary' | 'member',
   user?: UserDataMin
+}
+
+export interface SignUpRequest {
+  id: number;
+  firstName: string;
+  lastName: string;
+  CNP: string;
+  email: string;
+  identificationCode: string;
+  matriculationYear: string;
+  specializationId: number;
+  promotion: string;
+  group: string;
+  studyForm: 'if' | 'id' | 'ifr';
+  fundingForm: 'bugdet' | 'tax';
+  specialization: DomainSpecialization;
 }

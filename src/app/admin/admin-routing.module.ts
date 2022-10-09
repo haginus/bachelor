@@ -7,6 +7,7 @@ import { PaperAssignComponent } from './pages/paper-assign/paper-assign.componen
 import { AdminPapersComponent } from './pages/papers/papers.component';
 import { ReportsComponent } from './pages/reports/reports.component';
 import { SessionSettingsComponent } from './pages/session-settings/session-settings.component';
+import { SignUpRequestsComponent } from './pages/sign-up-requests/sign-up-requests.component';
 import { AdminStudentsComponent } from './pages/students/students.component';
 import { AdminTeachersComponent } from './pages/teachers/teachers.component';
 import { AdminTopicsComponent } from './pages/topics/topics.component';
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: '', component: AdminComponent },
   { path: 'students', component: AdminStudentsComponent },
   { path: 'teachers', component: AdminTeachersComponent },
+  { path: 'sign-up-requests', component: SignUpRequestsComponent },
   { path: 'domains', component: AdminDomainsComponent },
   { path: 'topics', component: AdminTopicsComponent },
   { path: 'session', component: SessionSettingsComponent, data: { title: 'Setări sesiune de examinare' } },

@@ -34,6 +34,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TopicBulkDeleteDialogComponent } from './dialogs/topic-bulk-delete-dialog/topic-bulk-delete-dialog.component';
 import { PaperValidationDialogComponent } from './dialogs/paper-validation-dialog/paper-validation-dialog.component';
 import { ReportsComponent } from './pages/reports/reports.component';
+import { SignUpRequestsComponent } from './pages/sign-up-requests/sign-up-requests.component';
+import { SignUpRequestDialogComponent } from './dialogs/sign-up-request-dialog/sign-up-request-dialog.component';
 
 const materialDeps = [
   MatPaginatorModule,
@@ -69,7 +71,9 @@ const materialDeps = [
     NewSessionDialogComponent,
     TopicBulkDeleteDialogComponent,
     PaperValidationDialogComponent,
-    ReportsComponent
+    ReportsComponent,
+    SignUpRequestsComponent,
+    SignUpRequestDialogComponent,
   ],
   imports: [
     CommonModule,
