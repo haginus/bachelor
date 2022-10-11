@@ -6,6 +6,13 @@
   <div class="form-container">
     <form [formGroup]="signUpForm">
       <h2>Creare cont student</h2>
+      <div class="tip-card translucent warning">
+        <mat-icon class="tip-icon">warning_amber</mat-icon>
+        <div class="tip-card-content">
+          Această secțiune din aplicație este destinată studenților din promoțiile anterioare.
+          În cazul în care sunteți student în promoția curentă, veți fi adăugat automat în aplicație.
+        </div>
+      </div>
       <div fxLayout="row grid" fxLayoutGap="10px grid">
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
           <mat-label>Nume *</mat-label>
@@ -28,6 +35,7 @@
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
           <mat-label>Număr matricol *</mat-label>
           <input matInput type="text" formControlName="identificationCode" name="studentIdentificationCode">
+          <mat-hint>Forma: [nr. unic]/[an înmatriculare]</mat-hint>
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
           <mat-label>Forma de finanțare *</mat-label>
@@ -76,15 +84,26 @@
           </mat-select>
         </mat-form-field>
       </div>
+      <mat-checkbox formControlName="segmentCheck" class="v-checkbox wrap">
+        Fac parte dintr-o promoție anterioară sau mi s-a cerut expres să completez acest formular. *
+      </mat-checkbox>
+      <br>
+      <mat-checkbox formControlName="termsCheck" class="v-checkbox wrap">
+        Sunt de acord ca datele mele personale să fie folosite de facultate în scopul
+        operării acestei platforme. *
+      </mat-checkbox>
+      <br>
+      <br>
+      <div class="flex-container align-center captcha-container">
+        <re-captcha (resolved)="solvedCaptcha($event)"></re-captcha>
+      </div>
+      <div class="flex-container align-center">
+          <button mat-raised-button color="accent"
+          [disabled]="signUpForm.invalid || !captchaToken || loading"
+          (click)="signUp()">Înscriere</button>
+      </div>
     </form>
-    <div class="flex-container align-center captcha-container">
-      <re-captcha (resolved)="solvedCaptcha($event)"></re-captcha>
-    </div>
-    <div class="flex-container align-center">
-        <button mat-raised-button color="accent"
-        [disabled]="signUpForm.invalid || !captchaToken || loading"
-        (click)="signUp()">Înscriere</button>
-    </div>
+    
     <mat-divider class="divider"></mat-divider>
     <div class="flex-container align-center">
       <router-link routerLink="/login">

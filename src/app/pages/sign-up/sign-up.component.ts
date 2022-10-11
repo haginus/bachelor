@@ -33,15 +33,17 @@ export class SignUpComponent implements OnInit, OnDestroy {
     'firstName': new FormControl(null, [Validators.required]),
     'lastName': new FormControl(null, [Validators.required]),
     'CNP': new FormControl(null, [CNPValidator]),
-    'identificationCode': new FormControl(null, [Validators.required]),
+    'identificationCode': new FormControl(null, [Validators.required, Validators.pattern(/^[0-9]*\/[1-2][0-9]{3}$/)]),
     'email': new FormControl(null, [Validators.email, Validators.required]),
     'domainId': new FormControl(null, [Validators.required]),
     'specializationId': new FormControl(null, [Validators.required]),
-    'promotion': new FormControl(null, [Validators.required]),
-    'group': new FormControl(null, [Validators.required]),
-    'matriculationYear': new FormControl(null, [Validators.required]),
+    'promotion': new FormControl(null, [Validators.required, Validators.minLength(4), Validators.maxLength(4)]),
+    'group': new FormControl(null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]),
+    'matriculationYear': new FormControl(null, [Validators.required, Validators.minLength(4), Validators.maxLength(4)]),
     'studyForm': new FormControl(null, [Validators.required]),
-    'fundingForm': new FormControl(null, [Validators.required])
+    'fundingForm': new FormControl(null, [Validators.required]),
+    'termsCheck': new FormControl(null, [Validators.requiredTrue]),
+    'segmentCheck': new FormControl(null, [Validators.requiredTrue])
   });
 
   domains: Domain[] = [];

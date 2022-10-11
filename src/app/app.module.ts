@@ -18,10 +18,12 @@ import { environment } from 'src/environments/environment';
 import { ProblemReportComponent } from './components/problem-report/problem-report.component';
 import { MatSelectModule } from '@angular/material/select';
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 const materialDeps = [
   MatSidenavModule,
-  MatSelectModule
+  MatSelectModule,
+  MatCheckboxModule,
 ]
 
 @NgModule({
