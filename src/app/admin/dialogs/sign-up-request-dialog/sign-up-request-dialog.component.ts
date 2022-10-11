@@ -43,7 +43,7 @@ export class SignUpRequestDialogComponent implements OnInit {
 
     this.admin.getDomains().subscribe((domains) => {
       this.domains = domains;
-      this.chosenDomain = domains.find(d => d.id == this.request.specializationId);
+      this.chosenDomain = domains.find(domain => domain.id == this.request.specialization.domainId);
     });
     
   }
