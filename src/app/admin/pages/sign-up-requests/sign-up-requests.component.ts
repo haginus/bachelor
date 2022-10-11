@@ -66,7 +66,7 @@ export class SignUpRequestsComponent implements OnInit {
     this.dialog.open(SignUpRequestDialogComponent, {
       data: request
     }).afterClosed().subscribe(result => {
-      if(request) this.refreshResults();
+      if(result) this.refreshResults();
     })
   }
 }

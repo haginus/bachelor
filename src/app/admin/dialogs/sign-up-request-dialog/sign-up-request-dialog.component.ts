@@ -13,7 +13,7 @@ import { CNPValidator } from 'src/app/validators/CNP-validator';
 })
 export class SignUpRequestDialogComponent implements OnInit {
 
-  domains: Domain[];
+  domains: Domain[] = [];
   chosenDomain?: Domain;
   isLoading = false;
 
@@ -21,15 +21,9 @@ export class SignUpRequestDialogComponent implements OnInit {
     private dialog: MatDialogRef<SignUpRequestDialogComponent>, private snackbar: MatSnackBar) { }
 
   ngOnInit(): void {
-    const specializationIdControl = this.signUpForm.get('specializationId');
     this.signUpForm.get('domainId').valueChanges.subscribe(domainId => {
       this.chosenDomain = this.domains.find(domain => domain.id == domainId);
-      specializationIdControl.reset();
-      if(this.chosenDomain) {
-        specializationIdControl.enable();
-      } else {
-        specializationIdControl.disable();
-      }
+      this.signUpForm.get('specializationId').reset();
     });
 
     this.signUpForm.setValue({
@@ -51,7 +45,6 @@ export class SignUpRequestDialogComponent implements OnInit {
       this.domains = domains;
       this.chosenDomain = domains.find(d => d.id == this.request.specializationId);
     });
-
     
   }
 
