@@ -21,6 +21,17 @@ export class SignUpRequestDialogComponent implements OnInit {
     private dialog: MatDialogRef<SignUpRequestDialogComponent>, private snackbar: MatSnackBar) { }
 
   ngOnInit(): void {
+    const specializationIdControl = this.signUpForm.get('specializationId');
+    this.signUpForm.get('domainId').valueChanges.subscribe(domainId => {
+      this.chosenDomain = this.domains.find(domain => domain.id == domainId);
+      specializationIdControl.reset();
+      if(this.chosenDomain) {
+        specializationIdControl.enable();
+      } else {
+        specializationIdControl.disable();
+      }
+    });
+
     this.signUpForm.setValue({
       firstName: this.request.firstName,
       lastName: this.request.lastName,
@@ -40,6 +51,8 @@ export class SignUpRequestDialogComponent implements OnInit {
       this.domains = domains;
       this.chosenDomain = domains.find(d => d.id == this.request.specializationId);
     });
+
+    
   }
 
   signUpForm = new FormGroup({
