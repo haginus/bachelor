@@ -33,7 +33,7 @@ export class StudentsBulkAddDialogComponent implements OnInit {
     this.admin.addStudentsBulk(file, specializationId, studyForm).subscribe(res => {
       if(res == null) {
       } else {
-        this.snackbar.open(`Au fost adăugați ${res.addedStudents}/${res.totalStudents} studenți.`);
+        this.snackbar.open(`${res.addedStudents} studenți au fost adăugați și ${res.editedStudents} editați din totalul de ${res.totalStudents} studenți.`);
       }
       this.dialogRef.close(true);
     })
