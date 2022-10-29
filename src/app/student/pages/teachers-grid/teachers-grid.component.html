@@ -40,6 +40,14 @@
     </mat-card>
 
     <div class="results">
+        <div class="tip-card translucent" *ngIf="canApply">
+            <mat-icon class="tip-icon">school</mat-icon>
+            <div class="tip-card-content">
+                Lista de mai jos conține doar profesorii care au adăugat oferte în aplicație. Pentru a accesa
+                lista completă a profesorilor, accesați 
+                <a class="link" href="https://fmi.unibuc.ro/departamente/" target="_blank">acest link.</a>
+            </div>
+        </div>
         <mat-card class="teacher-card" *ngFor="let teacher of teachers">
             <app-user-snippet [user]="teacher" class="teacher-snippet">
                 <span>{{ teacher.offers.length }} </span>

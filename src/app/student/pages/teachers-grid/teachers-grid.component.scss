@@ -12,6 +12,7 @@
     border-radius: 8px;
     position: relative;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 .progress-bar {
@@ -73,8 +74,14 @@
 }
 
 .results {
-    margin-top: 36px;
+    margin-top: 16px;
     width: 100%;
+
+    .tip-card {
+        max-width: 800px;
+        margin: 0 auto;
+        margin-bottom: 16px;
+    }
 
     .no-results {
         text-align: center;
@@ -87,12 +94,12 @@
 }
 
 .teacher-card {
-    width: calc(100% - 32px);
     max-width: 800px;
     border-radius: 8px;
     margin: 0 auto 16px auto;
     padding-bottom: 0;
     overflow: hidden;
+    box-sizing: border-box;
 
     app-user-snippet {
         margin-top: -8px;
