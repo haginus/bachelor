@@ -32,7 +32,7 @@ export class TeacherPapersComponent implements OnInit, OnDestroy, AfterViewInit 
   constructor(private teacher: TeacherService, private cd: ChangeDetectorRef, private dialog: MatDialog,
     private snackbar: MatSnackBar, private auth: AuthService) { }
 
-  displayedColumns: string[] = ['status', 'id', 'title', 'type', 'student', 'committee'];
+  displayedColumns: string[] = ['status', 'id', 'title', 'type', 'student', 'promotion', 'committee'];
   expandedPaper: Paper | null;
   resultsLength: number;
   isLoadingResults: boolean = true;
@@ -75,6 +75,7 @@ export class TeacherPapersComponent implements OnInit, OnDestroy, AfterViewInit 
     this.dataSource.sortingDataAccessor = (paper, property) => {
       switch (property) {
         case 'student': return paper.student.fullName;
+        case 'promotion': return paper.student?.student?.promotion;
         case 'committee': return paper.committee?.name;
         default: return paper[property];
       }
