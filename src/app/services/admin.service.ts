@@ -445,6 +445,16 @@ export class AdminService {
     );
   }
 
+  getSignUpRequestsExcel(): Observable<ArrayBuffer> {
+    const url = `${environment.apiUrl}/admin/sign-up-requests/excel`;
+    const options = this.auth.getPrivateHeaders();
+    return this.http
+      .get<any>(url, {...options, responseType: 'arraybuffer' as 'json'})
+      .pipe(
+        catchError(this.handleError<any>('getSignUpRequestsExcel', null))
+      );
+  }
+
   beginNewSession(password: string): Observable<SessionSettings> {
     const url = `${environment.apiUrl}/admin/session/new`;
     return this.http.post<SessionSettings>(url, { password }, this.auth.getPrivateHeaders()).pipe(
