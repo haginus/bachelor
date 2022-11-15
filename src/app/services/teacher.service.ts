@@ -115,6 +115,16 @@ export class TeacherService {
       );
   }
 
+  getStudentPapersExcel(): Observable<ArrayBuffer> {
+    const url = `${environment.apiUrl}/teacher/papers/excel`;
+    const options = this.auth.getPrivateHeaders();
+    return this.http
+      .get<any>(url, {...options, responseType: 'arraybuffer' as 'json'})
+      .pipe(
+        catchError(this.handleError<any>('getStudentPapersExcel', null))
+      );
+  }
+
   addPaper(studentId: number, title: string, description: string, topicIds: number[]): Observable<Paper> {
     const url = `${environment.apiUrl}/teacher/papers/add`;
     const data = { studentId, title, description, topicIds };

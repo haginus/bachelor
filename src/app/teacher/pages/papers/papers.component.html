@@ -12,6 +12,9 @@
         <button mat-raised-button color="accent" (click)="addPaper()" [disabled]="!canAddPapers">
             Adăugați o lucrare
         </button>
+        <button style="margin-left: 8px;" mat-icon-button matTooltip="Descărcați lista în format Excel" (click)="downloadExcel()">
+            <mat-icon>download</mat-icon>
+        </button>
         <span class="toolbar-spacer"></span>
         <button mat-icon-button (click)="refreshResults()">
             <mat-icon>refresh</mat-icon>

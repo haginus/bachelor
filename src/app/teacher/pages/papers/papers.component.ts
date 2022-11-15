@@ -10,6 +10,7 @@ import { switchMap } from 'rxjs/operators';
 import { PAPER_TYPES } from 'src/app/lib/constants';
 import { copyObject, parseDate } from 'src/app/lib/utils';
 import { AuthService, Paper } from 'src/app/services/auth.service';
+import { DocumentService } from 'src/app/services/document.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
 import { AreDocumentsUploaded, PaperDocumentEvent } from 'src/app/shared/paper-document-list/paper-document-list.component';
@@ -31,7 +32,7 @@ import { AddPaperComponent } from '../../dialogs/add-paper/add-paper.component';
 export class TeacherPapersComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private teacher: TeacherService, private cd: ChangeDetectorRef, private dialog: MatDialog,
-    private snackbar: MatSnackBar, private auth: AuthService) { }
+    private snackbar: MatSnackBar, private auth: AuthService, private document: DocumentService) { }
 
   displayedColumns: string[] = ['status', 'id', 'title', 'type', 'student', 'promotion', 'committee'];
   expandedPaper: Paper | null;
@@ -188,6 +189,15 @@ export class TeacherPapersComponent implements OnInit, OnDestroy, AfterViewInit 
       }
       return result;
     }
+  }
+
+  downloadExcel() {
+    const sbRef = this.snackbar.open("Se generează lista...");
+    this.teacher.getStudentPapersExcel().subscribe(buffer => {
+      sbRef.dismiss();
+      if(!buffer) return;
+      this.document.downloadDocument(buffer, 'Lucrări.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    });
   }
 
   ngOnDestroy(): void {
