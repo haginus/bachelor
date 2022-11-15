@@ -1,5 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
@@ -38,6 +39,13 @@ export class TeacherPapersComponent implements OnInit, OnDestroy, AfterViewInit 
   isLoadingResults: boolean = true;
   dataSource: MatTableDataSource<Paper>;
 
+  showFilters = false;
+  paperFilterForm = new FormGroup({
+    submitted: new FormControl(null),
+    type: new FormControl(null),
+    promotion: new FormControl(null),
+  });
+
   // Map to store whether paper needs attention.
   paperNeedsAttentionMap: PaperNeedsAttentionMap = {};
 
@@ -54,6 +62,7 @@ export class TeacherPapersComponent implements OnInit, OnDestroy, AfterViewInit 
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource([]);
+    this.dataSource.filterPredicate = this.getFilterFunction();
     this.paperSubscription = this.performedActions.pipe(
       switchMap(action => {
         this.isLoadingResults = true;
@@ -63,6 +72,10 @@ export class TeacherPapersComponent implements OnInit, OnDestroy, AfterViewInit 
    .subscribe(papers => {
       this.dataSource.data = papers;
       this.isLoadingResults = false;
+    });
+
+    this.paperFilterForm.valueChanges.subscribe(() => {
+      this.dataSource.filter = JSON.stringify(this.paperFilterForm.value);
     });
 
     this.sessionSettingsSubscription = this.auth.getSessionSettings().subscribe(settings => {
@@ -147,6 +160,34 @@ export class TeacherPapersComponent implements OnInit, OnDestroy, AfterViewInit 
 
       sub.unsubscribe();
     });
+  }
+
+  toggleFilters() {
+    if(this.showFilters && this.paperFilterForm.dirty) {
+      this.resetFilterForm();
+    }
+    this.showFilters = !this.showFilters;
+  }
+
+  resetFilterForm() {
+    this.paperFilterForm.reset();
+  }
+
+  getFilterFunction() {
+    return (paper: Paper, filter: string) => {
+      const filterForm = JSON.parse(filter);
+      let result = true;
+      if(filterForm.submitted != null) {
+        result = result && (filterForm.submitted == paper.submitted);
+      }
+      if(filterForm.type != null) {
+        result = result && (filterForm.type == paper.type);
+      }
+      if(filterForm.promotion != null) {
+        result = result && (paper.student.student.promotion.startsWith(filterForm.promotion));
+      }
+      return result;
+    }
   }
 
   ngOnDestroy(): void {
