@@ -12,10 +12,12 @@
         <mat-icon>token</mat-icon>
         <span>Retrimiteți e-mail activare</span>
       </button>
-      <button mat-menu-item (click)="impersonateStudent(id)">
-        <mat-icon>people</mat-icon>
-        <span>Impersonare</span>
-      </button>
+      <ng-container *ngIf="user.type == 'admin'">
+        <button mat-menu-item (click)="impersonateStudent(id)">
+            <mat-icon>people</mat-icon>
+            <span>Impersonare</span>
+        </button>
+      </ng-container>
     </ng-template>
   </mat-menu>
 

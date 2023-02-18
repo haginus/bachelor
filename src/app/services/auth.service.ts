@@ -273,7 +273,7 @@ export interface UserData {
   CNP: string,
   email: string,
   validated: boolean,
-  type: "student" | "teacher" | "admin",
+  type: "student" | "teacher" | "admin" | "secretary",
   isImpersonated: boolean,
   student?: Student;
   teacher?: Teacher;
