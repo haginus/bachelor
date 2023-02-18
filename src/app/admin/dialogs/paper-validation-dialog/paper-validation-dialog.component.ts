@@ -22,7 +22,7 @@ export class PaperValidationDialogComponent implements OnInit {
       });
     }
     if(this.data?.generalAverage) {
-      this.validatePaperForm.get("generalAverage").setValue(this.data?.generalAverage);
+      this.validatePaperForm.get("generalAverage").setValue('' + this.data?.generalAverage);
     }
   }
 
