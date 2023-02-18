@@ -1,5 +1,9 @@
 <mat-menu #paperMenu="matMenu">
     <ng-template matMenuContent let-paper="paper">
+        <button mat-menu-item (click)="editPaper(paper)" [disabled]="!canEditPaper(paper)">
+            <mat-icon>edit</mat-icon>
+            <span>Editați lucrarea</span>
+        </button>
         <button mat-menu-item (click)="removePaper(paper)">
             <mat-icon>person_remove</mat-icon>
             <span>Rupeți asocierea</span>

@@ -8,11 +8,13 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { PAPER_TYPES } from 'src/app/lib/constants';
-import { copyObject, parseDate } from 'src/app/lib/utils';
-import { AuthService, Paper } from 'src/app/services/auth.service';
+import { copyObject, inclusiveDate, parseDate } from 'src/app/lib/utils';
+import { AuthService, Paper, SessionSettings } from 'src/app/services/auth.service';
 import { DocumentService } from 'src/app/services/document.service';
+import { EditPaperResponse } from 'src/app/services/student.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
+import { EditPaperComponent } from 'src/app/shared/edit-paper/edit-paper.component';
 import { AreDocumentsUploaded, PaperDocumentEvent } from 'src/app/shared/paper-document-list/paper-document-list.component';
 import { AddPaperComponent } from '../../dialogs/add-paper/add-paper.component';
 
@@ -38,6 +40,7 @@ export class TeacherPapersComponent implements OnInit, OnDestroy, AfterViewInit 
   expandedPaper: Paper | null;
   resultsLength: number;
   isLoadingResults: boolean = true;
+  sessionSettings!: SessionSettings;
   dataSource: MatTableDataSource<Paper>;
 
   showFilters = false;
@@ -80,6 +83,7 @@ export class TeacherPapersComponent implements OnInit, OnDestroy, AfterViewInit 
     });
 
     this.sessionSettingsSubscription = this.auth.getSessionSettings().subscribe(settings => {
+      this.sessionSettings = settings;
       this.canAddPapers = settings.canApply();
       this.canUploadDocuments = Date.now() >= parseDate(settings.fileSubmissionStartDate).getTime();
     });
@@ -117,6 +121,30 @@ export class TeacherPapersComponent implements OnInit, OnDestroy, AfterViewInit 
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
         this.refreshResults();
+      }
+    });
+  }
+
+  canEditPaper(paper: Paper): boolean {
+    const today = Date.now();
+    const endDateSecretary = inclusiveDate(this.sessionSettings.fileSubmissionEndDate).getTime();
+    const paperCreatedAt = parseDate(paper.createdAt);
+    const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+    return (paperCreatedAt.getTime() + SEVEN_DAYS <= today || today + SEVEN_DAYS >= endDateSecretary) &&
+      today <= endDateSecretary;
+  }
+
+  editPaper(paper: Paper) {
+    const dialogRef = this.dialog.open<EditPaperComponent, Paper, EditPaperResponse>(EditPaperComponent, {
+      data: paper
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result?.success) {
+        this.refreshResults();
+        this.snackbar.open('Lucrearea a fost salvată.');
+        if(result.documentsGenerated) {
+          this.snackbar.open('Documente noi au fost generate în urma modificărilor. Cereți studentului să le semneze.', null, { duration: 10000 });
+        }
       }
     });
   }

@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AuthService, Committee, Domain, Paper, PaperDocument, UserData } from './auth.service';
-import { OfferApplication } from './student.service';
+import { EditPaperResponse, OfferApplication } from './student.service';
 import { Topic } from './topics.service';
 
 @Injectable({
@@ -132,6 +132,15 @@ export class TeacherService {
       .pipe(
         catchError(this.handleError<Paper>('addPaper', null))
       )
+  }
+
+  editPaper(paperId: number, title: string, description: string, topicIds: number[]): Observable<EditPaperResponse> {
+    const url = `${environment.apiUrl}/teacher/papers/edit`
+    return this.http
+      .post<EditPaperResponse>(url, { paperId, title, description, topicIds }, this.auth.getPrivateHeaders())
+      .pipe(
+        catchError(this.handleError<EditPaperResponse>('editPaper', { success: false }))
+      );
   }
 
   getStudents(name?: string, domainId?: number): Observable<UserData[]> {

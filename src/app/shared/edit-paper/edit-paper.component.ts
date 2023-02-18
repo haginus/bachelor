@@ -4,8 +4,9 @@ import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { Paper } from 'src/app/services/auth.service';
-import { StudentService } from 'src/app/services/student.service';
+import { AuthService, Paper, UserData } from 'src/app/services/auth.service';
+import { EditPaperResponse, StudentService } from 'src/app/services/student.service';
+import { TeacherService } from 'src/app/services/teacher.service';
 import { Topic, TopicsService } from 'src/app/services/topics.service';
 
 @Component({
@@ -15,13 +16,20 @@ import { Topic, TopicsService } from 'src/app/services/topics.service';
 })
 export class EditPaperComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public paper: Paper, private dialog: MatDialogRef<EditPaperComponent>,
-    private topic: TopicsService, private student: StudentService) {
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public paper: Paper,
+    private dialog: MatDialogRef<EditPaperComponent>,
+    private topic: TopicsService,
+    private student: StudentService,
+    private teacher: TeacherService,
+    private auth: AuthService) {
     this.filteredTopics = this.paperForm.get("topics").valueChanges.pipe(
       startWith(null),
       map((topicName: string | null) => typeof topicName == 'string' ? this._filter(topicName) : this.remainingTopics.slice())
     );
   }
+
+  user!: UserData;
 
   paperForm = new FormGroup({
     "title": new FormControl(this.paper.title, [Validators.required, Validators.minLength(3), Validators.maxLength(256)]),
@@ -50,7 +58,10 @@ export class EditPaperComponent implements OnInit {
       })
       this.remainingTopics = topics;
       subscription.unsubscribe();
-    })
+    });
+    this.auth.userData.subscribe(user => {
+      this.user = user;
+    });
   }
 
   removeTopic(topic: Topic) {
@@ -77,11 +88,21 @@ export class EditPaperComponent implements OnInit {
   }
 
   savePaper() {
-    const title = this.paperForm.get("title").value;
-    const description = this.paperForm.get("description").value;
+    const title = this.paperForm.get("title").value as string;
+    const description = this.paperForm.get("description").value as string;
     const topicIds = this.selectedTopics.map(topic => topic.id);
     this.isLoadingQuery = true;
-    let sub = this.student.editPaper(title, description, topicIds).subscribe(result => {
+    const params = [title, description, topicIds] as const;
+    let action: Observable<EditPaperResponse>;
+    switch(this.user.type) {
+      case "student":
+        action = this.student.editPaper(...params);
+        break;
+      case "teacher":
+        action = this.teacher.editPaper(this.paper.id, ...params);
+        break;
+    }
+    let sub = action.subscribe(result => {
       if(result.success) {
         this.dialog.close(result);
       }

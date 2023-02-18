@@ -8,7 +8,7 @@ import { AuthService, Paper, SessionSettings } from 'src/app/services/auth.servi
 import { StudentExtraData, StudentService, PaperRequiredDocument } from 'src/app/services/student.service';
 import { PAPER_TYPES } from 'src/app/lib/constants';
 import { AreDocumentsUploaded, PaperDocumentEvent } from '../../../shared/paper-document-list/paper-document-list.component';
-import { EditPaperComponent } from '../../dialogs/edit-paper/edit-paper.component';
+import { EditPaperComponent } from '../../../shared/edit-paper/edit-paper.component';
 import { StudentExtraDataEditorComponent } from '../../dialogs/student-extra-data-editor/student-extra-data-editor.component';
 import { inclusiveDate, parseDate } from 'src/app/lib/utils';
 

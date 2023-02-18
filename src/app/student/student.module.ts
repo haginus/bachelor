@@ -11,12 +11,9 @@ import { SharedModule } from '../shared/shared.module';
 import { StudentApplicationsComponent } from './pages/applications/applications.component';
 import { StudentPaperComponent } from './pages/paper/paper.component';
 import { StudentExtraDataEditorComponent } from './dialogs/student-extra-data-editor/student-extra-data-editor.component';
-import { EditPaperComponent } from './dialogs/edit-paper/edit-paper.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSelectModule } from '@angular/material/select';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
@@ -24,8 +21,6 @@ const materialDeps = [
   MatStepperModule,
   MatButtonToggleModule,
   MatSelectModule,
-  MatAutocompleteModule,
-  MatChipsModule,
   MatCheckboxModule
 ]
 
@@ -38,7 +33,6 @@ const materialDeps = [
     StudentApplicationsComponent,
     StudentPaperComponent,
     StudentExtraDataEditorComponent,
-    EditPaperComponent
   ],
   imports: [
     CommonModule,

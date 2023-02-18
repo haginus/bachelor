@@ -29,6 +29,9 @@ import { UserProfileEditorComponent } from './user-profile-editor/user-profile-e
 import { ReactiveFormsModule } from "@angular/forms";
 import { ApiUrlPipe } from "../pipes/api-url";
 import { FixedPipePipe } from '../pipes/fixed.pipe';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatChipsModule } from '@angular/material/chips';
+import { EditPaperComponent } from "./edit-paper/edit-paper.component";
 
 const deps = [
     MatProgressBarModule,
@@ -46,6 +49,8 @@ const deps = [
     MatToolbarModule,
     MatMenuModule,
     MatFormFieldModule,
+    MatAutocompleteModule,
+    MatChipsModule,
     MatInputModule,
     ReactiveFormsModule
 ]
@@ -62,6 +67,7 @@ const deps = [
         SessionInfoComponent,
         UserSnippetComponent,
         UserProfileEditorComponent,
+        EditPaperComponent,
         ApiUrlPipe,
         FixedPipePipe
     ],
@@ -82,6 +88,7 @@ const deps = [
         SessionInfoComponent,
         UserSnippetComponent,
         UserProfileEditorComponent,
+        EditPaperComponent,
         ...deps
     ]
   })
