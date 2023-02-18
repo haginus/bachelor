@@ -21,7 +21,7 @@ export class CommitteesComponent implements OnInit {
   constructor(private admin: AdminService, private dialog: MatDialog, private document: DocumentService,
     private snackbar: MatSnackBar) { }
 
-  displayedColumns: string[] = ['id', 'name', 'domains', 'president', 'secretary', 'members', 'paperNumber', 'actions'];
+  displayedColumns: string[] = ['status', 'id', 'name', 'domains', 'president', 'secretary', 'members', 'paperNumber', 'actions'];
   resultsLength: number;
   isLoadingResults: boolean = true;
   isError: boolean = false;
@@ -93,6 +93,16 @@ export class CommitteesComponent implements OnInit {
         this.performedActions.next('deleteCommittee');
       }
     })
+  }
+
+  markFinalGrades(id: number, finalGrades = true) {
+    this.admin.markCommitteeFinalGrades(id, finalGrades).subscribe(result => {
+      if(result) {
+        const marked = finalGrades ? 'marcate' : 'demarcate';
+        this.snackbar.open(`Note ${marked} drept finale.`);
+        this.performedActions.next('markFinalGrades');
+      }
+    });
   }
 
   getCommitteeDocument(committeeId: number, documentName: CommitteeDocument) {

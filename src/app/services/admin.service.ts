@@ -264,6 +264,14 @@ export class AdminService {
     );
   }
 
+  markCommitteeFinalGrades(id: number, finalGrades = true): Observable<boolean> {
+    const url = `${environment.apiUrl}/admin/committees/finalGrades`;
+    return this.http.post<any>(url, { id, finalGrades }, this.auth.getPrivateHeaders()).pipe(
+      map(_ => true),
+      catchError(this.handleError<any>('markCommitteeFinalGrades', false))
+    );
+  }
+
   setCommitteePapers(id: number, paperIds: number[]): Observable<boolean> {
     const url = `${environment.apiUrl}/admin/committees/assign-papers`;
     return this.http.post<any>(url, { id, paperIds }, this.auth.getPrivateHeaders()).pipe(
