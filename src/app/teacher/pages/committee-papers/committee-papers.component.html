@@ -20,9 +20,8 @@
             <button mat-raised-button color="warn" (click)="markGradesAsFinal()" [disabled]="committee.finalGrades">
                 {{ committee.finalGrades ? 'Note marcate drept finale' : 'Marcați notele drept finale' }}
             </button>
-            <button mat-button [matMenuTriggerFor]="documentGeneration">
-                Descărcați cataloagele
-                <mat-icon>arrow_drop_down</mat-icon>
+            <button mat-raised-button color="accent" (click)="generateCommitteeCatalog()">
+                <span>Descărcați catalogul</span>
             </button>
         </ng-container>
         <span class="toolbar-spacer"></span>
