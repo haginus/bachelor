@@ -75,6 +75,18 @@ export class AdminsComponent implements OnInit {
     });
   }
 
+  editUser(user: UserData) {
+    const dialogRef = this.dialog.open<AdminEditDialogComponent, AdminEditDialogData, UserData>(AdminEditDialogComponent, {
+      data: { mode: 'edit', data: user }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.performedActions.next('editUser');
+        this.snackbar.open("Utilizator modificat.");
+      }
+    });
+  }
+
   resendActivationCode(user: UserData) {
     this.admin.resendUserActivationCode(user.id).subscribe(result => {
       if(result) {

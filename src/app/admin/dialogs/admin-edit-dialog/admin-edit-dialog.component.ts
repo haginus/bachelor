@@ -44,7 +44,18 @@ export class AdminEditDialogComponent implements OnInit {
   }
 
   editUser() {
-
+    const { firstName, lastName, type } = this.adminForm.value;
+    this.auth.enterSudoMode().subscribe(password => {
+      if(!password) return;
+      this.isLoading = true;
+      this.admin.editAdmin(this.data.data!.id, firstName, lastName, type).subscribe(result => {
+        if(result) {
+          this.dialog.close(result);
+        } else {
+          this.isLoading = false;
+        }
+      });
+    });
   }
 
 

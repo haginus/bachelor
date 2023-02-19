@@ -1,5 +1,9 @@
 <mat-menu #teacherMenu="matMenu">
   <ng-template matMenuContent let-user="user">
+    <button mat-menu-item (click)="editUser(user)">
+      <mat-icon>edit</mat-icon>
+      <span>Editați utilizatorul</span>
+    </button>
     <button mat-menu-item (click)="deleteUser(user)">
       <mat-icon>delete</mat-icon>
       <span>Ștergeți utilizatorul</span>

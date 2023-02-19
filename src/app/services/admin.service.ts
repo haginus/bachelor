@@ -136,7 +136,7 @@ export class AdminService {
   }
 
   editAdmin(id: number, firstName: string, lastName: string, type: 'admin' | 'secretary'): Observable<UserData | null> {
-    const url = `${environment.apiUrl}/admin/admins/add`;
+    const url = `${environment.apiUrl}/admin/admins/edit`;
     const body = { id, firstName, lastName, type };
     return this.http.post<UserData>(url, body, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("editAdmin", null))
