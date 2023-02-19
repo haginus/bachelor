@@ -139,6 +139,17 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
     this.cd.detectChanges();
   }
 
+  submitPaper(paper: ExtendedPaper, submit = true) {
+    paper.isLoading = true;
+    this.admin.submitPaper(paper.id, submit).subscribe(result => {
+      if(result) {
+        paper.submitted = submit;
+        this.snackbar.open(submit ? 'Lucrare înscrisă.' : 'Înscriere anulată.');
+      }
+      paper.isLoading = false;
+    });
+  }
+
   validatePaper(paper: ExtendedPaper, validate: boolean) {
     let observable: Observable<boolean>;
     let generalAverage: number;
