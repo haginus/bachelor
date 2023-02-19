@@ -186,6 +186,17 @@ export class TeacherService {
       );
   }
 
+  unsubmitPaper(paperId: number) {
+    const url = `${environment.apiUrl}/teacher/papers/unsubmit`;
+    const data = { paperId };
+    return this.http
+      .post<any>(url, data, this.auth.getPrivateHeaders())
+      .pipe(
+        map(_ => true),
+        catchError(this.handleError<boolean>('unsubmitPaper', false))
+      );
+  }
+
   gradePaper(paperId: number, forPaper: number, forPresentation: number): Observable<boolean> {
     const url = `${environment.apiUrl}/teacher/papers/grade`;
     const data = { paperId, forPaper, forPresentation };

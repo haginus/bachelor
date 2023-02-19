@@ -13,7 +13,7 @@ import { AuthService, Paper, SessionSettings } from 'src/app/services/auth.servi
 import { DocumentService } from 'src/app/services/document.service';
 import { EditPaperResponse } from 'src/app/services/student.service';
 import { TeacherService } from 'src/app/services/teacher.service';
-import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
+import { CommonDialogComponent, CommonDialogData } from 'src/app/shared/common-dialog/common-dialog.component';
 import { EditPaperComponent } from 'src/app/shared/edit-paper/edit-paper.component';
 import { AreDocumentsUploaded, PaperDocumentEvent } from 'src/app/shared/paper-document-list/paper-document-list.component';
 import { AddPaperComponent } from '../../dialogs/add-paper/add-paper.component';
@@ -149,8 +149,29 @@ export class TeacherPapersComponent implements OnInit, OnDestroy, AfterViewInit 
     });
   }
 
+  unsubmitPaper(paper: Paper) {
+    let dialogRef = this.dialog.open<CommonDialogComponent, CommonDialogData, boolean>(CommonDialogComponent, {
+      data: {
+        title: 'Anulați înscrierea?',
+        content: 'Sunteți sigur că doriți să anulați înscrierea?',
+        actions: [
+          { name: 'Anulați', value: false },
+          { name: 'Anulați înscrierea', value: true }
+        ]
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(!result) return;
+      this.teacher.unsubmitPaper(paper.id).subscribe((result) => {
+        if(!result) return;
+        this.refreshResults();
+        this.snackbar.open('Înscrierea a fost anulată.');
+      });
+    });
+  }
+
   removePaper(paper: Paper) {
-    let dialogRef = this.dialog.open(CommonDialogComponent, {
+    let dialogRef = this.dialog.open<CommonDialogComponent, CommonDialogData, boolean>(CommonDialogComponent, {
       data: {
         title: 'Rupeți asocierea?',
         content: 'Sunteți sigur că doriți să rupeți asocierea?\nStudentul va trebui să își găsească alt profesor.',
