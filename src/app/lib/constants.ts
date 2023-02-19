@@ -18,7 +18,8 @@ export const USER_TYPES = {
     student: "student",
     teacher: "profesor",
     committee: "comisie",
-    admin: "administrator"
+    admin: "administrator",
+    secretary: "secretar",
 }
 
 export const PAPER_TYPES = {

@@ -1,0 +1,16 @@
+table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+td, th {
+  width: auto;
+}
+
+tr th:last-child, tr td:last-child {
+  width: 40px;
+}
+
+.container {
+  padding: 16px 12px;
+}

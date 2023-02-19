@@ -125,6 +125,24 @@ export class AdminService {
     );
   }
 
+  // Admins
+
+  addAdmin(firstName: string, lastName: string, email: string, type: 'admin' | 'secretary'): Observable<UserData | null> {
+    const url = `${environment.apiUrl}/admin/admins/add`;
+    const body = { firstName, lastName, email, type };
+    return this.http.post<UserData>(url, body, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError("addAdmin", null))
+    );
+  }
+
+  editAdmin(id: number, firstName: string, lastName: string, type: 'admin' | 'secretary'): Observable<UserData | null> {
+    const url = `${environment.apiUrl}/admin/admins/add`;
+    const body = { id, firstName, lastName, type };
+    return this.http.post<UserData>(url, body, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError("editAdmin", null))
+    );
+  }
+
 
   deleteUser(id: number): Observable<any> {
     const url = `${environment.apiUrl}/admin/users/delete`;
@@ -137,6 +155,15 @@ export class AdminService {
     const url = `${environment.apiUrl}/admin/users/resend-activation-code`;
     return this.http.post<any>(url, { id }, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("resendUserActivationCode", null))
+    );
+  }
+
+  // Admins
+
+  getAdminUsers(): Observable<UserData[]> {
+    const url = `${environment.apiUrl}/admin/admins`;
+    return this.http.get<UserData[]>(url, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError<UserData[]>('getAdminUsers', []))
     );
   }
 

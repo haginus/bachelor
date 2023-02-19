@@ -36,6 +36,9 @@ import { PaperValidationDialogComponent } from './dialogs/paper-validation-dialo
 import { ReportsComponent } from './pages/reports/reports.component';
 import { SignUpRequestsComponent } from './pages/sign-up-requests/sign-up-requests.component';
 import { SignUpRequestDialogComponent } from './dialogs/sign-up-request-dialog/sign-up-request-dialog.component';
+import { AdminsComponent } from './pages/admins/admins.component';
+import { AdminEditDialogComponent } from './dialogs/admin-edit-dialog/admin-edit-dialog.component';
+import { SudoDialogComponent } from './dialogs/sudo-dialog/sudo-dialog.component';
 
 const materialDeps = [
   MatPaginatorModule,
@@ -74,6 +77,9 @@ const materialDeps = [
     ReportsComponent,
     SignUpRequestsComponent,
     SignUpRequestDialogComponent,
+    AdminsComponent,
+    AdminEditDialogComponent,
+    SudoDialogComponent,
   ],
   imports: [
     CommonModule,

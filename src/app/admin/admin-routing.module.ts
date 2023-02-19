@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RoleGuard } from '../guards/role.guard';
 import { AdminComponent } from './admin.component';
+import { AdminsComponent } from './pages/admins/admins.component';
 import { CommitteesComponent } from './pages/committees/committees.component';
 import { AdminDomainsComponent } from './pages/domains/domains.component';
 import { PaperAssignComponent } from './pages/paper-assign/paper-assign.component';
@@ -28,6 +29,12 @@ const routes: Routes = [
     component: AdminTeachersComponent,
     canActivate: [RoleGuard],
     data: { title: 'Profesori', role: 'admin' }
+  },
+  {
+    path: 'admins',
+    component: AdminsComponent,
+    canActivate: [RoleGuard],
+    data: { title: 'Administratori și secretari', role: 'admin' }
   },
   {
     path: 'sign-up-requests',

@@ -1,0 +1,16 @@
+<app-loading *ngIf="isLoading" type="bar" color="primary" class="in-dialog"></app-loading>
+
+<h2 mat-dialog-title>Sunteți pe cale să intrați în modul sudo</h2>
+<mat-dialog-content class="mat-typography">
+  <p>Introduceți parola dvs. pentru a continua.</p>
+  <form [formGroup]="sudoForm" fxLayout="row grid" fxLayoutGap="10px grid" autocomplete="off">
+    <mat-form-field appearance="outline" fxFlex="100">
+      <mat-label>Parolă *</mat-label>
+      <input matInput type="password" formControlName="password" name="password">
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Anulați</button>
+  <button mat-button [disabled]="sudoForm.invalid" (click)="sudo()">Confirmați</button>
+</mat-dialog-actions>

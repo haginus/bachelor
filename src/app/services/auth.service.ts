@@ -1,10 +1,12 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, of, ReplaySubject } from 'rxjs';
-import { catchError, map, take, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { SudoDialogComponent } from '../admin/dialogs/sudo-dialog/sudo-dialog.component';
 import { inclusiveDate, parseDate } from '../lib/utils';
 import { PaperRequiredDocument } from './student.service';
 import { Topic } from './topics.service';
@@ -14,8 +16,7 @@ import { Topic } from './topics.service';
 })
 export class AuthService {
 
-  constructor(private http: HttpClient, private router: Router, private snackbar: MatSnackBar) { 
-    if(this.isSignedIn()) {
+  constructor(private http: HttpClient, private router: Router, private snackbar: MatSnackBar, private dialog: MatDialog) {    if(this.isSignedIn()) {
       this.getUserData().subscribe(res => {
         this.userDataSource.next(res);
       })
@@ -70,8 +71,15 @@ export class AuthService {
 
   impersonateUser(userId: number): Observable<AuthResponse> {
     const url = `${environment.apiUrl}/auth/impersonate`;
-    return this.http.post<AuthResponse>(url, { userId }, this.getPrivateHeaders()).pipe(
+    return this.enterSudoMode().pipe(
+      switchMap(password => {
+        if(!password) return of(null);
+        return this.http.post<AuthResponse>(url, { userId }, this.getPrivateHeaders());
+      }),
       map(res => {
+        if(!res) {
+          return { error: { message: "Ați renunțat la intrarea în modul sudo." } };
+        }
         this.setToken((res as any).token);
         this.userDataSource.next((res as any).user);
         return res;
@@ -96,6 +104,32 @@ export class AuthService {
     const url = `${environment.apiUrl}/auth/check-password-token`;
     return this.http.post<{ email: string }>(url, { token }).pipe(
       catchError(this.handleError("checkPasswordResetToken", { email: null }))
+    );
+  }
+
+  checkSudoPassword(password: string): Observable<boolean> {
+    const url = `${environment.apiUrl}/auth/sudo`;
+    return this.http.post<any>(url, { password }, this.getPrivateHeaders()).pipe(
+      map(res => res.success),
+      catchError(this.handleError("checkSudoPassword", false))
+    );
+  }
+
+  enterSudoMode(): Observable<string> {
+    const password = this.sudoPasswordSource.value;
+    if(password) return of(password);
+    const dialogRef = this.dialog.open<SudoDialogComponent, never, string>(SudoDialogComponent);
+    return dialogRef.afterClosed().pipe(
+      take(1),
+      map(password => {
+        if(password) {
+          this.sudoPasswordSource.next(password);
+          return password;
+        } else {
+          throw { error: { message: "Ați renunțat la intrarea în modul sudo." } };
+        }
+      }),
+      catchError(this.handleError("enterSudoMode", null))
     );
   }
 
@@ -124,6 +158,9 @@ export class AuthService {
     if(token) {
       headers = headers.append('Authorization', 'Bearer ' + token);
     }
+    if(this.sudoPasswordSource.value) {
+      headers = headers.append('X-Sudo-Password', this.sudoPasswordSource.value);
+    }
     return {
       headers,
       withCredentials: false,
@@ -132,6 +169,7 @@ export class AuthService {
 
   userDataSource: ReplaySubject<UserData | undefined> = new ReplaySubject<UserData | undefined>(1);
   userData = this.userDataSource.asObservable();
+  sudoPasswordSource: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
   getUserData() : Observable<UserData | undefined> {
     const url = `${environment.apiUrl}/auth/user`;
