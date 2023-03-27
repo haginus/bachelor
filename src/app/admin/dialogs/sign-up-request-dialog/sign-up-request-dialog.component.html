@@ -58,17 +58,21 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="33">
         <mat-label>Anul înmatriculării *</mat-label>
         <input matInput type="text" formControlName="matriculationYear" name="studentMatriculationYear">
       </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="33">
         <mat-label>Forma de învățământ *</mat-label>
         <mat-select formControlName="studyForm">
           <mat-option value="if">Învățământ cu frecvență</mat-option>
           <mat-option value="ifr">Învățământ cu frecvență redusă</mat-option>
           <mat-option value="id">Învățământ la distanță</mat-option>
         </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="33">
+        <mat-label>Media generală</mat-label>
+        <input matInput type="number" formControlName="generalAverage">
       </mat-form-field>
     </div>
   </form>

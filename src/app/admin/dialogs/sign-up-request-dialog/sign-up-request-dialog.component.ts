@@ -39,6 +39,7 @@ export class SignUpRequestDialogComponent implements OnInit {
       matriculationYear: this.request.matriculationYear,
       studyForm: this.request.studyForm,
       fundingForm: this.request.fundingForm,
+      generalAverage: '',
     });
 
     this.admin.getDomains().subscribe((domains) => {
@@ -60,7 +61,8 @@ export class SignUpRequestDialogComponent implements OnInit {
     'group': new FormControl(null, [Validators.required]),
     'matriculationYear': new FormControl(null, [Validators.required]),
     'studyForm': new FormControl(null, [Validators.required]),
-    'fundingForm': new FormControl(null, [Validators.required])
+    'fundingForm': new FormControl(null, [Validators.required]),
+    'generalAverage': new FormControl(null, [Validators.min(5), Validators.max(10)]),
   });
 
   declineRequest() {
