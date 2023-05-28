@@ -27,8 +27,8 @@ export class ReportsComponent implements OnInit {
     });
   }
 
-  getReportFile(reportName: any, download = false) {
-    this.admin.getReportFile(reportName).subscribe(data => {
+  getReportFile(reportName: any, download = false, query?: Record<string, any>) {
+    this.admin.getReportFile(reportName, query).subscribe(data => {
       if(!data) return;
       const { report, buffer } = data;
       if(download) {

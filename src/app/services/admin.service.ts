@@ -453,9 +453,12 @@ export class AdminService {
       );
   }
 
-  getReportFile<K extends keyof typeof REPORT_FILES>(reportName: K): Observable<{ report: ReportFile, buffer: ArrayBuffer }> {
+  getReportFile<K extends keyof typeof REPORT_FILES>(reportName: K, query?: Record<string, any>): Observable<{ report: ReportFile, buffer: ArrayBuffer }> {
     const report = REPORT_FILES[reportName];
-    const url = `${environment.apiUrl}/admin/reports/${reportName}`;
+    let url = `${environment.apiUrl}/admin/reports/${reportName}`;
+    if(query) {
+      url += '?' + Object.keys(query).map(key => `${key}=${query[key]}`).join('&');
+    }
     const options = this.auth.getPrivateHeaders();
     return this.http
       .get<any>(url, {...options, responseType: 'arraybuffer' as 'json'})

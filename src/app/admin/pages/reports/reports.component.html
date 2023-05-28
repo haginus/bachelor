@@ -18,8 +18,13 @@
   <h2 mat-card-title>Liste</h2>
   <mat-list>
     <mat-list-item>
-      <div mat-line>Generați listă lucrări</div>
+      <div mat-line>Generați listă lucrări înscrise</div>
       <div mat-line>Conține toate lucrările înscrise în această sesiune</div>
+      <button mat-stroked-button (click)="getReportFile('paper_list', true, { submitted: true })">Generați</button>
+    </mat-list-item>
+    <mat-list-item>
+      <div mat-line>Generați listă lucrări</div>
+      <div mat-line>Conține toate lucrările din platformă</div>
       <button mat-stroked-button (click)="getReportFile('paper_list', true)">Generați</button>
     </mat-list-item>
   </mat-list>
