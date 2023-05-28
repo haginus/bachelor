@@ -15,6 +15,22 @@ table {
     height: 0px;
 }
 
+.paper-title {
+    span {
+        line-height: 16px;
+        vertical-align: middle;
+    }
+
+    mat-icon {
+        font-size: 16px;
+        color: #1976D2;
+        width: 16px;
+        height: 16px;
+        vertical-align: middle;
+        margin-left: 4px;
+    }
+}
+
 .status-icon {
     cursor: default;
     user-select: none;

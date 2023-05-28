@@ -56,7 +56,10 @@
 
             <ng-container matColumnDef="title">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Titlu </th>
-                <td mat-cell *matCellDef="let row" class="wrap"> {{row.title}} </td>
+                <td mat-cell *matCellDef="let row" class="wrap paper-title">
+                    <span>{{row.title}}</span>
+                    <mat-icon *ngIf="row.isValid" matTooltip="Lucrare validată">verified</mat-icon>
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="type">
