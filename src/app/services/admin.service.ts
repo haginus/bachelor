@@ -65,11 +65,11 @@ export class AdminService {
     );
   }
 
-  editStudent(id: number, firstName: string, lastName: string, CNP: string,
+  editStudent(id: number, firstName: string, lastName: string, CNP: string, email: string,
     group: string, specializationId: number, identificationCode: string, promotion: string,
     studyForm: string, fundingForm: string, matriculationYear: string): Observable<UserData | null> {
     const url = `${environment.apiUrl}/admin/students/edit`;
-    const body = { id, firstName, lastName, CNP, group, specializationId, identificationCode, promotion,
+    const body = { id, firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion,
       studyForm, fundingForm, matriculationYear };
     return this.http.post<UserData>(url, body, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("editStudent", null))
@@ -108,9 +108,9 @@ export class AdminService {
     );
   }
 
-  editTeacher(id: number, title: string, firstName: string, lastName: string, CNP: string): Observable<UserData | null> {
+  editTeacher(id: number, title: string, firstName: string, lastName: string, CNP: string, email: string): Observable<UserData | null> {
     const url = `${environment.apiUrl}/admin/teachers/edit`;
-    const body = { id, title, firstName, lastName, CNP };
+    const body = { id, title, firstName, lastName, CNP, email };
     return this.http.post<UserData>(url, body, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("editTeacher", null))
     );

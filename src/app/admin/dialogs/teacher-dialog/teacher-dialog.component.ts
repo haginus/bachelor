@@ -20,9 +20,7 @@ export class AdminTeacherDialogConmonent implements OnInit {
   domains: Domain[];
 
   ngOnInit(): void {
-    if(this.data.mode == 'create') {
-      this.teacherForm.get('email').enable();
-    }
+    
   }
 
   teacherForm = new FormGroup({
@@ -30,8 +28,12 @@ export class AdminTeacherDialogConmonent implements OnInit {
     'lastName': new FormControl(this.data.data?.lastName, [Validators.required]),
     'title': new FormControl(this.data.data?.title),
     'CNP': new FormControl(this.data.data?.CNP, [CNPValidator]),
-    'email': new FormControl({ value: this.data.data?.email, disabled: true }, [Validators.email, Validators.required]),
+    'email': new FormControl(this.data.data?.email, [Validators.email, Validators.required]),
   });
+
+  get emailChanged() { 
+    return this.data.mode == 'edit' && this.teacherForm.get("email").value != this.data.data?.email;
+  }
 
   private getControlValues() {
     const title = this.teacherForm.get("title").value;
@@ -49,9 +51,9 @@ export class AdminTeacherDialogConmonent implements OnInit {
   }
 
   editTeacher() {
-    const { title, firstName, lastName, CNP } = this.getControlValues();
+    const { title, firstName, lastName, CNP, email } = this.getControlValues();
     const id = this.data.data.id;
-    return this.admin.editTeacher(id, title, firstName, lastName, CNP);
+    return this.admin.editTeacher(id, title, firstName, lastName, CNP, email);
   }
 
 }

@@ -57,7 +57,7 @@ export class StudentDialogComponent implements OnInit {
     'lastName': new FormControl(this.data.data?.lastName, [Validators.required]),
     'CNP': new FormControl(this.data.data?.CNP, [CNPValidator]),
     'identificationCode': new FormControl(this.data.data?.student?.identificationCode, [Validators.required]),
-    'email': new FormControl({ value: this.data.data?.email, disabled: true }, [Validators.email, Validators.required]),
+    'email': new FormControl(this.data.data?.email, [Validators.email, Validators.required]),
     'domainId': new FormControl({ value: this.data.data?.student?.domainId, disabled: true }, [Validators.required]),
     'specializationId': new FormControl({ value: this.data.data?.student?.specializationId, disabled: true }, [Validators.required]),
     'promotion': new FormControl(this.data.data?.student?.promotion, [Validators.required]),
@@ -67,7 +67,13 @@ export class StudentDialogComponent implements OnInit {
     'fundingForm': new FormControl(this.data.data?.student?.fundingForm, [Validators.required])
   });
 
-  get specializationId() { return this.studentForm.get("specializationId") };
+  get specializationId() { 
+    return this.studentForm.get("specializationId")
+  }
+
+  get emailChanged() { 
+    return this.data.mode == 'edit' && this.studentForm.get("email").value != this.data.data?.email;
+  }
 
   private setControlValues() {
     this.studentForm.get("firstName").setValue(this.data.data.firstName);
@@ -109,10 +115,10 @@ export class StudentDialogComponent implements OnInit {
   }
 
   editStudent() {
-    const { firstName, lastName, CNP, group, specializationId, identificationCode, promotion,
+    const { firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion,
       studyForm, fundingForm, matriculationYear} = this.getControlValues();
     const id = this.data.data.id;
-    return this.admin.editStudent(id, firstName, lastName, CNP, group, specializationId, identificationCode, promotion,
+    return this.admin.editStudent(id, firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion,
       studyForm, fundingForm, matriculationYear);
   }
 

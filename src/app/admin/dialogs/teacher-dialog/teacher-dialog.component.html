@@ -31,7 +31,9 @@
         <mat-form-field appearance="outline">
             <mat-label>E-mail *</mat-label>
             <input matInput type="email" formControlName="email" name="teacherEmail">
-            <mat-hint *ngIf="data.mode == 'edit'">E-mailul nu poate fi modificat.</mat-hint>
+            <mat-hint *ngIf="emailChanged" class="warning">
+                E-mail modificat. Utilizatorul va avea noi credențiale.
+            </mat-hint>
         </mat-form-field>
     </form>
 </mat-dialog-content>
