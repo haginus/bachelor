@@ -1,10 +1,10 @@
 <mat-menu #paperMenu="matMenu">
     <ng-template matMenuContent let-paper="paper">
-        <button mat-menu-item (click)="editPaper(paper)" [disabled]="!canEditPaper(paper)">
+        <button mat-menu-item (click)="editPaper(paper)" [disabled]="!canEditPapers">
             <mat-icon>edit</mat-icon>
             <span>Editați lucrarea</span>
         </button>
-        <button *ngIf="paper.submitted" mat-menu-item (click)="unsubmitPaper(paper)" [disabled]="!canEditPaper(paper)">
+        <button *ngIf="paper.submitted" mat-menu-item (click)="unsubmitPaper(paper)" [disabled]="!canEditPapers">
             <mat-icon>close</mat-icon>
             <span>Anulați înscrierea</span>
         </button>
