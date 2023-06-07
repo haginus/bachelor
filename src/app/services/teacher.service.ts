@@ -143,15 +143,19 @@ export class TeacherService {
       );
   }
 
-  getStudents(name?: string, domainId?: number): Observable<UserData[]> {
-    let url = `${environment.apiUrl}/teacher/students`;
-    if(name) {
-      url += `?name=${name}`;
+  getStudents(firstName?: string, lastName?: string, email?: string, domainId?: number): Observable<UserData[]> {
+    let url = `${environment.apiUrl}/teacher/students?`;
+    if(firstName) {
+      url += `&firstName=${name}`;
+    }
+    if(lastName) {
+      url += `&lastName=${lastName}`;
+    }
+    if(email) {
+      url += `&email=${email}`;
     }
     if(domainId) {
-      if(!name) url += '?';
-      else url += '&';
-      url += `domainId=${domainId}`;
+      url += `&domainId=${domainId}`;
     }
     return this.http
       .get<UserData[]>(url, this.auth.getPrivateHeaders())

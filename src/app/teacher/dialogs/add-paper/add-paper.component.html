@@ -7,54 +7,63 @@
       <form [formGroup]="paperForm" fxLayout="row grid" fxLayoutGap="10px grid">
         <ng-template matStepLabel>Completați detaliile lucrării</ng-template>
         <mat-form-field appearance="outline" fxFlex="100">
-            <mat-label>Titlu *</mat-label>
-            <input type="text" matInput formControlName="title"/>
-            <mat-error>Titlul trebuie să fie de lungime între 3 și 256 caractere.</mat-error>
+          <mat-label>Titlu *</mat-label>
+          <input type="text" matInput formControlName="title" />
+          <mat-error>Titlul trebuie să fie de lungime între 3 și 256 caractere.</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="100">
-            <mat-label>Descriere *</mat-label>
-            <textarea matInput type="text" formControlName="description"></textarea>
-            <mat-error>Descrierea trebuie să fie de lungime între 64 și 1024 caractere.</mat-error>
+          <mat-label>Descriere *</mat-label>
+          <textarea matInput type="text" formControlName="description"></textarea>
+          <mat-error>Descrierea trebuie să fie de lungime între 64 și 1024 caractere.</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="100">
           <mat-label>Teme lucrare *</mat-label>
           <mat-chip-list #chipList aria-label="Selectare teme">
-              <mat-chip *ngFor="let topic of selectedTopics" [selectable]="true" [removable]="true"
-                  (removed)="removeTopic(topic)">
-                  {{topic.name}}
-                  <mat-icon matChipRemove>cancel</mat-icon>
-              </mat-chip>
-              <input placeholder="Temă nouă..." #topicInput formControlName="topics" [matAutocomplete]="auto"
-                  [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                  (matChipInputTokenEnd)="addTopic($event)" (blur)="handleTopicBlur($event, topicInput.value)"/>
+            <mat-chip *ngFor="let topic of selectedTopics" [selectable]="true" [removable]="true"
+              (removed)="removeTopic(topic)">
+              {{topic.name}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="Temă nouă..." #topicInput formControlName="topics" [matAutocomplete]="auto"
+              [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="addTopic($event)" (blur)="handleTopicBlur($event, topicInput.value)" />
           </mat-chip-list>
           <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTopic($event)">
-              <mat-option *ngFor="let topic of filteredTopics | async" [value]="topic">
-                  {{topic.name}}
-              </mat-option>
+            <mat-option *ngFor="let topic of filteredTopics | async" [value]="topic">
+              {{topic.name}}
+            </mat-option>
           </mat-autocomplete>
           <mat-hint>Adăugați o temă înscriind numele și apăsând <b>Virgulă</b> sau <b>Enter.</b></mat-hint>
         </mat-form-field>
         <div class="actions">
           <button mat-button matStepperNext [disabled]="paperForm.invalid">Pasul următor</button>
         </div>
-    </form>
+      </form>
     </mat-step>
     <mat-step [stepControl]="findStudentForm">
+      <div class="filter-by">Filtrați după</div>
       <form [formGroup]="findStudentForm" fxLayout="row grid" fxLayoutGap="10px grid">
         <ng-template matStepLabel>Alegeți studentul</ng-template>
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-sm="50">
-            <mat-label>Căutați după nume...</mat-label>
-            <input type="text" matInput formControlName="name"/>
+          <mat-label>Nume de familie</mat-label>
+          <input type="text" matInput formControlName="lastName" />
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-sm="50">
-            <mat-label>Căutați după domeniu</mat-label>
-            <mat-select formControlName="domainId">
-              <mat-option [value]="null">--</mat-option>
-              <mat-option *ngFor="let domain of domains | async" [value]="domain.id">
-                {{ domain.name }}
-              </mat-option>
-            </mat-select>
+          <mat-label>Prenume</mat-label>
+          <input type="text" matInput formControlName="firstName" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-sm="50">
+          <mat-label>E-mail</mat-label>
+          <input type="email" matInput formControlName="email" name="studentEmail rpd" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-sm="50">
+          <mat-label>Domeniu</mat-label>
+          <mat-select formControlName="domainId">
+            <mat-option [value]="null">--</mat-option>
+            <mat-option *ngFor="let domain of domains | async" [value]="domain.id">
+              {{ domain.name }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
         <div class="student-scroll" fxFlex="100">
           <app-loading color="primary" *ngIf="isLoadingUsers"></app-loading>
@@ -92,7 +101,7 @@
         </p>
         <app-user-snippet *ngIf="resultedPaper?.user" [user]="resultedPaper.user">Student</app-user-snippet>
       </div>
-      
+
       <div fxLayoutAlign="end" class="dialog-buttons">
         <button mat-button mat-dialog-close>Anulați</button>
         <button mat-raised-button color="primary" (click)="savePaper()">Salvați</button>

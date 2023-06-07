@@ -35,7 +35,9 @@ export class AddPaperComponent implements OnInit {
   });
 
   findStudentForm = new FormGroup({
-    name: new FormControl(""),
+    firstName: new FormControl(""),
+    lastName: new FormControl(""),
+    email: new FormControl(""),
     domainId: new FormControl(null),
     studentId: new FormControl(null, [Validators.required])
   });
@@ -55,12 +57,14 @@ export class AddPaperComponent implements OnInit {
   PAPER_TYPES = PAPER_TYPES;
 
   ngOnInit(): void {
-    const nameChange = this.findStudentForm.get('name').valueChanges.pipe(startWith(''), debounceTime(500));
+    const firstNameChange = this.findStudentForm.get('firstName').valueChanges.pipe(startWith(''), debounceTime(500));
+    const lastNameChange = this.findStudentForm.get('lastName').valueChanges.pipe(startWith(''), debounceTime(500));
+    const emailChange = this.findStudentForm.get('email').valueChanges.pipe(startWith(''), debounceTime(500));
     const domainChange = this.findStudentForm.get('domainId').valueChanges.pipe(startWith(''));
-    this.userResultsSubscription = combineLatest([nameChange, domainChange]).pipe(
-      switchMap(([name, domainId]) => {
+    this.userResultsSubscription = combineLatest([firstNameChange, lastNameChange, emailChange, domainChange]).pipe(
+      switchMap(([firstName, lastName, email, domainId]) => {
         this.isLoadingUsers = true;
-        return this.teacher.getStudents(name, domainId);
+        return this.teacher.getStudents(firstName, lastName, email, domainId);
       })
     ).subscribe(results => {
       this.userResults = results;
