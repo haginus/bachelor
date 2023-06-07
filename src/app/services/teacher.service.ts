@@ -146,7 +146,7 @@ export class TeacherService {
   getStudents(firstName?: string, lastName?: string, email?: string, domainId?: number): Observable<UserData[]> {
     let url = `${environment.apiUrl}/teacher/students?`;
     if(firstName) {
-      url += `&firstName=${name}`;
+      url += `&firstName=${firstName}`;
     }
     if(lastName) {
       url += `&lastName=${lastName}`;
