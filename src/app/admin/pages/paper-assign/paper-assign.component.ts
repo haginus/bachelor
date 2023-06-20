@@ -37,6 +37,7 @@ export class PaperAssignComponent implements OnInit {
   paperFilter = new FormGroup({
     title: new FormControl(''),
     type: new FormControl(null),
+    studentName: new FormControl(''),
   });
 
   PAPER_TYPES = PAPER_TYPES;
@@ -86,9 +87,9 @@ export class PaperAssignComponent implements OnInit {
       startWith({}),
       switchMap(() => { 
         this.isLoadingOtherPapers = true;
-        const { title, type } = this.paperFilter.value;
+        const { title, type, studentName } = this.paperFilter.value;
         return this.admin.getPapers(undefined, undefined, null, null, 
-        { assigned: false, forCommittee: this.committeeId, submitted: true, isNotValid: false, title, type }, true)
+        { assigned: false, forCommittee: this.committeeId, submitted: true, isNotValid: false, title, type, studentName }, true)
       })
     ).subscribe(papers => {
       this.otherPapers = papers.rows;

@@ -52,6 +52,10 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="100">
+                <mat-label>Nume student</mat-label>
+                <input matInput formControlName="studentName" name="studentName">
+            </mat-form-field>
         </mat-card>
         <div cdkDropList [cdkDropListData]="otherPapers" class="paper-list" cdkDropListSortingDisabled
         (cdkDropListDropped)="drop($event)">
