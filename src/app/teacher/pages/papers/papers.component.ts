@@ -85,7 +85,7 @@ export class TeacherPapersComponent implements OnInit, OnDestroy, AfterViewInit 
     this.sessionSettingsSubscription = this.auth.getSessionSettings().subscribe(settings => {
       this.sessionSettings = settings;
       this.canAddPapers = settings.canApply();
-      this.canUploadDocuments = Date.now() >= parseDate(settings.fileSubmissionStartDate).getTime();
+      this.canUploadDocuments = Date.now() >= parseDate(settings.fileSubmissionStartDate).getTime() && !settings.allowGrading;
     });
   }
 

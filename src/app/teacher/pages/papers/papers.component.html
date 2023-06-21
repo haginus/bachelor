@@ -146,7 +146,7 @@
                             <app-paper-document-list [paperId]="paper.id"
                                 [requiredDocuments]="paper.requiredDocuments"
                                 [documents]="paper.documents"
-                                [canEdit]="paper.isValid == null && canUploadDocuments"
+                                [canEdit]="canUploadDocuments"
                                 perspective="teacher"
                                 (documentEvents)="handleDocumentEvents($event, paper.id)"
                                 (areDocumentsUploaded)="handleAreDocumentsUploadedEvent($event, paper)"
