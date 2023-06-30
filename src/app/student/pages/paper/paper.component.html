@@ -91,7 +91,8 @@
                     Aveți documente de completat.
                 </ng-container>
                 <ng-container *ngIf="areDocumentsUploaded">
-                    Ați încărcat toate documentele.
+                    <span>Ați încărcat toate documentele. </span>
+                    <span *ngIf="paper.committee">Lucrarea dvs. a fost atribuită la {{ paper.committee.name }}.</span>
                 </ng-container>
             </div>
             <div class="tip-card-action">
