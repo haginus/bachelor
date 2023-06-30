@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AreDocumentsUploaded } from 'src/app/shared/paper-document-list/paper-document-list.component';
 import { MatDialog } from '@angular/material/dialog';
 import { GradePaperComponent } from '../../dialogs/grade-paper/grade-paper.component';
-import { CommitteeDocument, DocumentService } from 'src/app/services/document.service';
+import { CommitteeDocument, CommitteeDocumentsFormat, DocumentService } from 'src/app/services/document.service';
 import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PAPER_TYPES } from 'src/app/lib/constants';
@@ -150,25 +150,15 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
     } else if(documentName == 'final_catalog') {
       downloadTitle += '-CATALOG-FINAL';
     }
-    downloadTitle += '.pdf';
-    this.documentService.downloadDocument(buffer, downloadTitle, 'application/pdf');
+    downloadTitle += `.${CommitteeDocumentsFormat[documentName][0]}`;
+    this.documentService.downloadDocument(buffer, downloadTitle, CommitteeDocumentsFormat[documentName][1]);
   }
 
-  generateCommitteeCatalog() {
+  generateCommitteeDocument(documentName: CommitteeDocument) {
     this.isLoadingResults = true;
-    this.documentService.getCommitteeDocument(this.committee.id, 'catalog').subscribe(buffer => {
+    this.documentService.getCommitteeDocument(this.committee.id, documentName).subscribe(buffer => {
       if(buffer) {
-        this.downloadDocument(buffer, 'catalog');
-      }
-      this.isLoadingResults = false;
-    });
-  }
-
-  generateCommitteeFinalCatalog() {
-    this.isLoadingResults = true;
-    this.documentService.getCommitteeDocument(this.committee.id, 'final_catalog').subscribe(buffer => {
-      if(buffer) {
-        this.downloadDocument(buffer, 'final_catalog');
+        this.downloadDocument(buffer, documentName);
       }
       this.isLoadingResults = false;
     });

@@ -101,4 +101,9 @@ export class DocumentService {
   }
 }
 
-export type CommitteeDocument = 'catalog' | 'final_catalog';
+export type CommitteeDocument = 'catalog' | 'catalog_docx' | 'final_catalog';
+export const CommitteeDocumentsFormat: Record<CommitteeDocument, [string, string]> = {
+  'catalog': ['pdf', 'application/pdf'],
+  'catalog_docx': ['docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+  'final_catalog': ['pdf', 'application/pdf'],
+}

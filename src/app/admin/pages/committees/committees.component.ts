@@ -7,7 +7,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AdminService } from 'src/app/services/admin.service';
 import { AuthService, Committee, Domain, Paper, UserData, UserDataMin } from 'src/app/services/auth.service';
-import { CommitteeDocument, DocumentService } from 'src/app/services/document.service';
+import { CommitteeDocument, CommitteeDocumentsFormat, DocumentService } from 'src/app/services/document.service';
 import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
 import { CommitteeDialogComponent } from '../../dialogs/committee-dialog/committee-dialog.component';
 
@@ -113,10 +113,15 @@ export class CommitteesComponent implements OnInit, OnDestroy {
     });
   }
 
-  getCommitteeDocument(committeeId: number, documentName: CommitteeDocument) {
+  getCommitteeDocument(committee: Committee, documentName: CommitteeDocument) {
     let sbRef = this.snackbar.open('Se generează documentul...');
-    this.document.getCommitteeDocument(committeeId, documentName).subscribe(document => {
-      this.document.viewDocument(document, 'application/pdf');
+    this.document.getCommitteeDocument(committee.id, documentName).subscribe(document => {
+      const format = CommitteeDocumentsFormat[documentName];
+      if(format[0] == 'pdf') {
+        this.document.viewDocument(document, format[1]);
+      } else {
+        this.document.downloadDocument(document, `Catalog ${committee.name}.${format[0]}`, format[1]);
+      }
       sbRef.dismiss();
     });
   }

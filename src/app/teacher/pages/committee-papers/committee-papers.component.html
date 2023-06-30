@@ -1,12 +1,12 @@
 <mat-menu #documentGeneration="matMenu">
     <ng-template matMenuContent>
-        <button mat-menu-item (click)="generateCommitteeCatalog()">
+        <button mat-menu-item (click)="generateCommitteeDocument('catalog')">
             <mat-icon>description</mat-icon>
-            <span>Descărcați catalogul</span>
+            <span>Format PDF</span>
         </button>
-        <button mat-menu-item (click)="generateCommitteeFinalCatalog()">
+        <button mat-menu-item (click)="generateCommitteeDocument('catalog_docx')">
             <mat-icon>description</mat-icon>
-            <span>Descărcați catalogul final</span>
+            <span>Format DOCX</span>
         </button>
     </ng-template>
 </mat-menu>
@@ -20,8 +20,9 @@
             <button mat-raised-button color="warn" (click)="markGradesAsFinal()" [disabled]="committee.finalGrades">
                 {{ committee.finalGrades ? 'Note marcate drept finale' : 'Marcați notele drept finale' }}
             </button>
-            <button mat-raised-button color="accent" (click)="generateCommitteeCatalog()">
+            <button mat-button [matMenuTriggerFor]="documentGeneration">
                 <span>Descărcați catalogul</span>
+                <mat-icon>arrow_drop_down</mat-icon>
             </button>
         </ng-container>
         <span class="toolbar-spacer"></span>

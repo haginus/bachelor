@@ -18,7 +18,7 @@
                 <span>Demarcați notele drept finale</span>
             </button>
         </ng-container>
-        <button mat-menu-item [matMenuTriggerFor]="committeeCatalogGenerationMenu" [matMenuTriggerData]="{id: row.id}">
+        <button mat-menu-item [matMenuTriggerFor]="committeeCatalogGenerationMenu" [matMenuTriggerData]="{committee: row}">
             <mat-icon>description</mat-icon>
             <span>Generați documente</span>
         </button>
@@ -26,12 +26,16 @@
 </mat-menu>
 
 <mat-menu #committeeCatalogGenerationMenu="matMenu">
-    <ng-template matMenuContent let-id="id">
-        <button mat-menu-item (click)="getCommitteeDocument(id, 'catalog')">
+    <ng-template matMenuContent let-committee="committee">
+        <button mat-menu-item (click)="getCommitteeDocument(committee, 'catalog')">
             <mat-icon>description</mat-icon>
-            <span>Generați catalogul</span>
+            <span>Generați catalogul în format PDF</span>
         </button>
-        <button mat-menu-item (click)="getCommitteeDocument(id, 'final_catalog')">
+        <button mat-menu-item (click)="getCommitteeDocument(committee, 'catalog_docx')">
+            <mat-icon>description</mat-icon>
+            <span>Generați catalogul în format DOCX</span>
+        </button>
+        <button mat-menu-item (click)="getCommitteeDocument(committee, 'final_catalog')">
             <mat-icon>description</mat-icon>
             <span>Generați catalogul final</span>
         </button>
