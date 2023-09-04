@@ -62,8 +62,7 @@
             <div class="spinner-container" *ngIf="isLoadingOtherPapers">
                 <mat-spinner diameter="36"></mat-spinner>
             </div>
-            <div class="paper-box" *ngFor="let paper of otherPapers" cdkDrag
-                [cdkDragDisabled]="!isMasterCommittee && teacherIsInCommittee(paper.teacherId)">
+            <div class="paper-box" *ngFor="let paper of otherPapers" cdkDrag>
                 <ng-template *ngTemplateOutlet="paperTemplate; context: { paper: paper }"></ng-template>
             </div>
             <div class="no-results" *ngIf="otherPapers.length == 0">Nu există lucrări.</div>
