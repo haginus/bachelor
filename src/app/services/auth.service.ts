@@ -41,6 +41,12 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
+  public appendTokenQuery(url: string): string {
+    const token = this.getToken();
+    if(!token) return url;
+    return url + (url.includes('?') ? '&' : '?') + 'token=' + token;
+  }
+
   isSignedIn() : boolean {
     return this.getToken() != null;
   }
@@ -185,7 +191,7 @@ export class AuthService {
     const url = `${environment.apiUrl}/auth/session`;
     return this.http.get<SessionSettingsI>(url).pipe(
       map(settings => new SessionSettings(settings)),
-      catchError((err, caught) => { 
+      catchError((err, caught) => {
         return of(null);
       })
     );
@@ -209,7 +215,7 @@ export class AuthService {
     const url = `${environment.apiUrl}/student/validate`;
     return this.http.post(url, { topics }, this.getPrivateHeaders()).pipe(
       tap(res => {
-        this.userData.pipe(take(1)).subscribe(user => { // change 
+        this.userData.pipe(take(1)).subscribe(user => { // change
           (user as UserData).validated = true;
           this.userDataSource.next(user);
         });
@@ -228,7 +234,7 @@ export class AuthService {
     const url = `${environment.apiUrl}/teacher/validate`;
     return this.http.post(url, {}, this.getPrivateHeaders()).pipe(
       tap(res => {
-        this.userData.pipe(take(1)).subscribe(user => { // change 
+        this.userData.pipe(take(1)).subscribe(user => { // change
           (user as UserData).validated = true;
           this.userDataSource.next(user);
         });
@@ -253,7 +259,7 @@ export class AuthService {
     formData.append('website', website);
     return this.http.patch<Profile>(url, formData, this.getPrivateHeaders()).pipe(
       tap(profile => {
-        this.userData.pipe(take(1)).subscribe(user => { // change 
+        this.userData.pipe(take(1)).subscribe(user => { // change
           (user as UserData).profile = profile;
           this.userDataSource.next(user);
         });

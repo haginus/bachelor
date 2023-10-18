@@ -12,7 +12,7 @@ export class ReportsComponent implements OnInit {
 
   constructor(private document: DocumentService, private admin: AdminService, private snackbar: MatSnackBar) { }
 
-  finalReportStatus: FinalReportStatus; 
+  finalReportStatus: FinalReportStatus;
 
   ngOnInit(): void {
     this.getFinalReportStatus();
@@ -42,15 +42,13 @@ export class ReportsComponent implements OnInit {
   getFinalReportStatus() {
     this.admin.getFinalReportStatus().subscribe(status => {
       this.finalReportStatus = status;
-    })
+    });
   }
 
   generateFinalReport() {
     this.finalReportStatus.isGenerating = true;
-    let sbRef = this.snackbar.open('Se generează raportul... Acest lucru poate dura ceva.', null, { duration: null });
-    this.admin.generateFinalReport().subscribe(_ => {
-      this.getFinalReportStatus();
-      sbRef.dismiss();
+    this.admin.generateFinalReport().subscribe(status => {
+      this.finalReportStatus = status;
     });
   }
 

@@ -41,7 +41,24 @@
     <mat-list-item *ngIf="finalReportStatus?.isGenerating">
       <div mat-line>Generați raport sesiune</div>
       <div mat-line>Raportul este în curs de generare...</div>
-      <mat-spinner diameter="32"></mat-spinner>
+      <div class="progress-container">
+        <mat-progress-spinner
+          class="spinner main"
+          diameter="32"
+          [mode]="finalReportStatus?.progress ? 'determinate' : 'indeterminate'"
+          [value]="finalReportStatus?.progress * 100">
+        </mat-progress-spinner>
+        <mat-progress-spinner
+          class="spinner placeholder"
+          diameter="32"
+          *ngIf="finalReportStatus?.progress"
+          [value]="100"
+          mode="determinate">
+        </mat-progress-spinner>
+        <div class="text">
+          {{ finalReportStatus.progress * 100 | number: '1.0-0' }}%
+        </div>
+      </div>
     </mat-list-item>
     <mat-list-item *ngIf="finalReportStatus?.lastGeneratedOn && !finalReportStatus?.isGenerating">
       <div mat-line>Descărcați raport sesiune</div>

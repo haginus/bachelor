@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, of } from 'rxjs';
-import { catchError, map, retry } from 'rxjs/operators';
+import { Observable, interval, of } from 'rxjs';
+import { catchError, first, map, retry, startWith, switchMap, takeWhile } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AuthService, Domain, Paper, SessionSettings, UserData, Committee, CommitteeMember, PaperType, SignUpRequest } from './auth.service';
 import { Topic } from './topics.service';
@@ -12,7 +12,7 @@ import { Topic } from './topics.service';
 })
 export class AdminService {
 
-  constructor(private http: HttpClient, private auth: AuthService, private snackbar: MatSnackBar) { }
+  constructor(private http: HttpClient, private auth: AuthService, private snackbar: MatSnackBar, private zone: NgZone) { }
 
   getStats(): Observable<Statistic[]> {
     const url = `${environment.apiUrl}/admin/stats`;
@@ -324,11 +324,11 @@ export class AdminService {
       );
   }
 
-  // Papers 
+  // Papers
 
   getPapers(sort: string = 'id', order: string = 'ASC', page?: number, pageSize?: number,
     filter?: GetPapersFilter, minified?: boolean): Observable<PaperQueryResult> {
-    
+
     let url = `${environment.apiUrl}/admin/papers?sort=${sort}&order=${order}`;
     if(page != undefined && pageSize) {
       url += `&page=${page}&pageSize=${pageSize}`;
@@ -399,7 +399,7 @@ export class AdminService {
     );
   }
 
-  // Session Settings 
+  // Session Settings
 
   changeSessionSettings(settings: SessionSettings): Observable<SessionSettings> {
     const url = `${environment.apiUrl}/admin/session`;
@@ -426,21 +426,37 @@ export class AdminService {
 
   getFinalReportStatus(): Observable<FinalReportStatus> {
     const url = `${environment.apiUrl}/admin/session/report`;
-    return this.http
-      .get<FinalReportStatus>(url, this.auth.getPrivateHeaders())
-      .pipe(
-        catchError(this.handleError<any>('getFinalReportStatus', null))
-      );
+    return interval(1000).pipe(
+      startWith(0),
+      switchMap(() => this.http.get<FinalReportStatus>(url, this.auth.getPrivateHeaders())),
+      takeWhile((status, index) => status.isGenerating, true),
+      catchError(this.handleError<any>('getFinalReportStatus', null))
+    );
   }
 
-  generateFinalReport(): Observable<boolean> {
-    const url = `${environment.apiUrl}/admin/session/report`;
-    return this.http
-      .post<any>(url, {}, this.auth.getPrivateHeaders())
-      .pipe(
-        map(_ => true),
-        catchError(this.handleError<any>('generateFinalReport', false))
-      );
+  generateFinalReport(): Observable<FinalReportStatus> {
+    const url = this.auth.appendTokenQuery(`${environment.apiUrl}/admin/session/report/generate`);
+    const eventSource = new EventSource(url);
+    return new Observable<FinalReportStatus>(observer => {
+      eventSource.onmessage = event => {
+        this.zone.run(() => {
+          const data = JSON.parse(event.data) as FinalReportStatus;
+          observer.next(data);
+          if(data.progress == 1 && data.isGenerating == false) {
+            eventSource.close();
+            observer.complete();
+          }
+        });
+      }
+      eventSource.onerror = event => {
+        this.zone.run(() => {
+          observer.error(event);
+          eventSource.close();
+        });
+      }
+    }).pipe(
+      catchError(this.handleError<any>('generateFinalReport', null))
+    );
   }
 
   getFinalCatalog(mode: string): Observable<ArrayBuffer> {
