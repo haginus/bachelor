@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map } from 'rxjs/operators';
 import { AdminService } from 'src/app/services/admin.service';
+import { ImportResultDialogComponent } from '../import-result-dialog/import-result-dialog.component';
 
 @Component({
   selector: 'app-students-bulk-add-dialog',
@@ -13,7 +14,8 @@ import { AdminService } from 'src/app/services/admin.service';
 export class StudentsBulkAddDialogComponent implements OnInit {
 
   constructor(private admin: AdminService, private snackbar: MatSnackBar,
-    private dialogRef: MatDialogRef<StudentsBulkAddDialogComponent>) { }
+    private dialogRef: MatDialogRef<StudentsBulkAddDialogComponent>,
+    private dialog: MatDialog) { }
 
   loading: boolean = false;
 
@@ -33,7 +35,15 @@ export class StudentsBulkAddDialogComponent implements OnInit {
     this.admin.addStudentsBulk(file, specializationId, studyForm).subscribe(res => {
       if(res == null) {
       } else {
-        this.snackbar.open(`${res.addedStudents} studenți au fost adăugați și ${res.editedStudents} editați din totalul de ${res.totalStudents} studenți.`);
+        const stats = res.stats;
+        const sbRef = this.snackbar.open(
+          `${stats.addedRows} studenți au fost adăugați și ${stats.editedRows} editați din totalul de ${stats.totalRows} studenți. ${stats.invalidRows} linii au fost ignorate.`,
+          'Vedeți rezultatele',
+          { duration: 10000 }
+        );
+        sbRef.onAction().toPromise().then(() => {
+          this.dialog.open(ImportResultDialogComponent, { data: res });
+        });
       }
       this.dialogRef.close(true);
     })

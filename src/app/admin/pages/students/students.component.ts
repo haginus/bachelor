@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { BehaviorSubject, merge, Observable, of as observableOf, Subscription } from 'rxjs';
 import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
@@ -27,7 +26,7 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
 
   user: UserData;
   userSubscription: Subscription;
-  
+
   ngOnInit(): void {
     this.userSubscription = this.auth.userData.subscribe(user => {
       this.user = user;
@@ -68,7 +67,7 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
   ngAfterViewInit() {
     const filterChanges = this.studentFilter.valueChanges.pipe(debounceTime(500));
     merge(this.sort.sortChange, filterChanges).subscribe(() => this.paginator.pageIndex = 0);
-    
+
     merge(this.sort.sortChange, this.paginator.page, filterChanges, this.performedActions)
       .pipe(
         startWith({}),
@@ -197,7 +196,7 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
     const domain = this.domains.find(domain => domain.id == domainId);
     return domain.specializations;
   }
-  
+
   handleFilterDomainChange(value: number) {
     const specializationControl = this.studentFilter.get("specializationId");
     if(value) {

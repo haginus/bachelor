@@ -39,6 +39,8 @@ import { SignUpRequestDialogComponent } from './dialogs/sign-up-request-dialog/s
 import { AdminsComponent } from './pages/admins/admins.component';
 import { AdminEditDialogComponent } from './dialogs/admin-edit-dialog/admin-edit-dialog.component';
 import { SudoDialogComponent } from './dialogs/sudo-dialog/sudo-dialog.component';
+import { ImportResultDialogComponent } from './dialogs/import-result-dialog/import-result-dialog.component';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 const materialDeps = [
   MatPaginatorModule,
@@ -80,6 +82,7 @@ const materialDeps = [
     AdminsComponent,
     AdminEditDialogComponent,
     SudoDialogComponent,
+    ImportResultDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -87,6 +90,7 @@ const materialDeps = [
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    NgxJsonViewerModule,
     ...materialDeps
   ]
 })

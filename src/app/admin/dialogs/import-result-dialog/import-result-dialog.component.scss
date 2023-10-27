@@ -1,0 +1,20 @@
+.result-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  color: rgba(0, 0, 0, 0.6);
+
+  .result-item {
+    display: flex;
+    align-items: center;
+
+    mat-icon {
+      user-select: none;
+    }
+
+    .label {
+      margin-left: 6px;
+    }
+  }
+}
