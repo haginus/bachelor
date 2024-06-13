@@ -9,11 +9,15 @@ import { AdminService } from '../../../services/admin.service';
 import { AuthService, UserData } from '../../../services/auth.service';
 import { USER_TYPES } from '../../../lib/constants';
 import { CommonDialogComponent, CommonDialogData } from '../../../shared/common-dialog/common-dialog.component';
+import { rowAnimation } from '../../../row-animations';
 
 @Component({
   selector: 'app-admins',
   templateUrl: './admins.component.html',
-  styleUrls: ['./admins.component.scss']
+  styleUrls: ['./admins.component.scss'],
+  animations: [
+    rowAnimation,
+  ]
 })
 export class AdminsComponent implements OnInit {
 

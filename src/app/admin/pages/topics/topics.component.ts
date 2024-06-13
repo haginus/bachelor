@@ -9,11 +9,15 @@ import { AdminTopicDialogComponent } from '../../dialogs/topic-dialog/topic-dial
 import { AdminService } from '../../../services/admin.service';
 import { Topic } from '../../../services/topics.service';
 import { Selectable } from '../../../lib/models/Selectable';
+import { rowAnimation } from '../../../row-animations';
 
 @Component({
   selector: 'app-topics',
   templateUrl: './topics.component.html',
-  styleUrls: ['./topics.component.scss']
+  styleUrls: ['./topics.component.scss'],
+  animations: [
+    rowAnimation,
+  ]
 })
 export class AdminTopicsComponent implements OnInit, AfterViewInit {
 

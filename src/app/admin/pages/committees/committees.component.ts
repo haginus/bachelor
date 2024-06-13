@@ -8,11 +8,15 @@ import { AdminService } from '../../../services/admin.service';
 import { CommitteeDocument, CommitteeDocumentsFormat, DocumentService } from '../../../services/document.service';
 import { AuthService, Committee, Domain, UserData, UserDataMin } from '../../../services/auth.service';
 import { CommonDialogComponent } from '../../../shared/common-dialog/common-dialog.component';
+import { rowAnimation } from '../../../row-animations';
 
 @Component({
   selector: 'app-committees',
   templateUrl: './committees.component.html',
-  styleUrls: ['./committees.component.scss']
+  styleUrls: ['./committees.component.scss'],
+  animations: [
+    rowAnimation,
+  ]
 })
 export class CommitteesComponent implements OnInit, OnDestroy {
 

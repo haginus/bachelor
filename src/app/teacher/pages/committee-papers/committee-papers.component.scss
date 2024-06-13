@@ -1,77 +1,80 @@
 :host {
-    padding: 16px;
-    display: block;
+  padding: 16px;
+  display: block;
 }
 
 mat-toolbar button {
-    margin-right: 5px;
+  margin-right: 5px;
 }
 
 table {
-    width: 100%;
+  width: 100%;
 }
 
 .detail-row {
-    height: 0px;
+  height: 0px;
 }
 
 .paper-title {
-    span {
-        line-height: 16px;
-        vertical-align: middle;
-    }
+  span {
+    line-height: 16px;
+    vertical-align: middle;
+  }
 
-    mat-icon {
-        font-size: 16px;
-        color: #1976D2;
-        width: 16px;
-        height: 16px;
-        vertical-align: middle;
-        margin-left: 4px;
-    }
+  mat-icon {
+    font-size: 16px;
+    color: #1976D2;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin-left: 4px;
+  }
 }
 
 .status-icon {
-    cursor: default;
-    user-select: none;
+  cursor: default;
+  user-select: none;
 
-    &.done {
-        color: #388e3c;
-    }
-    &.warn {
-        color: #f57c00;
-    }
+  &.done {
+    color: #388e3c;
+  }
+
+  &.warn {
+    color: #f57c00;
+  }
 }
 
 .paper-detail {
-    overflow: hidden;
-    .paper-header {
-        display: flex;
-        margin-top: 12px;
-        .paper-description {
-            flex: 1;
-            color: #616161;
-        }
+  overflow: hidden;
+
+  .paper-header {
+    display: flex;
+    margin-top: 12px;
+
+    .paper-description {
+      flex: 1;
+      color: #616161;
     }
-    .document-list {
-        padding-top: 8px;
-        margin: 0 -16px;
-    }
+  }
+
+  .document-list {
+    padding-top: 8px;
+  }
 }
 
 .paper-row td {
-    border-bottom-width: 0;
+  border-bottom-width: 0;
 }
 
 .paper-row td:first-child {
-    width: 24px;
-    padding: 0 12px;
+  width: 24px;
+  padding: 0 12px;
 }
 
 tr.paper-row:not(.expanded-row):hover {
-    background: whitesmoke;
+  background: whitesmoke;
 }
-  
+
 tr.paper-row:not(.expanded-row):active {
-    background: #efefef;
+  background: #efefef;
 }

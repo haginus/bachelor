@@ -9,11 +9,15 @@ import { AdminService } from '../../../services/admin.service';
 import { DocumentService } from '../../../services/document.service';
 import { SignUpRequest } from '../../../services/auth.service';
 import { DOMAIN_TYPES } from '../../../lib/constants';
+import { rowAnimation } from '../../../row-animations';
 
 @Component({
   selector: 'app-sign-up-requests',
   templateUrl: './sign-up-requests.component.html',
-  styleUrls: ['./sign-up-requests.component.scss']
+  styleUrls: ['./sign-up-requests.component.scss'],
+  animations: [
+    rowAnimation,
+  ]
 })
 export class SignUpRequestsComponent implements OnInit {
 

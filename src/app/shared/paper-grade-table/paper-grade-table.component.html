@@ -24,11 +24,13 @@
         <td mat-footer-cell *matFooterCellDef><b>{{ getAverage() | fixed }}</b></td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    <tr mat-footer-row *matFooterRowDef="displayedColumns;" [hidden]="paper.grades.length == 0"></tr>
+    <tr mat-header-row @rowAnimation *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row @rowAnimation *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-footer-row @rowAnimation *matFooterRowDef="displayedColumns;" [hidden]="paper.grades.length == 0"></tr>
 
-    <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">Nu s-au acordat încă note.</td>
+    <tr class="mat-mdc-row mdc-data-table__row" *matNoDataRow>
+      <td class="mat-mdc-cell mdc-data-table__cell" colspan="1000">
+        Nu s-au acordat încă note.
+      </td>
     </tr>
 </table>

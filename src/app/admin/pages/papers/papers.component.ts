@@ -14,17 +14,15 @@ import { AdminService, GetPapersFilter } from '../../../services/admin.service';
 import { Paper } from '../../../services/auth.service';
 import { DOMAIN_TYPES, PAPER_TYPES, STUDY_FORMS } from '../../../lib/constants';
 import { AreDocumentsUploaded } from '../../../shared/paper-document-list/paper-document-list.component';
+import { detailExpand, rowAnimation } from '../../../row-animations';
 
 @Component({
   selector: 'app-papers',
   templateUrl: './papers.component.html',
   styleUrls: ['./papers.component.scss'],
   animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
+    rowAnimation,
+    detailExpand,
   ],
 })
 export class AdminPapersComponent implements OnInit, AfterViewInit {

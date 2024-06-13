@@ -11,11 +11,15 @@ import { AdminTeacherDeleteDialogComponent } from '../../dialogs/teacher-delete-
 import { AdminTeacherDialogConmonent } from '../../dialogs/teacher-dialog/teacher-dialog.component';
 import { AdminService } from '../../../services/admin.service';
 import { AuthService, UserData } from '../../../services/auth.service';
+import { rowAnimation } from '../../../row-animations';
 
 @Component({
   selector: 'app-admin-teachers',
   templateUrl: './teachers.component.html',
-  styleUrls: ['./teachers.component.scss']
+  styleUrls: ['./teachers.component.scss'],
+  animations: [
+    rowAnimation,
+  ]
 })
 export class AdminTeachersComponent implements OnInit, AfterViewInit {
 

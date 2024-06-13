@@ -1,221 +1,217 @@
 <mat-menu #paperMenu="matMenu">
-    <ng-template matMenuContent let-paper="paper">
-        <!-- <button mat-menu-item (click)="editPaper(paper)" [disabled]="!canEditPaper(paper)">
+  <ng-template matMenuContent let-paper="paper">
+    <!-- <button mat-menu-item (click)="editPaper(paper)" [disabled]="!canEditPaper(paper)">
             <mat-icon>edit</mat-icon>
             <span>Editați lucrarea</span>
         </button> -->
-        <button *ngIf="paper.submitted" [disabled]="paper.isValid != null" mat-menu-item (click)="submitPaper(paper, false)">
-            <mat-icon>close</mat-icon>
-            <span>Anulați înscrierea</span>
-        </button>
-        <button *ngIf="!paper.submitted" mat-menu-item (click)="submitPaper(paper, true)">
-            <mat-icon>send</mat-icon>
-            <span>Înscrieți lucrarea</span>
-        </button>
-    </ng-template>
+    <button *ngIf="paper.submitted" [disabled]="paper.isValid != null" mat-menu-item
+      (click)="submitPaper(paper, false)">
+      <mat-icon>close</mat-icon>
+      <span>Anulați înscrierea</span>
+    </button>
+    <button *ngIf="!paper.submitted" mat-menu-item (click)="submitPaper(paper, true)">
+      <mat-icon>send</mat-icon>
+      <span>Înscrieți lucrarea</span>
+    </button>
+  </ng-template>
 </mat-menu>
 
 <div class="mat-elevation-z8 table-container">
-    <mat-toolbar color="white">
-        <span class="toolbar-spacer"></span>
-        <button mat-icon-button (click)="refreshResults()">
-            <mat-icon>refresh</mat-icon>
-        </button>
-        <button mat-icon-button (click)="toggleFilters()" [color]="showFilters ? 'primary' : ''">
-            <mat-icon>filter_list</mat-icon>
-        </button>
-    </mat-toolbar>
-    <div class="table-filters" *ngIf="showFilters">
-        <div class="filter-header">
-            <span class="text">Filtrați după</span>
-            <button mat-button (click)="resetFilterForm()">Resetați</button>
-        </div>
-        <form [formGroup]="paperFilterForm" fxLayout="row grid" fxLayoutGap="10px grid">
-            <div fxFlex="50" fxFlex.lt-md="100">
-                <mat-button-toggle-group formControlName="submitted">
-                    <mat-button-toggle [value]="true">Înscrise</mat-button-toggle>
-                    <mat-button-toggle [value]="false">Neînscrise</mat-button-toggle>
-                  </mat-button-toggle-group>
-            </div>
-            <div fxFlex="50" fxFlex.lt-md="100">
-                <mat-button-toggle-group formControlName="assigned">
-                    <mat-button-toggle [value]="true">Atribuite</mat-button-toggle>
-                    <mat-button-toggle [value]="false">Neatribuite</mat-button-toggle>
-                    <mat-button-toggle [value]="null">Toate</mat-button-toggle>
-                </mat-button-toggle-group>
-            </div>
-            <div fxFlex="50" fxFlex.lt-md="100">
-                <mat-button-toggle-group formControlName="validity">
-                    <mat-button-toggle value="valid">Valide</mat-button-toggle>
-                    <mat-button-toggle value="notValid">Invalide</mat-button-toggle>
-                    <mat-button-toggle value="nullValid">Nevalidate</mat-button-toggle>
-                    <mat-button-toggle [value]="null">Toate</mat-button-toggle>
-                  </mat-button-toggle-group>
-            </div>
-            <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-                <mat-label>Tip</mat-label>
-                <mat-select formControlName="type">
-                    <mat-option [value]="null">--</mat-option>
-                    <mat-option *ngFor="let type of PAPER_TYPES | keyvalue" [value]="type.key">
-                        {{ type.value | titlecase }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-                <mat-label>Domeniu</mat-label>
-                <mat-select formControlName="domainId">
-                    <mat-option [value]="null">--</mat-option>
-                    <mat-option *ngFor="let domain of domains | async" [value]="domain.id">
-                        {{ domain.name }}, {{ DOMAIN_TYPES[domain.type] | titlecase }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-                <mat-label>Forma de învățământ</mat-label>
-                <mat-select formControlName="studyForm">
-                    <mat-option [value]="null">--</mat-option>
-                    <mat-option *ngFor="let type of STUDY_FORMS | keyvalue" [value]="type.key">
-                        {{ type.value }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </form>
-        <form [formGroup]="paperFilterDebouncedForm" fxLayout="row grid" fxLayoutGap="10px grid" style="padding-top: 10px">
-            <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-                <mat-label>Titlu lucrare</mat-label>
-                <input matInput formControlName="title" />
-            </mat-form-field>
-            <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-                <mat-label>Nume student</mat-label>
-                <input matInput formControlName="studentName" />
-            </mat-form-field>
-        </form>
+  <mat-toolbar color="white">
+    <span class="toolbar-spacer"></span>
+    <button mat-icon-button (click)="refreshResults()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+    <button mat-icon-button (click)="toggleFilters()" [color]="showFilters ? 'primary' : ''">
+      <mat-icon>filter_list</mat-icon>
+    </button>
+  </mat-toolbar>
+  <div class="table-filters" *ngIf="showFilters">
+    <div class="filter-header">
+      <span class="text">Filtrați după</span>
+      <button mat-button (click)="resetFilterForm()">Resetați</button>
     </div>
-    <div class="loading-shade" *ngIf="isLoadingResults">
-        <mat-spinner></mat-spinner>
-    </div>
-    <div class="discrete-scroll">
-        <table mat-table [dataSource]="data" multiTemplateDataRows #table
-            matSort matSortActive="id" matSortDisableClear matSortDirection="asc">
-            <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let row">
-                    <ng-container *ngIf="!row.isLoading">
-                        <mat-icon *ngIf="row.isValid == null && row.submitted" class="status-icon warn"
-                        matTooltip="Necesită validare/invalidare"
-                        >pending_actions</mat-icon>
-                        <mat-icon *ngIf="row.isValid == true" class="status-icon done"
-                        matTooltip="Lucrare validată"
-                        >done</mat-icon>
-                        <mat-icon *ngIf="row.isValid == false" class="status-icon severe"
-                        matTooltip="Lucrare invalidată"
-                        >close</mat-icon>
-                    </ng-container>
-                    <ng-container *ngIf="row.isLoading">
-                        <mat-spinner diameter="24"></mat-spinner>
-                    </ng-container>
-                </td>
-            </ng-container>
+    <form [formGroup]="paperFilterForm" fxLayout="row grid" fxLayoutGap="10px grid">
+      <div fxFlex="50" fxFlex.lt-md="100">
+        <mat-button-toggle-group formControlName="submitted">
+          <mat-button-toggle [value]="true">Înscrise</mat-button-toggle>
+          <mat-button-toggle [value]="false">Neînscrise</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div fxFlex="50" fxFlex.lt-md="100">
+        <mat-button-toggle-group formControlName="assigned">
+          <mat-button-toggle [value]="true">Atribuite</mat-button-toggle>
+          <mat-button-toggle [value]="false">Neatribuite</mat-button-toggle>
+          <mat-button-toggle [value]="null">Toate</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div fxFlex="50" fxFlex.lt-md="100">
+        <mat-button-toggle-group formControlName="validity">
+          <mat-button-toggle value="valid">Valide</mat-button-toggle>
+          <mat-button-toggle value="notValid">Invalide</mat-button-toggle>
+          <mat-button-toggle value="nullValid">Nevalidate</mat-button-toggle>
+          <mat-button-toggle [value]="null">Toate</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+        <mat-label>Tip</mat-label>
+        <mat-select formControlName="type">
+          <mat-option [value]="null">--</mat-option>
+          <mat-option *ngFor="let type of PAPER_TYPES | keyvalue" [value]="type.key">
+            {{ type.value | titlecase }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+        <mat-label>Domeniu</mat-label>
+        <mat-select formControlName="domainId">
+          <mat-option [value]="null">--</mat-option>
+          <mat-option *ngFor="let domain of domains | async" [value]="domain.id">
+            {{ domain.name }}, {{ DOMAIN_TYPES[domain.type] | titlecase }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+        <mat-label>Forma de învățământ</mat-label>
+        <mat-select formControlName="studyForm">
+          <mat-option [value]="null">--</mat-option>
+          <mat-option *ngFor="let type of STUDY_FORMS | keyvalue" [value]="type.key">
+            {{ type.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+    <form [formGroup]="paperFilterDebouncedForm" fxLayout="row grid" fxLayoutGap="10px grid" style="padding-top: 10px">
+      <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+        <mat-label>Titlu lucrare</mat-label>
+        <input matInput formControlName="title" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+        <mat-label>Nume student</mat-label>
+        <input matInput formControlName="studentName" />
+      </mat-form-field>
+    </form>
+  </div>
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div class="discrete-scroll">
+    <table mat-table [dataSource]="data" multiTemplateDataRows #table matSort matSortActive="id" matSortDisableClear
+      matSortDirection="asc">
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let row">
+          <ng-container *ngIf="!row.isLoading">
+            <mat-icon *ngIf="row.isValid == null && row.submitted" class="status-icon warn"
+              matTooltip="Necesită validare/invalidare">pending_actions</mat-icon>
+            <mat-icon *ngIf="row.isValid == true" class="status-icon done" matTooltip="Lucrare validată">done</mat-icon>
+            <mat-icon *ngIf="row.isValid == false" class="status-icon severe"
+              matTooltip="Lucrare invalidată">close</mat-icon>
+          </ng-container>
+          <ng-container *ngIf="row.isLoading">
+            <mat-spinner diameter="24"></mat-spinner>
+          </ng-container>
+        </td>
+      </ng-container>
 
-            <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-                <td mat-cell *matCellDef="let row"> {{ row.id }} </td>
-            </ng-container>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <td mat-cell *matCellDef="let row"> {{ row.id }} </td>
+      </ng-container>
 
-            <ng-container matColumnDef="title">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Titlu </th>
-                <td mat-cell *matCellDef="let row" class="wrap"> {{row.title}} </td>
-            </ng-container>
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Titlu </th>
+        <td mat-cell *matCellDef="let row" class="wrap"> {{row.title}} </td>
+      </ng-container>
 
-            <ng-container matColumnDef="type">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Tip </th>
-                <td mat-cell *matCellDef="let row">
-                    {{ PAPER_TYPES[row.type] | titlecase}}
-                </td>
-            </ng-container>
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tip </th>
+        <td mat-cell *matCellDef="let row">
+          {{ PAPER_TYPES[row.type] | titlecase}}
+        </td>
+      </ng-container>
 
-            <ng-container matColumnDef="student">
-                <th mat-header-cell *matHeaderCellDef> Student </th>
-                <td mat-cell *matCellDef="let row" class="clickable"
-                (click)="openStudentDialog(row.student.id, $event)"
-                > {{row.student?.lastName}} {{row.student?.firstName}} </td>
-            </ng-container>
+      <ng-container matColumnDef="student">
+        <th mat-header-cell *matHeaderCellDef> Student </th>
+        <td mat-cell *matCellDef="let row" class="clickable" (click)="openStudentDialog(row.student.id, $event)">
+          {{row.student?.lastName}} {{row.student?.firstName}} </td>
+      </ng-container>
 
-            <ng-container matColumnDef="teacher">
-                <th mat-header-cell *matHeaderCellDef> Profesor </th>
-                <td mat-cell *matCellDef="let row"> {{row.teacher?.lastName}} {{row.teacher?.firstName}} </td>
-            </ng-container>
+      <ng-container matColumnDef="teacher">
+        <th mat-header-cell *matHeaderCellDef> Profesor </th>
+        <td mat-cell *matCellDef="let row"> {{row.teacher?.lastName}} {{row.teacher?.firstName}} </td>
+      </ng-container>
 
 
-            <ng-container matColumnDef="committee">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="committeeId"> Comisie </th>
-                <td mat-cell *matCellDef="let row" class="wrap">
-                    <ng-container *ngIf="row.committee">{{ row.committee.name }}</ng-container>
-                    <ng-container *ngIf="!row.committee">Neatribuit</ng-container>
-                </td>
-            </ng-container>
+      <ng-container matColumnDef="committee">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="committeeId"> Comisie </th>
+        <td mat-cell *matCellDef="let row" class="wrap">
+          <ng-container *ngIf="row.committee">{{ row.committee.name }}</ng-container>
+          <ng-container *ngIf="!row.committee">Neatribuit</ng-container>
+        </td>
+      </ng-container>
 
-            <ng-container matColumnDef="expandedDetail">
-                <td mat-cell *matCellDef="let paper" [attr.colspan]="displayedColumns.length">
-                    <div class="paper-detail" [@detailExpand]="paper == expandedPaper ? 'expanded' : 'collapsed'">
-                        <div class="paper-header">
-                            <div class="paper-description">{{paper.description}}</div>
-                            <div class="actions">
-                                <button mat-icon-button [mat-menu-trigger-for]="paperMenu" [matMenuTriggerData]="{ paper: paper }">
-                                    <mat-icon>more_vert</mat-icon>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="paper-topics">
-                            <span class="badge" *ngFor="let topic of paper.topics">
-                                {{topic.name}}
-                            </span>
-                        </div>
-                        <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px" class="paper-actions"
-                            *ngIf="paper.isValid == null && paper.submitted">
-                            <div [matTooltip]="!paper.documentsUploaded ? 'Studentul nu a încărcat toate documentele.' : ''">
-                                <button mat-raised-button color="primary"
-                                (click)="validatePaper(paper, true)"
-                                [disabled]="paper.isLoading">Validați lucrarea</button>
-                            </div>
-                            <button mat-button [disabled]="paper.isLoading"
-                            (click)="validatePaper(paper, false)">Invalidați lucrarea</button>
-                        </div>
-                        <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px" class="paper-actions" *ngIf="paper.isValid != null">
-                            <div class="validation-result">
-                                <mat-icon *ngIf="paper.isValid" class="status-icon done">done</mat-icon>
-                                <mat-icon *ngIf="!paper.isValid" class="status-icon severe">close</mat-icon>
-                                <b>Lucrare {{ paper.isValid ? 'validată' : 'invalidată' }}</b>
-                                <b *ngIf="paper.isValid && paper.student?.generalAverage">&nbsp;(M.G. {{ paper.student.generalAverage }})</b>
-                            </div>
-                            <button mat-icon-button matTooltip="Reluați validarea" (click)="undoValidatePaper(paper)">
-                                <mat-icon>undo</mat-icon>
-                            </button>
-                        </div>
-                        <app-paper-grade-table [paper]="paper" *ngIf="paper.isValid"></app-paper-grade-table>
-                        <div class="document-list">
-                            <div mat-subheader>Documente</div>
-                            <app-paper-document-list [paperId]="paper.id"
-                                [requiredDocuments]="paper.requiredDocuments"
-                                [documents]="paper.documents" perspective="admin"
-                                [canEdit]="paper.isValid == null"
-                                (areDocumentsUploaded)="handleAreDocumentsUploadedEvent($event, paper)"
-                            ></app-paper-document-list>
-                        </div>
-                    </div>
-                </td>
-            </ng-container>
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let paper" [attr.colspan]="displayedColumns.length">
+          <div class="paper-detail" [@detailExpand]="paper == expandedPaper ? 'expanded' : 'collapsed'">
+            <div class="paper-header">
+              <div class="paper-description">{{paper.description}}</div>
+              <div class="actions">
+                <button mat-icon-button [mat-menu-trigger-for]="paperMenu" [matMenuTriggerData]="{ paper: paper }">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="paper-topics">
+              <span class="badge" *ngFor="let topic of paper.topics">
+                {{topic.name}}
+              </span>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px" class="paper-actions"
+              *ngIf="paper.isValid == null && paper.submitted">
+              <div [matTooltip]="!paper.documentsUploaded ? 'Studentul nu a încărcat toate documentele.' : ''">
+                <button mat-raised-button color="primary" (click)="validatePaper(paper, true)"
+                  [disabled]="paper.isLoading">Validați lucrarea</button>
+              </div>
+              <button mat-button [disabled]="paper.isLoading" (click)="validatePaper(paper, false)">Invalidați
+                lucrarea</button>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px" class="paper-actions"
+              *ngIf="paper.isValid != null">
+              <div class="validation-result">
+                <mat-icon *ngIf="paper.isValid" class="status-icon done">done</mat-icon>
+                <mat-icon *ngIf="!paper.isValid" class="status-icon severe">close</mat-icon>
+                <b>Lucrare {{ paper.isValid ? 'validată' : 'invalidată' }}</b>
+                <b *ngIf="paper.isValid && paper.student?.generalAverage">&nbsp;(M.G. {{ paper.student.generalAverage
+                  }})</b>
+              </div>
+              <button mat-icon-button matTooltip="Reluați validarea" (click)="undoValidatePaper(paper)">
+                <mat-icon>undo</mat-icon>
+              </button>
+            </div>
+            <app-paper-grade-table [paper]="paper" *ngIf="paper.isValid"></app-paper-grade-table>
+            <div class="document-list">
+              <div mat-subheader>Documente</div>
+              <app-paper-document-list [paperId]="paper.id" [requiredDocuments]="paper.requiredDocuments"
+                [documents]="paper.documents" perspective="admin" [canEdit]="paper.isValid == null"
+                (areDocumentsUploaded)="handleAreDocumentsUploadedEvent($event, paper)"></app-paper-document-list>
+            </div>
+          </div>
+        </td>
+      </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="paper-row"
-                [class.expanded-row]="expandedPaper === row" (click)="expandedPaper = expandedPaper === row ? null : row">
-            </tr>
-            <tr mat-row *matRowDef="let row; columns: ['expandedDetail'];" class="detail-row"></tr>
+      <tr mat-header-row @rowAnimation *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row @rowAnimation *matRowDef="let row; columns: displayedColumns;" class="paper-row"
+        [class.expanded-row]="expandedPaper === row" (click)="expandedPaper = expandedPaper === row ? null : row">
+      </tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail'];" class="detail-row"></tr>
 
-            <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="7" [hidden]="isLoadingResults">Nu există lucrări.</td>
-            </tr>
-        </table>
-    </div>
-    <mat-paginator [length]="resultsLength" [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
+      <tr class="mat-mdc-row mdc-data-table__row" *matNoDataRow>
+        <td class="mat-mdc-cell mdc-data-table__cell" colspan="1000" [hidden]="isLoadingResults">
+          Nu există lucrări.
+        </td>
+      </tr>
+    </table>
+  </div>
+  <mat-paginator [length]="resultsLength" [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
 </div>

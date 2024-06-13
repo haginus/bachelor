@@ -5,11 +5,15 @@ import { Subscription } from 'rxjs';
 import { AdminDomainDialogComponent } from '../../dialogs/domain-dialog/domain-dialog.component';
 import { AdminService } from '../../../services/admin.service';
 import { Domain } from '../../../services/auth.service';
+import { rowAnimation } from '../../../row-animations';
 
 @Component({
   selector: 'app-domains',
   templateUrl: './domains.component.html',
-  styleUrls: ['./domains.component.scss']
+  styleUrls: ['./domains.component.scss'],
+  animations: [
+    rowAnimation,
+  ]
 })
 export class AdminDomainsComponent implements OnInit, OnDestroy {
 

@@ -1,11 +1,15 @@
 import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { Paper, PaperGrade } from '../../services/auth.service';
+import { rowAnimation } from '../../row-animations';
 
 @Component({
   selector: 'app-paper-grade-table',
   templateUrl: './paper-grade-table.component.html',
-  styleUrls: ['./paper-grade-table.component.scss']
+  styleUrls: ['./paper-grade-table.component.scss'],
+  animations: [
+    rowAnimation,
+  ]
 })
 export class PaperGradeTableComponent implements OnChanges {
 

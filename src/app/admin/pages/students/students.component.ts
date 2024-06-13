@@ -13,11 +13,15 @@ import { StudentsBulkAddDialogComponent } from '../../dialogs/students-bulk-add-
 import { AdminService } from '../../../services/admin.service';
 import { AuthService, Domain, UserData } from '../../../services/auth.service';
 import { DOMAIN_TYPES } from '../../../lib/constants';
+import { rowAnimation } from '../../../row-animations';
 
 @Component({
   selector: 'app-students',
   templateUrl: './students.component.html',
-  styleUrls: ['./students.component.scss']
+  styleUrls: ['./students.component.scss'],
+  animations: [
+    rowAnimation,
+  ]
 })
 export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit {
 
