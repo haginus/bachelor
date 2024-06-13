@@ -19,6 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { environment } from '../environments/environment';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 const materialDeps = [
   MatSidenavModule,
@@ -50,6 +51,10 @@ const materialDeps = [
     { provide: MatPaginatorIntl, useClass: MatPaginatorIntlRo},
     { provide: RECAPTCHA_SETTINGS, useValue: { siteKey: environment.captchaKey, } },
     { provide: RECAPTCHA_LANGUAGE, useValue: "ro-RO" },
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: 'outline', subscriptSizing: 'dynamic' }
+    }
   ],
   bootstrap: [AppComponent]
 })

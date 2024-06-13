@@ -13,6 +13,7 @@ import { SignUpRequestsComponent } from './pages/sign-up-requests/sign-up-reques
 import { AdminStudentsComponent } from './pages/students/students.component';
 import { AdminTeachersComponent } from './pages/teachers/teachers.component';
 import { AdminTopicsComponent } from './pages/topics/topics.component';
+import { sudoModeGuard } from '../guards/sudo-mode.guard';
 
 const routes: Routes = [
   {
@@ -33,7 +34,7 @@ const routes: Routes = [
   {
     path: 'admins',
     component: AdminsComponent,
-    canActivate: [RoleGuard],
+    canActivate: [RoleGuard, sudoModeGuard],
     data: { title: 'Administratori și secretari', role: 'admin' }
   },
   {
