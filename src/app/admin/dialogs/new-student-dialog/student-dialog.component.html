@@ -1,16 +1,26 @@
-<app-loading *ngIf="isLoadingData" type="spinner" color="primary"></app-loading>
-<h2 mat-dialog-title *ngIf="data.mode == 'create'">Adăugați student</h2>
-<h2 mat-dialog-title *ngIf="data.mode == 'edit'">Editați student</h2>
-<h2 mat-dialog-title *ngIf="data.mode == 'view'">Vizualizare student</h2>
+@if (isLoadingData) {
+  <app-loading type="spinner" color="primary"></app-loading>
+}
+@switch (data.mode) {
+  @case('create') {
+    <h2 mat-dialog-title>Adăugați student</h2>
+  }
+  @case ('edit') {
+    <h2 mat-dialog-title>Editați student</h2>
+  }
+  @case ('view') {
+    <h2 mat-dialog-title>Vizualizare student</h2>
+  }
+}
 <mat-dialog-content class="mat-typography" [class.mode-view]="data.mode == 'view'">
   <form [formGroup]="studentForm">
     <div fxLayout="row grid" fxLayoutGap="10px grid">
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Nume *</mat-label>
+        <mat-label>Nume</mat-label>
         <input matInput type="text" formControlName="lastName" name="studentLastName">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Prenume *</mat-label>
+        <mat-label>Prenume</mat-label>
         <input matInput type="text" formControlName="firstName" name="studentFirstName">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
@@ -19,35 +29,35 @@
         <mat-error>{{ studentForm.get("CNP").errors?.['CNPValidator'].message }}</mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>E-mail *</mat-label>
+        <mat-label>E-mail</mat-label>
         <input matInput type="email" formControlName="email" name="studentEmail">
         <mat-hint *ngIf="emailChanged" class="warning">
           E-mail modificat. Utilizatorul va avea noi credențiale.
         </mat-hint>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Număr matricol *</mat-label>
+        <mat-label>Număr matricol</mat-label>
         <input matInput type="text" formControlName="identificationCode" name="studentIdentificationCode">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Forma de finanțare *</mat-label>
+        <mat-label>Forma de finanțare</mat-label>
         <mat-select formControlName="fundingForm">
           <mat-option value="budget">Buget</mat-option>
           <mat-option value="tax">Taxă</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Grupă *</mat-label>
+        <mat-label>Grupă</mat-label>
         <input matInput type="text" formControlName="group" name="studentGroup">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Promoție *</mat-label>
+        <mat-label>Promoție</mat-label>
         <input matInput type="text" formControlName="promotion" name="studentPromotion">
       </mat-form-field>
 
       <!-- Edit mode -->
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50" *ngIf="data.mode != 'view'">
-        <mat-label>Domeniu *</mat-label>
+        <mat-label>Domeniu</mat-label>
         <mat-select formControlName="domainId">
           <mat-option *ngFor="let domain of domains" [value]="domain.id">
             <span>{{domain.name}}</span>
@@ -58,7 +68,7 @@
         <mat-spinner class="select-spinner" [diameter]="24" *ngIf="loadingDomains"></mat-spinner>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50" *ngIf="data.mode != 'view'">
-        <mat-label>Programul de studii *</mat-label>
+        <mat-label>Programul de studii</mat-label>
         <mat-select formControlName="specializationId">
           <mat-option *ngFor="let specialization of chosenDomain?.specializations" [value]="specialization.id">
             <span>{{specialization.name}}</span>
@@ -78,11 +88,11 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Anul înmatriculării *</mat-label>
+        <mat-label>Anul înmatriculării</mat-label>
         <input matInput type="text" formControlName="matriculationYear" name="studentMatriculationYear">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Forma de învățământ *</mat-label>
+        <mat-label>Forma de învățământ</mat-label>
         <mat-select formControlName="studyForm">
           <mat-option value="if">Învățământ cu frecvență</mat-option>
           <mat-option value="ifr">Învățământ cu frecvență redusă</mat-option>

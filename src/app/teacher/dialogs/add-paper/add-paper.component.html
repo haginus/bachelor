@@ -7,20 +7,19 @@
       <form [formGroup]="paperForm" fxLayout="row grid" fxLayoutGap="10px grid">
         <ng-template matStepLabel>Completați detaliile lucrării</ng-template>
         <mat-form-field appearance="outline" fxFlex="100">
-          <mat-label>Titlu *</mat-label>
+          <mat-label>Titlu</mat-label>
           <input type="text" matInput formControlName="title" />
           <mat-error>Titlul trebuie să fie de lungime între 3 și 256 caractere.</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="100">
-          <mat-label>Descriere *</mat-label>
+          <mat-label>Descriere</mat-label>
           <textarea matInput type="text" formControlName="description"></textarea>
           <mat-error>Descrierea trebuie să fie de lungime între 64 și 1024 caractere.</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="100">
-          <mat-label>Teme lucrare *</mat-label>
+          <mat-label>Teme lucrare</mat-label>
           <mat-chip-grid #chipList aria-label="Selectare teme">
-            <mat-chip *ngFor="let topic of selectedTopics" [removable]="true"
-              (removed)="removeTopic(topic)">
+            <mat-chip *ngFor="let topic of selectedTopics" [removable]="true" (removed)="removeTopic(topic)">
               {{topic.name}}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>

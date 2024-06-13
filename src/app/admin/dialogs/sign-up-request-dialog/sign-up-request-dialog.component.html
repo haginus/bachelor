@@ -4,11 +4,11 @@
   <form [formGroup]="signUpForm">
     <div fxLayout="row grid" fxLayoutGap="10px grid">
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Nume *</mat-label>
+        <mat-label>Nume</mat-label>
         <input matInput type="text" formControlName="lastName" name="studentLastName">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Prenume *</mat-label>
+        <mat-label>Prenume</mat-label>
         <input matInput type="text" formControlName="firstName" name="studentFirstName">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
@@ -18,30 +18,30 @@
         <mat-error>{{ signUpForm.get("CNP").errors?.['CNPValidator'].message }}</mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>E-mail *</mat-label>
+        <mat-label>E-mail</mat-label>
         <input matInput type="email" formControlName="email" name="studentEmail">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Număr matricol *</mat-label>
+        <mat-label>Număr matricol</mat-label>
         <input matInput type="text" formControlName="identificationCode" name="studentIdentificationCode">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Forma de finanțare *</mat-label>
+        <mat-label>Forma de finanțare</mat-label>
         <mat-select formControlName="fundingForm">
           <mat-option value="budget">Buget</mat-option>
           <mat-option value="tax">Taxă</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Grupă *</mat-label>
+        <mat-label>Grupă</mat-label>
         <input matInput type="text" formControlName="group" name="studentGroup">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Promoție *</mat-label>
+        <mat-label>Promoție</mat-label>
         <input matInput type="text" formControlName="promotion" name="studentPromotion">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Domeniu *</mat-label>
+        <mat-label>Domeniu</mat-label>
         <mat-select formControlName="domainId">
           <mat-option *ngFor="let domain of domains" [value]="domain.id">
             <span>{{domain.name}}</span>
@@ -51,7 +51,7 @@
         </mat-select>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Programul de studii *</mat-label>
+        <mat-label>Programul de studii</mat-label>
         <mat-select formControlName="specializationId">
           <mat-option *ngFor="let specialization of chosenDomain?.specializations" [value]="specialization.id">
             <span>{{specialization.name}}</span>
@@ -59,11 +59,11 @@
         </mat-select>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="33">
-        <mat-label>Anul înmatriculării *</mat-label>
+        <mat-label>Anul înmatriculării</mat-label>
         <input matInput type="text" formControlName="matriculationYear" name="studentMatriculationYear">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="33">
-        <mat-label>Forma de învățământ *</mat-label>
+        <mat-label>Forma de învățământ</mat-label>
         <mat-select formControlName="studyForm">
           <mat-option value="if">Învățământ cu frecvență</mat-option>
           <mat-option value="ifr">Învățământ cu frecvență redusă</mat-option>

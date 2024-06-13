@@ -17,11 +17,11 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Nume *</mat-label>
+      <mat-label>Nume</mat-label>
       <input matInput type="text" formControlName="lastName" name="teacherLastName">
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Prenume *</mat-label>
+      <mat-label>Prenume</mat-label>
       <input matInput type="text" formControlName="firstName" name="teacherFirstName">
     </mat-form-field>
     <mat-form-field appearance="outline">
@@ -30,7 +30,7 @@
       <mat-error>{{ teacherForm.get("CNP").errors?.['CNPValidator'].message }}</mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>E-mail *</mat-label>
+      <mat-label>E-mail</mat-label>
       <input matInput type="email" formControlName="email" name="teacherEmail">
       <mat-hint *ngIf="emailChanged" class="warning">
         E-mail modificat. Utilizatorul va avea noi credențiale.
