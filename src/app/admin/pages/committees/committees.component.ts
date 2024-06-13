@@ -1,15 +1,13 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatSort } from '@angular/material/sort';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { AdminService } from 'src/app/services/admin.service';
-import { AuthService, Committee, Domain, Paper, UserData, UserDataMin } from 'src/app/services/auth.service';
-import { CommitteeDocument, CommitteeDocumentsFormat, DocumentService } from 'src/app/services/document.service';
-import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
 import { CommitteeDialogComponent } from '../../dialogs/committee-dialog/committee-dialog.component';
+import { AdminService } from '../../../services/admin.service';
+import { CommitteeDocument, CommitteeDocumentsFormat, DocumentService } from '../../../services/document.service';
+import { AuthService, Committee, Domain, UserData, UserDataMin } from '../../../services/auth.service';
+import { CommonDialogComponent } from '../../../shared/common-dialog/common-dialog.component';
 
 @Component({
   selector: 'app-committees',

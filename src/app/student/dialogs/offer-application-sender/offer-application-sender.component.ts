@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { OfferApplication, StudentService } from 'src/app/services/student.service';
+import { OfferApplication, StudentService } from '../../../services/student.service';
 
 @Component({
   selector: 'app-offer-application-sender',
@@ -29,7 +29,7 @@ export class OfferApplicationSenderComponent implements OnInit {
     const title = this.applicationForm.get("title").value;
     const description = this.applicationForm.get("description").value;
     const usedTechnologies = this.applicationForm.get("usedTechnologies").value;
-    
+
     let application: OfferApplication = { title, description, usedTechnologies };
     return application;
   }

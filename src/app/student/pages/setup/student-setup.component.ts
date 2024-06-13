@@ -2,12 +2,12 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
-import { AuthService, UserData } from 'src/app/services/auth.service';
-import { Topic, TopicsService } from 'src/app/services/topics.service';
-import { FUNDING_FORMS, STUDY_FORMS } from 'src/app/lib/constants';
+import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { ProblemReportComponent, ProblemReportDialogData } from 'src/app/components/problem-report/problem-report.component';
+import { Topic, TopicsService } from '../../../services/topics.service';
+import { AuthService, UserData } from '../../../services/auth.service';
+import { FUNDING_FORMS, STUDY_FORMS } from '../../../lib/constants';
+import { ProblemReportComponent, ProblemReportDialogData } from '../../../components/problem-report/problem-report.component';
 
 @Component({
   selector: 'student-setup',

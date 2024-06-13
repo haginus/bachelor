@@ -3,13 +3,13 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 
 @Injectable()
 export class MatPaginatorIntlRo extends MatPaginatorIntl {
-  itemsPerPageLabel = 'Rezultate pe pagină:';
-  nextPageLabel = 'Pagina următoare';
-  previousPageLabel = 'Pagina anterioară';
-  firstPageLabel = 'Prima pagină';
-  lastPageLabel = 'Ultima pagină';
+  override itemsPerPageLabel = 'Rezultate pe pagină:';
+  override nextPageLabel = 'Pagina următoare';
+  override previousPageLabel = 'Pagina anterioară';
+  override firstPageLabel = 'Prima pagină';
+  override lastPageLabel = 'Ultima pagină';
 
-  getRangeLabel = function (page: number, pageSize: number, length: number) {
+  override getRangeLabel = function (page: number, pageSize: number, length: number) {
     if (length === 0 || pageSize === 0) {
       return '0 din ' + length;
     }

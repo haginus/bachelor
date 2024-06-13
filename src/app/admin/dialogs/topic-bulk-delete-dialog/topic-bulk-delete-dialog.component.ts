@@ -2,9 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { arrayMap } from 'src/app/lib/utils';
-import { AdminService } from 'src/app/services/admin.service';
-import { Topic, TopicsService } from 'src/app/services/topics.service';
+import { Topic, TopicsService } from '../../../services/topics.service';
+import { AdminService } from '../../../services/admin.service';
+import { arrayMap } from '../../../lib/utils';
 
 @Component({
   selector: 'app-topic-bulk-delete-dialog',
@@ -31,7 +31,7 @@ export class TopicBulkDeleteDialogComponent implements OnInit {
     });
   }
 
-  
+
   deleteTopics() {
     const ids = this.topicsToDelete.map(topic => topic.id);
     const moveId = this.deleteTopicForm.get('moveTo').value;

@@ -1,11 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, Subscription } from 'rxjs';
-import { AdminService } from 'src/app/services/admin.service';
-import { Domain, UserData } from 'src/app/services/auth.service';
-import { CNPValidator } from 'src/app/validators/CNP-validator';
+import { Subscription } from 'rxjs';
+import { AdminService } from '../../../services/admin.service';
+import { Domain, UserData } from '../../../services/auth.service';
+import { CNPValidator } from '../../../validators/CNP-validator';
 
 @Component({
   selector: 'app-student-dialog',
@@ -33,7 +32,7 @@ export class StudentDialogComponent implements OnInit {
         this.studentForm.get('domainId').enable();
         this.studentForm.get('specializationId').enable();
         this.chosenDomain = domains.find(domain => domain.id == this.data.data?.student.domain.id);
-        this.studentForm.get('domainId').valueChanges.subscribe(domainId => { 
+        this.studentForm.get('domainId').valueChanges.subscribe(domainId => {
           this.chosenDomain = domains.find(domain => domain.id == domainId);
           this.specializationId.reset();
         })
@@ -67,11 +66,11 @@ export class StudentDialogComponent implements OnInit {
     'fundingForm': new FormControl(this.data.data?.student?.fundingForm, [Validators.required])
   });
 
-  get specializationId() { 
+  get specializationId() {
     return this.studentForm.get("specializationId")
   }
 
-  get emailChanged() { 
+  get emailChanged() {
     return this.data.mode == 'edit' && this.studentForm.get("email").value != this.data.data?.email;
   }
 

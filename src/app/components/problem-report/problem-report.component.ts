@@ -3,8 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
-import { AuthService, UserData } from 'src/app/services/auth.service';
-import { MiscService } from 'src/app/services/misc.service';
+import { AuthService, UserData } from '../../services/auth.service';
+import { MiscService } from '../../services/misc.service';
 
 @Component({
   selector: 'app-problem-report',
@@ -58,7 +58,7 @@ export class ProblemReportComponent implements OnInit, OnDestroy {
     if(this.data?.type) {
       this.problemType.disable();
     }
-    this.misc.sendProblemReport(formValue).subscribe(result => {
+    this.misc.sendProblemReport(formValue as any).subscribe(result => {
       if(result) {
         this.dialog.close();
         this.snackbar.open("Mesajul a fost trimis. Ați primit o copie pe e-mail.");

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { AuthService, PaperDocument } from './auth.service';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class DocumentService {
     const blob = new Blob([data], { type });
     const url = window.URL.createObjectURL(blob);
     const windowRef = window.open(url);
-    if(!windowRef || windowRef.closed || typeof windowRef.closed == "undefined") { 
+    if(!windowRef || windowRef.closed || typeof windowRef.closed == "undefined") {
       const sbRef = this.snackbar.open("Deschiderea documentului a fost blocată de browserul " +
         "dvs. Asigurați-vă că permiteți ferestrele pop-up.", "Reîncercați");
       sbRef.onAction().subscribe(() => this.viewDocument(data, type));
@@ -70,7 +70,7 @@ export class DocumentService {
         catchError(this.handleError<any>('deleteDocument', false))
       );
   }
-  
+
   getCommitteeDocument(committeeId: number, documentName: CommitteeDocument) {
     const url = `${environment.apiUrl}/documents/committee/${documentName}?committeeId=${committeeId}`;
     const options = this.auth.getPrivateHeaders();

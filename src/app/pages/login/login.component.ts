@@ -5,8 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecaptchaComponent } from 'ng-recaptcha';
 import { Subscription } from 'rxjs';
-import { ProblemReportComponent, ProblemReportDialogData } from 'src/app/components/problem-report/problem-report.component';
 import { AuthService } from '../../services/auth.service';
+import { ProblemReportComponent, ProblemReportDialogData } from '../../components/problem-report/problem-report.component';
 
 @Component({
   selector: 'app-login',
@@ -20,10 +20,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.routeSub = this.route.queryParams.subscribe(params => {
-      this.nextRoute = params.next;
+      this.nextRoute = params['next'];
     });
   }
-  
+
   ngOnDestroy(): void {
     this.routeSub.unsubscribe();
   }

@@ -1,16 +1,15 @@
-import { devOnlyGuardedExpression } from '@angular/compiler';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { combineLatest, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { AuthService, Paper, SessionSettings } from 'src/app/services/auth.service';
-import { StudentExtraData, StudentService, PaperRequiredDocument } from 'src/app/services/student.service';
-import { PAPER_TYPES } from 'src/app/lib/constants';
 import { AreDocumentsUploaded, PaperDocumentEvent } from '../../../shared/paper-document-list/paper-document-list.component';
 import { EditPaperComponent } from '../../../shared/edit-paper/edit-paper.component';
 import { StudentExtraDataEditorComponent } from '../../dialogs/student-extra-data-editor/student-extra-data-editor.component';
-import { inclusiveDate, parseDate } from 'src/app/lib/utils';
+import { PaperRequiredDocument, StudentExtraData, StudentService } from '../../../services/student.service';
+import { AuthService, Paper, SessionSettings } from '../../../services/auth.service';
+import { PAPER_TYPES } from '../../../lib/constants';
+import { inclusiveDate, parseDate } from '../../../lib/utils';
 
 @Component({
   selector: 'app-student-paper',
@@ -23,7 +22,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
     private auth: AuthService, private cd: ChangeDetectorRef) { }
 
   PAPER_TYPES = PAPER_TYPES;
-  
+
   paper: Paper = null;
   studentExtraData: StudentExtraData = null;
   isLoadingInitialData: boolean = true;
@@ -50,7 +49,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   handleAreDocumentsUploaded(event: AreDocumentsUploaded) {
     this.areDocumentsUploaded = event.byUploader.student;
     this._checkSubmissionPeriod();
-    this.deadlinePassed = (!this.canUploadSecretaryFiles && !event.byUploaderCategory.student.secretary_files) || 
+    this.deadlinePassed = (!this.canUploadSecretaryFiles && !event.byUploaderCategory.student.secretary_files) ||
                           (!this.canUploadPaperFiles && !event.byUploaderCategory.student.paper_files)
     this.cd.detectChanges();
   }
@@ -63,7 +62,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
     this.canUploadSecretaryFiles = this.sessionSettings.canUploadSecretaryFiles();
     this.canUploadPaperFiles = this.sessionSettings.canUploadPaperFiles();
     this.submissionStarted = today >= startDateSecretary;
-    
+
     const paperCreatedAt = parseDate(this.paper?.createdAt);
     const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
     this.canEditPaper = (paperCreatedAt.getTime() + SEVEN_DAYS <= today || today + SEVEN_DAYS >= endDateSecretary) &&
@@ -98,7 +97,6 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   editStudentExtraData() {
     const dialogRef = this.dialog.open(StudentExtraDataEditorComponent, {
       data: this.studentExtraData,
-      width: '100%'
     });
 
     dialogRef.afterClosed().subscribe(data => {

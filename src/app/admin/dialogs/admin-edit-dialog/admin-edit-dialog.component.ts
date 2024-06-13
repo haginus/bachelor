@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AdminService } from 'src/app/services/admin.service';
-import { AuthService, UserData } from 'src/app/services/auth.service';
+import { AuthService, UserData } from '../../../services/auth.service';
+import { AdminService } from '../../../services/admin.service';
 
 @Component({
   selector: 'app-admin-edit-dialog',
@@ -18,7 +18,7 @@ export class AdminEditDialogComponent implements OnInit {
     'firstName': new FormControl(this.data.data?.firstName, [Validators.required]),
     'lastName': new FormControl(this.data.data?.lastName, [Validators.required]),
     'email': new FormControl({ value: this.data.data?.email, disabled: true }, [Validators.email, Validators.required]),
-    'type': new FormControl(this.data.data?.type, [Validators.required]),
+    'type': new FormControl<'admin' | 'secretary'>("admin", [Validators.required]),
   });
   isLoading: boolean = false;
 

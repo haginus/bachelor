@@ -4,11 +4,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { RecaptchaComponent } from 'ng-recaptcha';
 import { Subscription } from 'rxjs';
-import { ProblemReportComponent, ProblemReportDialogData } from 'src/app/components/problem-report/problem-report.component';
-import { AuthService, Domain } from 'src/app/services/auth.service';
-import { MiscService } from 'src/app/services/misc.service';
-import { CommonDialogComponent, CommonDialogData } from 'src/app/shared/common-dialog/common-dialog.component';
-import { CNPValidator } from 'src/app/validators/CNP-validator';
+import { AuthService, Domain } from '../../services/auth.service';
+import { MiscService } from '../../services/misc.service';
+import { CNPValidator } from '../../validators/CNP-validator';
+import { CommonDialogComponent, CommonDialogData } from '../../shared/common-dialog/common-dialog.component';
+import { ProblemReportComponent, ProblemReportDialogData } from '../../components/problem-report/problem-report.component';
 
 @Component({
   selector: 'app-sign-up',
@@ -51,7 +51,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
 
   chosenDomain: Domain = null;
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.domainSubscription = this.misc.getDomains().subscribe(domains => {
       this.domains = domains;
     });
@@ -75,9 +75,9 @@ export class SignUpComponent implements OnInit, OnDestroy {
   }
 
   signUp() {
-    this.auth.signUp(this.signUpForm.value, this.captchaToken).subscribe((result) => {
+    this.auth.signUp(this.signUpForm.value as any, this.captchaToken).subscribe((result) => {
       if(!result) return;
-      
+
       this.dialog.open<CommonDialogComponent, CommonDialogData>(CommonDialogComponent, {
         data: {
           title: "Cerere înregistrată",

@@ -4,11 +4,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
-import { DOMAIN_TYPES } from 'src/app/lib/constants';
-import { AdminService } from 'src/app/services/admin.service';
-import { SignUpRequest } from 'src/app/services/auth.service';
-import { DocumentService } from 'src/app/services/document.service';
 import { SignUpRequestDialogComponent } from '../../dialogs/sign-up-request-dialog/sign-up-request-dialog.component';
+import { AdminService } from '../../../services/admin.service';
+import { DocumentService } from '../../../services/document.service';
+import { SignUpRequest } from '../../../services/auth.service';
+import { DOMAIN_TYPES } from '../../../lib/constants';
 
 @Component({
   selector: 'app-sign-up-requests',

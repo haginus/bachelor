@@ -2,9 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AdminService } from 'src/app/services/admin.service';
-import { Domain, SignUpRequest } from 'src/app/services/auth.service';
-import { CNPValidator } from 'src/app/validators/CNP-validator';
+import { Domain, SignUpRequest } from '../../../services/auth.service';
+import { AdminService } from '../../../services/admin.service';
+import { CNPValidator } from '../../../validators/CNP-validator';
 
 @Component({
   selector: 'app-sign-up-request-dialog',
@@ -17,7 +17,7 @@ export class SignUpRequestDialogComponent implements OnInit {
   chosenDomain?: Domain;
   isLoading = false;
 
-  constructor(private admin: AdminService, @Inject(MAT_DIALOG_DATA) public request: SignUpRequest, 
+  constructor(private admin: AdminService, @Inject(MAT_DIALOG_DATA) public request: SignUpRequest,
     private dialog: MatDialogRef<SignUpRequestDialogComponent>, private snackbar: MatSnackBar) { }
 
   ngOnInit(): void {
@@ -46,7 +46,7 @@ export class SignUpRequestDialogComponent implements OnInit {
       this.domains = domains;
       this.chosenDomain = domains.find(domain => domain.id == this.request.specialization.domainId);
     });
-    
+
   }
 
   signUpForm = new FormGroup({
@@ -78,7 +78,7 @@ export class SignUpRequestDialogComponent implements OnInit {
 
   acceptRequest() {
     this.isLoading = true;
-    this.admin.acceptSignUpRequest(this.request.id, this.signUpForm.value).subscribe((r) => {
+    this.admin.acceptSignUpRequest(this.request.id, this.signUpForm.value as any).subscribe((r) => {
       if(r) {
         this.snackbar.open("Cererea a fost acceptată.");
         return this.dialog.close(true);

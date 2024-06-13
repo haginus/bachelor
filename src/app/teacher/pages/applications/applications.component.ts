@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { OfferApplication } from 'src/app/services/student.service';
-import { TeacherService } from 'src/app/services/teacher.service';
-import { ApplicationListActions } from 'src/app/shared/application-list/application-list.component';
+import { TeacherService } from '../../../services/teacher.service';
+import { OfferApplication } from '../../../services/student.service';
+import { ApplicationListActions } from '../../../shared/application-list/application-list.component';
 
 @Component({
   selector: 'app-applications',
@@ -27,15 +27,15 @@ export class TeacherApplicationsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.routeSubscription =  this.route.params.subscribe(res => {
-      if(res.state !== undefined) {
-        if(!['accepted', 'declined', 'pending'].includes(res.state)) { // check state
+      if(res['state'] !== undefined) {
+        if(!['accepted', 'declined', 'pending'].includes(res['state'])) { // check state
           this.router.navigate(['teacher', 'applications']);
         } else {
-          this.state = res.state;
+          this.state = res['state'];
         }
       }
-      if(res.offerId !== undefined) {
-        let number = parseInt(res.offerId);
+      if(res['offerId'] !== undefined) {
+        let number = parseInt(res['offerId']);
         if(isFinite(number)) {
           this.offerId = number;
         }

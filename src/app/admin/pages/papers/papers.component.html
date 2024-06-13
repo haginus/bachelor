@@ -193,7 +193,7 @@
                             </button>
                         </div>
                         <app-paper-grade-table [paper]="paper" *ngIf="paper.isValid"></app-paper-grade-table>
-                        <mat-list class="document-list">
+                        <div class="document-list">
                             <div mat-subheader>Documente</div>
                             <app-paper-document-list [paperId]="paper.id"
                                 [requiredDocuments]="paper.requiredDocuments"
@@ -201,7 +201,7 @@
                                 [canEdit]="paper.isValid == null"
                                 (areDocumentsUploaded)="handleAreDocumentsUploadedEvent($event, paper)"
                             ></app-paper-document-list>
-                        </mat-list>
+                        </div>
                     </div>
                 </td>
             </ng-container>

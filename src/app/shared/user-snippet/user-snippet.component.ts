@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { UserData, UserDataMin } from 'src/app/services/auth.service';
+import { UserDataMin } from '../../services/auth.service';
 
 @Component({
   selector: 'app-user-snippet',

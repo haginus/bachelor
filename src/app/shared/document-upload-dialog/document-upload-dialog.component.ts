@@ -2,10 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
-import { AdminService } from 'src/app/services/admin.service';
-import { DocumentService } from 'src/app/services/document.service';
-import { PaperRequiredDocument, StudentService } from 'src/app/services/student.service';
-import { TeacherService } from 'src/app/services/teacher.service';
+import { PaperRequiredDocument, StudentService } from '../../services/student.service';
+import { DocumentService } from '../../services/document.service';
 
 @Component({
   selector: 'app-document-upload-dialog',

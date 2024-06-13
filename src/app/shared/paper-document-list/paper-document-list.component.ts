@@ -1,12 +1,11 @@
-import { Component, DoCheck, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, DoCheck, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { PaperDocument, SessionSettings } from 'src/app/services/auth.service';
-import { DocumentService } from 'src/app/services/document.service';
-import { PaperDocumentCategory, PaperDocumentTypes, PaperDocumentUploadBy } from 'src/app/services/student.service';
-import { USER_TYPES } from 'src/app/lib/constants';
 import { DocumentUploadDialogComponent, DocumentUploadDialogData } from '../document-upload-dialog/document-upload-dialog.component';
+import { DocumentService } from '../../services/document.service';
+import { PaperDocument, SessionSettings } from '../../services/auth.service';
+import { USER_TYPES } from '../../lib/constants';
+import { PaperDocumentCategory, PaperDocumentTypes, PaperDocumentUploadBy } from '../../services/student.service';
 
 @Component({
   selector: 'app-paper-document-list',
@@ -53,7 +52,7 @@ export class PaperDocumentListComponent implements OnChanges {
     } else {
       return true;
     }
-  } 
+  }
 
   private _computeNextAction(doc: DocumentMapElement): DocumentAction {
     const isGenerated = doc.actualTypes.generated == true;
@@ -114,7 +113,7 @@ export class PaperDocumentListComponent implements OnChanges {
       let lastId = currentDocuments.length == 0 ? null : currentDocuments.map(doc => doc.id).reduce((max, id) => (max < id) ? id : max);
       let doc = { requiredTypes: requiredDoc.types, actualTypes, title: requiredDoc.title, lastId,
         uploadBy: requiredDoc.uploadBy, category: requiredDoc.category, canChange: true };
-      
+
       doc.canChange = this.canEdit && this._checkSubmissionDates(doc.category);
       doc['nextAction'] = this._computeNextAction(doc);
       documentMap[docName] = doc;

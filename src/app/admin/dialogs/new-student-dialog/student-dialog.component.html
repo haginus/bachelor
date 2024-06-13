@@ -16,7 +16,7 @@
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
         <mat-label>CNP</mat-label>
         <input matInput type="text" formControlName="CNP" name="studentCNP">
-        <mat-error>{{ studentForm.get("CNP").errors?.CNPValidator.message }}</mat-error>
+        <mat-error>{{ studentForm.get("CNP").errors?.['CNPValidator'].message }}</mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
         <mat-label>E-mail *</mat-label>

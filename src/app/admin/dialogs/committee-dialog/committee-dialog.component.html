@@ -28,11 +28,11 @@
         <div formArrayName="members">
             <h3>Membri</h3>
             <ul class="error-list">
-                <li *ngIf="formMembers.errors?.atLeastOnePresident">Comisia trebuie să aibă un președinte.</li>
-                <li *ngIf="formMembers.errors?.atMostOnePresident">Comisia nu poate avea mai mulți președinți.</li>
-                <li *ngIf="formMembers.errors?.atLeastOneSecretary">Comisia trebuie să aibă un secretar.</li>
-                <li *ngIf="formMembers.errors?.atMostOneSecretary">Comisia nu poate avea mai mulți secretari.</li>
-                <li *ngIf="formMembers.errors?.atLeastTwoMembers">Comisia trebuie să aibă cel puțin doi membri.</li>
+                <li *ngIf="formMembers.errors?.['atLeastOnePresident']">Comisia trebuie să aibă un președinte.</li>
+                <li *ngIf="formMembers.errors?.['atMostOnePresident']">Comisia nu poate avea mai mulți președinți.</li>
+                <li *ngIf="formMembers.errors?.['atLeastOneSecretary']">Comisia trebuie să aibă un secretar.</li>
+                <li *ngIf="formMembers.errors?.['atMostOneSecretary']">Comisia nu poate avea mai mulți secretari.</li>
+                <li *ngIf="formMembers.errors?.['atLeastTwoMembers']">Comisia trebuie să aibă cel puțin doi membri.</li>
             </ul>
             <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let teacher of filteredTeachers" [value]="teacher">

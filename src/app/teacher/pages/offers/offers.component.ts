@@ -2,9 +2,10 @@ import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
-import { Offer, TeacherService } from 'src/app/services/teacher.service';
-import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
 import { TeacherOfferDialogComponent } from '../../dialogs/teacher-offer-dialog/teacher-offer-dialog.component';
+import { TeacherService } from '../../../services/teacher.service';
+import { Offer } from '../../../services/student.service';
+import { CommonDialogComponent } from '../../../shared/common-dialog/common-dialog.component';
 
 @Component({
   selector: 'teacher-offers',

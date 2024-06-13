@@ -7,12 +7,12 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { BehaviorSubject, merge, Observable, of as observableOf, Subscription } from 'rxjs';
 import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
-import { DOMAIN_TYPES } from 'src/app/lib/constants';
-import { AdminService } from 'src/app/services/admin.service';
-import { AuthService, Domain, UserData } from 'src/app/services/auth.service';
 import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
 import { StudentDeleteDialogComponent } from '../../dialogs/student-delete-dialog/student-delete-dialog.component';
 import { StudentsBulkAddDialogComponent } from '../../dialogs/students-bulk-add-dialog/students-bulk-add-dialog.component';
+import { AdminService } from '../../../services/admin.service';
+import { AuthService, Domain, UserData } from '../../../services/auth.service';
+import { DOMAIN_TYPES } from '../../../lib/constants';
 
 @Component({
   selector: 'app-students',
@@ -73,7 +73,7 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          const filters = this.studentFilter.value;
+          const filters = this.studentFilter.value as any;
           return this.admin.getStudentUsers(
             this.sort.active, this.sort.direction.toUpperCase(), this.paginator.pageIndex, this.paginator.pageSize, filters);
         }),

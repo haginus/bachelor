@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AdminService } from 'src/app/services/admin.service';
-import { UserData } from 'src/app/services/auth.service';
+import { UserData } from '../../../services/auth.service';
+import { AdminService } from '../../../services/admin.service';
 
 @Component({
   selector: 'app-admin-teacher-delete-dialog',

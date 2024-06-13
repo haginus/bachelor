@@ -6,10 +6,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
-import { PAPER_TYPES } from 'src/app/lib/constants';
-import { AdminService } from 'src/app/services/admin.service';
-import { Paper, Committee } from 'src/app/services/auth.service';
-import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
+import { AdminService } from '../../../services/admin.service';
+import { Committee, Paper } from '../../../services/auth.service';
+import { PAPER_TYPES } from '../../../lib/constants';
+import { CommonDialogComponent } from '../../../shared/common-dialog/common-dialog.component';
 
 @Component({
   selector: 'app-paper-assign',
@@ -45,7 +45,7 @@ export class PaperAssignComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.pipe(
       switchMap(params => {
-        let committeeId = params.committeeId;
+        let committeeId = params['committeeId'];
         if(committeeId && parseInt(committeeId)) {
           this.committeeId = parseInt(committeeId);
         } else {
@@ -85,10 +85,10 @@ export class PaperAssignComponent implements OnInit {
     const filterChanges = this.paperFilter.valueChanges.pipe(debounceTime(500));
     filterChanges.pipe(
       startWith({}),
-      switchMap(() => { 
+      switchMap(() => {
         this.isLoadingOtherPapers = true;
         const { title, type, studentName } = this.paperFilter.value;
-        return this.admin.getPapers(undefined, undefined, null, null, 
+        return this.admin.getPapers(undefined, undefined, null, null,
         { assigned: false, forCommittee: this.committeeId, submitted: true, isNotValid: false, title, type, studentName }, true)
       })
     ).subscribe(papers => {

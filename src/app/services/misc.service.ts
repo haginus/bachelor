@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 import { AuthService, Domain } from './auth.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

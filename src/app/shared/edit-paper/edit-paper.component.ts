@@ -4,10 +4,10 @@ import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { AuthService, Paper, UserData } from 'src/app/services/auth.service';
-import { EditPaperResponse, StudentService } from 'src/app/services/student.service';
-import { TeacherService } from 'src/app/services/teacher.service';
-import { Topic, TopicsService } from 'src/app/services/topics.service';
+import { AuthService, Paper, UserData } from '../../services/auth.service';
+import { Topic, TopicsService } from '../../services/topics.service';
+import { EditPaperResponse, StudentService } from '../../services/student.service';
+import { TeacherService } from '../../services/teacher.service';
 
 @Component({
   selector: 'app-edit-paper',
@@ -22,7 +22,8 @@ export class EditPaperComponent implements OnInit {
     private topic: TopicsService,
     private student: StudentService,
     private teacher: TeacherService,
-    private auth: AuthService) {
+    private auth: AuthService
+  ) {
     this.filteredTopics = this.paperForm.get("topics").valueChanges.pipe(
       startWith(null),
       map((topicName: string | null) => typeof topicName == 'string' ? this._filter(topicName) : this.remainingTopics.slice())
@@ -117,6 +118,6 @@ export class EditPaperComponent implements OnInit {
   }
 
   private _normalize = (str: string) => str.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  
+
 
 }

@@ -6,11 +6,11 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { BehaviorSubject, merge, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { AdminService } from 'src/app/services/admin.service';
-import { AuthService, UserData } from 'src/app/services/auth.service';
 import { AdminTeacherBulkAddDialogComponent } from '../../dialogs/teacher-bulk-add-dialog/teacher-bulk-add-dialog.component';
 import { AdminTeacherDeleteDialogComponent } from '../../dialogs/teacher-delete-dialog/teacher-delete-dialog.component';
 import { AdminTeacherDialogConmonent } from '../../dialogs/teacher-dialog/teacher-dialog.component';
+import { AdminService } from '../../../services/admin.service';
+import { AuthService, UserData } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-admin-teachers',
@@ -126,7 +126,7 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
           if (res != null) {
             this.snackbar.open("Profesor șters.");
             this.performedActions.next("teacherDeleted");
-          } 
+          }
         })
       }
     })

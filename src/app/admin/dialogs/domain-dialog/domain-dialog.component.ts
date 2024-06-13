@@ -2,9 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PAPER_TYPES } from 'src/app/lib/constants';
-import { AdminService } from 'src/app/services/admin.service';
-import { Domain, DomainSpecialization } from 'src/app/services/auth.service';
+import { AdminService } from '../../../services/admin.service';
+import { PAPER_TYPES } from '../../../lib/constants';
+import { Domain, DomainSpecialization } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-domain-dialog',
@@ -95,7 +95,7 @@ export class AdminDomainDialogComponent implements OnInit {
 
   deleteDomain() {
     const id = this.data.domain.id;
-    
+
     this.isLoading = true;
     this.admin.deleteDomain(id).subscribe(res => {
       if(res) {

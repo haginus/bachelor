@@ -1,72 +1,63 @@
-<mat-list-item *ngFor="let document of requiredDocuments">
-    <span mat-list-icon>
-        <mat-icon *ngIf="!documentMap[document.name].actionPending">description</mat-icon>
-        <mat-spinner diameter="24" *ngIf="documentMap[document.name].actionPending"></mat-spinner>
-    </span>
-    <div mat-line>{{document.title}}</div>
-    <div mat-line>
-        <span *ngIf="documentMap[document.name].nextAction == null || documentMap[document.name].nextAction == 'upload'">
-            Document lipsă
-            <span *ngIf="documentMap[document.name].uploadBy != perspective">
-                | Se încarcă de către {{ USER_TYPES[documentMap[document.name].uploadBy] }}
-            </span>
+<div class="document-item" *ngFor="let document of requiredDocuments">
+  <div class="icon">
+    <mat-icon *ngIf="!documentMap[document.name].actionPending">description</mat-icon>
+    <mat-spinner diameter="24" *ngIf="documentMap[document.name].actionPending"></mat-spinner>
+  </div>
+  <div class="content">
+    <div class="title">{{document.title}}</div>
+    <div>
+      <span *ngIf="documentMap[document.name].nextAction == null || documentMap[document.name].nextAction == 'upload'">
+        Document lipsă
+        <span *ngIf="documentMap[document.name].uploadBy != perspective">
+          | Se încarcă de către {{ USER_TYPES[documentMap[document.name].uploadBy] }}
         </span>
-        <span *ngIf="documentMap[document.name].nextAction == 'sign'">
-            Necesită semnătură
-        </span>
-        <span *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].actualTypes.generated && !documentMap[document.name].requiredTypes.signed">
-            Document generat
-        </span>
-        <span *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].actualTypes.signed">
-            Document semnat
-        </span>
-        <span *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].actualTypes.copy">
-            Document încărcat
-        </span>
+      </span>
+      <span *ngIf="documentMap[document.name].nextAction == 'sign'">
+        Necesită semnătură
+      </span>
+      <span
+        *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].actualTypes.generated && !documentMap[document.name].requiredTypes.signed">
+        Document generat
+      </span>
+      <span *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].actualTypes.signed">
+        Document semnat
+      </span>
+      <span *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].actualTypes.copy">
+        Document încărcat
+      </span>
     </div>
-    <button class="left-button"
-        mat-icon-button
-        matTooltip="Ștergeți documentul"
-        (click)="deleteDocument(documentMap[document.name])"
-        *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].uploadBy == perspective"
-        [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange">
-        <mat-icon>history</mat-icon>
-    </button>
-    <button 
-        mat-stroked-button
-        *ngIf="documentMap[document.name].nextAction == 'view'"
-        (click)="viewDocument(documentMap[document.name])"
-        [disabled]="documentMap[document.name].actionPending"
-    >
-        Vizualizați
-    </button>
-    <button 
-        mat-stroked-button
-        *ngIf="documentMap[document.name].nextAction == 'sign'"
-        (click)="openDocumentDialog('sign', document.name, documentMap[document.name].lastId)"
-        [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange"
-    >
-        Semnați
-    </button>
-    <button 
-        mat-stroked-button
-        *ngIf="documentMap[document.name].nextAction == 'upload'"
-        (click)="openDocumentDialog('uploadCopy', document.name)"
-        [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange"
-    >
-        Încărcați
-    </button>
-    <button mat-icon-button [matMenuTriggerFor]="moreMenu" [matMenuTriggerData]="{document: document}" 
-        *ngIf="perspective == 'admin' && canEdit">
-        <mat-icon>more_vert</mat-icon>
-    </button>
-</mat-list-item>
+  </div>
+  <button class="left-button" mat-icon-button matTooltip="Ștergeți documentul"
+    (click)="deleteDocument(documentMap[document.name])"
+    *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].uploadBy == perspective"
+    [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange">
+    <mat-icon>history</mat-icon>
+  </button>
+  <button mat-stroked-button *ngIf="documentMap[document.name].nextAction == 'view'"
+    (click)="viewDocument(documentMap[document.name])" [disabled]="documentMap[document.name].actionPending">
+    Vizualizați
+  </button>
+  <button mat-stroked-button *ngIf="documentMap[document.name].nextAction == 'sign'"
+    (click)="openDocumentDialog('sign', document.name, documentMap[document.name].lastId)"
+    [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange">
+    Semnați
+  </button>
+  <button mat-stroked-button *ngIf="documentMap[document.name].nextAction == 'upload'"
+    (click)="openDocumentDialog('uploadCopy', document.name)"
+    [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange">
+    Încărcați
+  </button>
+  <button mat-icon-button [matMenuTriggerFor]="moreMenu" [matMenuTriggerData]="{document: document}"
+    *ngIf="perspective == 'admin' && canEdit">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+</div>
 
 <mat-menu #moreMenu="matMenu">
-    <ng-template matMenuContent let-document="document">
-        <button mat-menu-item (click)="reuploadDocument(document)">
-            <mat-icon>upload</mat-icon>
-            <span>Reîncărcați documentul</span>
-        </button>
-    </ng-template>
+  <ng-template matMenuContent let-document="document">
+    <button mat-menu-item (click)="reuploadDocument(document)">
+      <mat-icon>upload</mat-icon>
+      <span>Reîncărcați documentul</span>
+    </button>
+  </ng-template>
 </mat-menu>

@@ -3,8 +3,7 @@ import { FormControl, FormGroup, FormGroupDirective, ValidationErrors, Validator
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-change-password',
@@ -67,7 +66,7 @@ export class ChangePasswordComponent implements OnInit {
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective): boolean {
-    const foreignInvalidity = form.form.errors?.passwordsNotMatched;
+    const foreignInvalidity = form.form.errors?.['passwordsNotMatched'];
     return (control.invalid || foreignInvalidity) && (control.dirty || control.touched);
   }
 }

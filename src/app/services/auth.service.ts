@@ -5,11 +5,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 import { SudoDialogComponent } from '../admin/dialogs/sudo-dialog/sudo-dialog.component';
 import { inclusiveDate, parseDate } from '../lib/utils';
 import { PaperRequiredDocument } from './student.service';
 import { Topic } from './topics.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -77,6 +77,7 @@ export class AuthService {
 
   impersonateUser(userId: number): Observable<AuthResponse> {
     const url = `${environment.apiUrl}/auth/impersonate`;
+    // @ts-ignore
     return this.enterSudoMode().pipe(
       switchMap(password => {
         if(!password) return of(null);

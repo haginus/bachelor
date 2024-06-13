@@ -4,11 +4,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, map, switchMap } from 'rxjs/operators';
-import { AuthService } from 'src/app/services/auth.service';
-import { GetTeacherOffersFilters, Offer, StudentService, TeacherOffers } from 'src/app/services/student.service';
-import { Topic, TopicsService } from 'src/app/services/topics.service';
-import { CommonDialogComponent } from 'src/app/shared/common-dialog/common-dialog.component';
 import { OfferApplicationSenderComponent } from '../../dialogs/offer-application-sender/offer-application-sender.component';
+import { Topic, TopicsService } from '../../../services/topics.service';
+import { GetTeacherOffersFilters, Offer, StudentService, TeacherOffers } from '../../../services/student.service';
+import { AuthService } from '../../../services/auth.service';
+import { CommonDialogComponent } from '../../../shared/common-dialog/common-dialog.component';
 
 @Component({
   selector: 'student-teachers-grid',
@@ -66,7 +66,7 @@ export class StundentTeachersGridComponent implements OnInit, OnDestroy {
 
     this.teacherSubscription = this.route.data.pipe(
       switchMap(data => {
-        this.mode = data.mode ? data.mode : 'all';
+        this.mode = data['mode'] ? data['mode'] : 'all';
         if(this.mode == 'suggested') {
           return this.studentService.getSuggestedTeacherOffers();
         } else {
@@ -74,7 +74,7 @@ export class StundentTeachersGridComponent implements OnInit, OnDestroy {
             debounceTime(500), // wait until user stops typing
             switchMap(result => {
               this.isLoadingTeachers = true;
-              let filters: GetTeacherOffersFilters = result;
+              let filters = result as GetTeacherOffersFilters;
               if(this.topics.length == filters.topicIds.length || filters.topicIds.length == 0) {
                 filters.topicIds = null;
               }

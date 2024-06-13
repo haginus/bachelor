@@ -14,11 +14,11 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatPaginatorIntlRo } from './providers/mat-paginator-intl-ro';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { RECAPTCHA_LANGUAGE, RECAPTCHA_SETTINGS, RecaptchaModule } from "ng-recaptcha";
-import { environment } from 'src/environments/environment';
 import { ProblemReportComponent } from './components/problem-report/problem-report.component';
 import { MatSelectModule } from '@angular/material/select';
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { environment } from '../environments/environment';
 
 const materialDeps = [
   MatSidenavModule,

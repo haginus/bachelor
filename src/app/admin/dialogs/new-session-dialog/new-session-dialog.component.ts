@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { AdminService } from 'src/app/services/admin.service';
+import { AdminService } from '../../../services/admin.service';
 
 @Component({
   selector: 'app-new-session-dialog',

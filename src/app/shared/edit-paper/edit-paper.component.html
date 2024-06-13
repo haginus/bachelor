@@ -14,21 +14,21 @@
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="100">
             <mat-label>Teme</mat-label>
-            <mat-chip-list #chipList>
-                <mat-chip *ngFor="let topic of selectedTopics" [selectable]="true" [removable]="true"
+            <mat-chip-grid #chipList>
+                <mat-chip *ngFor="let topic of selectedTopics" [removable]="true"
                     (removed)="removeTopic(topic)">
                     {{topic.name}}
                     <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
                 <input placeholder="Alegeți o temă nouă..." #topicInput formControlName="topics" [matAutocomplete]="auto"
                     [matChipInputFor]="chipList">
-            </mat-chip-list>
+            </mat-chip-grid>
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTopic($event)">
                 <mat-option *ngFor="let topic of filteredTopics | async" [value]="topic">
                     {{topic.name}}
                 </mat-option>
             </mat-autocomplete>
-        </mat-form-field>    
+        </mat-form-field>
     </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

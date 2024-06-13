@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AdminService, FinalReportStatus } from 'src/app/services/admin.service';
-import { DocumentService } from 'src/app/services/document.service';
+import { DocumentService } from '../../../services/document.service';
+import { AdminService, FinalReportStatus } from '../../../services/admin.service';
 
 @Component({
   selector: 'app-reports',

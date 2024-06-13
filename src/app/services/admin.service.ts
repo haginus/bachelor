@@ -3,7 +3,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, interval, of } from 'rxjs';
 import { catchError, first, map, retry, startWith, switchMap, takeWhile } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { AuthService, Domain, Paper, SessionSettings, UserData, Committee, CommitteeMember, PaperType, SignUpRequest } from './auth.service';
 import { Topic } from './topics.service';
 

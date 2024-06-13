@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AuthService, UserData } from 'src/app/services/auth.service';
-import { StudentExtraData } from 'src/app/services/student.service';
+import { AuthService, UserData } from '../../../services/auth.service';
+import { StudentExtraData } from '../../../services/student.service';
 
 @Component({
   selector: 'app-student-extra-data-editor',
@@ -11,15 +11,18 @@ import { StudentExtraData } from 'src/app/services/student.service';
 })
 export class StudentExtraDataEditorComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) private dialogData: StudentExtraData, private auth: AuthService,
-    private dialog: MatDialogRef<StudentExtraDataEditorComponent> ) {
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private dialogData: StudentExtraData,
+    private auth: AuthService,
+    private dialog: MatDialogRef<StudentExtraDataEditorComponent>
+  ) {
     this.studentExtraData = this.dialogData;
   }
 
   studentExtraData: StudentExtraData;
   userData: UserData;
   isSavingData: boolean = false;
-  
+
   studentDataForm = new FormGroup({
     "birthLastName": new FormControl(null, [Validators.required, Validators.maxLength(128)]),
     "parentInitial": new FormControl(null, [Validators.required, Validators.pattern(/^[A-Z][a-z]?\.( [A-Z][a-z]?\.){0,2}$/)]),
@@ -53,7 +56,7 @@ export class StudentExtraDataEditorComponent implements OnInit {
     })
     if(this.studentExtraData) {
       try {
-        this.studentDataForm.setValue(this.studentExtraData);
+        this.studentDataForm.setValue(this.studentExtraData as any);
         this.studentDataForm.markAllAsTouched();
       } catch(err) { }
     }
@@ -61,7 +64,7 @@ export class StudentExtraDataEditorComponent implements OnInit {
 
   saveData() {
     this.isSavingData = true;
-    const formValue: StudentExtraData = this.studentDataForm.value;
+    const formValue = this.studentDataForm.value as StudentExtraData;
     this.studentExtraData = formValue;
     this.dialog.close(this.studentExtraData);
   }

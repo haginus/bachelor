@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { AuthService, Committee, Domain, Paper, PaperDocument, UserData } from './auth.service';
 import { EditPaperResponse, OfferApplication } from './student.service';
 import { Topic } from './topics.service';

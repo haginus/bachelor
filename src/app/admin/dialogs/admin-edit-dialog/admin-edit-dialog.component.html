@@ -5,15 +5,15 @@
 <mat-dialog-content class="mat-typography" *ngIf="data.mode == 'edit' || data.mode == 'create'">
   <form [formGroup]="adminForm" fxLayout="row grid" fxLayoutGap="10px grid" autocomplete="off">
     <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-      <mat-label>Nume *</mat-label>
+      <mat-label>Nume</mat-label>
       <input matInput type="text" formControlName="lastName" name="userLastName">
     </mat-form-field>
     <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-      <mat-label>Prenume *</mat-label>
+      <mat-label>Prenume</mat-label>
       <input matInput type="text" formControlName="firstName" name="userFirstName">
     </mat-form-field>
     <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-      <mat-label>E-mail *</mat-label>
+      <mat-label>E-mail</mat-label>
       <input matInput type="email" formControlName="email" name="userEmail">
       <mat-hint *ngIf="data.mode == 'edit'">E-mailul nu poate fi modificat.</mat-hint>
     </mat-form-field>

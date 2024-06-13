@@ -2,7 +2,7 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService, UserData } from 'src/app/services/auth.service';
+import { AuthService, UserData } from '../../../services/auth.service';
 
 @Component({
   selector: 'teacher-setup',

@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { FAQ, MiscService } from 'src/app/services/misc.service';
+import { FAQ, MiscService } from '../../services/misc.service';
 
 @Component({
   selector: 'app-faq',

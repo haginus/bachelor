@@ -4,15 +4,15 @@ import { MatDrawer, MatDrawerMode } from '@angular/material/sidenav';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators'
-import { environment } from 'src/environments/environment';
 import { routerFadeAnimation } from './animations';
 import { ProblemReportComponent } from './components/problem-report/problem-report.component';
 import { AuthService, SessionSettings, UserData } from './services/auth.service';
 import { UserProfileEditorComponent } from './shared/user-profile-editor/user-profile-editor.component';
+import { environment } from '../environments/environment';
 
 
 const SideWidth = 800;
-const DEFAULT_TITLE = 'Platformă de asociere';
+const DEFAULT_TITLE = 'Finalizare studii';
 
 @Component({
   selector: 'app-root',
@@ -53,9 +53,9 @@ export class AppComponent implements OnInit {
       if(this.drawerMode == 'over') {
         this.drawer.close();
       }
-      this.hideDrawer = data.hideDrawer === true;
-      this.hideToolbar = data.hideToolbar === true;
-      this.title = data.title != undefined ? data.title : DEFAULT_TITLE;
+      this.hideDrawer = data['hideDrawer'] === true;
+      this.hideToolbar = data['hideToolbar'] === true;
+      this.title = data['title'] || DEFAULT_TITLE;
       if(this.hideDrawer) {
         this.drawer.close();
       } else if(this.drawerMode == 'side') {
@@ -105,7 +105,7 @@ export class AppComponent implements OnInit {
 
   prepareRoute(outlet: RouterOutlet) {
     if(outlet && outlet.isActivated) {
-      if(outlet.activatedRouteData.animate === false) {
+      if(outlet.activatedRouteData['animate'] === false) {
         return "DoNotAnimate";
       }
       return outlet.activatedRoute;

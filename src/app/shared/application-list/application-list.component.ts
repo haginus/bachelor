@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { OfferApplication } from 'src/app/services/student.service';
-import { DOMAIN_TYPES } from 'src/app/lib/constants';
+import { DOMAIN_TYPES } from '../../lib/constants';
+import { OfferApplication } from '../../services/student.service';
 
 @Component({
   selector: 'app-application-list',

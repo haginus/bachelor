@@ -4,11 +4,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, merge, of, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { USER_TYPES } from 'src/app/lib/constants';
-import { AdminService } from 'src/app/services/admin.service';
-import { AuthService, UserData } from 'src/app/services/auth.service';
-import { CommonDialogComponent, CommonDialogData } from 'src/app/shared/common-dialog/common-dialog.component';
 import { AdminEditDialogComponent, AdminEditDialogData } from '../../dialogs/admin-edit-dialog/admin-edit-dialog.component';
+import { AdminService } from '../../../services/admin.service';
+import { AuthService, UserData } from '../../../services/auth.service';
+import { USER_TYPES } from '../../../lib/constants';
+import { CommonDialogComponent, CommonDialogData } from '../../../shared/common-dialog/common-dialog.component';
 
 @Component({
   selector: 'app-admins',
@@ -17,7 +17,7 @@ import { AdminEditDialogComponent, AdminEditDialogData } from '../../dialogs/adm
 })
 export class AdminsComponent implements OnInit {
 
-  constructor(private admin: AdminService, private auth: AuthService, private router: Router, 
+  constructor(private admin: AdminService, private auth: AuthService, private router: Router,
     private dialog: MatDialog, private snackbar: MatSnackBar) { }
 
   USER_TYPES = USER_TYPES;
@@ -32,10 +32,10 @@ export class AdminsComponent implements OnInit {
   isLoadingResults = true;
 
   performedActions: BehaviorSubject<string> = new BehaviorSubject('');
-  
+
 
   ngOnInit(): void {
-    this.dataSubscription = combineLatest(this.auth.enterSudoMode(), this.performedActions)
+    this.dataSubscription = combineLatest([this.auth.enterSudoMode(), this.performedActions])
       .pipe(
         switchMap(([password]) => {
           if(!password) return of([]);

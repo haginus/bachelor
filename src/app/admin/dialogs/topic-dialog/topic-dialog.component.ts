@@ -3,8 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map } from 'rxjs/operators';
-import { AdminService } from 'src/app/services/admin.service';
-import { Topic, TopicsService } from 'src/app/services/topics.service';
+import { AdminService } from '../../../services/admin.service';
+import { Topic, TopicsService } from '../../../services/topics.service';
 
 @Component({
   selector: 'app-topic-dialog',
@@ -91,5 +91,5 @@ export class AdminTopicDialogComponent implements OnInit {
 
 export interface TopicDialogData {
   mode: 'create' | 'edit' | 'delete',
-  topic?: Topic
+  topic?: Topic;
 }

@@ -1,15 +1,14 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { BehaviorSubject, merge, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { Selectable } from 'src/app/lib/models/Selectable';
-import { AdminService } from 'src/app/services/admin.service';
-import { Topic, TopicsService } from 'src/app/services/topics.service';
 import { TopicBulkDeleteDialogComponent } from '../../dialogs/topic-bulk-delete-dialog/topic-bulk-delete-dialog.component';
 import { AdminTopicDialogComponent } from '../../dialogs/topic-dialog/topic-dialog.component';
+import { AdminService } from '../../../services/admin.service';
+import { Topic } from '../../../services/topics.service';
+import { Selectable } from '../../../lib/models/Selectable';
 
 @Component({
   selector: 'app-topics',

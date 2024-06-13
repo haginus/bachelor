@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable } from '@angular/material/table';
 import { Subscription } from 'rxjs';
-import { AdminService } from 'src/app/services/admin.service';
-import { Domain } from 'src/app/services/auth.service';
 import { AdminDomainDialogComponent } from '../../dialogs/domain-dialog/domain-dialog.component';
+import { AdminService } from '../../../services/admin.service';
+import { Domain } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-domains',
@@ -100,6 +100,6 @@ export class AdminDomainsComponent implements OnInit, OnDestroy {
   }
 
 
-  
+
 
 }

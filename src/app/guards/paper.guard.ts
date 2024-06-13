@@ -13,7 +13,7 @@ export class PaperGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const hasPaper = route.data.hasPaper == undefined ? true : route.data.hasPaper;
+    const hasPaper = route.data['hasPaper'] == undefined ? true : route.data['hasPaper'];
     return this.user.userData.pipe(
       map(user => {
         if(user === undefined) {

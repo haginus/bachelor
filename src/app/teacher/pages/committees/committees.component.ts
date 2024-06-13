@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Committee } from 'src/app/services/auth.service';
-import { TeacherService } from 'src/app/services/teacher.service';
+import { TeacherService } from '../../../services/teacher.service';
+import { Committee } from '../../../services/auth.service';
 
 @Component({
   selector: 'teacher-committees',

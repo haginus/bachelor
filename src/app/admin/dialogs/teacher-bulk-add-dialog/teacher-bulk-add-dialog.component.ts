@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AdminService } from 'src/app/services/admin.service';
+import { AdminService } from '../../../services/admin.service';
 
 @Component({
   selector: 'app-admin-teacher-bulk-add-dialog',

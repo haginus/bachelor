@@ -27,7 +27,7 @@
     <mat-form-field appearance="outline">
       <mat-label>CNP</mat-label>
       <input matInput type="text" formControlName="CNP" name="teacherCNP">
-      <mat-error>{{ teacherForm.get("CNP").errors?.CNPValidator.message }}</mat-error>
+      <mat-error>{{ teacherForm.get("CNP").errors?.['CNPValidator'].message }}</mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>E-mail *</mat-label>

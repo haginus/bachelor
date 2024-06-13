@@ -2,14 +2,15 @@ import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
-import { Domain } from 'src/app/services/auth.service';
-import { Offer, TeacherService } from 'src/app/services/teacher.service';
-import { Topic, TopicsService } from 'src/app/services/topics.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Topic, TopicsService } from '../../../services/topics.service';
+import { TeacherService } from '../../../services/teacher.service';
+import { Domain } from '../../../services/auth.service';
+import { Offer } from '../../../services/student.service';
 
 @Component({
   selector: 'app-teacher-offer-dialog',
@@ -20,7 +21,7 @@ export class TeacherOfferDialogComponent implements OnInit {
   //TODO: domains, add edit functions
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: TeacherOfferDialogData, private topicService: TopicsService,
-  private teacher: TeacherService, private dialog: MatDialogRef<TeacherOfferDialogComponent>, private snackbar: MatSnackBar) { 
+  private teacher: TeacherService, private dialog: MatDialogRef<TeacherOfferDialogComponent>, private snackbar: MatSnackBar) {
     this.filteredTopics = this.offerForm.get("topics").valueChanges.pipe(
       startWith(null),
       map((topicName: string | null) => typeof topicName == 'string' ? this._filter(topicName) : this.remainingTopics.slice())
@@ -112,7 +113,7 @@ export class TeacherOfferDialogComponent implements OnInit {
       this.offerForm.get("limit").updateValueAndValidity(); // ensure user can't change limit below taken places
     }
     this.topicService.getTopics().subscribe(topics => {
-      this.remainingTopics = 
+      this.remainingTopics =
         topics.filter(topic => !this.selectedTopics.find(t => t.id == topic.id));
     });
     this.domainSubscription = this.teacher.getDomains().subscribe(domains => {
@@ -140,7 +141,7 @@ export class TeacherOfferDialogComponent implements OnInit {
       switchMap(topics => {
         let topicIds = this.selectedTopics.filter(topic => topic.id != 0).map(topic => topic.id);
         topicIds = topicIds.concat(topics.map(topic => topic.id)); // get IDs for newly added topics
-        return isEdit ? 
+        return isEdit ?
           this.teacher.editOffer(this.data.offer.id, this.domainId.value, topicIds, this.limit.value, this.description.value) :
           this.teacher.addOffer(this.domainId.value, topicIds, this.limit.value, this.description.value);
       })
@@ -176,6 +177,6 @@ export class TeacherOfferDialogComponent implements OnInit {
 }
 
 export interface TeacherOfferDialogData {
-  mode: 'create' | 'edit',
-  offer?: Offer
+  mode: 'create' | 'edit';
+  offer?: Offer;
 }

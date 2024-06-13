@@ -1,11 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, Subscription } from 'rxjs';
-import { AdminService } from 'src/app/services/admin.service';
-import { Domain, UserData } from 'src/app/services/auth.service';
-import { CNPValidator } from 'src/app/validators/CNP-validator';
+import { AdminService } from '../../../services/admin.service';
+import { Domain, UserData } from '../../../services/auth.service';
+import { CNPValidator } from '../../../validators/CNP-validator';
 
 @Component({
   selector: 'app-admin-teacher-dialog',
@@ -20,7 +18,7 @@ export class AdminTeacherDialogConmonent implements OnInit {
   domains: Domain[];
 
   ngOnInit(): void {
-    
+
   }
 
   teacherForm = new FormGroup({
@@ -31,7 +29,7 @@ export class AdminTeacherDialogConmonent implements OnInit {
     'email': new FormControl(this.data.data?.email, [Validators.email, Validators.required]),
   });
 
-  get emailChanged() { 
+  get emailChanged() {
     return this.data.mode == 'edit' && this.teacherForm.get("email").value != this.data.data?.email;
   }
 
@@ -60,5 +58,5 @@ export class AdminTeacherDialogConmonent implements OnInit {
 
 export interface AdminTeacherDialogData {
   mode: "view" | "create" | "edit";
-  data?: UserData
+  data?: UserData;
 }

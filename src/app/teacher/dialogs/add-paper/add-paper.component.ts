@@ -7,10 +7,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { combineLatest, merge, Observable, of, Subscription } from 'rxjs';
 import { debounceTime, map, startWith, switchMap } from 'rxjs/operators';
-import { PAPER_TYPES } from 'src/app/lib/constants';
-import { Domain, UserData } from 'src/app/services/auth.service';
-import { TeacherService } from 'src/app/services/teacher.service';
-import { Topic, TopicsService } from 'src/app/services/topics.service';
+import { TeacherService } from '../../../services/teacher.service';
+import { Topic, TopicsService } from '../../../services/topics.service';
+import { Domain, UserData } from '../../../services/auth.service';
+import { PAPER_TYPES } from '../../../lib/constants';
 
 @Component({
   selector: 'app-add-paper',
@@ -19,7 +19,7 @@ import { Topic, TopicsService } from 'src/app/services/topics.service';
 })
 export class AddPaperComponent implements OnInit {
 
-  constructor(private teacher: TeacherService, private topicService: TopicsService, 
+  constructor(private teacher: TeacherService, private topicService: TopicsService,
     private dialog: MatDialogRef<AddPaperComponent>, private snackbar: MatSnackBar) {
     this.filteredTopics = this.paperForm.get("topics").valueChanges.pipe(
       startWith(null),
@@ -71,7 +71,7 @@ export class AddPaperComponent implements OnInit {
       this.isLoadingUsers = false;
     });
     this.topicService.getTopics().subscribe(topics => {
-      this.remainingTopics = 
+      this.remainingTopics =
         topics.filter(topic => !this.selectedTopics.find(t => t.id == topic.id));
     });
   }
@@ -82,7 +82,7 @@ export class AddPaperComponent implements OnInit {
     this.topicService.addTopics(topicNames).pipe(
       switchMap(topics => {
         let topicIds = this.selectedTopics.filter(topic => topic.id != 0).map(topic => topic.id);
-        topicIds = topicIds.concat(topics.map(topic => topic.id)); 
+        topicIds = topicIds.concat(topics.map(topic => topic.id));
         const { title, description } = this.paperForm.value;
         const { studentId } = this.findStudentForm.value;
         return this.teacher.addPaper(studentId, title, description, topicIds);

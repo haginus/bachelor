@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
-import { toFixedTruncate } from 'src/app/lib/utils';
-import { Paper, PaperGrade } from 'src/app/services/auth.service';
+import { Paper, PaperGrade } from '../../services/auth.service';
 
 @Component({
   selector: 'app-paper-grade-table',

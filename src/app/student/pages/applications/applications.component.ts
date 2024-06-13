@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { OfferApplication, StudentService } from 'src/app/services/student.service';
-import { ApplicationListActions } from 'src/app/shared/application-list/application-list.component';
+import { OfferApplication, StudentService } from '../../../services/student.service';
+import { ApplicationListActions } from '../../../shared/application-list/application-list.component';
 
 @Component({
   selector: 'app-student-applications',
@@ -25,11 +25,11 @@ export class StudentApplicationsComponent implements OnInit {
 
   ngOnInit(): void {
     this.routeSubscription =  this.route.params.subscribe(res => {
-      if(res.state !== undefined) {
-        if(!['accepted', 'declined', 'pending'].includes(res.state)) { // check state
+      if(res['state'] !== undefined) {
+        if(!['accepted', 'declined', 'pending'].includes(res['state'])) { // check state
           this.router.navigate(['student', 'applications']);
         } else {
-          this.state = res.state;
+          this.state = res['state'];
         }
       }
       this.getApplications();

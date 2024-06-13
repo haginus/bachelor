@@ -20,7 +20,7 @@ export class RoleGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      const expectedRoles = Array.isArray(route.data.role) ? route.data.role : [route.data.role];
+      const expectedRoles = Array.isArray(route.data['role']) ? route.data['role'] : [route.data['role']];
       return this.auth.userData.pipe(
         map(user => {
           const mappedRole = ROLE_MAP[user?.type];
@@ -34,5 +34,5 @@ export class RoleGuard implements CanActivate {
         })
       );
   }
-  
+
 }

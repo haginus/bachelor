@@ -65,7 +65,7 @@ const parseCNP = (cnp: string): ParsedCNP => {
 
 class CNPParseError extends Error {
   code: string;
-  message: string;
+  override message: string;
 
   constructor(code: string, message: string) {
     super();

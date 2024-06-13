@@ -1,210 +1,198 @@
 <div class="flex-container align-center v-align-center fixed" *ngIf="loading">
-    <mat-spinner [diameter]="48"></mat-spinner>
+  <mat-spinner [diameter]="48"></mat-spinner>
 </div>
 
 <div class="flex-container align-center v-align-center fixed" *ngIf="backendDown">
-    <h2>Platforma este indisponibilă</h2>
-    <p>Dacă problema persistă, contactați administratorul.</p>
-    <p></p>
-    <button mat-raised-button color="primary" (click)="reloadApp()">Reîncercați</button>
+  <h2>Platforma este indisponibilă</h2>
+  <p>Dacă problema persistă, contactați administratorul.</p>
+  <p></p>
+  <button mat-raised-button color="primary" (click)="reloadApp()">Reîncercați</button>
 </div>
 
 <mat-menu #userMenu="matMenu">
-    <button mat-menu-item (click)="release()" *ngIf="user?.isImpersonated">
-        <mat-icon>undo</mat-icon>
-        <span>Opriți impersonarea</span>
-    </button>
-    <button mat-menu-item (click)="editProfile()">
-        <mat-icon>person</mat-icon>
-        <span>Profilul dvs.</span>
-    </button>
-    <button mat-menu-item (click)="signOut()">
-        <mat-icon>logout</mat-icon>
-        <span>Deconectare</span>
-    </button>
+  <button mat-menu-item (click)="release()" *ngIf="user?.isImpersonated">
+    <mat-icon>undo</mat-icon>
+    <span>Opriți impersonarea</span>
+  </button>
+  <button mat-menu-item (click)="editProfile()">
+    <mat-icon>person</mat-icon>
+    <span>Profilul dvs.</span>
+  </button>
+  <button mat-menu-item (click)="signOut()">
+    <mat-icon>logout</mat-icon>
+    <span>Deconectare</span>
+  </button>
 </mat-menu>
 
 <div class="flex-container fullscreen main-container" [hidden]="loading">
-    <mat-toolbar *ngIf="!hideToolbar">
-        <button mat-icon-button matTooltip="Comutați meniul"
-            *ngIf="!hideDrawer" (click)="drawer.toggle()">
-            <mat-icon>menu</mat-icon>
+  <mat-toolbar *ngIf="!hideToolbar">
+    <button mat-icon-button matTooltip="Comutați meniul" *ngIf="!hideDrawer" (click)="drawer.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span class="toolbar-title">{{ title }}</span>
+    <span class="toolbar-spacer"></span>
+    <button mat-button class="user-preview-container" [matMenuTriggerFor]="userMenu">
+      <div class="user-name" fxHide.lt-sm *ngIf="user">
+        <div>{{user.firstName}} {{user.lastName}}</div>
+        <div *ngIf="user.student">Gr. {{ user.student?.group }}</div>
+      </div>
+      <mat-icon *ngIf="!user?.isImpersonated">person</mat-icon>
+      <mat-icon *ngIf="user?.isImpersonated">people</mat-icon>
+    </button>
+  </mat-toolbar>
+  <mat-drawer-container class="drawer-container">
+    <mat-drawer #drawer [mode]="drawerMode" class="main-drawer">
+      <div class="scroll-menu">
+        <!-- STUDENT -->
+        @if(user?.type === 'student') {
+          <div class="nav-list">
+            <a class="nav-list-item" routerLink="student" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              <mat-icon>lightbulb</mat-icon>
+              <span>Informații și întrebări</span>
+            </a>
+          </div>
+          @if(!user.student?.paper) {
+            <div class="nav-list">
+              <a class="nav-list-item" routerLink="student/suggested-teachers" routerLinkActive="active">
+                <mat-icon>stars</mat-icon>
+                <span>Profesori sugerați</span>
+              </a>
+              <a class="nav-list-item" routerLink="student/teachers" routerLinkActive="active">
+                <mat-icon>school</mat-icon>
+                <span>Toți profesorii</span>
+              </a>
+            </div>
+            <div class="nav-list">
+              <a class="nav-list-item" routerLink="student/applications/pending" routerLinkActive="active">
+                <mat-icon>assignment</mat-icon>
+                <span>Cereri în așteptare</span>
+              </a>
+              <a class="nav-list-item" routerLink="student/applications/declined" routerLinkActive="active">
+                <mat-icon>assignment_returned</mat-icon>
+                <span>Cereri respinse</span>
+              </a>
+            </div>
+          } @else {
+            <div class="nav-list">
+              <a class="nav-list-item" routerLink="student/paper" routerLinkActive="active">
+                <mat-icon>stars</mat-icon>
+                <span>Lucrarea mea</span>
+              </a>
+            </div>
+          }
+        }
+        @if(user?.type === 'teacher') {
+          <div class="nav-list">
+            <a class="nav-list-item" routerLink="teacher" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              <mat-icon>lightbulb</mat-icon>
+              <span>Informații și întrebări</span>
+            </a>
+          </div>
+          <div class="nav-list">
+            <a class="nav-list-item" routerLink="teacher/offers" routerLinkActive="active">
+              <mat-icon>stars</mat-icon>
+              <span>Ofertele dvs.</span>
+            </a>
+          </div>
+          <div class="nav-list">
+            <a class="nav-list-item" routerLink="teacher/applications/pending" routerLinkActive="active">
+              <mat-icon>assignment</mat-icon>
+              <span>Cereri în așteptare</span>
+            </a>
+            <a class="nav-list-item" routerLink="teacher/applications/declined" routerLinkActive="active">
+              <mat-icon>assignment_returned</mat-icon>
+              <span>Cereri respinse</span>
+            </a>
+          </div>
+          <div class="nav-list">
+            <a class="nav-list-item" routerLink="teacher/papers" routerLinkActive="active">
+              <mat-icon>description</mat-icon>
+              <span>Lucrări coordonate</span>
+            </a>
+          </div>
+          <div class="nav-list">
+            <a class="nav-list-item" routerLink="teacher/committees" routerLinkActive="active">
+              <mat-icon>description</mat-icon>
+              <span>Comisii</span>
+            </a>
+          </div>
+        }
+        @if(['secretary', 'admin'].includes(user?.type)) {
+          <div class="nav-list">
+            <a class="nav-list-item" routerLink="admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              <mat-icon>home</mat-icon>
+              <span>Panou de bord</span>
+            </a>
+          </div>
+          <div class="nav-list">
+            <a class="nav-list-item" routerLink="admin/students" routerLinkActive="active">
+              <mat-icon>people</mat-icon>
+              <span>Listă studenți</span>
+            </a>
+            @if(user.type === 'admin') {
+              <a class="nav-list-item" routerLink="admin/teachers" routerLinkActive="active">
+                <mat-icon>school</mat-icon>
+                <span>Listă profesori</span>
+              </a>
+              <a class="nav-list-item" routerLink="admin/admins" routerLinkActive="active">
+                <mat-icon>admin_panel_settings</mat-icon>
+                <span>Listă administratori și secretari</span>
+              </a>
+            }
+            <a class="nav-list-item" routerLink="admin/sign-up-requests" routerLinkActive="active">
+              <mat-icon>pending</mat-icon>
+              <span>Cereri înregistrare</span>
+            </a>
+          </div>
+          @if(user.type === 'admin') {
+            <div class="nav-list">
+              <a class="nav-list-item" routerLink="admin/domains" routerLinkActive="active">
+                <mat-icon>category</mat-icon>
+                <span>Domenii</span>
+              </a>
+            </div>
+            <div class="nav-list">
+              <a class="nav-list-item" routerLink="admin/topics" routerLinkActive="active">
+                <mat-icon>topic</mat-icon>
+                <span>Teme</span>
+              </a>
+            </div>
+          }
+          <div class="nav-list">
+            <a class="nav-list-item" routerLink="admin/papers" routerLinkActive="active">
+              <mat-icon>description</mat-icon>
+              <span>Lucrări</span>
+            </a>
+            <a class="nav-list-item" routerLink="admin/committees" routerLinkActive="active">
+              <mat-icon>group</mat-icon>
+              <span>Comisii</span>
+            </a>
+          </div>
+          @if(user.type === 'admin') {
+            <div class="nav-list">
+              <a class="nav-list-item" routerLink="admin/session" routerLinkActive="active">
+                <mat-icon>settings</mat-icon>
+                <span>Setări sesiune de examinare</span>
+              </a>
+              <a class="nav-list-item" routerLink="admin/reports" routerLinkActive="active">
+                <mat-icon>save</mat-icon>
+                <span>Rapoarte</span>
+              </a>
+            </div>
+          }
+        }
+      </div>
+      <div class="drawer-footer">
+        <button mat-icon-button matTooltip="Lăsați feedback" (click)="sendFeedback()">
+          <mat-icon>feedback</mat-icon>
         </button>
-        <span class="toolbar-title">{{ title }}</span>
-        <span class="toolbar-spacer"></span>
-        <button mat-button class="user-preview-container" [matMenuTriggerFor]="userMenu">
-            <div class="user-name" fxHide.lt-sm *ngIf="user">
-                <div>{{user.firstName}} {{user.lastName}}</div>
-                <div *ngIf="user.student">Gr. {{ user.student?.group }}</div>
-            </div>
-            <mat-icon *ngIf="!user?.isImpersonated">person</mat-icon>
-            <mat-icon *ngIf="user?.isImpersonated">people</mat-icon>
-        </button>
-    </mat-toolbar>
-    <mat-drawer-container class="drawer-container">
-        <mat-drawer #drawer [mode]="drawerMode" class="main-drawer">
-            <div class="scroll-menu">
-                <!-- STUDENT -->
-                <mat-list *ngIf="user?.type == 'student' && user.student.paper == null">
-                    <div mat-subheader>Informații</div>
-                    <a mat-list-item class="nav-item" routerLink="student" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                        <mat-icon mat-list-icon>lightbulb</mat-icon>
-                        <div mat-line>Informații și întrebări</div>
-                    </a>
-                    <div mat-subheader>Profesori</div>
-                    <a mat-list-item class="nav-item" routerLink="student/suggested-teachers" routerLinkActive="active">
-                        <mat-icon mat-list-icon>stars</mat-icon>
-                        <div mat-line>Profesori sugerați</div>
-                    </a>
-                    <a mat-list-item class="nav-item" routerLink="student/teachers" routerLinkActive="active">
-                        <mat-icon mat-list-icon>school</mat-icon>
-                        <div mat-line>Toți profesorii</div>
-                    </a>
-                    <div mat-subheader>Cereri</div>
-                    <a mat-list-item class="nav-item" routerLink="student/applications/pending" routerLinkActive="active">
-                        <mat-icon mat-list-icon>assignment</mat-icon>
-                        <div mat-line>Cereri în așteptare</div>
-                    </a>
-                    <a mat-list-item class="nav-item" routerLink="student/applications/declined" routerLinkActive="active">
-                        <mat-icon mat-list-icon>assignment_returned</mat-icon>
-                        <div mat-line>Cereri respinse</div>
-                    </a>
-                </mat-list>
-                <mat-list *ngIf="user?.type == 'student' && user.student.paper">
-                    <div mat-subheader>Informații</div>
-                    <a mat-list-item class="nav-item" routerLink="student" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                        <mat-icon mat-list-icon>lightbulb</mat-icon>
-                        <div mat-line>Informații și întrebări</div>
-                    </a>
-                    <div mat-subheader>Asociere</div>
-                    <a mat-list-item class="nav-item" routerLink="student/paper" routerLinkActive="active">
-                        <mat-icon mat-list-icon>stars</mat-icon>
-                        <div mat-line>Lucrarea mea</div>
-                    </a>
-                </mat-list>
-                <!-- TEACHER -->
-                <mat-list *ngIf="user?.type == 'teacher'">
-                    <div mat-subheader>Informații</div>
-                    <a mat-list-item class="nav-item" routerLink="teacher" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                        <mat-icon mat-list-icon>lightbulb</mat-icon>
-                        <div mat-line>Informații și întrebări</div>
-                    </a>
-                    <div mat-subheader>Oferte</div>
-                    <a mat-list-item class="nav-item" routerLink="teacher/offers" routerLinkActive="active">
-                        <mat-icon mat-list-icon>stars</mat-icon>
-                        <div mat-line>Ofertele dvs.</div>
-                    </a>
-                    <div mat-subheader>Cereri de asociere</div>
-                    <a mat-list-item class="nav-item" routerLink="teacher/applications/pending" routerLinkActive="active">
-                        <mat-icon mat-list-icon>assignment</mat-icon>
-                        <div mat-line>Cereri în așteptare</div>
-                    </a>
-                    <a mat-list-item class="nav-item" routerLink="teacher/applications/declined" routerLinkActive="active">
-                        <mat-icon mat-list-icon>assignment_returned</mat-icon>
-                        <div mat-line>Cereri refuzate</div>
-                    </a>
-                    <div mat-subheader>Lucrări</div>
-                    <a mat-list-item class="nav-item" routerLink="teacher/papers" routerLinkActive="active">
-                        <mat-icon mat-list-icon>description</mat-icon>
-                        <div mat-line>Lucrări coordonate</div>
-                    </a>
-                    <div mat-subheader>Comisii</div>
-                    <a mat-list-item class="nav-item" routerLink="teacher/committees" routerLinkActive="active">
-                        <mat-icon mat-list-icon>description</mat-icon>
-                        <div mat-line>Comisii</div>
-                    </a>
-                </mat-list>
-                <!-- SECRETARY -->
-                <mat-list *ngIf="user?.type == 'secretary'">
-                    <a mat-list-item class="nav-item" routerLink="admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                        <mat-icon mat-list-icon>home</mat-icon>
-                        <div mat-line>Panou de bord</div>
-                    </a>
-                    <div mat-subheader>Utilizatori</div>
-                    <a mat-list-item class="nav-item" routerLink="admin/students" routerLinkActive="active">
-                        <mat-icon mat-list-icon>people</mat-icon>
-                        <div mat-line>Listă studenți</div>
-                    </a>
-                    <a mat-list-item class="nav-item" routerLink="admin/sign-up-requests" routerLinkActive="active">
-                        <mat-icon mat-list-icon>pending</mat-icon>
-                        <div mat-line>Cereri înregistrare</div>
-                    </a>
-                    <div mat-subheader>Lucrări</div>
-                    <a mat-list-item class="nav-item" routerLink="admin/papers" routerLinkActive="active">
-                        <mat-icon mat-list-icon>description</mat-icon>
-                        <div mat-line>Lucrări</div>
-                    </a>
-                    <div mat-subheader>Comisii</div>
-                    <a mat-list-item class="nav-item" routerLink="admin/committees" routerLinkActive="active">
-                        <mat-icon mat-list-icon>group</mat-icon>
-                        <div mat-line>Comisii</div>
-                    </a>
-                </mat-list>
-                <!-- ADMIN -->
-                <mat-list *ngIf="user?.type == 'admin'">
-                    <a mat-list-item class="nav-item" routerLink="admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                        <mat-icon mat-list-icon>home</mat-icon>
-                        <div mat-line>Panou de bord</div>
-                    </a>
-                    <div mat-subheader>Utilizatori</div>
-                    <a mat-list-item class="nav-item" routerLink="admin/students" routerLinkActive="active">
-                        <mat-icon mat-list-icon>people</mat-icon>
-                        <div mat-line>Listă studenți</div>
-                    </a>
-                    <a mat-list-item class="nav-item" routerLink="admin/teachers" routerLinkActive="active">
-                        <mat-icon mat-list-icon>school</mat-icon>
-                        <div mat-line>Listă profesori</div>
-                    </a>
-                    <a mat-list-item class="nav-item" routerLink="admin/admins" routerLinkActive="active">
-                        <mat-icon mat-list-icon>admin_panel_settings</mat-icon>
-                        <div mat-line>Listă administratori și secretari</div>
-                    </a>
-                    <a mat-list-item class="nav-item" routerLink="admin/sign-up-requests" routerLinkActive="active">
-                        <mat-icon mat-list-icon>pending</mat-icon>
-                        <div mat-line>Cereri înregistrare</div>
-                    </a>
-                    <div mat-subheader>Domenii</div>
-                    <a mat-list-item class="nav-item" routerLink="admin/domains" routerLinkActive="active">
-                        <mat-icon mat-list-icon>category</mat-icon>
-                        <div mat-line>Domenii</div>
-                    </a>
-                    <div mat-subheader>Teme</div>
-                    <a mat-list-item class="nav-item" routerLink="admin/topics" routerLinkActive="active">
-                        <mat-icon mat-list-icon>topic</mat-icon>
-                        <div mat-line>Teme</div>
-                    </a>
-                    <div mat-subheader>Lucrări</div>
-                    <a mat-list-item class="nav-item" routerLink="admin/papers" routerLinkActive="active">
-                        <mat-icon mat-list-icon>description</mat-icon>
-                        <div mat-line>Lucrări</div>
-                    </a>
-                    <div mat-subheader>Comisii</div>
-                    <a mat-list-item class="nav-item" routerLink="admin/committees" routerLinkActive="active">
-                        <mat-icon mat-list-icon>group</mat-icon>
-                        <div mat-line>Comisii</div>
-                    </a>
-                    <div mat-subheader>Setări și rapoarte</div>
-                    <a mat-list-item class="nav-item" routerLink="admin/session" routerLinkActive="active">
-                        <mat-icon mat-list-icon>settings</mat-icon>
-                        <div mat-line>Setări sesiune de examinare</div>
-                    </a>
-                    <a mat-list-item class="nav-item" routerLink="admin/reports" routerLinkActive="active">
-                        <mat-icon mat-list-icon>save</mat-icon>
-                        <div mat-line>Rapoarte</div>
-                    </a>
-                </mat-list>
-            </div>
-            <div class="drawer-footer">
-                <button mat-icon-button matTooltip="Lăsați feedback" (click)="sendFeedback()">
-                    <mat-icon>feedback</mat-icon>
-                </button>
-                <span class="flex-spacer"></span>
-                <em class="app-version" *ngIf="user?.type == 'admin'">v{{ appVersion }}</em>
-            </div>
-        </mat-drawer>
+        <span class="flex-spacer"></span>
+        <em class="app-version" *ngIf="user?.type == 'admin'">v{{ appVersion }}</em>
+      </div>
+    </mat-drawer>
 
-        <div class="main-content" [@routeAnimations]="prepareRoute(outlet)">
-            <router-outlet #outlet="outlet"></router-outlet>
-        </div>
-    </mat-drawer-container>
+    <div class="main-content" [@routeAnimations]="prepareRoute(outlet)">
+      <router-outlet #outlet="outlet"></router-outlet>
+    </div>
+  </mat-drawer-container>
 </div>

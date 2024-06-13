@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 import { AuthService, Domain, Paper, PaperDocument, UserData, UserDataMin } from './auth.service';
 import { Topic } from './topics.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -164,6 +164,7 @@ export interface Offer {
   id: number
   takenPlaces: number
   hasApplied?: boolean
+  pendingApplications?: number;
   limit: number
   topics: Topic[]
   domainId: number,

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, FormGroupDirective, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormGroupDirective, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AdminService } from 'src/app/services/admin.service';
-import { AuthService, SessionSettings, SessionSettingsI } from 'src/app/services/auth.service';
-import { DocumentService } from 'src/app/services/document.service';
 import { NewSessionDialogComponent } from '../../dialogs/new-session-dialog/new-session-dialog.component';
+import { AuthService, SessionSettings } from '../../../services/auth.service';
+import { AdminService } from '../../../services/admin.service';
+import { DocumentService } from '../../../services/document.service';
 
 @Component({
   selector: 'app-session-settings',
@@ -60,7 +60,7 @@ export class SessionSettingsComponent implements OnInit {
   settingsFormMatcher = new SettingsFormErrorStateMatcher();
 
   saveSettings() {
-    const settings = new SessionSettings(this.settingsForm.value);
+    const settings = new SessionSettings(this.settingsForm.value as any);
     this.isLoadingSettings = true;
     this.admin.changeSessionSettings(settings).subscribe(settings => {
       // If the update was successful

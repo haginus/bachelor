@@ -8,12 +8,12 @@ import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { BehaviorSubject, merge, Observable, of, Subscription } from 'rxjs';
 import { debounceTime, startWith, switchMap } from 'rxjs/operators';
-import { DOMAIN_TYPES, PAPER_TYPES, STUDY_FORMS } from 'src/app/lib/constants';
-import { AdminService, GetPapersFilter } from 'src/app/services/admin.service';
-import { Paper } from 'src/app/services/auth.service';
-import { AreDocumentsUploaded, PaperDocumentEvent } from 'src/app/shared/paper-document-list/paper-document-list.component';
 import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
 import { PaperValidationDialogComponent, PaperValidationDialogData } from '../../dialogs/paper-validation-dialog/paper-validation-dialog.component';
+import { AdminService, GetPapersFilter } from '../../../services/admin.service';
+import { Paper } from '../../../services/auth.service';
+import { DOMAIN_TYPES, PAPER_TYPES, STUDY_FORMS } from '../../../lib/constants';
+import { AreDocumentsUploaded } from '../../../shared/paper-document-list/paper-document-list.component';
 
 @Component({
   selector: 'app-papers',
@@ -160,7 +160,7 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
           generalAverage: paper.student.generalAverage
         }
       });
-      
+
       observable = dialog.afterClosed().pipe(
         switchMap(average => {
           if(average) {
@@ -186,7 +186,7 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
   }
 
   undoValidatePaper(paper: ExtendedPaper) {
-    
+
     this.admin.undoValidatePaper(paper.id).subscribe(result => {
       if(result) {
         paper.isValid = null;

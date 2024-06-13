@@ -3,7 +3,7 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validator, V
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { take } from 'rxjs/operators';
-import { AuthService, Profile } from 'src/app/services/auth.service';
+import { AuthService, Profile } from '../../services/auth.service';
 
 @Component({
   selector: 'app-user-profile-editor',

@@ -4,8 +4,8 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { Observable } from 'rxjs';
-import { AdminService } from 'src/app/services/admin.service';
-import { Domain, UserData, Committee, CommitteeMember  } from 'src/app/services/auth.service';
+import { AdminService } from '../../../services/admin.service';
+import { Committee, CommitteeMember, Domain, UserData } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-committee-dialog',
