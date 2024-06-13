@@ -13,5 +13,5 @@ export class AdminComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  statistics = this.admin.getStats();
+  statistics$ = this.admin.getStats();
 }

@@ -1,29 +1,32 @@
 :host {
-    padding: 16px;
-    display: block;
+  padding: 16px;
+  display: block;
 }
+
 .stat-card {
-    cursor: pointer;
-    
-    .stat-title {
-        font-size: 14px;
-        color: #757575;
-    }
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: #fff;
+  padding: 16px;
 
-    .stat-number-container {
-        margin-top: 16px;
-        
-    }
+  .stat-title {
+    font-size: 14px;
+    color: #757575;
+  }
 
-    .stat-number {
-        color: #424242;
-        line-height: 36px;
-        font-weight: 300;
-        font-size: 36px;
-    }
+  .stat-number-container {
+    margin-top: 16px;
+  }
 
-    .stat-extra {
-        margin-left: 4px;
-        color: #616161;
-    }
+  .stat-number {
+    color: #424242;
+    line-height: 36px;
+    font-weight: 300;
+    font-size: 36px;
+  }
+
+  .stat-extra {
+    margin-left: 4px;
+    color: #616161;
+  }
 }

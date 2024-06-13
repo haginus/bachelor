@@ -1,11 +1,11 @@
 <div class="stats-container" fxLayout="row grid" fxLayoutGap="10px grid">
-    <div fxFlex="50" fxFlex.gt-md="33" *ngFor="let stat of statistics | async">
-        <mat-card class="stat-card" [routerLink]="stat.sectionPath">
-            <div class="stat-title">{{ stat.title }}</div>
-            <div class="stat-number-container">
-                <span class="stat-number">{{ stat.content }}</span>
-                <span class="stat-extra">{{ stat.extra }}</span>
-            </div>
-        </mat-card>
+  <div fxFlex="50" fxFlex.gt-md="33" *ngFor="let stat of statistics$ | async">
+    <div class="stat-card mat-elevation-z2" [routerLink]="stat.sectionPath">
+      <div class="stat-title">{{ stat.title }}</div>
+      <div class="stat-number-container">
+        <span class="stat-number">{{ stat.content }}</span>
+        <span class="stat-extra">{{ stat.extra }}</span>
+      </div>
     </div>
+  </div>
 </div>
