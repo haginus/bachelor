@@ -1,65 +1,69 @@
 <div class="flex-container align-center v-align-center fullscreen page-container">
-    <div class="login-container mat-elevation-z2">
-        <app-loading *ngIf="loading"></app-loading>
-        <div class="image-container flex-container align-center logo">
-            <img src="assets/img/fmi-logo.png"/>
-        </div>
-        <div class="form-container">
-            <form [formGroup]="loginForm" *ngIf="view == 'login'">
-                <mat-form-field appearance="outline">
-                    <mat-label>E-mail</mat-label>
-                    <input matInput type="email" formControlName="email">
-                </mat-form-field>
-                <mat-form-field appearance="outline">
-                    <mat-label>Parolă</mat-label>
-                    <input matInput type="password" formControlName="password">
-                </mat-form-field>
-                <div class="flex-container align-center captcha-container">
-                    <re-captcha (resolved)="solvedCaptcha($event)" #captcha></re-captcha>
-                </div>
-                <div class="flex-container align-center">
-                    <button mat-raised-button color="accent" [disabled]="loginForm.invalid || !captchaToken || loading"
-                    (click)="signIn()">Autentificare</button>
-                </div>
-            </form>
-            <form [formGroup]="forgotPasswordForm" *ngIf="view == 'forgotPassword'">
-                <mat-form-field appearance="outline">
-                    <mat-label>E-mail</mat-label>
-                    <input matInput type="email" formControlName="email">
-                </mat-form-field>
-                <div class="flex-container align-center captcha-container">
-                    <re-captcha (resolved)="solvedCaptcha($event)"></re-captcha>
-                </div>
-                <div class="flex-container align-center">
-                    <button mat-raised-button color="accent"
-                    [disabled]="forgotPasswordForm.invalid || !captchaToken || loading"
-                    (click)="sendForgotPasswordEmail()">Trimiteți e-mail de resetare</button>
-                </div>
-            </form>
-            <mat-divider class="divider"></mat-divider>
-                
-            <div class="flex-container align-center">
-                <div *ngIf="view == 'login'">
-                    <button mat-button  (click)="changeView('forgotPassword')">
-                        <span>Ați uitat parola?</span>
-                    </button>
-                    <router-link routerLink="/sign-up">
-                        <button mat-button>
-                            <span>Creare cont student</span>
-                        </button>
-                    </router-link>
-                </div>
-                
-                <button mat-button *ngIf="view == 'forgotPassword'" (click)="changeView('login')">
-                    <span>Înapoi la autentificare</span>
-                </button>
-            </div>
-        </div>
+  <div class="login-container mat-elevation-z2">
+    @if(loading) {
+      <app-loading></app-loading>
+    }
+    <div class="image-container flex-container align-center logo">
+      <img src="assets/img/fmi-logo.png" />
     </div>
-    <div class="footer">
-        <span>Facultatea de Matematică și Informatică,</span>
-        <span>&nbsp;</span>
-        <span>Universitatea din București</span> <br>
-        <a class="link" (click)="sendProblem()">Raportați o problemă</a>
+    <div class="form-container">
+      @if(view === 'login') {
+        <form [formGroup]="loginForm">
+          <mat-form-field appearance="outline">
+            <mat-label>E-mail</mat-label>
+            <input matInput type="email" formControlName="email">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Parolă</mat-label>
+            <input matInput type="password" formControlName="password">
+          </mat-form-field>
+          <div class="flex-container align-center captcha-container">
+            <re-captcha (resolved)="solvedCaptcha($event)" #captcha></re-captcha>
+          </div>
+          <div class="flex-container align-center">
+            <button mat-raised-button color="accent" [disabled]="loginForm.invalid || !captchaToken || loading"
+              (click)="signIn()">Autentificare</button>
+          </div>
+        </form>
+      } @else if(view === 'forgotPassword') {
+        <form [formGroup]="forgotPasswordForm">
+          <mat-form-field appearance="outline">
+            <mat-label>E-mail</mat-label>
+            <input matInput type="email" formControlName="email">
+          </mat-form-field>
+          <div class="flex-container align-center captcha-container">
+            <re-captcha (resolved)="solvedCaptcha($event)"></re-captcha>
+          </div>
+          <div class="flex-container align-center">
+            <button mat-raised-button color="accent" [disabled]="forgotPasswordForm.invalid || !captchaToken || loading"
+              (click)="sendForgotPasswordEmail()">Trimiteți e-mail de resetare</button>
+          </div>
+        </form>
+      }
+      <mat-divider class="divider"></mat-divider>
+
+      <div class="flex-container align-center">
+        <div *ngIf="view == 'login'">
+          <button mat-button (click)="changeView('forgotPassword')">
+            <span>Ați uitat parola?</span>
+          </button>
+          <router-link routerLink="/sign-up">
+            <button mat-button>
+              <span>Creare cont student</span>
+            </button>
+          </router-link>
+        </div>
+
+        <button mat-button *ngIf="view == 'forgotPassword'" (click)="changeView('login')">
+          <span>Înapoi la autentificare</span>
+        </button>
+      </div>
     </div>
+  </div>
+  <div class="footer">
+    <span>Facultatea de Matematică și Informatică,</span>
+    <span>&nbsp;</span>
+    <span>Universitatea din București</span> <br>
+    <a class="link" (click)="sendProblem()">Raportați o problemă</a>
+  </div>
 </div>
