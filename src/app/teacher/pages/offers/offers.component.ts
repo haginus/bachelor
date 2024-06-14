@@ -6,6 +6,7 @@ import { TeacherOfferDialogComponent } from '../../dialogs/teacher-offer-dialog/
 import { TeacherService } from '../../../services/teacher.service';
 import { Offer } from '../../../services/student.service';
 import { CommonDialogComponent } from '../../../shared/common-dialog/common-dialog.component';
+import { DOMAIN_TYPES } from '../../../lib/constants';
 
 @Component({
   selector: 'teacher-offers',
@@ -19,6 +20,8 @@ export class TeacherOffersComponent implements OnInit, OnDestroy {
   offers: Offer[] = []
   offerSubscription: Subscription;
   isLoadingOffers: boolean = true;
+
+  DOMAIN_TYPES = DOMAIN_TYPES;
 
   ngOnInit(): void {
     this.getOffers();

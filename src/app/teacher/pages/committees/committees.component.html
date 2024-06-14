@@ -1,48 +1,46 @@
 <app-loading color="primary" *ngIf="isLoadingCommittees"></app-loading>
 <div fxLayout="row grid" fxLayoutGap="10px grid">
-    <div *ngFor="let committee of committees" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-card>
-            <mat-card-header>
-                <mat-card-title>{{ committee.name }}</mat-card-title>
-                <mat-card-subtitle>
-                    {{ committee.papers.length }}
-                    {{ committee.papers.length == 1 ? 'lucrare' : 'lucrări' }}
-                </mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-content>
-                <mat-list>
-                    <mat-list-item>
-                        <div mat-line>Domenii</div>
-                        <div mat-line>
-                            <ng-container *ngFor="let domain of committee.domains; let isLast = last">
-                                {{ domain.name }}
-                                <ng-container *ngIf="!isLast">, </ng-container>
-                            </ng-container>
-                        </div>
-                    </mat-list-item>
-                    <mat-list-item>
-                        <div mat-line>Membri</div>
-                        <div mat-line class="white-space-initial iterating">
-                            <span *ngFor="let member of committee.members; let isLast = last">
-                                {{ member.user.lastName }} {{ member.user.firstName }}
-                                <span *ngIf="member.role == 'president'">(președinte)</span>
-                                <span *ngIf="member.role == 'member'">(membru)</span>
-                                <span *ngIf="member.role == 'secretary'">(secretar)</span>
-                            </span>
-                        </div>
-                    </mat-list-item>
-                </mat-list>
-            </mat-card-content>
-            <mat-card-actions align="end">
-                <button mat-raised-button color="primary" [routerLink]="[committee.id]">
-                    <span>Lucrări </span>
-                    <mat-icon>navigate_next</mat-icon>
-                </button>
-            </mat-card-actions>
-        </mat-card>
+  @for(committee of committees; track committee.id) {
+    <div fxFlex="100" fxFlex.gt-xs="50">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ committee.name }}</mat-card-title>
+          <mat-card-subtitle>
+            {{ committee.papers.length }}
+            {{ committee.papers.length == 1 ? 'lucrare' : 'lucrări' }}
+          </mat-card-subtitle>
+        </mat-card-header>
+        <div class="list">
+          <div class="list-item">
+            <div class="content">
+              <div>Domenii</div>
+              <div>{{ committee.domains | pluck:'name' | join }}</div>
+            </div>
+          </div>
+          <div class="list-item">
+            <div class="content">
+              <div>Membri</div>
+              <div>
+                @for(member of committee.members; track member.teacherId) {
+                  <div>
+                    {{ member.user.lastName }} {{ member.user.firstName }} - {{ COMMITTEE_MEMBER_ROLE[member.role] }}
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        <mat-card-actions align="end">
+          <button mat-raised-button color="primary" [routerLink]="[committee.id]">
+            <span>Lucrări </span>
+            <mat-icon>navigate_next</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
     </div>
+  }
 </div>
 <div *ngIf="!isLoadingCommittees && committees.length == 0" class="no-results-container">
-    <mat-icon class="hero-icon">cloud</mat-icon>
-    <h2>Nu sunteți membru în nicio comisie.</h2>
+  <mat-icon class="hero-icon">cloud</mat-icon>
+  <h2>Nu sunteți membru în nicio comisie.</h2>
 </div>

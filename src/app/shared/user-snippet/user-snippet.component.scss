@@ -75,17 +75,5 @@
       margin: 0;
     }
   }
-  .mat-list-icon {
-    color: rgba(0, 0, 0, 0.54);
-  }
-  .mat-list-item.auto-height {
-    height: auto!important;
-    .mat-line {
-      white-space: normal;
-    }
-    .mat-list-item-content {
-      align-items: flex-start;
-    }
-  }
 }
 

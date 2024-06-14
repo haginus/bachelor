@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TeacherService } from '../../../services/teacher.service';
 import { Committee } from '../../../services/auth.service';
+import { COMMITTEE_MEMBER_ROLE } from '../../../lib/constants';
 
 @Component({
   selector: 'teacher-committees',
@@ -15,6 +16,8 @@ export class TeacherCommitteesComponent implements OnInit, OnDestroy {
   committees: Committee[];
   isLoadingCommittees: boolean;
   subscription: Subscription;
+
+  COMMITTEE_MEMBER_ROLE = COMMITTEE_MEMBER_ROLE;
 
   ngOnInit(): void {
     this.isLoadingCommittees = true;

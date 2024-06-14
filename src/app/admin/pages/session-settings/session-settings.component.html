@@ -1,68 +1,86 @@
 <mat-card class="session-edit-card">
-    <app-loading color="primary" *ngIf="isLoadingSettings"></app-loading>
-    <h2 mat-card-title>Detalii sesiune curentă</h2>
+  <app-loading color="primary" *ngIf="isLoadingSettings"></app-loading>
+  <mat-card-header>
+    <mat-card-title>Detalii sesiune curentă</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
     <form [formGroup]="settingsForm">
-        <div fxLayout="row grid" fxLayoutGap="10px grid">
-            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-                <mat-label>Nume sesiune</mat-label>
-                <input matInput type="text" formControlName="sessionName" placeholder="Exemplu: Iulie 2021" [errorStateMatcher]="settingsFormMatcher">
-                <mat-hint>Numele sesiunii curente</mat-hint>
-            </mat-form-field>
-            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-                <mat-label>Promoția curentă</mat-label>
-                <input matInput type="text" formControlName="currentPromotion" placeholder="Exemplu: 2021" [errorStateMatcher]="settingsFormMatcher">
-                <mat-hint>Promoția studenților</mat-hint>
-            </mat-form-field>
-            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-                <mat-label>Dată începere cereri asociere</mat-label>
-                <input matInput type="date" formControlName="applyStartDate" [errorStateMatcher]="settingsFormMatcher">
-                <mat-hint>Data de la care studenții pot trimite cereri către profesori</mat-hint>
-            </mat-form-field>
-            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-                <mat-label>Dată încheiere cereri asociere</mat-label>
-                <input matInput type="date" formControlName="applyEndDate" [errorStateMatcher]="settingsFormMatcher">
-                <mat-hint>Data până la care studenții pot trimite cereri către profesori</mat-hint>
-                <mat-error>Data încheierii sesiunii de cereri nu poate fi mai devreme de cea a începerii!</mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-                <mat-label>Dată începere depuneri documente</mat-label>
-                <input matInput type="date" formControlName="fileSubmissionStartDate" [errorStateMatcher]="settingsFormMatcher">
-                <mat-hint>Data de la care studenții pot începe depunerea documentelor la dosar</mat-hint>
-                <mat-error>Data începerii depunerilor de documente nu poate fi mai devreme de cea a începerii sesiunii de cereri!</mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-                <mat-label>Dată încheiere depuneri documente</mat-label>
-                <input matInput type="date" formControlName="fileSubmissionEndDate" [errorStateMatcher]="settingsFormMatcher">
-                <mat-hint>Data până la care studenții pot depune documentele la dosar</mat-hint>
-                <mat-error>Data încheierii depunerilor de documente nu poate fi mai devreme de cea a începerii!</mat-error>
-            </mat-form-field>
-            <div fxFlex="50" fxHide.xs></div>
-            <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-                <mat-label>Termen limită depunere lucrări</mat-label>
-                <input matInput type="date" formControlName="paperSubmissionEndDate" [errorStateMatcher]="settingsFormMatcher">
-                <mat-hint>Data până la care studenții și profesorii pot depune lucrarea, respectiv referatul.</mat-hint>
-                <mat-error>Termenul limită pentru depunerea lucrărilor nu poate fi mai devreme de data începerii depunerilor de documente!</mat-error>
-            </mat-form-field>
-            <mat-list fxFlex="100">
-                <mat-list-item>
-                    <div mat-line>Permiteți notarea de către comisii</div>
-                    <mat-slide-toggle formControlName="allowGrading"></mat-slide-toggle>
-                </mat-list-item>
-            </mat-list>
-        </div>
-        <div fxLayout="column" fxLayoutAlign="center center" class="form-actions">
-            <button mat-raised-button color="primary" (click)="saveSettings()" [disabled]="settingsForm.invalid">Salvați setările</button>
-        </div>
+      <div fxLayout="row grid" fxLayoutGap="12px grid">
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Nume sesiune</mat-label>
+          <input matInput type="text" formControlName="sessionName" placeholder="Exemplu: Iulie 2021"
+            [errorStateMatcher]="settingsFormMatcher">
+          <mat-hint>Numele sesiunii curente</mat-hint>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Promoția curentă</mat-label>
+          <input matInput type="text" formControlName="currentPromotion" placeholder="Exemplu: 2021"
+            [errorStateMatcher]="settingsFormMatcher">
+          <mat-hint>Promoția studenților</mat-hint>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Dată începere cereri asociere</mat-label>
+          <input matInput type="date" formControlName="applyStartDate" [errorStateMatcher]="settingsFormMatcher">
+          <mat-hint>Data de la care studenții pot trimite cereri către profesori</mat-hint>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Dată încheiere cereri asociere</mat-label>
+          <input matInput type="date" formControlName="applyEndDate" [errorStateMatcher]="settingsFormMatcher">
+          <mat-hint>Data până la care studenții pot trimite cereri către profesori</mat-hint>
+          <mat-error>Data încheierii sesiunii de cereri nu poate fi mai devreme de cea a începerii!</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Dată începere depuneri documente</mat-label>
+          <input matInput type="date" formControlName="fileSubmissionStartDate" [errorStateMatcher]="settingsFormMatcher">
+          <mat-hint>Data de la care studenții pot începe depunerea documentelor la dosar</mat-hint>
+          <mat-error>Data începerii depunerilor de documente nu poate fi mai devreme de cea a începerii sesiunii de
+            cereri!</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Dată încheiere depuneri documente</mat-label>
+          <input matInput type="date" formControlName="fileSubmissionEndDate" [errorStateMatcher]="settingsFormMatcher">
+          <mat-hint>Data până la care studenții pot depune documentele la dosar</mat-hint>
+          <mat-error>Data încheierii depunerilor de documente nu poate fi mai devreme de cea a începerii!</mat-error>
+        </mat-form-field>
+        <div fxFlex="50" fxHide.xs></div>
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Termen limită depunere lucrări</mat-label>
+          <input matInput type="date" formControlName="paperSubmissionEndDate" [errorStateMatcher]="settingsFormMatcher">
+          <mat-hint>Data până la care studenții și profesorii pot depune lucrarea, respectiv referatul.</mat-hint>
+          <mat-error>
+            Termenul limită pentru depunerea lucrărilor nu poate fi mai devreme de data începerii depunerilor de
+            documente!
+          </mat-error>
+        </mat-form-field>
+        <mat-list fxFlex="100">
+          <mat-list-item>
+            <div matListItemTitle>Permiteți notarea de către comisii</div>
+            <div matListItemMeta>
+              <mat-slide-toggle formControlName="allowGrading"></mat-slide-toggle>
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="center center" class="form-actions">
+        <button mat-raised-button color="primary" (click)="saveSettings()" [disabled]="settingsForm.invalid">
+          Salvați setările
+        </button>
+      </div>
     </form>
+  </mat-card-content>
 </mat-card>
 
 <mat-card>
-    <h2 mat-card-title>Acțiuni</h2>
-    <mat-list>
-        <mat-list-item>
-            <div mat-line>Treceți la o sesiune nouă</div>
-            <div mat-line>Ștergeți toți studenții și lucrările din platformă.</div>
-            <button mat-stroked-button color="warn" (click)="newSession()">Sesiune nouă</button>
-        </mat-list-item>
-    </mat-list>
+  <mat-card-header>
+    <mat-card-title>Acțiuni</mat-card-title>
+  </mat-card-header>
+  <mat-list>
+    <mat-list-item>
+      <div matListItemTitle>Treceți la o sesiune nouă</div>
+      <div matListItemLine>Ștergeți toți studenții și lucrările din platformă.</div>
+      <div matListItemMeta>
+        <button mat-stroked-button color="warn" (click)="newSession()">Sesiune nouă</button>
+      </div>
+    </mat-list-item>
+  </mat-list>
 </mat-card>

@@ -1,58 +1,61 @@
 mat-toolbar {
-    background-color: inherit;
+  background-color: inherit;
 
-    .toolbar-spacer {
-        flex: 1 1 auto;
-    }
+  .toolbar-spacer {
+    flex: 1 1 auto;
+  }
 }
 
 
 .results {
-    padding: 1rem;
+  padding: 1rem;
 }
 
 .offer-card {
-    width: 100%;
-    box-sizing: border-box;
-    margin: 0 auto;
-    margin-bottom: 16px;
-    overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+  margin-bottom: 16px;
+  overflow: hidden;
 
-    .offer-card-header {
-        display: flex;
-        .header-content {
-            flex: 1;
-        }
-    }
+  .offer-card-header {
+    display: flex;
 
-    .offer-card-footer {
-        border-top: 1px solid #eeeeee;
-        margin: 0 -16px -16px -16px;
+    .header-content {
+      flex: 1;
     }
+  }
+
+  .offer-card-footer {
+    border-top: 1px solid #eeeeee;
+  }
 }
 
 .card-action {
-    display: flex;
-    height: 48px;
-    align-items: center;
-    padding: 0 16px;
-    transition: 0.2s;
-    cursor: pointer;
-    text-decoration: none;
-    color: inherit;
+  display: flex;
+  height: 48px;
+  align-items: center;
+  padding: 0 16px;
+  transition: 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 
 
-    &:hover {
-        background-color: #eeeeee;
-    }
+  &:hover {
+    background-color: #eeeeee;
+  }
 
-    span {
-        flex: 1;
-    }
+  span {
+    flex: 1;
+  }
 }
 
 .offer-topics {
-    margin-left: -4px;
-    margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  .badge {
+    margin: 0px!important;
+  }
 }
-

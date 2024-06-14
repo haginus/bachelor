@@ -1,59 +1,82 @@
-
 <mat-menu #menu="matMenu">
-  <div (click)="$event.stopPropagation()" class="user-card" *ngIf="user">
+  @if(user) {
+    <div (click)="$event.stopPropagation()" class="user-card">
       <div class="user-card-header">
         <div class="profile-picture">
-          <mat-icon *ngIf="!user.profile?.picture">person</mat-icon>
-          <img *ngIf="user.profile?.picture" src="{{ user.profile.picture | apiUrl }}" />
+          @if(!user.profile?.picture) {
+            <mat-icon>person</mat-icon>
+          } @else {
+            <img [src]="user.profile.picture | apiUrl" />
+          }
         </div>
         <div class="header-text">
           <h2>{{ user.firstName }} {{ user.lastName }}</h2>
         </div>
       </div>
-      <mat-list class="condense">
-        <mat-list-item>
-          <mat-icon mat-list-icon>mail</mat-icon>
-          <div mat-line>E-mail</div>
-          <div mat-line>
-            <a class="link" href="mailto:{{ user.email }}" target="_blank">
-              {{ user.email }}
-            </a>
+      <div class="list dense">
+        <div class="list-item">
+          <mat-icon>mail</mat-icon>
+          <div class="content">
+            <div>E-mail</div>
+            <div>
+              <a class="link" href="mailto:{{ user.email }}" target="_blank">
+                {{ user.email }}
+              </a>
+            </div>
           </div>
-        </mat-list-item>
-        <mat-list-item *ngIf="user.student?.group">
-          <mat-icon mat-list-icon>groups</mat-icon>
-          <div mat-line>Grupă</div>
-          <div mat-line>{{ user.student.group }}</div>
-        </mat-list-item>
-        <mat-list-item *ngIf="user.student?.specialization">
-          <mat-icon mat-list-icon>work_outline</mat-icon>
-          <div mat-line>Program de studiu</div>
-          <div mat-line>{{ user.student.specialization.name }}</div>
-        </mat-list-item>
-        <mat-list-item *ngIf="user.profile?.website">
-          <mat-icon mat-list-icon>language</mat-icon>
-          <div mat-line>Website</div>
-          <div mat-line>
-            <a class="link" [href]="makeLink(user.profile.website)" target="_blank">
-              {{ user.profile.website }}
-            </a>
+        </div>
+        @if(user.student) {
+          <div class="list-item">
+            <mat-icon>groups</mat-icon>
+            <div class="content">
+              <div>Grupă</div>
+              <div>{{ user.student.group }}</div>
+            </div>
           </div>
-        </mat-list-item>
-        <mat-list-item class="auto-height" *ngIf="user.profile?.bio">
-          <mat-icon mat-list-icon>article</mat-icon>
-          <div mat-line>Bio</div>
-          <div mat-line>
-            {{ user.profile.bio }}
+          @if(user.student.specialization) {
+            <div class="list-item">
+              <mat-icon>work_outline</mat-icon>
+              <div class="content">
+                <div>Program de studiu</div>
+                <div>{{ user.student.specialization.name }}</div>
+              </div>
+            </div>
+          }
+        }
+        @if(user.profile?.website) {
+          <div class="list-item">
+            <mat-icon>language</mat-icon>
+            <div class="content">
+              <div>Website</div>
+              <div>
+                <a class="link" [href]="makeLink(user.profile.website)" target="_blank">
+                  {{ user.profile.website }}
+                </a>
+              </div>
+            </div>
           </div>
-        </mat-list-item>
-      </mat-list>
-  </div>
+        }
+        @if(user.profile?.bio) {
+          <div class="list-item auto-height">
+            <mat-icon>article</mat-icon>
+            <div class="content">
+              <div>Bio</div>
+              <div>{{ user.profile.bio }}</div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
 </mat-menu>
 
 <div class="user-snippet" [matMenuTriggerFor]="menu">
   <div class="profile-picture">
-    <mat-icon *ngIf="!user.profile?.picture">person</mat-icon>
-    <img *ngIf="user.profile?.picture" src="{{ user.profile.picture | apiUrl }}" />
+    @if(!user.profile?.picture) {
+      <mat-icon>person</mat-icon>
+    } @else {
+      <img [src]="user.profile.picture | apiUrl" />
+    }
   </div>
   <div class="text">
     <div class="first-line">{{ user.firstName }} {{ user.lastName }}</div>

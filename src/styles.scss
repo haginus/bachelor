@@ -150,11 +150,11 @@ mat-icon {
 }
 
 .iterating {
-  span::after {
+  > span::after {
     content: ', '
   }
 
-  span:last-child::after {
+  > span:last-child::after {
     content: ''
   }
 }
@@ -315,9 +315,44 @@ app-loading.in-dialog {
   }
 }
 
-.mat-list.condense {
-  .mat-list-item {
-    height: 56px !important;
+
+.list {
+
+  &.dense {
+    .list-item {
+      padding: 4px 16px;
+      min-height: 52px;
+    }
+  }
+
+  .list-item {
+    display: flex;
+    padding: 8px 16px;
+    align-items: center;
+    gap: 4px;
+    min-height: 64px;
+    box-sizing: border-box;
+
+    mat-icon {
+      color: #424242;
+      margin-right: 8px;
+    }
+
+    .content {
+      flex: 1;
+      &>:not(:last-child) {
+        margin-bottom: 4px;
+      }
+      &>:first-child {
+        font-size: 16px;
+        line-height: 16px;
+      }
+      &>:not(:first-child) {
+        font-size: 14px;
+        line-height: 14px;
+        color: rgba(0, 0, 0, 0.54);
+      }
+    }
   }
 }
 
@@ -345,11 +380,6 @@ app-loading.in-dialog {
 
 .flex-spacer {
   flex: 1;
-}
-
-mat-list-item.no-height {
-  height: unset !important;
-  padding: 16px 0 !important;
 }
 
 mat-hint.warning {

@@ -42,24 +42,24 @@
   <mat-list>
     <div mat-subheader>Date personale</div>
     <mat-list-item>
-      <div mat-line>Titlu</div>
-      <div mat-line>{{data.data.title || '-'}}</div>
+      <div matListItemTitle>Titlu</div>
+      <div matListItemLine>{{ data.data.title || '-' }}</div>
     </mat-list-item>
     <mat-list-item>
-      <div mat-line>Nume</div>
-      <div mat-line>{{data.data.lastName}}</div>
+      <div matListItemTitle>Nume</div>
+      <div matListItemLine>{{ data.data.lastName }}</div>
     </mat-list-item>
     <mat-list-item>
-      <div mat-line>Prenume</div>
-      <div mat-line>{{data.data.firstName}}</div>
+      <div matListItemTitle>Prenume</div>
+      <div matListItemLine>{{ data.data.firstName }}</div>
     </mat-list-item>
     <mat-list-item>
-      <div mat-line>CNP</div>
-      <div mat-line>{{data.data.CNP || '-'}}</div>
+      <div matListItemTitle>CNP</div>
+      <div matListItemLine>{{ data.data.CNP || '-' }}</div>
     </mat-list-item>
     <mat-list-item>
-      <div mat-line>E-mail</div>
-      <div mat-line>{{data.data.email}}</div>
+      <div matListItemTitle>E-mail</div>
+      <div matListItemLine>{{ data.data.email }}</div>
     </mat-list-item>
   </mat-list>
 </mat-dialog-content>

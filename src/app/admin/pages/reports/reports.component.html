@@ -1,74 +1,101 @@
 <mat-card>
-  <h2 mat-card-title>Cataloage</h2>
-  <mat-list>
-    <mat-list-item>
-      <div mat-line>Generați catalogul final</div>
-      <div mat-line>Conține notele studenților din această sesiune</div>
+  <mat-card-header>
+    <mat-card-title>Cataloage</mat-card-title>
+  </mat-card-header>
+  <div class="list">
+    <div class="list-item">
+      <div class="content">
+        <div>Generați catalogul final</div>
+        <div>Conține notele studenților din această sesiune</div>
+      </div>
       <button mat-stroked-button (click)="getFinalCatalog('final')">Generați</button>
-    </mat-list-item>
-    <mat-list-item>
-      <div mat-line>Generați catalogul centralizator</div>
-      <div mat-line>Conține notele studenților din această sesiune care au fost declarați admiși</div>
+    </div>
+    <div class="list-item">
+      <div class="content">
+        <div>Generați catalogul centralizator</div>
+        <div>Conține notele studenților din această sesiune care au fost declarați admiși</div>
+      </div>
       <button mat-stroked-button (click)="getFinalCatalog('centralizing')">Generați</button>
-    </mat-list-item>
-  </mat-list>
+    </div>
+  </div>
 </mat-card>
 
 <mat-card>
-  <h2 mat-card-title>Liste</h2>
-  <mat-list>
-    <mat-list-item>
-      <div mat-line>Generați listă lucrări înscrise</div>
-      <div mat-line>Conține toate lucrările înscrise în această sesiune</div>
-      <button mat-stroked-button (click)="getReportFile('paper_list', true, { submitted: true })">Generați</button>
-    </mat-list-item>
-    <mat-list-item>
-      <div mat-line>Generați listă lucrări</div>
-      <div mat-line>Conține toate lucrările din platformă</div>
+  <mat-card-header>
+    <mat-card-title>Liste lucrări</mat-card-title>
+  </mat-card-header>
+  <div class="list">
+    <div class="list-item">
+      <div class="content">
+        <div>Generați listă lucrări înscrise</div>
+        <div>Conține toate lucrările înscrise în această sesiune</div>
+      </div>
+      <button mat-stroked-button (click)="getReportFile('paper_list', false, { submitted: false })">
+        Generați
+      </button>
+    </div>
+    <div class="list-item">
+      <div class="content">
+        <div>Generați listă lucrări</div>
+        <div>Conține toate lucrările din platformă</div>
+      </div>
       <button mat-stroked-button (click)="getReportFile('paper_list', true)">Generați</button>
-    </mat-list-item>
-  </mat-list>
+    </div>
+  </div>
 </mat-card>
 
 <mat-card>
-  <h2 mat-card-title>Raport sesiune</h2>
-  <mat-list>
-    <mat-list-item *ngIf="!finalReportStatus || (!finalReportStatus.lastGeneratedOn && !finalReportStatus.isGenerating)">
-      <div mat-line>Generați raport sesiune</div>
-      <div mat-line>Raportul cuprinde toate informațiile din platformă.</div>
-      <button mat-stroked-button (click)="generateFinalReport()">Generați</button>
-    </mat-list-item>
-    <mat-list-item *ngIf="finalReportStatus?.isGenerating">
-      <div mat-line>Generați raport sesiune</div>
-      <div mat-line>Raportul este în curs de generare...</div>
-      <div class="progress-container">
-        <mat-progress-spinner
-          class="spinner main"
-          diameter="32"
-          [mode]="finalReportStatus?.progress ? 'determinate' : 'indeterminate'"
-          [value]="finalReportStatus?.progress * 100">
-        </mat-progress-spinner>
-        <mat-progress-spinner
-          class="spinner placeholder"
-          diameter="32"
-          *ngIf="finalReportStatus?.progress"
-          [value]="100"
-          mode="determinate">
-        </mat-progress-spinner>
-        <div class="text">
-          {{ finalReportStatus.progress * 100 | number: '1.0-0' }}%
+  <mat-card-header>
+    <mat-card-title>Raport sesiune</mat-card-title>
+  </mat-card-header>
+  <div class="list">
+    @if(finalReportStatus?.isGenerating) {
+      <div class="list-item">
+        <div class="content">
+          <div>Generați raport sesiune</div>
+          <div>Raportul este în curs de generare...</div>
+        </div>
+        <div class="progress-container">
+          <mat-progress-spinner
+            class="spinner main"
+            diameter="32"
+            [mode]="finalReportStatus.progress ? 'determinate' : 'indeterminate'"
+            [value]="finalReportStatus.progress * 100"
+          />
+          @if(finalReportStatus.progress) {
+            <mat-progress-spinner
+              class="spinner placeholder"
+              diameter="32"
+              [value]="100"
+              mode="determinate"
+            />
+          }
+          <div class="text">
+            {{ finalReportStatus.progress * 100 | number: '1.0-0' }}%
+          </div>
         </div>
       </div>
-    </mat-list-item>
-    <mat-list-item *ngIf="finalReportStatus?.lastGeneratedOn && !finalReportStatus?.isGenerating">
-      <div mat-line>Descărcați raport sesiune</div>
-      <div mat-line>Ultima dată generat pe {{ lastGeneratedOn }}</div>
-      <button mat-stroked-button (click)="getFinalReport()">Descărcați</button>
-      <button mat-icon-button [matMenuTriggerFor]="regenerateMenu">
-        <mat-icon>more_vert</mat-icon>
-    </button>
-    </mat-list-item>
-  </mat-list>
+    } @else if(!finalReportStatus || !finalReportStatus.lastGeneratedOn) {
+      <div class="list-item">
+        <div class="content">
+          <div>Generați raport sesiune</div>
+          <div>Raportul cuprinde toate informațiile din platformă.</div>
+        </div>
+        <button mat-stroked-button (click)="generateFinalReport()">Generați</button>
+      </div>
+    } @else {
+      <div class="list-item">
+        <div class="content">
+          <div>Descărcați raport sesiune</div>
+          <div>Ultima dată generat pe {{ lastGeneratedOn }}</div>
+        </div>
+        <button mat-stroked-button (click)="getFinalReport()">Descărcați</button>
+        <button mat-icon-button [matMenuTriggerFor]="regenerateMenu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+      </div>
+    }
+  </div>
 </mat-card>
 
 <mat-menu #regenerateMenu="matMenu">
