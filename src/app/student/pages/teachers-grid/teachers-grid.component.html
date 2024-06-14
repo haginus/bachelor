@@ -1,102 +1,127 @@
 <div class="main">
-    <mat-progress-bar mode="query" class="progress-bar top" *ngIf="isLoadingTeachers && mode == 'suggested'"></mat-progress-bar>
-    
-    <div class="tip-card warning" *ngIf="!canApply">
-        <mat-icon class="tip-icon">warning_amber</mat-icon>
+  @if(mode === 'suggested' && isLoadingTeachers) {
+    <mat-progress-bar mode="query" class="progress-bar top"></mat-progress-bar>
+  }
+
+  @if(!canApply) {
+    <div class="tip-card warning">
+      <mat-icon class="tip-icon">warning_amber</mat-icon>
+      <div class="tip-card-content">
+        Perioada de depuneri de cereri de asociere s-a încheiat. <br> Nu mai puteți aplica în această sesiune.
+      </div>
+    </div>
+  }
+
+  @if(mode === 'all') {
+    <div class="filter-container mat-elevation-z3">
+      <form [formGroup]="filterForm" class="form-group">
+        <div class="group-header">FILTRAȚI DUPĂ</div>
+        <div class="group-controls">
+          <div>
+            <mat-form-field appearance="outline">
+              <mat-label>Teme propuse</mat-label>
+              <mat-select formControlName="topicIds" multiple>
+                @for(topic of topics; track topic.id) {
+                  <mat-option [value]="topic.id">
+                    <span>{{topic.name}}</span>
+                  </mat-option>
+                }
+              </mat-select>
+              <mat-hint class="select-options">
+                <span (click)="setAllTopics()">Selectați tot</span> |
+                <span (click)="removeTopicSelection()">Ștergeți selecția</span>
+              </mat-hint>
+            </mat-form-field>
+          </div>
+          <div class="flex-grow">
+            <mat-form-field appearance="outline">
+              <mat-label>Nume profesor</mat-label>
+              <input matInput type="text" formControlName="teacherName" />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-button-toggle-group class="toggle-group" formControlName="onlyFree">
+              <mat-button-toggle [value]="false">Toți profesorii</mat-button-toggle>
+              <mat-button-toggle [value]="true">Profesorii liberi</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+        </div>
+      </form>
+      @if(isLoadingTeachers) {
+        <mat-progress-bar mode="query" class="progress-bar"></mat-progress-bar>
+      }
+    </div>
+  }
+
+  <div class="results">
+    @if(canApply) {
+      <div class="tip-card translucent">
+        <mat-icon class="tip-icon">school</mat-icon>
         <div class="tip-card-content">
-            Perioada de depuneri de cereri de asociere s-a încheiat. <br> Nu mai puteți aplica în această sesiune.
+          Lista de mai jos conține doar profesorii care au adăugat oferte în aplicație. Pentru a accesa
+          lista completă a profesorilor, accesați
+          <a class="link" href="https://fmi.unibuc.ro/departamente/" target="_blank">acest link.</a>
         </div>
-    </div>
-
-    <mat-card class="filter-container mat-elevation-z3" *ngIf="mode == 'all'">
-        <form [formGroup]="filterForm" class="form-group">
-            <div class="group-header">FILTRAȚI DUPĂ</div>
-            <div class="group-controls">
-                <mat-form-field appearance="outline">
-                    <mat-label>Teme propuse</mat-label>
-                    <mat-select formControlName="topicIds" multiple>
-                        <mat-option *ngFor="let topic of topics" [value]="topic.id">
-                            <span>{{topic.name}}</span>
-                        </mat-option>
-                    </mat-select>
-                    <mat-hint class="select-options">
-                        <span (click)="setAllTopics()">Selectați tot</span> |
-                        <span (click)="removeTopicSelection()">Ștergeți selecția</span>
-                    </mat-hint>
-                </mat-form-field>
-                <mat-form-field appearance="outline" class="control-flex">
-                    <mat-label>Nume profesor</mat-label>
-                    <input matInput type="text" formControlName="teacherName" />
-                </mat-form-field>
-                <div>
-                    <mat-button-toggle-group class="toggle-group" formControlName="onlyFree">
-                        <mat-button-toggle [value]="false">Toți profesorii</mat-button-toggle>
-                        <mat-button-toggle [value]="true">Profesorii liberi</mat-button-toggle>
-                    </mat-button-toggle-group>
+      </div>
+    }
+    @for(teacher of teachers; track teacher.id) {
+      <mat-card class="teacher-card">
+        <mat-card-header>
+          <app-user-snippet [user]="teacher" class="teacher-snippet">
+            <span>{{ teacher.offers.length }} </span>
+            <span>{{ teacher.offers.length === 1 ? 'ofertă' : 'oferte' }}</span>
+          </app-user-snippet>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-divider></mat-divider>
+          @for(offer of teacher.offers; track offer.id) {
+            <div class="teacher-offer">
+              <div class="offer-topics">
+                @for(topic of offer.topics; track topic.id) {
+                  <span class="badge">{{ topic.name }} </span>
+                }
+              </div>
+              @if(offer.limit != offer.takenPlaces) {
+                <div
+                  class="offer-places"
+                  [class.low]="offer.takenPlaces / offer.limit < 0.35"
+                  [class.mid]="offer.takenPlaces / offer.limit >= 0.35"
+                  [class.high]="offer.takenPlaces / offer.limit > 0.75"
+                >
+                  {{ offer.limit - offer.takenPlaces }} locuri
                 </div>
+              }
+              <div class="offer-actions">
+                <button mat-stroked-button
+                  [disabled]="!!offer.hasApplied || offer.takenPlaces == offer.limit || !canApply"
+                  (click)="applyOffer(offer)">
+                  @if(offer.hasApplied) {
+                    <span>Aplicat</span>
+                  } @else if(offer.takenPlaces < offer.limit) {
+                    @if(offer.description) {
+                      <span>Detalii</span>
+                    } @else {
+                      <span>Aplicați</span>
+                    }
+                  } @else {
+                    <span>Ocupat</span>
+                  }
+                </button>
+              </div>
             </div>
-        </form>
-        <mat-progress-bar mode="query" class="progress-bar" *ngIf="isLoadingTeachers"></mat-progress-bar>
-    </mat-card>
+            @if(!$last) {
+              <mat-divider></mat-divider>
+            }
+          }
+        </mat-card-content>
+      </mat-card>
+    }
 
-    <div class="results">
-        <div class="tip-card translucent" *ngIf="canApply">
-            <mat-icon class="tip-icon">school</mat-icon>
-            <div class="tip-card-content">
-                Lista de mai jos conține doar profesorii care au adăugat oferte în aplicație. Pentru a accesa
-                lista completă a profesorilor, accesați 
-                <a class="link" href="https://fmi.unibuc.ro/departamente/" target="_blank">acest link.</a>
-            </div>
-        </div>
-        <mat-card class="teacher-card" *ngFor="let teacher of teachers">
-            <app-user-snippet [user]="teacher" class="teacher-snippet">
-                <span>{{ teacher.offers.length }} </span>
-                <span *ngIf="teacher.offers.length == 1">ofertă</span>
-                <span *ngIf="teacher.offers.length != 1">oferte</span>
-            </app-user-snippet>
-            <mat-card-header></mat-card-header>
-            <mat-card-content>
-                <mat-divider></mat-divider>
-                <div *ngFor="let offer of teacher.offers">
-                    <div class="teacher-offer">
-                        <div class="offer-topics">
-                            <span *ngFor="let topic of offer.topics" class="badge">{{ topic.name }} </span>
-                        </div>
-                        <div class="offer-places"
-                        *ngIf="offer.limit != offer.takenPlaces"
-                        [class.low]="offer.takenPlaces / offer.limit < 0.35"
-                        [class.mid]="offer.takenPlaces / offer.limit >= 0.35"
-                        [class.high]="offer.takenPlaces / offer.limit > 0.75"
-                        >{{offer.limit - offer.takenPlaces}} locuri</div>
-                        <div class="offer-actions">
-                            <button mat-stroked-button 
-                            [disabled]="!!offer.hasApplied || offer.takenPlaces == offer.limit || !canApply"
-                            (click)="applyOffer(offer)">
-                                <span *ngIf="offer.hasApplied">
-                                    Aplicat
-                                </span>
-                                <span *ngIf="!offer.hasApplied && offer.takenPlaces < offer.limit">
-                                    <span *ngIf="offer.description">
-                                        Detalii
-                                    </span>
-                                    <span *ngIf="!offer.description">
-                                        Aplicați
-                                    </span>
-                                </span>
-                                <span *ngIf="!offer.hasApplied && offer.takenPlaces == offer.limit">
-                                    Ocupat
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                    <mat-divider></mat-divider>
-                </div>
-            </mat-card-content>
-        </mat-card>
-
-        <div class="no-results" *ngIf="!isLoadingTeachers && teachers.length == 0">
-            <mat-icon>sentiment_very_dissatisfied</mat-icon>
-            <h1>Nu există rezultate.</h1>
-        </div>
-    </div>
+    @if(!isLoadingTeachers && teachers.length == 0) {
+      <div class="no-results">
+        <mat-icon>sentiment_very_dissatisfied</mat-icon>
+        <h1>Nu există rezultate.</h1>
+      </div>
+    }
+  </div>
 </div>
