@@ -1,37 +1,49 @@
-<app-loading class="in-dialog" color="primary" *ngIf="isLoadingQuery"></app-loading>
+@if(isLoadingQuery) {
+  <app-loading class="in-dialog" color="primary"></app-loading>
+}
 <h2 mat-dialog-title>Editați lucrarea</h2>
 <mat-dialog-content>
-    <form [formGroup]="paperForm" fxLayout="row grid" fxLayoutGap="10px grid">
-        <mat-form-field appearance="outline" fxFlex="100">
-            <mat-label>Titlu</mat-label>
-            <input type="text" matInput formControlName="title"/>
-            <mat-error>Titlul trebuie să fie de lungime între 3 și 256 caractere.</mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="outline" fxFlex="100">
-            <mat-label>Descriere</mat-label>
-            <textarea matInput type="text" formControlName="description"></textarea>
-            <mat-error>Descrierea trebuie să fie de lungime între 64 și 1024 caractere.</mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="outline" fxFlex="100">
-            <mat-label>Teme</mat-label>
-            <mat-chip-grid #chipList>
-                <mat-chip *ngFor="let topic of selectedTopics" [removable]="true"
-                    (removed)="removeTopic(topic)">
-                    {{topic.name}}
-                    <mat-icon matChipRemove>cancel</mat-icon>
-                </mat-chip>
-                <input placeholder="Alegeți o temă nouă..." #topicInput formControlName="topics" [matAutocomplete]="auto"
-                    [matChipInputFor]="chipList">
-            </mat-chip-grid>
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTopic($event)">
-                <mat-option *ngFor="let topic of filteredTopics | async" [value]="topic">
-                    {{topic.name}}
-                </mat-option>
-            </mat-autocomplete>
-        </mat-form-field>
-    </form>
+  <form [formGroup]="paperForm" fxLayout="row grid" fxLayoutGap="12px grid">
+    <mat-form-field appearance="outline" fxFlex="100">
+      <mat-label>Titlu</mat-label>
+      <input type="text" matInput formControlName="title" />
+      <mat-error>Titlul trebuie să fie de lungime între 3 și 256 caractere.</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline" fxFlex="100">
+      <mat-label>Descriere</mat-label>
+      <textarea matInput type="text" formControlName="description"></textarea>
+      <mat-error>Descrierea trebuie să fie de lungime între 64 și 1024 caractere.</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline" fxFlex="100" floatLabel="always">
+      <mat-label>Teme *</mat-label>
+      <mat-chip-grid #chipList>
+        @for(topic of selectedTopics; track $index) {
+          <mat-chip [removable]="true" (removed)="removeTopic(topic)">
+            {{ topic.name }}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        }
+        <input
+          placeholder="Alegeți o temă nouă..."
+          #topicInput
+          formControlName="topics"
+          [matAutocomplete]="auto"
+          [matChipInputFor]="chipList"
+        />
+      </mat-chip-grid>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTopic($event)">
+        @for(topic of filteredTopics | async; track topic.id) {
+          <mat-option [value]="topic" tabIndex="1">
+            {{topic.name}}
+          </mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Anulați</button>
-    <button mat-button (click)="savePaper()" [disabled]="paperForm.invalid || selectedTopics.length == 0">Salvați</button>
+  <button mat-button mat-dialog-close>Anulați</button>
+  <button mat-button (click)="savePaper()" [disabled]="paperForm.invalid || selectedTopics.length == 0">Salvați</button>
 </mat-dialog-actions>

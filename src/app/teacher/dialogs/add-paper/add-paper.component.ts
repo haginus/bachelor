@@ -5,7 +5,7 @@ import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { combineLatest, merge, Observable, of, Subscription } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { TeacherService } from '../../../services/teacher.service';
 import { Topic, TopicsService } from '../../../services/topics.service';
@@ -103,15 +103,13 @@ export class AddPaperComponent implements OnInit {
   separatorKeysCodes: number[] = [ENTER, COMMA];
 
   addTopic(event: MatChipInputEvent) {
-    const input = event.input;
-    const value = event.value;
-
-    // Reset the input value
+    const input = event.chipInput.inputElement;
+    const value = (event.value || '').trim();
     if (input) {
       input.value = '';
     }
 
-    if ((value || '').trim()) {
+    if (value) {
       this.addTopicInternal(value);
     }
 

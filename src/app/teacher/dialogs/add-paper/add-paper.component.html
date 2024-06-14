@@ -1,4 +1,6 @@
-<app-loading class="in-dialog" color="primary" *ngIf="isLoadingQuery"></app-loading>
+@if(isLoadingQuery) {
+  <app-loading class="in-dialog" color="primary"></app-loading>
+}
 <h2 mat-dialog-title>Adăugați o lucrare</h2>
 
 <mat-dialog-content>
@@ -17,20 +19,33 @@
           <mat-error>Descrierea trebuie să fie de lungime între 64 și 1024 caractere.</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="100">
-          <mat-label>Teme lucrare</mat-label>
+          <mat-label>Teme lucrare *</mat-label>
           <mat-chip-grid #chipList aria-label="Selectare teme">
-            <mat-chip *ngFor="let topic of selectedTopics" [removable]="true" (removed)="removeTopic(topic)">
-              {{topic.name}}
-              <mat-icon matChipRemove>cancel</mat-icon>
-            </mat-chip>
-            <input placeholder="Temă nouă..." #topicInput formControlName="topics" [matAutocomplete]="auto"
-              [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-              (matChipInputTokenEnd)="addTopic($event)" (blur)="handleTopicBlur($event, topicInput.value)" />
+            @for(topic of selectedTopics; track $index) {
+              <mat-chip [removable]="true" (removed)="removeTopic(topic)">
+                {{topic.name}}
+                <button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip>
+            }
+            <input
+              placeholder="Temă nouă..."
+              #topicInput
+              formControlName="topics"
+              [matAutocomplete]="auto"
+              [matChipInputFor]="chipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="addTopic($event)"
+              (blur)="handleTopicBlur($event, topicInput.value)"
+            />
           </mat-chip-grid>
           <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTopic($event)">
-            <mat-option *ngFor="let topic of filteredTopics | async" [value]="topic">
-              {{topic.name}}
-            </mat-option>
+            @for(topic of filteredTopics | async; track topic.id) {
+              <mat-option [value]="topic" tabIndex="1">
+                {{ topic.name }}
+              </mat-option>
+            }
           </mat-autocomplete>
           <mat-hint>Adăugați o temă înscriind numele și apăsând <b>Virgulă</b> sau <b>Enter.</b></mat-hint>
         </mat-form-field>
@@ -59,25 +74,35 @@
           <mat-label>Domeniu</mat-label>
           <mat-select formControlName="domainId">
             <mat-option [value]="null">--</mat-option>
-            <mat-option *ngFor="let domain of domains | async" [value]="domain.id">
-              {{ domain.name }}
-            </mat-option>
+            @for(domain of domains | async; track domain.id) {
+              <mat-option [value]="domain.id">
+                {{domain.name}}
+              </mat-option>
+            }
           </mat-select>
         </mat-form-field>
         <div class="student-scroll" fxFlex="100">
-          <app-loading color="primary" *ngIf="isLoadingUsers"></app-loading>
+
+          @if(isLoadingUsers) {
+            <app-loading color="primary"></app-loading>
+          }
           <mat-selection-list [multiple]="false" formControlName="studentId">
-            <mat-list-option *ngFor="let user of userResults" [disabled]="!!user.student.paper" [value]="user.id">
-              <h3 matLine>{{ user.firstName }} {{ user.lastName }}</h3>
-              <b matLine>{{ user.email }}</b>
-              <div matLine *ngIf="!user.student.paper">
-                <span>Grupa {{ user.student.group }}, </span>
-                <span>Specializarea {{ user.student.specialization?.name }}</span>
-              </div>
-              <div matLine *ngIf="!!user.student.paper">
-                <i>Este deja asociat.</i>
-              </div>
-            </mat-list-option>
+            @for(user of userResults; track user.id) {
+              <mat-list-option [disabled]="!!user.student.paper" [value]="user.id">
+                <h3 matListItemTitle>{{ user.firstName }} {{ user.lastName }}</h3>
+                <b matListItemLine>{{ user.email }}</b>
+                @if(!user.student.paper) {
+                  <div matListItemLine>
+                    <span>Grupa {{ user.student.group }}, </span>
+                    <span>Specializarea {{ user.student.specialization?.name }}</span>
+                  </div>
+                } @else {
+                  <div matListItemLine>
+                    <i>Este deja asociat.</i>
+                  </div>
+                }
+              </mat-list-option>
+            }
           </mat-selection-list>
         </div>
         <div class="actions">
@@ -89,16 +114,22 @@
       <ng-template matStepLabel>Vedeți rezultatul</ng-template>
       <div class="paper-snippet mat-elevation-z1">
         <h2>{{ resultedPaper.title }}</h2>
-        <p class="paper-type" *ngIf="resultedPaper?.user">
-          Lucrare de {{ PAPER_TYPES[resultedPaper.user.student.domain.paperType ]}}
-        </p>
+        @if(resultedPaper?.user) {
+          <p class="paper-type">
+            Lucrare de {{ PAPER_TYPES[resultedPaper.user.student.domain.paperType] }}
+          </p>
+        }
         <p class="paper-description">
           {{ resultedPaper.description }}
         </p>
         <p class="paper-topics">
-          <span class="badge" *ngFor="let topic of selectedTopics">{{ topic.name }}</span>
+          @for(topic of selectedTopics; track $index) {
+            <span class="badge">{{ topic.name }}</span>
+          }
         </p>
-        <app-user-snippet *ngIf="resultedPaper?.user" [user]="resultedPaper.user">Student</app-user-snippet>
+        @if(resultedPaper?.user) {
+          <app-user-snippet [user]="resultedPaper.user">Student</app-user-snippet>
+        }
       </div>
 
       <div fxLayoutAlign="end" class="dialog-buttons">
