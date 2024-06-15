@@ -1,11 +1,11 @@
-FROM node:14-alpine AS build
-WORKDIR /dist/src/app
+FROM node:20-alpine AS build
+WORKDIR /usr
 COPY package*.json ./
-RUN npm install
+RUN npm install --force
 COPY . .
 RUN npm run build
 
 
-FROM nginx:1.20.2-alpine AS ngi
-COPY --from=build /dist/src/app/dist/bachelor /usr/share/nginx/html
+FROM nginx:1.27.0 AS ngi
+COPY --from=build /usr/dist/bachelor/browser /usr/share/nginx/html
 EXPOSE 80
