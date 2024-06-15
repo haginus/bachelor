@@ -1,18 +1,24 @@
 <h2 mat-dialog-title>Adăugare profesori din .CSV</h2>
 <mat-dialog-content class="mat-typography">
-    <p>
-        Încărcați un fișier .csv cu următoarele coloane: <br> 
-        <i>TITLU,NUME,PRENUME,CNP,EMAIL</i></p>
-    <form>
-        <div class="form-group flex-container align-center">
-            <div [hidden]="loading">
-                <label for="file" class="mat-raised-button">Încărcați</label>
-                <input type="file" id="file" (change)="handleFileInput($event.target)">
-            </div>
-            <mat-spinner [diameter]="36" *ngIf="loading"></mat-spinner>
-        </div>
-        <div class="flex-container align-center" *ngIf="!loading">
-            <a class="link" href="/assets/example-csv/teachers.csv" target="_blank">Descărcați un exemplu</a>
-        </div>
-    </form>
+  <p>
+    Încărcați un fișier .csv cu următoarele coloane: <br>
+    <i class="wrap">TITLU,NUME,PRENUME,CNP,EMAIL</i>
+  </p>
+  <form>
+    @if(!loading) {
+      <div class="flex-container align-center">
+        <button mat-stroked-button appUploadFile accept="text/csv" (file)="handleFileInput($event)">
+          <mat-icon>cloud_upload</mat-icon>
+          <span>Încărcați</span>
+        </button>
+      </div>
+      <div class="flex-container align-center">
+        <a class="link" href="/assets/example-csv/teachers.csv" target="_blank">Descărcați un exemplu</a>
+      </div>
+    } @else {
+      <div class="flex-container align-center">
+        <mat-spinner [diameter]="36"></mat-spinner>
+      </div>
+    }
+  </form>
 </mat-dialog-content>

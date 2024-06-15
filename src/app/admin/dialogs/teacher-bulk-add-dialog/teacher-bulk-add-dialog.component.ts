@@ -17,15 +17,14 @@ export class AdminTeacherBulkAddDialogComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  handleFileInput(target: any) {
-    const file: File = target.files[0];
+  handleFileInput(file: File) {
     this.loading = true;
     this.admin.addTeachersBulk(file).subscribe(res => {
       if(res) {
         this.snackbar.open(`Au fost adăugați ${res.addedTeachers}/${res.totalTeachers} profesori.`);
       }
       this.dialogRef.close(true);
-    })
+    });
   }
 
 }

@@ -1,17 +1,18 @@
-input[type="file"] {
-    display: none;
+.wrap {
+  display: block;
+  overflow-y: scroll;
 }
 
-.form-group {
-    padding: 8px;
+.link {
+  margin-top: 8px;
 }
 
 mat-form-field {
-    display: block;
+  display: block;
 }
 
 .disabled {
-    color: gray;
-    cursor: default;
-    background-color: #eee;
+  color: gray;
+  cursor: default;
+  background-color: #eee;
 }

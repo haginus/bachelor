@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ImportResultDialogComponent } from '../import-result-dialog/import-result-dialog.component';
 import { AdminService } from '../../../services/admin.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-students-bulk-add-dialog',
@@ -12,9 +13,12 @@ import { AdminService } from '../../../services/admin.service';
 })
 export class StudentsBulkAddDialogComponent implements OnInit {
 
-  constructor(private admin: AdminService, private snackbar: MatSnackBar,
+  constructor(
+    private admin: AdminService,
+    private snackbar: MatSnackBar,
     private dialogRef: MatDialogRef<StudentsBulkAddDialogComponent>,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog
+  ) {}
 
   loading: boolean = false;
 
@@ -27,8 +31,7 @@ export class StudentsBulkAddDialogComponent implements OnInit {
     'studyForm': new FormControl(null, [Validators.required])
   });
 
-  handleFileInput(target: any) {
-    const file: File = target.files[0];
+  handleFileInput(file: File) {
     this.loading = true;
     const { specializationId, studyForm } = this.studentForm.value;
     this.admin.addStudentsBulk(file, specializationId, studyForm).subscribe(res => {
@@ -40,7 +43,7 @@ export class StudentsBulkAddDialogComponent implements OnInit {
           'Vedeți rezultatele',
           { duration: 10000 }
         );
-        sbRef.onAction().toPromise().then(() => {
+        firstValueFrom(sbRef.onAction()).then(() => {
           this.dialog.open(ImportResultDialogComponent, { data: res });
         });
       }

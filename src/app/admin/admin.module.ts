@@ -41,6 +41,7 @@ import { AdminEditDialogComponent } from './dialogs/admin-edit-dialog/admin-edit
 import { SudoDialogComponent } from './dialogs/sudo-dialog/sudo-dialog.component';
 import { ImportResultDialogComponent } from './dialogs/import-result-dialog/import-result-dialog.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { UploadFileDirective } from '../shared/directives/upload-file.directive';
 
 const materialDeps = [
   MatPaginatorModule,
@@ -91,6 +92,7 @@ const materialDeps = [
     ReactiveFormsModule,
     SharedModule,
     NgxJsonViewerModule,
+    UploadFileDirective,
     ...materialDeps
   ]
 })
