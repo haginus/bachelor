@@ -25,8 +25,8 @@ import { TeacherService } from '../../../services/teacher.service';
 import { AuthService, Committee, CommitteeMember, Paper, UserData } from '../../../services/auth.service';
 import { CommitteeDocument, CommitteeDocumentsFormat, DocumentService } from '../../../services/document.service';
 import { PAPER_TYPES } from '../../../lib/constants';
-import { AreDocumentsUploaded } from '../../../shared/paper-document-list/paper-document-list.component';
-import { CommonDialogComponent } from '../../../shared/common-dialog/common-dialog.component';
+import { AreDocumentsUploaded } from '../../../shared/components/paper-document-list/paper-document-list.component';
+import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
 import { detailExpand, rowAnimation } from '../../../row-animations';
 
 @Component({

@@ -7,7 +7,7 @@ import { CommitteeDialogComponent } from '../../dialogs/committee-dialog/committ
 import { AdminService } from '../../../services/admin.service';
 import { CommitteeDocument, CommitteeDocumentsFormat, DocumentService } from '../../../services/document.service';
 import { AuthService, Committee, Domain, UserData, UserDataMin } from '../../../services/auth.service';
-import { CommonDialogComponent } from '../../../shared/common-dialog/common-dialog.component';
+import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
 import { rowAnimation } from '../../../row-animations';
 
 @Component({

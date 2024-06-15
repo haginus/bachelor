@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DOMAIN_TYPES } from '../../lib/constants';
-import { OfferApplication } from '../../services/student.service';
+import { DOMAIN_TYPES } from '../../../lib/constants';
+import { OfferApplication } from '../../../services/student.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';

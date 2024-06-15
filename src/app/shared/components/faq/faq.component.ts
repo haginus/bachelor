@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { FAQ, MiscService } from '../../services/misc.service';
+import { FAQ, MiscService } from '../../../services/misc.service';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({

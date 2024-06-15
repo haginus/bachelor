@@ -7,7 +7,7 @@ import { filter, map, mergeMap } from 'rxjs/operators'
 import { routerFadeAnimation } from './animations';
 import { ProblemReportComponent } from './components/problem-report/problem-report.component';
 import { AuthService, SessionSettings, UserData } from './services/auth.service';
-import { UserProfileEditorComponent } from './shared/user-profile-editor/user-profile-editor.component';
+import { UserProfileEditorComponent } from './shared/components/user-profile-editor/user-profile-editor.component';
 import { environment } from '../environments/environment';
 
 

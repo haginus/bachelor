@@ -26,10 +26,10 @@ import { AuthService, Paper, SessionSettings } from '../../../services/auth.serv
 import { DocumentService } from '../../../services/document.service';
 import { PAPER_TYPES } from '../../../lib/constants';
 import { inclusiveDate, parseDate } from '../../../lib/utils';
-import { AreDocumentsUploaded, PaperDocumentEvent } from '../../../shared/paper-document-list/paper-document-list.component';
-import { EditPaperComponent } from '../../../shared/edit-paper/edit-paper.component';
+import { AreDocumentsUploaded, PaperDocumentEvent } from '../../../shared/components/paper-document-list/paper-document-list.component';
+import { EditPaperComponent } from '../../../shared/components/edit-paper/edit-paper.component';
 import { EditPaperResponse } from '../../../services/student.service';
-import { CommonDialogComponent, CommonDialogData } from '../../../shared/common-dialog/common-dialog.component';
+import { CommonDialogComponent, CommonDialogData } from '../../../shared/components/common-dialog/common-dialog.component';
 import { detailExpand, rowAnimation } from '../../../row-animations';
 
 @Component({

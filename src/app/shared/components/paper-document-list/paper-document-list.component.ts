@@ -2,10 +2,10 @@ import { Component, DoCheck, EventEmitter, Input, OnChanges, Output, SimpleChang
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DocumentUploadDialogComponent, DocumentUploadDialogData } from '../document-upload-dialog/document-upload-dialog.component';
-import { DocumentService } from '../../services/document.service';
-import { PaperDocument, SessionSettings } from '../../services/auth.service';
-import { USER_TYPES } from '../../lib/constants';
-import { PaperDocumentCategory, PaperDocumentTypes, PaperDocumentUploadBy } from '../../services/student.service';
+import { DocumentService } from '../../../services/document.service';
+import { PaperDocument, SessionSettings } from '../../../services/auth.service';
+import { USER_TYPES } from '../../../lib/constants';
+import { PaperDocumentCategory, PaperDocumentTypes, PaperDocumentUploadBy } from '../../../services/student.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';

@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { MatTable, MatTableModule } from '@angular/material/table';
-import { Paper, PaperGrade } from '../../services/auth.service';
-import { rowAnimation } from '../../row-animations';
-import { FixedPipe } from '../pipes/fixed.pipe';
+import { Paper, PaperGrade } from '../../../services/auth.service';
+import { rowAnimation } from '../../../row-animations';
+import { FixedPipe } from '../../pipes/fixed.pipe';
 
 @Component({
   selector: 'app-paper-grade-table',

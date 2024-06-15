@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { OfferApplication, StudentService } from '../../../services/student.service';
-import { ApplicationListActions } from '../../../shared/application-list/application-list.component';
+import { ApplicationListActions } from '../../../shared/components/application-list/application-list.component';
 
 @Component({
   selector: 'app-student-applications',

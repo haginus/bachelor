@@ -4,10 +4,10 @@ import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } 
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { AuthService, Paper, UserData } from '../../services/auth.service';
-import { Topic, TopicsService } from '../../services/topics.service';
-import { EditPaperResponse, StudentService } from '../../services/student.service';
-import { TeacherService } from '../../services/teacher.service';
+import { AuthService, Paper, UserData } from '../../../services/auth.service';
+import { Topic, TopicsService } from '../../../services/topics.service';
+import { EditPaperResponse, StudentService } from '../../../services/student.service';
+import { TeacherService } from '../../../services/teacher.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';

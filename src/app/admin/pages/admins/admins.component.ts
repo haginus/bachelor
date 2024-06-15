@@ -8,7 +8,7 @@ import { AdminEditDialogComponent, AdminEditDialogData } from '../../dialogs/adm
 import { AdminService } from '../../../services/admin.service';
 import { AuthService, UserData } from '../../../services/auth.service';
 import { USER_TYPES } from '../../../lib/constants';
-import { CommonDialogComponent, CommonDialogData } from '../../../shared/common-dialog/common-dialog.component';
+import { CommonDialogComponent, CommonDialogData } from '../../../shared/components/common-dialog/common-dialog.component';
 import { rowAnimation } from '../../../row-animations';
 
 @Component({

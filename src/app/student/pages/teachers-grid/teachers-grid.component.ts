@@ -8,7 +8,7 @@ import { OfferApplicationSenderComponent } from '../../dialogs/offer-application
 import { Topic, TopicsService } from '../../../services/topics.service';
 import { GetTeacherOffersFilters, Offer, StudentService, TeacherOffers } from '../../../services/student.service';
 import { AuthService } from '../../../services/auth.service';
-import { CommonDialogComponent } from '../../../shared/common-dialog/common-dialog.component';
+import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
 
 @Component({
   selector: 'student-teachers-grid',

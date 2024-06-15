@@ -9,7 +9,7 @@ import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operat
 import { AdminService } from '../../../services/admin.service';
 import { Committee, Paper } from '../../../services/auth.service';
 import { PAPER_TYPES } from '../../../lib/constants';
-import { CommonDialogComponent } from '../../../shared/common-dialog/common-dialog.component';
+import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
 
 @Component({
   selector: 'app-paper-assign',

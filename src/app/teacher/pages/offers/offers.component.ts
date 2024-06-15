@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { TeacherOfferDialogComponent } from '../../dialogs/teacher-offer-dialog/teacher-offer-dialog.component';
 import { TeacherService } from '../../../services/teacher.service';
 import { Offer } from '../../../services/student.service';
-import { CommonDialogComponent } from '../../../shared/common-dialog/common-dialog.component';
+import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
 import { DOMAIN_TYPES } from '../../../lib/constants';
 
 @Component({

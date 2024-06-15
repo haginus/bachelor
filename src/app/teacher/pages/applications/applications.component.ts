@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TeacherService } from '../../../services/teacher.service';
 import { OfferApplication } from '../../../services/student.service';
-import { ApplicationListActions } from '../../../shared/application-list/application-list.component';
+import { ApplicationListActions } from '../../../shared/components/application-list/application-list.component';
 
 @Component({
   selector: 'app-applications',

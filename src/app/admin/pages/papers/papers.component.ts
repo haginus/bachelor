@@ -13,7 +13,7 @@ import { PaperValidationDialogComponent, PaperValidationDialogData } from '../..
 import { AdminService, GetPapersFilter } from '../../../services/admin.service';
 import { Paper } from '../../../services/auth.service';
 import { DOMAIN_TYPES, PAPER_TYPES, STUDY_FORMS } from '../../../lib/constants';
-import { AreDocumentsUploaded } from '../../../shared/paper-document-list/paper-document-list.component';
+import { AreDocumentsUploaded } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { detailExpand, rowAnimation } from '../../../row-animations';
 
 @Component({

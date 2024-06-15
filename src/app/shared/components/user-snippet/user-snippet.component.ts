@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { UserDataMin } from '../../services/auth.service';
+import { UserDataMin } from '../../../services/auth.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
-import { ApiUrlPipe } from '../pipes/api-url';
+import { ApiUrlPipe } from '../../pipes/api-url';
 
 @Component({
   selector: 'app-user-snippet',

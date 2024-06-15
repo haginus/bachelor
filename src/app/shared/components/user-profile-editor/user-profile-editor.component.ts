@@ -3,15 +3,15 @@ import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validatio
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { take } from 'rxjs/operators';
-import { AuthService, Profile } from '../../services/auth.service';
+import { AuthService, Profile } from '../../../services/auth.service';
 import { NgClass } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ApiUrlPipe } from '../pipes/api-url';
+import { ApiUrlPipe } from '../../pipes/api-url';
 import { MatInputModule } from '@angular/material/input';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
-import { UploadFileDirective } from '../directives/upload-file.directive';
+import { UploadFileDirective } from '../../directives/upload-file.directive';
 
 @Component({
   selector: 'app-user-profile-editor',

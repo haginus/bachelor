@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AuthService, SessionSettings } from '../../services/auth.service';
+import { AuthService, SessionSettings } from '../../../services/auth.service';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { DatePipe } from '@angular/common';
