@@ -1,27 +1,55 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Topic, TopicsService } from '../../../services/topics.service';
 import { TeacherService } from '../../../services/teacher.service';
 import { Domain } from '../../../services/auth.service';
 import { Offer } from '../../../services/student.service';
+import { DOMAIN_TYPES } from '../../../lib/constants';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AsyncPipe } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-teacher-offer-dialog',
   templateUrl: './teacher-offer-dialog.component.html',
-  styleUrls: ['./teacher-offer-dialog.component.scss']
+  styleUrls: ['./teacher-offer-dialog.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    FlexLayoutModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    MatChipsModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatButtonModule,
+    AsyncPipe,
+  ],
 })
 export class TeacherOfferDialogComponent implements OnInit {
-  //TODO: domains, add edit functions
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: TeacherOfferDialogData, private topicService: TopicsService,
-  private teacher: TeacherService, private dialog: MatDialogRef<TeacherOfferDialogComponent>, private snackbar: MatSnackBar) {
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: TeacherOfferDialogData,
+    private topicService: TopicsService,
+    private teacher: TeacherService,
+    private dialog: MatDialogRef<TeacherOfferDialogComponent>,
+    private snackbar: MatSnackBar
+  ) {
     this.filteredTopics = this.offerForm.get("topics").valueChanges.pipe(
       startWith(null),
       map((topicName: string | null) => typeof topicName == 'string' ? this._filter(topicName) : this.remainingTopics.slice())
@@ -42,6 +70,8 @@ export class TeacherOfferDialogComponent implements OnInit {
 
   @ViewChild('topicInput') topicInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
+
+  DOMAIN_TYPES = DOMAIN_TYPES;
 
   addTopic(event: MatChipInputEvent) {
     const input = event.input;

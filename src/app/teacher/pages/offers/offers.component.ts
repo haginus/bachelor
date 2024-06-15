@@ -1,17 +1,38 @@
 import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { TeacherOfferDialogComponent } from '../../dialogs/teacher-offer-dialog/teacher-offer-dialog.component';
 import { TeacherService } from '../../../services/teacher.service';
 import { Offer } from '../../../services/student.service';
 import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
 import { DOMAIN_TYPES } from '../../../lib/constants';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { RouterLink } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @Component({
   selector: 'teacher-offers',
   templateUrl: './offers.component.html',
-  styleUrls: ['./offers.component.scss']
+  styleUrls: ['./offers.component.scss'],
+  standalone: true,
+  imports: [
+    FlexLayoutModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
+    RouterLink,
+  ]
 })
 export class TeacherOffersComponent implements OnInit, OnDestroy {
 

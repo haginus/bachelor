@@ -1,13 +1,27 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService, UserData } from '../../../services/auth.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatListModule } from '@angular/material/list';
+import { UserProfileEditorComponent } from '../../../shared/components/user-profile-editor/user-profile-editor.component';
 
 @Component({
   selector: 'teacher-setup',
   templateUrl: './setup.component.html',
-  styleUrls: ['./setup.component.scss']
+  styleUrls: ['./setup.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatCheckboxModule,
+    MatStepperModule,
+    MatProgressSpinnerModule,
+    MatListModule,
+    UserProfileEditorComponent,
+  ],
 })
 export class TeacherSetupComponent implements OnInit {
 

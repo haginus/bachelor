@@ -1,4 +1,7 @@
-<app-loading color="primary" *ngIf="isLoadingCommittees"></app-loading>
+@if(isLoadingCommittees) {
+  <app-loading color="primary"></app-loading>
+}
+
 <div fxLayout="row grid" fxLayoutGap="10px grid">
   @for(committee of committees; track committee.id) {
     <div fxFlex="100" fxFlex.gt-xs="50">
@@ -40,7 +43,10 @@
     </div>
   }
 </div>
-<div *ngIf="!isLoadingCommittees && committees.length == 0" class="no-results-container">
-  <mat-icon class="hero-icon">cloud</mat-icon>
-  <h2>Nu sunteți membru în nicio comisie.</h2>
-</div>
+
+@if(!isLoadingCommittees && committees.length == 0) {
+  <div class="no-results-container">
+    <mat-icon class="hero-icon">cloud</mat-icon>
+    <h2>Nu sunteți membru în nicio comisie.</h2>
+  </div>
+}

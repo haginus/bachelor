@@ -1,57 +1,61 @@
-<div class="flex-container fullscreen align-center v-align-center" *ngIf="loadingUser">
-  <mat-spinner [diameter]="48"></mat-spinner>
-</div>
-
-<mat-horizontal-stepper labelPosition="bottom" linear #stepper (selectionChange)="selectionChange($event)"
-  *ngIf="!loadingUser">
-  <mat-step [stepControl]="validationForm" [editable]="false">
-    <ng-template matStepLabel>Validare</ng-template>
-    <form [formGroup]="validationForm">
-      <h2>Validarea datelor</h2>
-      <div class="step-details">Asigurați-vă că datele de mai jos sunt corecte.</div>
-      <mat-list *ngIf="user">
-        <div mat-subheader>Date personale</div>
-        <mat-list-item>
-          <div matListItemTitle>Titlu academic</div>
-          <div matListItemLine>{{ user.title || 'Nu a fost introdus.' }}</div>
-        </mat-list-item>
-        <mat-list-item>
-          <div matListItemTitle>Nume</div>
-          <div matListItemLine>{{ user.lastName }}</div>
-        </mat-list-item>
-        <mat-list-item>
-          <div matListItemTitle>Prenume</div>
-          <div matListItemLine>{{ user.firstName }}</div>
-        </mat-list-item>
-        <mat-list-item>
-          <div matListItemTitle>CNP</div>
-          <div matListItemLine>{{ user.CNP || 'Nu a fost introdus.' }}</div>
-        </mat-list-item>
-      </mat-list>
-      <mat-checkbox formControlName="isValid" class="v-checkbox">Confirm că datele sunt corecte.</mat-checkbox>
-      <div class="flex-container align-end actions-container">
-        <button mat-raised-button matStepperNext [disabled]="validationForm.invalid">Pasul următor</button>
+@if(loadingUser) {
+  <div class="flex-container fullscreen align-center v-align-center">
+    <mat-spinner [diameter]="48"></mat-spinner>
+  </div>
+} @else {
+  <mat-horizontal-stepper labelPosition="bottom" linear #stepper (selectionChange)="selectionChange($event)">
+    <mat-step [stepControl]="validationForm" [editable]="false">
+      <ng-template matStepLabel>Validare</ng-template>
+      <form [formGroup]="validationForm">
+        <h2>Validarea datelor</h2>
+        <div class="step-details">Asigurați-vă că datele de mai jos sunt corecte.</div>
+        @if(user) {
+          <mat-list>
+            <div mat-subheader>Date personale</div>
+            <mat-list-item>
+              <div matListItemTitle>Titlu academic</div>
+              <div matListItemLine>{{ user.title || 'Nu a fost introdus.' }}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <div matListItemTitle>Nume</div>
+              <div matListItemLine>{{ user.lastName }}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <div matListItemTitle>Prenume</div>
+              <div matListItemLine>{{ user.firstName }}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <div matListItemTitle>CNP</div>
+              <div matListItemLine>{{ user.CNP || 'Nu a fost introdus.' }}</div>
+            </mat-list-item>
+          </mat-list>
+        }
+        <mat-checkbox formControlName="isValid" class="v-checkbox">Confirm că datele sunt corecte.</mat-checkbox>
+        <div class="flex-container align-end actions-container">
+          <button mat-raised-button matStepperNext [disabled]="validationForm.invalid">Pasul următor</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Profil</ng-template>
+      <h2>Profilul dvs.</h2>
+      <div class="step-details">Completați-vă profilul pentru mai multă vizibilitate pe platformă.</div>
+      <app-user-profile-editor [showReset]="false" (profileSaved)="stepper.next()"></app-user-profile-editor>
+    </mat-step>
+    <mat-step [editable]="false">
+      <ng-template matStepLabel>Gata</ng-template>
+      <div class="flex-container last-tab-container">
+        @if(loadingValidation) {
+          <div>
+            <mat-spinner [diameter]="48"></mat-spinner>
+            <h3>În curs de validare</h3>
+          </div>
+        } @else {
+          <h3>A apărut o eroare.</h3>
+          <button mat-raised-button (click)="validateTeacher()">Reîncercați</button>
+          <button mat-raised-button (click)="stepper.reset()">Reluați validarea</button>
+        }
       </div>
-    </form>
-  </mat-step>
-  <mat-step>
-    <ng-template matStepLabel>Profil</ng-template>
-    <h2>Profilul dvs.</h2>
-    <div class="step-details">Completați-vă profilul pentru mai multă vizibilitate pe platformă.</div>
-    <app-user-profile-editor [showReset]="false" (profileSaved)="stepper.next()"></app-user-profile-editor>
-  </mat-step>
-  <mat-step [editable]="false">
-    <ng-template matStepLabel>Gata</ng-template>
-    <div class="flex-container last-tab-container">
-      <div *ngIf="loadingValidation">
-        <mat-spinner [diameter]="48"></mat-spinner>
-        <h3>În curs de validare</h3>
-      </div>
-      <div *ngIf="!loadingValidation">
-        <h3>A apărut o eroare.</h3>
-        <button mat-raised-button (click)="validateTeacher()">Reîncercați</button>
-        <button mat-raised-button (click)="stepper.reset()">Reluați validarea</button>
-      </div>
-    </div>
-  </mat-step>
-</mat-horizontal-stepper>
+    </mat-step>
+  </mat-horizontal-stepper>
+}

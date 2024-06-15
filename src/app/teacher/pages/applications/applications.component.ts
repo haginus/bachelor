@@ -4,17 +4,27 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TeacherService } from '../../../services/teacher.service';
 import { OfferApplication } from '../../../services/student.service';
-import { ApplicationListActions } from '../../../shared/components/application-list/application-list.component';
+import { ApplicationListActions, ApplicationListComponent } from '../../../shared/components/application-list/application-list.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-applications',
   templateUrl: './applications.component.html',
-  styleUrls: ['./applications.component.scss']
+  styleUrls: ['./applications.component.scss'],
+  standalone: true,
+  imports: [
+    LoadingComponent,
+    ApplicationListComponent,
+  ],
 })
 export class TeacherApplicationsComponent implements OnInit, OnDestroy {
 
-  constructor(private teacher: TeacherService, private snackbar: MatSnackBar,
-    private route: ActivatedRoute, private router: Router) { }
+  constructor(
+    private teacher: TeacherService,
+    private snackbar: MatSnackBar,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   offerId: number = null;
   state: 'accepted' | 'declined' | 'pending' = null;

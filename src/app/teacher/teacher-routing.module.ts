@@ -2,28 +2,64 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NotValidatedGuard } from '../guards/not-validated.guard';
 import { ValidatedGuard } from '../guards/validated.guard';
-import { TeacherOffersComponent } from './pages/offers/offers.component';
-import { TeacherSetupComponent } from './pages/setup/setup.component';
-import { TeacherComponent } from './teacher.component';
-import { TeacherApplicationsComponent } from './pages/applications/applications.component'; 
-import { TeacherPapersComponent } from './pages/papers/papers.component';
-import { TeacherCommitteesComponent } from './pages/committees/committees.component';
-import { TeacherCommitteePapersComponent } from './pages/committee-papers/committee-papers.component';
 
 const routes: Routes = [
-  { path: '', component: TeacherComponent, canActivate: [ValidatedGuard] },
-  { path: 'setup', component: TeacherSetupComponent, data: { hideDrawer: true, title: "Validare" }, canActivate: [NotValidatedGuard] },
-  { path: 'offers', component: TeacherOffersComponent, data: { title: "Ofertele dvs." }, canActivate: [ValidatedGuard] },
-  { path: 'applications', component: TeacherApplicationsComponent, data: { title: "Cereri" }, canActivate: [ValidatedGuard] },
-  { path: 'applications/:state', component: TeacherApplicationsComponent, data: { title: "Cereri" }, canActivate: [ValidatedGuard] },
-  { path: 'applications/:state/:offerId', component: TeacherApplicationsComponent, data: { title: "Cereri" }, canActivate: [ValidatedGuard] },
-  { path: 'papers', component: TeacherPapersComponent, data: { title: "Lucrări" }, canActivate: [ValidatedGuard] },
-  { path: 'committees', component: TeacherCommitteesComponent, data: { title: "Comisiile dvs." }, canActivate: [ValidatedGuard] },
-  { path: 'committees/:id', component: TeacherCommitteePapersComponent, canActivate: [ValidatedGuard] },
+  {
+    path: '',
+    loadComponent: () => import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+    canActivate: [ValidatedGuard],
+  },
+  {
+    path: 'setup',
+    loadComponent: () => import('./pages/setup/setup.component').then((m) => m.TeacherSetupComponent),
+    data: { hideDrawer: true, title: 'Validare' },
+    canActivate: [NotValidatedGuard],
+  },
+  {
+    path: 'offers',
+    loadComponent: () => import('./pages/offers/offers.component').then((m) => m.TeacherOffersComponent),
+    data: { title: 'Ofertele dvs.' },
+    canActivate: [ValidatedGuard],
+  },
+  {
+    path: 'applications',
+    loadComponent: () => import('./pages/applications/applications.component').then((m) => m.TeacherApplicationsComponent),
+    data: { title: 'Cereri' },
+    canActivate: [ValidatedGuard],
+  },
+  {
+    path: 'applications/:state',
+    loadComponent: () => import('./pages/applications/applications.component').then((m) => m.TeacherApplicationsComponent),
+    data: { title: 'Cereri' },
+    canActivate: [ValidatedGuard],
+  },
+  {
+    path: 'applications/:state/:offerId',
+    loadComponent: () => import('./pages/applications/applications.component').then((m) => m.TeacherApplicationsComponent),
+    data: { title: 'Cereri' },
+    canActivate: [ValidatedGuard],
+  },
+  {
+    path: 'papers',
+    loadComponent: () => import('./pages/papers/papers.component').then((m) => m.TeacherPapersComponent),
+    data: { title: 'Lucrări' },
+    canActivate: [ValidatedGuard],
+  },
+  {
+    path: 'committees',
+    loadComponent: () => import('./pages/committees/committees.component').then((m) => m.TeacherCommitteesComponent),
+    data: { title: 'Comisiile dvs.' },
+    canActivate: [ValidatedGuard],
+  },
+  {
+    path: 'committees/:id',
+    loadComponent: () => import('./pages/committee-papers/committee-papers.component').then((m) => m.TeacherCommitteePapersComponent),
+    canActivate: [ValidatedGuard],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class TeacherRoutingModule { }
+export class TeacherRoutingModule {}

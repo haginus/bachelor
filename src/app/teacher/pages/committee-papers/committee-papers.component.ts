@@ -5,29 +5,31 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
-
 import { BehaviorSubject, combineLatest, merge, Subscription } from 'rxjs';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { GradePaperComponent } from '../../dialogs/grade-paper/grade-paper.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { TeacherService } from '../../../services/teacher.service';
 import { AuthService, Committee, CommitteeMember, Paper, UserData } from '../../../services/auth.service';
 import { CommitteeDocument, CommitteeDocumentsFormat, DocumentService } from '../../../services/document.service';
 import { PAPER_TYPES } from '../../../lib/constants';
-import { AreDocumentsUploaded } from '../../../shared/components/paper-document-list/paper-document-list.component';
+import { AreDocumentsUploaded, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
 import { detailExpand, rowAnimation } from '../../../row-animations';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { UserSnippetComponent } from '../../../shared/components/user-snippet/user-snippet.component';
+import { PaperGradeTableComponent } from '../../../shared/components/paper-grade-table/paper-grade-table.component';
+import { TitleCasePipe } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @Component({
   selector: 'app-committee-papers',
@@ -36,6 +38,23 @@ import { detailExpand, rowAnimation } from '../../../row-animations';
   animations: [
     rowAnimation,
     detailExpand,
+  ],
+  standalone: true,
+  imports: [
+    FlexLayoutModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    MatTooltipModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatToolbarModule,
+    MatProgressSpinnerModule,
+    UserSnippetComponent,
+    PaperGradeTableComponent,
+    PaperDocumentListComponent,
+    TitleCasePipe,
   ],
 })
 export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {

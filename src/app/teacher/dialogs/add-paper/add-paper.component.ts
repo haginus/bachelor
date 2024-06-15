@@ -1,26 +1,60 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { TeacherService } from '../../../services/teacher.service';
 import { Topic, TopicsService } from '../../../services/topics.service';
 import { Domain, UserData } from '../../../services/auth.service';
 import { PAPER_TYPES } from '../../../lib/constants';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { UserSnippetComponent } from '../../../shared/components/user-snippet/user-snippet.component';
+import { AsyncPipe } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-add-paper',
   templateUrl: './add-paper.component.html',
-  styleUrls: ['./add-paper.component.scss']
+  styleUrls: ['./add-paper.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    FlexLayoutModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    MatStepperModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    MatChipsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatListModule,
+    LoadingComponent,
+    UserSnippetComponent,
+    AsyncPipe,
+  ],
 })
 export class AddPaperComponent implements OnInit {
 
-  constructor(private teacher: TeacherService, private topicService: TopicsService,
-    private dialog: MatDialogRef<AddPaperComponent>, private snackbar: MatSnackBar) {
+  constructor(
+    private teacher: TeacherService,
+    private topicService: TopicsService,
+    private dialog: MatDialogRef<AddPaperComponent>,
+    private snackbar: MatSnackBar
+  ) {
     this.filteredTopics = this.paperForm.get("topics").valueChanges.pipe(
       startWith(null),
       map((topicName: string | null) => typeof topicName == 'string' ? this._filter(topicName) : this.remainingTopics.slice())
