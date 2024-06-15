@@ -1,10 +1,7 @@
 <h2 mat-dialog-title>{{ data.title }}</h2>
 <mat-dialog-content>{{ data.content }}</mat-dialog-content>
 <mat-dialog-actions align="end">
-    <span *ngFor="let action of data.actions">
-        <button mat-button [mat-dialog-close]="action.value">
-            {{ action.name }}
-        </button>
-    </span>
-    
+  @for(action of data.actions; track $index) {
+    <button mat-button [mat-dialog-close]="action.value">{{ action.name }}</button>
+  }
 </mat-dialog-actions>

@@ -27,13 +27,13 @@ import { MatInputModule } from '@angular/material/input';
 import { UserSnippetComponent } from './user-snippet/user-snippet.component';
 import { UserProfileEditorComponent } from './user-profile-editor/user-profile-editor.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ApiUrlPipe } from '../pipes/api-url';
-import { FixedPipePipe } from '../pipes/fixed.pipe';
+import { ApiUrlPipe } from './pipes/api-url';
+import { FixedPipe } from './pipes/fixed.pipe';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { EditPaperComponent } from './edit-paper/edit-paper.component';
-import { PluckPipe } from '../pipes/pluck.pipe';
-import { JoinPipe } from '../pipes/join.pipe';
+import { PluckPipe } from './pipes/pluck.pipe';
+import { JoinPipe } from './pipes/join.pipe';
 
 const deps = [
   MatProgressBarModule,
@@ -59,23 +59,26 @@ const deps = [
 
 @NgModule({
   declarations: [
-    LoadingComponent,
-    CommonDialogComponent,
-    ApplicationListComponent,
-    DocumentUploadDialogComponent,
-    PaperDocumentListComponent,
-    PaperGradeTableComponent,
-    FaqComponent,
-    SessionInfoComponent,
-    UserSnippetComponent,
+  ],
+  imports: [
+    CommonModule,
     UserProfileEditorComponent,
+    SessionInfoComponent,
+    PaperGradeTableComponent,
+    PaperDocumentListComponent,
+    LoadingComponent,
+    ApplicationListComponent,
+    UserSnippetComponent,
+    CommonDialogComponent,
+    DocumentUploadDialogComponent,
     EditPaperComponent,
+    FaqComponent,
     ApiUrlPipe,
-    FixedPipePipe,
+    FixedPipe,
     PluckPipe,
     JoinPipe,
+    ...deps
   ],
-  imports: [CommonModule, ...deps],
   exports: [
     LoadingComponent,
     CommonDialogComponent,
@@ -90,7 +93,7 @@ const deps = [
     UserSnippetComponent,
     UserProfileEditorComponent,
     EditPaperComponent,
-    FixedPipePipe,
+    FixedPipe,
     PluckPipe,
     JoinPipe,
     ...deps,

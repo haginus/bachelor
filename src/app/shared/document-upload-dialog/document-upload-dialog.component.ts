@@ -1,14 +1,27 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { PaperRequiredDocument, StudentService } from '../../services/student.service';
 import { DocumentService } from '../../services/document.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { UploadFileDirective } from '../directives/upload-file.directive';
 
 @Component({
   selector: 'app-document-upload-dialog',
   templateUrl: './document-upload-dialog.component.html',
-  styleUrls: ['./document-upload-dialog.component.scss']
+  styleUrls: ['./document-upload-dialog.component.scss'],
+  standalone: true,
+  imports: [
+    MatDialogModule,
+    MatSnackBarModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatIconModule,
+    UploadFileDirective,
+  ]
 })
 export class DocumentUploadDialogComponent implements OnInit {
 
@@ -52,8 +65,7 @@ export class DocumentUploadDialogComponent implements OnInit {
     })
   }
 
-  handleFileInput(target: any, type: string) {
-    const file: File = target.files[0];
+  handleFileInput(file: File, type: string) {
     this.isUploadingFile = true;
     let ob: Observable<any>;
     switch(this.data.perspective) {
@@ -74,7 +86,6 @@ export class DocumentUploadDialogComponent implements OnInit {
       if(res == null) {
         this.snackbar.open("A apărut o eroare.");
         this.isUploadingFile = false;
-        target.value = null;
       } else {
         this.snackbar.open(`Document încărcat.`);
         this.dialogRef.close(res);

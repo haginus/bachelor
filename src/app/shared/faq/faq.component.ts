@@ -1,11 +1,16 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FAQ, MiscService } from '../../services/misc.service';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-faq',
   templateUrl: './faq.component.html',
-  styleUrls: ['./faq.component.scss']
+  styleUrls: ['./faq.component.scss'],
+  standalone: true,
+  imports: [
+    MatExpansionModule,
+  ]
 })
 export class FaqComponent implements OnInit, OnDestroy {
 

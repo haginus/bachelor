@@ -1,67 +1,70 @@
-<div mat-dialog-title>
-    <h2 class="title" *ngIf="mode == 'signDocument'">
-        Semnați documentul
-    </h2>
-    <h2 class="title" *ngIf="mode == 'uploadDocument'">
-        Încărcați documentul
-    </h2>
-    <h3 class="subtitle">{{data.document.title}}</h3>
+<div class="header">
+  @if(mode === 'signDocument') {
+    <h2 class="title">Semnați documentul</h2>
+  } @else if(mode === 'uploadDocument') {
+    <h2 class="title">Încărcați documentul</h2>
+  }
+  <h3 class="subtitle">{{ data.document.title }}</h3>
 </div>
 
-<mat-dialog-content class="mat-typography" *ngIf="mode == 'signDocument'">
+@if(mode === 'signDocument') {
+  <mat-dialog-content class="mat-typography">
     <div>
-        <p>
-            Pași: <br>
-            1. Descărcați documentul generat.
-        </p>
-        <div class="button-container">
-            <button mat-raised-button (click)="downloadDocument()"
-            *ngIf="!isLoadingFile" class="icon-button">
-                <mat-icon>cloud_download</mat-icon>
-                <span>Descărcați documentul</span>
-            </button>
-            <mat-spinner [diameter]="36" *ngIf="isLoadingFile"></mat-spinner>
-        </div>
-        <p>
-            2. Semnați documentul.
-        </p>
-        <p>
-            3. Încărcați documentul semnat. <br>
-            Fișiere acceptate:
-            {{ acceptedExtensions }}
-        </p>
-        <div fxLayout="row">
-            <div [hidden]="isUploadingFile">
-                <label for="file" class="mat-raised-button icon-button" *ngIf="state == 'docDownloaded'">
-                    <mat-icon>cloud_upload</mat-icon>
-                    <span>Încărcați documentul </span>
-                </label>
-                <button mat-raised-button *ngIf="state == 'initial'" class="icon-button" disabled>
-                    <mat-icon>cloud_upload</mat-icon>
-                    <span>Încărcați documentul </span>
-                </button>
-                <input type="file" id="file" [accept]="data.document.acceptedMimeTypes" (change)="handleFileInput($event.target, 'signed')">     
-            </div>
-            <mat-spinner [diameter]="36" *ngIf="isUploadingFile"></mat-spinner>
-        </div>
+      <p>
+        Pași: <br>
+        1. Descărcați documentul generat.
+      </p>
+      @if(!isLoadingFile) {
+        <button mat-stroked-button (click)="downloadDocument()" class="document-button">
+          <mat-icon>cloud_download</mat-icon>
+          <span>Descărcați documentul</span>
+        </button>
+      } @else {
+        <mat-spinner [diameter]="36"></mat-spinner>
+      }
+      <p>
+        2. Semnați documentul.
+      </p>
+      <p>
+        3. Încărcați documentul semnat. <br>
+      </p>
+      @if(!isUploadingFile) {
+        <button
+          class="document-button"
+          mat-stroked-button
+          appUploadFile
+          [accept]="data.document.acceptedMimeTypes"
+          (file)="handleFileInput($event, 'signed')"
+          [disabled]="state != 'docDownloaded'"
+        >
+          <mat-icon>cloud_upload</mat-icon>
+          <span>Încărcați documentul</span>
+        </button>
+      } @else {
+        <mat-spinner [diameter]="36"></mat-spinner>
+      }
+      <p>Fișiere acceptate: {{ acceptedExtensions }}</p>
     </div>
-</mat-dialog-content>
-
-<mat-dialog-content class="mat-typography" *ngIf="mode == 'uploadDocument'">
+  </mat-dialog-content>
+} @else if(mode == 'uploadDocument') {
+  <mat-dialog-content class="mat-typography">
     <p>
-        Fișiere acceptate:
-        {{ acceptedExtensions }}
+      Fișiere acceptate:
+      {{ acceptedExtensions }}
     </p>
-    <div fxLayout="row">
-        <div [hidden]="isUploadingFile">
-            <label for="file" class="mat-raised-button icon-button">
-                <mat-icon>cloud_upload</mat-icon>
-                <span>
-                    Încărcați documentul
-                </span>
-            </label>
-            <input type="file" id="file" [accept]="data.document.acceptedMimeTypes" (change)="handleFileInput($event.target, 'copy')">     
-        </div>
-        <mat-spinner [diameter]="36" *ngIf="isUploadingFile"></mat-spinner>
-    </div>
-</mat-dialog-content>
+    @if(!isUploadingFile) {
+      <button
+        class="document-button"
+        mat-stroked-button
+        appUploadFile
+        [accept]="data.document.acceptedMimeTypes"
+        (file)="handleFileInput($event, 'copy')"
+      >
+        <mat-icon>cloud_upload</mat-icon>
+        <span>Încărcați documentul</span>
+      </button>
+    } @else {
+      <mat-spinner [diameter]="36"></mat-spinner>
+    }
+  </mat-dialog-content>
+}

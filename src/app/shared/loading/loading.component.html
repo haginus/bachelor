@@ -1,4 +1,7 @@
 <div class="blocking-container" [class.is-spinner]="type == 'spinner'">
-    <mat-progress-bar [color]="color" mode="indeterminate" *ngIf="type == 'bar'"></mat-progress-bar>
-    <mat-spinner [color]="color" diameter="48" *ngIf="type == 'spinner'"></mat-spinner>
+  @if(type === 'bar') {
+    <mat-progress-bar [color]="color" mode="indeterminate"></mat-progress-bar>
+  } @else if(type === 'spinner') {
+    <mat-spinner [color]="color" [diameter]="48"></mat-spinner>
+  }
 </div>

@@ -1,12 +1,18 @@
 import { Component, Input, OnChanges, ViewChild } from '@angular/core';
-import { MatTable } from '@angular/material/table';
+import { MatTable, MatTableModule } from '@angular/material/table';
 import { Paper, PaperGrade } from '../../services/auth.service';
 import { rowAnimation } from '../../row-animations';
+import { FixedPipe } from '../pipes/fixed.pipe';
 
 @Component({
   selector: 'app-paper-grade-table',
   templateUrl: './paper-grade-table.component.html',
   styleUrls: ['./paper-grade-table.component.scss'],
+  standalone: true,
+  imports: [
+    MatTableModule,
+    FixedPipe
+  ],
   animations: [
     rowAnimation,
   ]

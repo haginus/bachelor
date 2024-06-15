@@ -1,18 +1,40 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { AuthService, Paper, UserData } from '../../services/auth.service';
 import { Topic, TopicsService } from '../../services/topics.service';
 import { EditPaperResponse, StudentService } from '../../services/student.service';
 import { TeacherService } from '../../services/teacher.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatChipsModule } from '@angular/material/chips';
+import { AsyncPipe } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { LoadingComponent } from '../loading/loading.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @Component({
   selector: 'app-edit-paper',
   templateUrl: './edit-paper.component.html',
-  styleUrls: ['./edit-paper.component.scss']
+  styleUrls: ['./edit-paper.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    FlexLayoutModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatChipsModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatIconModule,
+    LoadingComponent,
+    AsyncPipe,
+  ]
 })
 export class EditPaperComponent implements OnInit {
 

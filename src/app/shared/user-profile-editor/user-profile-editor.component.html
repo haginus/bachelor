@@ -1,21 +1,24 @@
 <div class="profile-header">
   <div class="profile-picture" [ngClass]="{ 'no-photo': !(userProfile?.picture || profilePictureFile)}">
-    <div>
-      <label for="photo" class="change-photo">
-        <mat-icon>photo_camera</mat-icon>
-        <div class="text">
-          <span *ngIf="!userProfile || !userProfile.picture">
+    <div class="change-photo" appUploadFile (file)="handleFileChange($event)" accept="image/*">
+      <mat-icon>photo_camera</mat-icon>
+      <div class="text">
+        @if(!userProfile?.picture && !profilePictureFile) {
+          <span>
             Adăugați o poză
           </span>
-          <span *ngIf="userProfile?.picture">
+        } @else {
+          <span>
             Schimbați poza
           </span>
-        </div>
-      </label>
-      <input type="file" id="photo" hidden accept="image/*" (change)="handleFileChange($event.target)" />
+        }
+      </div>
     </div>
-    <img *ngIf="userProfile?.picture && !profilePictureFile" src="{{ userProfile.picture | apiUrl }}" />
-    <img *ngIf="profilePictureFile" [src]="base64Photo" />
+    @if(profilePictureFile) {
+      <img [src]="base64Photo" />
+    } @else if(userProfile?.picture) {
+      <img [src]="userProfile.picture | apiUrl" />
+    }
   </div>
 </div>
 
@@ -33,6 +36,8 @@
 </form>
 
 <div fxLayout="row" fxLayoutAlign="end">
-  <button mat-button (click)="resetForm()" *ngIf="showReset" [disabled]="loading">Resetați</button>
+  @if(showReset) {
+    <button mat-button (click)="resetForm()" [disabled]="loading">Resetați</button>
+  }
   <button mat-raised-button color="primary" (click)="saveProfile()" [disabled]="loading">Salvați profilul</button>
 </div>

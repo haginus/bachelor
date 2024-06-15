@@ -6,30 +6,44 @@ import { DocumentService } from '../../services/document.service';
 import { PaperDocument, SessionSettings } from '../../services/auth.service';
 import { USER_TYPES } from '../../lib/constants';
 import { PaperDocumentCategory, PaperDocumentTypes, PaperDocumentUploadBy } from '../../services/student.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-paper-document-list',
   templateUrl: './paper-document-list.component.html',
-  styleUrls: ['./paper-document-list.component.scss']
+  styleUrls: ['./paper-document-list.component.scss'],
+  standalone: true,
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatMenuModule,
+  ]
 })
 export class PaperDocumentListComponent implements OnChanges {
 
-  constructor(private snackbar: MatSnackBar, private dialog: MatDialog,
-    private document: DocumentService) { }
+  constructor(
+    private snackbar: MatSnackBar,
+    private dialog: MatDialog,
+    private document: DocumentService
+  ) { }
 
   @Input() requiredDocuments: PaperRequiredDocument[] = [];
   @Input() documents: PaperDocument[] = [];
-  // In what quality is the viewer of this list
+  /** In what quality is the viewer of this list */
   @Input() perspective: 'student' | 'teacher' | 'committee' | 'admin' = 'student';
-  // Paper ID (needed for teacher / committee to know where to upload the document)
+  /** Paper ID (needed for teacher / committee to know where to upload the document) */
   @Input() paperId: number;
   /** Whether the user can upload/remove documents. */
   @Input() canEdit: boolean = true;
   /** Session Settings needed to determine whether the user can upload certain docs. */
   @Input() sessionSettings: SessionSettings;
-  // Emit events when documents change (signed / copy uploaded)
+  /**  Emit events when documents change (signed / copy uploaded) */
   @Output() documentEvents = new EventEmitter<PaperDocumentEvent>();
-  // Output variable that tells whether all the documents are uploaded (by uploader and category)
+  /**  Output variable that tells whether all the documents are uploaded (by uploader and category) */
   @Output() areDocumentsUploaded = new EventEmitter<AreDocumentsUploaded>();
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -182,7 +196,7 @@ export class PaperDocumentListComponent implements OnChanges {
         paperId: this.paperId,
         perspective: this.perspective
       },
-      width: '100%',
+      width: '80%',
       maxWidth: '500px'
     });
     dialogRef.afterClosed().subscribe(document => {

@@ -1,57 +1,88 @@
-<div class="document-item" *ngFor="let document of requiredDocuments">
-  <div class="icon">
-    <mat-icon *ngIf="!documentMap[document.name].actionPending">description</mat-icon>
-    <mat-spinner diameter="24" *ngIf="documentMap[document.name].actionPending"></mat-spinner>
-  </div>
-  <div class="content">
-    <div class="title">{{document.title}}</div>
-    <div>
-      <span *ngIf="documentMap[document.name].nextAction == null || documentMap[document.name].nextAction == 'upload'">
-        Document lipsă
-        <span *ngIf="documentMap[document.name].uploadBy != perspective">
-          | Se încarcă de către {{ USER_TYPES[documentMap[document.name].uploadBy] }}
-        </span>
-      </span>
-      <span *ngIf="documentMap[document.name].nextAction == 'sign'">
-        Necesită semnătură
-      </span>
-      <span
-        *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].actualTypes.generated && !documentMap[document.name].requiredTypes.signed">
-        Document generat
-      </span>
-      <span *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].actualTypes.signed">
-        Document semnat
-      </span>
-      <span *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].actualTypes.copy">
-        Document încărcat
-      </span>
+@for(document of requiredDocuments; track document.name) {
+  <div class="document-item">
+    <div class="icon">
+      @if(!documentMap[document.name].actionPending) {
+        <mat-icon>description</mat-icon>
+      } @else {
+        <mat-spinner diameter="24"></mat-spinner>
+      }
     </div>
+    <div class="content">
+      <div class="title">{{document.title}}</div>
+      <div>
+        @if(documentMap[document.name].nextAction == null || documentMap[document.name].nextAction == 'upload') {
+          <span>
+            Document lipsă
+            @if(documentMap[document.name].uploadBy != perspective) {
+              <span>
+                | Se încarcă de către {{ USER_TYPES[documentMap[document.name].uploadBy] }}
+              </span>
+            }
+          </span>
+        }
+        @if(documentMap[document.name].nextAction == 'sign') {
+          <span>Necesită semnătură</span>
+        }
+        @if(documentMap[document.name].nextAction == 'view') {
+          @if(documentMap[document.name].actualTypes.generated && !documentMap[document.name].requiredTypes.signed) {
+            <span>Document generat</span>
+          }
+          @if(documentMap[document.name].actualTypes.signed) {
+            <span>Document semnat</span>
+          }
+          @if(documentMap[document.name].actualTypes.copy) {
+            <span>Document încărcat</span>
+          }
+        }
+      </div>
+    </div>
+    @if(documentMap[document.name].nextAction == 'view' && documentMap[document.name].uploadBy == perspective) {
+      <button
+        class="left-button"
+        mat-icon-button
+        matTooltip="Ștergeți documentul"
+        (click)="deleteDocument(documentMap[document.name])"
+        [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange"
+      >
+        <mat-icon>history</mat-icon>
+      </button>
+    }
+    @switch (documentMap[document.name].nextAction) {
+      @case ('view') {
+        <button
+          mat-stroked-button
+          (click)="viewDocument(documentMap[document.name])"
+          [disabled]="documentMap[document.name].actionPending"
+        >
+          Vizualizați
+        </button>
+      }
+      @case ('sign') {
+        <button
+          mat-stroked-button
+          (click)="openDocumentDialog('sign', document.name, documentMap[document.name].lastId)"
+          [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange"
+        >
+          Semnați
+        </button>
+      }
+      @case ('upload') {
+        <button
+          mat-stroked-button
+          (click)="openDocumentDialog('uploadCopy', document.name)"
+          [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange"
+        >
+          Încărcați
+        </button>
+      }
+    }
+    @if(perspective == 'admin' && canEdit) {
+      <button mat-icon-button [matMenuTriggerFor]="moreMenu" [matMenuTriggerData]="{ document: document }">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    }
   </div>
-  <button class="left-button" mat-icon-button matTooltip="Ștergeți documentul"
-    (click)="deleteDocument(documentMap[document.name])"
-    *ngIf="documentMap[document.name].nextAction == 'view' && documentMap[document.name].uploadBy == perspective"
-    [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange">
-    <mat-icon>history</mat-icon>
-  </button>
-  <button mat-stroked-button *ngIf="documentMap[document.name].nextAction == 'view'"
-    (click)="viewDocument(documentMap[document.name])" [disabled]="documentMap[document.name].actionPending">
-    Vizualizați
-  </button>
-  <button mat-stroked-button *ngIf="documentMap[document.name].nextAction == 'sign'"
-    (click)="openDocumentDialog('sign', document.name, documentMap[document.name].lastId)"
-    [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange">
-    Semnați
-  </button>
-  <button mat-stroked-button *ngIf="documentMap[document.name].nextAction == 'upload'"
-    (click)="openDocumentDialog('uploadCopy', document.name)"
-    [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange">
-    Încărcați
-  </button>
-  <button mat-icon-button [matMenuTriggerFor]="moreMenu" [matMenuTriggerData]="{document: document}"
-    *ngIf="perspective == 'admin' && canEdit">
-    <mat-icon>more_vert</mat-icon>
-  </button>
-</div>
+}
 
 <mat-menu #moreMenu="matMenu">
   <ng-template matMenuContent let-document="document">

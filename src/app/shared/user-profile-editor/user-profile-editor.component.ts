@@ -1,19 +1,42 @@
 import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validator, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validator, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { take } from 'rxjs/operators';
 import { AuthService, Profile } from '../../services/auth.service';
+import { NgClass } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ApiUrlPipe } from '../pipes/api-url';
+import { MatInputModule } from '@angular/material/input';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatButtonModule } from '@angular/material/button';
+import { UploadFileDirective } from '../directives/upload-file.directive';
 
 @Component({
   selector: 'app-user-profile-editor',
   templateUrl: './user-profile-editor.component.html',
-  styleUrls: ['./user-profile-editor.component.scss']
+  styleUrls: ['./user-profile-editor.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    FlexLayoutModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NgClass,
+    UploadFileDirective,
+    ApiUrlPipe,
+  ],
 })
 export class UserProfileEditorComponent implements OnInit {
 
-  constructor(private user: AuthService, private sb: MatSnackBar,
-    @Optional() private dialog: MatDialogRef<UserProfileEditorComponent>) { }
+  constructor(
+    private user: AuthService,
+    private sb: MatSnackBar,
+    @Optional() private dialog: MatDialogRef<UserProfileEditorComponent>
+  ) {}
 
   profileForm = new FormGroup({
     "bio": new FormControl(''),
@@ -59,8 +82,7 @@ export class UserProfileEditorComponent implements OnInit {
     });
   }
 
-  async handleFileChange(target: any) {
-    const file: File = target.files[0];
+  async handleFileChange(file: File) {
     this.profilePictureFile = file;
     this.base64Photo = await toBase64(file) as ArrayBuffer;
   }

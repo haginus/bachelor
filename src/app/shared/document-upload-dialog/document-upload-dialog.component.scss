@@ -1,23 +1,16 @@
-.title {
+.header {
+  padding: 24px;
+  padding-bottom: 0;
+
+  .title {
     margin-bottom: 4px;
+  }
 }
 
-input[type="file"] {
-    display: none;
+p {
+  color: #121;
 }
 
-label {
-    margin-bottom: 6px;
-}
-
-.button-container {
-    height: 48px;
-}
-
-.icon-button {
-    display: flex;
-    align-items: center;
-    mat-icon {
-        margin-right: 8px;
-    }
+.document-button {
+  margin-bottom: 12px;
 }
