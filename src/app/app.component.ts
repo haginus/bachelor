@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer, MatDrawerMode, MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators'
 import { routerFadeAnimation } from './animations';
-import { ProblemReportButtonComponent, ProblemReportComponent } from './components/problem-report/problem-report.component';
+import { ProblemReportButtonComponent } from './components/problem-report/problem-report.component';
 import { AuthService, SessionSettings, UserData } from './services/auth.service';
 import { UserProfileEditorComponent } from './shared/components/user-profile-editor/user-profile-editor.component';
 import { environment } from '../environments/environment';

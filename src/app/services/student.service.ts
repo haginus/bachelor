@@ -8,7 +8,7 @@ import { Topic } from './topics.service';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class StudentService {
 

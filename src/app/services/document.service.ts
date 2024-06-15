@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 import { AuthService, PaperDocument } from './auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class DocumentService {
 

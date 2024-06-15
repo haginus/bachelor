@@ -9,7 +9,7 @@ import { EditPaperResponse, OfferApplication } from './student.service';
 import { Topic } from './topics.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class TeacherService {
 

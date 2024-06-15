@@ -8,7 +8,7 @@ import { AuthService, Domain, Paper, SessionSettings, UserData, Committee, Commi
 import { Topic } from './topics.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class AdminService {
 

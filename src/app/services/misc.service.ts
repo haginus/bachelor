@@ -7,7 +7,7 @@ import { AuthService, Domain } from './auth.service';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class MiscService {
 
