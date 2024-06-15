@@ -1,14 +1,19 @@
 import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatDrawer, MatDrawerMode } from '@angular/material/sidenav';
-import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { MatDrawer, MatDrawerMode, MatSidenavModule } from '@angular/material/sidenav';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators'
 import { routerFadeAnimation } from './animations';
-import { ProblemReportComponent } from './components/problem-report/problem-report.component';
+import { ProblemReportButtonComponent, ProblemReportComponent } from './components/problem-report/problem-report.component';
 import { AuthService, SessionSettings, UserData } from './services/auth.service';
 import { UserProfileEditorComponent } from './shared/components/user-profile-editor/user-profile-editor.component';
 import { environment } from '../environments/environment';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 const SideWidth = 800;
@@ -18,7 +23,19 @@ const DEFAULT_TITLE = 'Finalizare studii';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  animations: [routerFadeAnimation]
+  animations: [routerFadeAnimation],
+  standalone: true,
+  imports: [
+    MatProgressSpinnerModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatDrawer,
+    MatSidenavModule,
+    RouterModule,
+    ProblemReportButtonComponent,
+  ],
 })
 
 export class AppComponent implements OnInit {
@@ -27,8 +44,12 @@ export class AppComponent implements OnInit {
   hideDrawer = false;
   hideToolbar = false;
 
-  constructor(private router: Router, private route: ActivatedRoute, private auth: AuthService,
-    private dialog: MatDialog) { }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private auth: AuthService,
+    private dialog: MatDialog
+  ) {}
 
   user: UserData | undefined = undefined;
   sessionSettings: SessionSettings;
@@ -97,10 +118,6 @@ export class AppComponent implements OnInit {
 
   editProfile() {
     this.dialog.open(UserProfileEditorComponent);
-  }
-
-  sendFeedback() {
-    this.dialog.open(ProblemReportComponent);
   }
 
   prepareRoute(outlet: RouterOutlet) {

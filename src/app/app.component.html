@@ -1,19 +1,25 @@
-<div class="flex-container align-center v-align-center fixed" *ngIf="loading">
-  <mat-spinner [diameter]="48"></mat-spinner>
-</div>
+@if(loading) {
+  <div class="flex-container align-center v-align-center fixed">
+    <mat-spinner [diameter]="48"></mat-spinner>
+  </div>
+}
 
-<div class="flex-container align-center v-align-center fixed" *ngIf="backendDown">
-  <h2>Platforma este indisponibilă</h2>
-  <p>Dacă problema persistă, contactați administratorul.</p>
-  <p></p>
-  <button mat-raised-button color="primary" (click)="reloadApp()">Reîncercați</button>
-</div>
+@if(backendDown) {
+  <div class="flex-container align-center v-align-center fixed">
+    <h2>Platforma este indisponibilă</h2>
+    <p>Dacă problema persistă, contactați administratorul.</p>
+    <p></p>
+    <button mat-raised-button color="primary" (click)="reloadApp()">Reîncercați</button>
+  </div>
+}
 
 <mat-menu #userMenu="matMenu">
-  <button mat-menu-item (click)="release()" *ngIf="user?.isImpersonated">
-    <mat-icon>undo</mat-icon>
-    <span>Opriți impersonarea</span>
-  </button>
+  @if(user?.isImpersonated) {
+    <button mat-menu-item (click)="release()">
+      <mat-icon>undo</mat-icon>
+      <span>Opriți impersonarea</span>
+    </button>
+  }
   <button mat-menu-item (click)="editProfile()">
     <mat-icon>person</mat-icon>
     <span>Profilul dvs.</span>
@@ -25,21 +31,28 @@
 </mat-menu>
 
 <div class="flex-container fullscreen main-container" [hidden]="loading">
-  <mat-toolbar *ngIf="!hideToolbar">
-    <button mat-icon-button matTooltip="Comutați meniul" *ngIf="!hideDrawer" (click)="drawer.toggle()">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <span class="toolbar-title">{{ title }}</span>
-    <span class="toolbar-spacer"></span>
-    <button mat-button class="user-preview-container" [matMenuTriggerFor]="userMenu">
-      <div class="user-name" fxHide.lt-sm *ngIf="user">
-        <div>{{user.firstName}} {{user.lastName}}</div>
-        <div *ngIf="user.student">Gr. {{ user.student?.group }}</div>
-      </div>
-      <mat-icon *ngIf="!user?.isImpersonated">person</mat-icon>
-      <mat-icon *ngIf="user?.isImpersonated">people</mat-icon>
-    </button>
-  </mat-toolbar>
+  @if(!hideToolbar) {
+    <mat-toolbar>
+      @if(!hideDrawer) {
+        <button mat-icon-button matTooltip="Comutați meniul" (click)="drawer.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
+      <span class="toolbar-title">{{ title }}</span>
+      <span class="toolbar-spacer"></span>
+      <button mat-button class="user-preview-container" [matMenuTriggerFor]="userMenu">
+        @if(user) {
+          <div class="user-name" fxHide.lt-sm>
+            <div>{{ user.firstName }} {{ user.lastName }}</div>
+            @if(user.student) {
+              <div>Gr. {{ user.student.group }}</div>
+            }
+          </div>
+        }
+        <mat-icon>{{ user?.isImpersonated ? 'people' : 'person' }}</mat-icon>
+      </button>
+    </mat-toolbar>
+  }
   <mat-drawer-container class="drawer-container">
     <mat-drawer #drawer [mode]="drawerMode" class="main-drawer">
       <div class="scroll-menu">
@@ -183,11 +196,13 @@
         }
       </div>
       <div class="drawer-footer">
-        <button mat-icon-button matTooltip="Lăsați feedback" (click)="sendFeedback()">
-          <mat-icon>feedback</mat-icon>
-        </button>
+        @defer {
+          <app-problem-report-button />
+        }
         <span class="flex-spacer"></span>
-        <em class="app-version" *ngIf="user?.type == 'admin'">v{{ appVersion }}</em>
+        @if(user?.type === 'admin') {
+          <em class="app-version">v{{ appVersion }}</em>
+        }
       </div>
     </mat-drawer>
 

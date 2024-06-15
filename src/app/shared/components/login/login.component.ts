@@ -1,22 +1,44 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
-import { RecaptchaComponent } from 'ng-recaptcha';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { RecaptchaComponent, RecaptchaModule } from 'ng-recaptcha';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../services/auth.service';
-import { ProblemReportComponent, ProblemReportDialogData } from '../../components/problem-report/problem-report.component';
+import { AuthService } from '../../../services/auth.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { LoadingComponent } from '../loading/loading.component';
+import { ProblemReportButtonComponent } from '../../../components/problem-report/problem-report.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    RecaptchaModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    ProblemReportButtonComponent,
+    LoadingComponent,
+    RouterLink,
+  ],
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
-  constructor(private auth: AuthService, private router: Router, private snackBar: MatSnackBar,
-    private route: ActivatedRoute, private dialog: MatDialog) { }
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.routeSub = this.route.queryParams.subscribe(params => {
@@ -83,14 +105,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.loading = false;
       if(result) {
         this.snackBar.open("E-mail de resetare a parolei a fost trimis.");
-      }
-    });
-  }
-
-  sendProblem() {
-    this.dialog.open<ProblemReportComponent, ProblemReportDialogData>(ProblemReportComponent, {
-      data: {
-        type: "data"
       }
     });
   }

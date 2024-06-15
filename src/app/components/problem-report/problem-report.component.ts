@@ -1,20 +1,45 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { AuthService, UserData } from '../../services/auth.service';
 import { MiscService } from '../../services/misc.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { DialogModule } from '@angular/cdk/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-problem-report',
   templateUrl: './problem-report.component.html',
-  styleUrls: ['./problem-report.component.scss']
+  styleUrls: ['./problem-report.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    FlexLayoutModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    LoadingComponent,
+  ],
 })
 export class ProblemReportComponent implements OnInit, OnDestroy {
 
-  constructor(@Inject(MAT_DIALOG_DATA) private data: ProblemReportDialogData, private dialog: MatDialogRef<ProblemReportComponent>,
-    private auth: AuthService, private misc: MiscService, private snackbar: MatSnackBar) { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private data: ProblemReportDialogData,
+    private dialog: MatDialogRef<ProblemReportComponent>,
+    private auth: AuthService,
+    private misc: MiscService,
+    private snackbar: MatSnackBar
+  ) {}
 
   problemReportForm = new FormGroup({
     type: new FormControl(this.data?.type, [Validators.required]),
@@ -73,4 +98,41 @@ export class ProblemReportComponent implements OnInit, OnDestroy {
 export interface ProblemReportDialogData {
   type?: string;
   email?: string;
+}
+
+@Component({
+  selector: 'app-problem-report-button',
+  template: `
+    @if(showText) {
+      <button mat-button (click)="openDialog()">
+        <mat-icon>feedback</mat-icon>
+        <span>Raportați o problemă</span>
+      </button>
+    } @else {
+      <button mat-icon-button (click)="openDialog()" matTooltip="Raportați o problemă">
+        <mat-icon>feedback</mat-icon>
+      </button>
+    }
+  `,
+  standalone: true,
+  imports: [
+    DialogModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+  ],
+})
+export class ProblemReportButtonComponent {
+  @Input() data?: ProblemReportDialogData;
+  @Input() showText: boolean = false;
+
+  constructor(
+    private dialog: MatDialog,
+  ) {}
+
+  openDialog() {
+    this.dialog.open<ProblemReportComponent, ProblemReportDialogData>(ProblemReportComponent, {
+      data: this.data,
+    });
+  }
 }

@@ -1,19 +1,36 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormGroupDirective, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormGroupDirective, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { LoadingComponent } from '../loading/loading.component';
+import { MatButtonModule } from '@angular/material/button';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
-  styleUrls: ['./change-password.component.scss']
+  styleUrls: ['./change-password.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    FlexLayoutModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    LoadingComponent,
+  ]
 })
 export class ChangePasswordComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private router: Router,
-    private auth: AuthService, private snackBar: MatSnackBar) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private auth: AuthService,
+  ) {}
 
   mode = "token";
   userEmail: string = null;

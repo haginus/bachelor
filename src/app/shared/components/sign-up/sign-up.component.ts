@@ -1,29 +1,58 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { RecaptchaComponent } from 'ng-recaptcha';
+import { Router, RouterLink } from '@angular/router';
+import { RecaptchaComponent, RecaptchaModule } from 'ng-recaptcha';
 import { Subscription } from 'rxjs';
-import { AuthService, Domain } from '../../services/auth.service';
-import { MiscService } from '../../services/misc.service';
-import { CNPValidator } from '../../validators/CNP-validator';
-import { CommonDialogComponent, CommonDialogData } from '../../shared/components/common-dialog/common-dialog.component';
-import { ProblemReportComponent, ProblemReportDialogData } from '../../components/problem-report/problem-report.component';
+import { AuthService, Domain } from '../../../services/auth.service';
+import { MiscService } from '../../../services/misc.service';
+import { CNPValidator } from '../../../validators/CNP-validator';
+import { CommonDialogComponent, CommonDialogData } from '../common-dialog/common-dialog.component';
+import { DOMAIN_TYPES } from '../../../lib/constants';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { LoadingComponent } from '../loading/loading.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
-  styleUrls: ['./sign-up.component.scss']
+  styleUrls: ['./sign-up.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    FlexLayoutModule,
+    RecaptchaModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    LoadingComponent,
+    RouterLink,
+  ],
 })
 export class SignUpComponent implements OnInit, OnDestroy {
 
-  constructor(private dialog: MatDialog, private auth: AuthService, private misc: MiscService, private router: Router) { }
+  constructor(
+    private dialog: MatDialog,
+    private auth: AuthService,
+    private misc: MiscService,
+    private router: Router
+  ) { }
 
   loading: boolean = false;
 
   @ViewChild('captcha') captchaComponent: RecaptchaComponent;
 
   captchaToken: string = null;
+
+  DOMAIN_TYPES = DOMAIN_TYPES;
 
   solvedCaptcha(captchaToken: string) {
     this.captchaToken = captchaToken;
@@ -89,14 +118,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
       }).afterClosed().subscribe(() => {
         this.router.navigate(['/']);
       });
-    });
-  }
-
-  sendProblem() {
-    this.dialog.open<ProblemReportComponent, ProblemReportDialogData>(ProblemReportComponent, {
-      data: {
-        type: "data"
-      }
     });
   }
 

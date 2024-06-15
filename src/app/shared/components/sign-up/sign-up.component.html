@@ -1,5 +1,7 @@
 <div class="login-container mat-elevation-z2">
-  <app-loading *ngIf="loading"></app-loading>
+  @if(loading) {
+    <app-loading></app-loading>
+  }
   <div class="image-container flex-container align-center logo">
     <img src="assets/img/fmi-logo.png" />
   </div>
@@ -73,11 +75,11 @@
           <mat-form-field appearance="outline">
             <mat-label>Domeniu</mat-label>
             <mat-select formControlName="domainId">
-              <mat-option *ngFor="let domain of domains" [value]="domain.id">
-                <span>{{domain.name}}</span>
-                <span *ngIf="domain.type == 'bachelor'"> (Licență)</span>
-                <span *ngIf="domain.type == 'master'"> (Master)</span>
-              </mat-option>
+              @for(domain of domains; track domain.id) {
+                <mat-option [value]="domain.id">
+                  {{ domain.name }} ({{ DOMAIN_TYPES[domain.type] }})
+                </mat-option>
+              }
             </mat-select>
           </mat-form-field>
         </div>
@@ -85,9 +87,11 @@
           <mat-form-field appearance="outline">
             <mat-label>Programul de studii</mat-label>
             <mat-select formControlName="specializationId">
-              <mat-option *ngFor="let specialization of chosenDomain?.specializations" [value]="specialization.id">
-                <span>{{specialization.name}}</span>
-              </mat-option>
+              @for(specialization of chosenDomain?.specializations; track specialization.id) {
+                <mat-option [value]="specialization.id">
+                  <span>{{ specialization.name }}</span>
+                </mat-option>
+              }
             </mat-select>
           </mat-form-field>
         </div>
@@ -128,7 +132,7 @@
       </div>
     </form>
 
-    <mat-divider class="divider"></mat-divider>
+    <div class="divider"></div>
     <div class="flex-container align-center">
       <router-link routerLink="/login">
         <button mat-button>

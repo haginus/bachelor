@@ -40,10 +40,10 @@
           </div>
         </form>
       }
-      <mat-divider class="divider"></mat-divider>
+      <div class="divider"></div>
 
       <div class="flex-container align-center">
-        <div *ngIf="view == 'login'">
+        @if(view === 'login') {
           <button mat-button (click)="changeView('forgotPassword')">
             <span>Ați uitat parola?</span>
           </button>
@@ -52,11 +52,11 @@
               <span>Creare cont student</span>
             </button>
           </router-link>
-        </div>
-
-        <button mat-button *ngIf="view == 'forgotPassword'" (click)="changeView('login')">
-          <span>Înapoi la autentificare</span>
-        </button>
+        } @else if(view === 'forgotPassword') {
+          <button mat-button (click)="changeView('login')">
+            <span>Înapoi la autentificare</span>
+          </button>
+        }
       </div>
     </div>
   </div>
@@ -64,6 +64,8 @@
     <span>Facultatea de Matematică și Informatică,</span>
     <span>&nbsp;</span>
     <span>Universitatea din București</span> <br>
-    <a class="link" (click)="sendProblem()">Raportați o problemă</a>
+    @defer {
+      <app-problem-report-button [showText]="true" />
+    }
   </div>
 </div>
