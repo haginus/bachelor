@@ -1,25 +1,50 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { combineLatest, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { AreDocumentsUploaded, PaperDocumentEvent } from '../../../shared/components/paper-document-list/paper-document-list.component';
+import { AreDocumentsUploaded, PaperDocumentEvent, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { EditPaperComponent } from '../../../shared/components/edit-paper/edit-paper.component';
 import { StudentExtraDataEditorComponent } from '../../dialogs/student-extra-data-editor/student-extra-data-editor.component';
 import { PaperRequiredDocument, StudentExtraData, StudentService } from '../../../services/student.service';
 import { AuthService, Paper, SessionSettings } from '../../../services/auth.service';
 import { PAPER_TYPES } from '../../../lib/constants';
 import { inclusiveDate, parseDate } from '../../../lib/utils';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { UserSnippetComponent } from '../../../shared/components/user-snippet/user-snippet.component';
+import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-student-paper',
   templateUrl: './paper.component.html',
-  styleUrls: ['./paper.component.scss']
+  styleUrls: ['./paper.component.scss'],
+  standalone: true,
+  imports: [
+    MatDialogModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressBarModule,
+    LoadingComponent,
+    UserSnippetComponent,
+    PaperDocumentListComponent,
+    NgClass,
+    DecimalPipe,
+    DatePipe,
+  ],
 })
 export class StudentPaperComponent implements OnInit, OnDestroy {
 
-  constructor(private dialog: MatDialog, private student: StudentService, private snackbar: MatSnackBar,
-    private auth: AuthService, private cd: ChangeDetectorRef) { }
+  constructor(
+    private dialog: MatDialog,
+    private student: StudentService,
+    private auth: AuthService,
+    private cd: ChangeDetectorRef
+  ) {}
 
   PAPER_TYPES = PAPER_TYPES;
 
@@ -50,7 +75,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
     this.areDocumentsUploaded = event.byUploader.student;
     this._checkSubmissionPeriod();
     this.deadlinePassed = (!this.canUploadSecretaryFiles && !event.byUploaderCategory.student.secretary_files) ||
-                          (!this.canUploadPaperFiles && !event.byUploaderCategory.student.paper_files)
+      (!this.canUploadPaperFiles && !event.byUploaderCategory.student.paper_files);
     this.cd.detectChanges();
   }
 

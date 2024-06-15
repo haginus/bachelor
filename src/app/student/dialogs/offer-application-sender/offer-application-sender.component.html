@@ -1,6 +1,8 @@
-<div class="loading-shade" *ngIf="isLoadingQuery">
-  <mat-progress-bar mode="query"></mat-progress-bar>
-</div>
+@if(isLoadingQuery) {
+  <div class="loading-shade">
+    <mat-progress-bar mode="query"></mat-progress-bar>
+  </div>
+}
 
 <h2 mat-dialog-title>Aplicați la această ofertă</h2>
 

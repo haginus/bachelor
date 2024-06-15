@@ -1,7 +1,9 @@
-<div class="loading-shade" *ngIf="isSavingData">
-  <mat-spinner diameter="48" color="accent"></mat-spinner>
-  <div class="message">Se salveză datele...</div>
-</div>
+@if(isSavingData) {
+  <div class="loading-shade">
+    <mat-spinner diameter="48" color="accent"></mat-spinner>
+    <div class="message">Se salveză datele...</div>
+  </div>
+}
 
 <h2 mat-dialog-title>Completați datele necesare</h2>
 
@@ -144,7 +146,7 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="center">
-  <button mat-raised-button [disabled]="studentDataForm.invalid" (click)="saveData()">
+  <button mat-stroked-button [disabled]="studentDataForm.invalid" (click)="saveData()">
     Salvați
   </button>
 </mat-dialog-actions>

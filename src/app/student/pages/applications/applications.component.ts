@@ -3,17 +3,27 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { OfferApplication, StudentService } from '../../../services/student.service';
-import { ApplicationListActions } from '../../../shared/components/application-list/application-list.component';
+import { ApplicationListActions, ApplicationListComponent } from '../../../shared/components/application-list/application-list.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-student-applications',
   templateUrl: './applications.component.html',
-  styleUrls: ['./applications.component.scss']
+  styleUrls: ['./applications.component.scss'],
+  standalone: true,
+  imports: [
+    LoadingComponent,
+    ApplicationListComponent,
+  ]
 })
 export class StudentApplicationsComponent implements OnInit {
 
-  constructor(private student: StudentService, private snackbar: MatSnackBar,
-    private route: ActivatedRoute, private router: Router) { }
+  constructor(
+    private student: StudentService,
+    private snackbar: MatSnackBar,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   applications: OfferApplication[] = []
   isLoadingApplications: boolean = true;

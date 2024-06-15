@@ -1,6 +1,6 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,16 +8,39 @@ import { Topic, TopicsService } from '../../../services/topics.service';
 import { AuthService, UserData } from '../../../services/auth.service';
 import { FUNDING_FORMS, STUDY_FORMS } from '../../../lib/constants';
 import { ProblemReportComponent, ProblemReportDialogData } from '../../../components/problem-report/problem-report.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatListModule } from '@angular/material/list';
+import { UserProfileEditorComponent } from '../../../shared/components/user-profile-editor/user-profile-editor.component';
+import { AsyncPipe, TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'student-setup',
   templateUrl: './student-setup.component.html',
-  styleUrls: ['./student-setup.component.scss']
+  styleUrls: ['./student-setup.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatStepperModule,
+    MatListModule,
+    UserProfileEditorComponent,
+    TitleCasePipe,
+    AsyncPipe,
+  ],
 })
 export class StudentSetupComponent implements OnInit, OnDestroy {
 
-  constructor(private topicsService: TopicsService, private userService: AuthService, private router: Router,
-    private dialog: MatDialog) { }
+  constructor(
+    private topicsService: TopicsService,
+    private userService: AuthService,
+    private router: Router,
+    private dialog: MatDialog
+  ) {}
 
   userObservable: any;
   loadingUser: boolean = true;

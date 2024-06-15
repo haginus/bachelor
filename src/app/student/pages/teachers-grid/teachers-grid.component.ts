@@ -1,24 +1,54 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { debounceTime, map, switchMap } from 'rxjs/operators';
 import { OfferApplicationSenderComponent } from '../../dialogs/offer-application-sender/offer-application-sender.component';
 import { Topic, TopicsService } from '../../../services/topics.service';
 import { GetTeacherOffersFilters, Offer, StudentService, TeacherOffers } from '../../../services/student.service';
 import { AuthService } from '../../../services/auth.service';
 import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { UserSnippetComponent } from '../../../shared/components/user-snippet/user-snippet.component';
 
 @Component({
   selector: 'student-teachers-grid',
   templateUrl: './teachers-grid.component.html',
-  styleUrls: ['./teachers-grid.component.scss']
+  styleUrls: ['./teachers-grid.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatProgressBarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatDividerModule,
+    UserSnippetComponent,
+  ],
 })
-export class StundentTeachersGridComponent implements OnInit, OnDestroy {
+export class StudentTeachersGridComponent implements OnInit, OnDestroy {
 
-  constructor(private topicService: TopicsService, private studentService: StudentService, private auth: AuthService,
-    private dialog: MatDialog, private route: ActivatedRoute) { }
+  constructor(
+    private topicService: TopicsService,
+    private studentService: StudentService,
+    private auth: AuthService,
+    private dialog: MatDialog,
+    private route: ActivatedRoute
+  ) {}
 
   mode: 'all' | 'suggested';
   topics: Topic[] = []
