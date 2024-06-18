@@ -85,25 +85,6 @@ export class StudentService {
       );
   }
 
-  editPaper(title: string, description: string, topicIds: number[]): Observable<EditPaperResponse> {
-    const url = `${environment.apiUrl}/student/paper/edit`
-    return this.http
-      .post<EditPaperResponse>(url, { title, description, topicIds }, this.auth.getPrivateHeaders())
-      .pipe(
-        catchError(this.handleError<EditPaperResponse>('editPaper', { success: false }))
-      );
-  }
-
-  submitPaper(submit: boolean): Observable<boolean> {
-    const url = `${environment.apiUrl}/student/paper/submit`
-    return this.http
-      .post<any>(url, { submit }, this.auth.getPrivateHeaders())
-      .pipe(
-        map(_ => true),
-        catchError(this.handleError<boolean>('submitPaper', false))
-      );
-  }
-
   getExtraData(): Observable<StudentExtraData> {
     const url = `${environment.apiUrl}/student/extra-data`
     return this.http
@@ -192,10 +173,6 @@ export interface GetTeacherOffersFilters {
 export interface PostResponse {
   success?: boolean,
   error?: string
-}
-
-export interface EditPaperResponse extends PostResponse {
-  documentsGenerated?: boolean;
 }
 
 export interface PaperDocumentTypes {

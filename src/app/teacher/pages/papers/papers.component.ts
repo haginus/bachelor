@@ -11,7 +11,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { BehaviorSubject, of, Subscription } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AddPaperComponent } from '../../dialogs/add-paper/add-paper.component';
 import { TeacherService } from '../../../services/teacher.service';
@@ -21,7 +21,6 @@ import { PAPER_TYPES } from '../../../lib/constants';
 import { inclusiveDate, parseDate } from '../../../lib/utils';
 import { AreDocumentsUploaded, PaperDocumentEvent, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { EditPaperComponent } from '../../../shared/components/edit-paper/edit-paper.component';
-import { EditPaperResponse } from '../../../services/student.service';
 import { CommonDialogComponent, CommonDialogData } from '../../../shared/components/common-dialog/common-dialog.component';
 import { detailExpand, rowAnimation } from '../../../row-animations';
 import { MatButtonModule } from '@angular/material/button';
@@ -35,6 +34,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { DecimalPipe, KeyValuePipe, TitleCasePipe } from '@angular/common';
 import { UserSnippetComponent } from '../../../shared/components/user-snippet/user-snippet.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { PapersService } from '../../../services/papers.service';
 
 @Component({
   selector: 'app-papers',
@@ -71,6 +71,7 @@ export class TeacherPapersComponent
 {
   constructor(
     private teacher: TeacherService,
+    private readonly papersService: PapersService,
     private cd: ChangeDetectorRef,
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
@@ -193,15 +194,13 @@ export class TeacherPapersComponent
   editPaper(paper: Paper) {
     const dialogRef = this.dialog.open<
       EditPaperComponent,
-      Paper,
-      EditPaperResponse
+      Paper
     >(EditPaperComponent, {
       data: paper,
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.success) {
         this.refreshResults();
-        this.snackbar.open('Lucrearea a fost salvată.');
         if (result.documentsGenerated) {
           this.snackbar.open(
             'Documente noi au fost generate în urma modificărilor. Cereți studentului să le semneze.',
@@ -213,7 +212,7 @@ export class TeacherPapersComponent
     });
   }
 
-  unsubmitPaper(paper: Paper) {
+  async unsubmitPaper(paper: Paper) {
     let dialogRef = this.dialog.open<
       CommonDialogComponent,
       CommonDialogData,
@@ -223,19 +222,20 @@ export class TeacherPapersComponent
         title: 'Anulați înscrierea?',
         content: 'Sunteți sigur că doriți să anulați înscrierea?',
         actions: [
-          { name: 'Anulați', value: false },
+          { name: 'Înapoi', value: false },
           { name: 'Anulați înscrierea', value: true },
         ],
       },
     });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (!result) return;
-      this.teacher.unsubmitPaper(paper.id).subscribe((result) => {
-        if (!result) return;
-        this.refreshResults();
-        this.snackbar.open('Înscrierea a fost anulată.');
-      });
-    });
+    const result = await firstValueFrom(dialogRef.afterClosed());
+    if (!result) return;
+    const isSuccessful = await firstValueFrom(
+      this.papersService.unsubmitPaper(paper.id)
+    );
+    if (isSuccessful) {
+      this.refreshResults();
+      this.snackbar.open('Înscrierea a fost anulată.');
+    }
   }
 
   removePaper(paper: Paper) {

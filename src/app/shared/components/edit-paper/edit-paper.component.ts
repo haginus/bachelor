@@ -2,12 +2,10 @@ import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { AuthService, Paper, UserData } from '../../../services/auth.service';
 import { Topic, TopicsService } from '../../../services/topics.service';
-import { EditPaperResponse, StudentService } from '../../../services/student.service';
-import { TeacherService } from '../../../services/teacher.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
@@ -16,6 +14,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { LoadingComponent } from '../loading/loading.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { PapersService } from '../../../services/papers.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-paper',
@@ -41,9 +41,9 @@ export class EditPaperComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public paper: Paper,
     private dialog: MatDialogRef<EditPaperComponent>,
+    private snackBar: MatSnackBar,
     private topic: TopicsService,
-    private student: StudentService,
-    private teacher: TeacherService,
+    private papersService: PapersService,
     private auth: AuthService
   ) {
     this.filteredTopics = this.paperForm.get("topics").valueChanges.pipe(
@@ -110,28 +110,26 @@ export class EditPaperComponent implements OnInit {
     this.paperForm.get("topics").setValue(null);
   }
 
-  savePaper() {
-    const title = this.paperForm.get("title").value as string;
-    const description = this.paperForm.get("description").value as string;
+  async savePaper() {
+    const title = this.paperForm.get("title").value;
+    const description = this.paperForm.get("description").value;
     const topicIds = this.selectedTopics.map(topic => topic.id);
     this.isLoadingQuery = true;
-    const params = [title, description, topicIds] as const;
-    let action: Observable<EditPaperResponse>;
-    switch(this.user.type) {
-      case "student":
-        action = this.student.editPaper(...params);
-        break;
-      case "teacher":
-        action = this.teacher.editPaper(this.paper.id, ...params);
-        break;
-    }
-    let sub = action.subscribe(result => {
+    try {
+      const result = await firstValueFrom(
+        this.papersService.editPaper(this.paper.id, { title, description, topicIds })
+      );
       if(result.success) {
+        let snackMessage = "Lucrarea a fost salvată.";
+        if(result.documentsGenerated) {
+          snackMessage += " Documentele au fost regenerate.";
+        }
+        this.snackBar.open(snackMessage, null, { duration: 8000 });
         this.dialog.close(result);
       }
+    } finally {
       this.isLoadingQuery = false;
-      sub.unsubscribe();
-    });
+    }
   }
 
   private _filter(topicName: string): Topic[] {

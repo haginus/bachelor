@@ -103,10 +103,17 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close *ngIf="data.mode != 'view'">Anulați</button>
-  <button mat-button mat-dialog-close *ngIf="data.mode == 'view'">Închideți</button>
-  <button mat-button [mat-dialog-close]="addStudent()" [disabled]="studentForm.invalid"
-    *ngIf="data.mode == 'create'">Adăugați</button>
-  <button mat-button [mat-dialog-close]="editStudent()" [disabled]="studentForm.invalid"
-    *ngIf="data.mode == 'edit'">Salvați</button>
+  @if(data.mode != 'view') {
+    <button mat-button mat-dialog-close>Anulați</button>
+  } @else {
+    <button mat-button mat-dialog-close>Închideți</button>
+  }
+  @if(data.mode != 'create') {
+    <button mat-button (click)="editStudentExtraData()">Editați datele suplimentare</button>
+  }
+  @if(data.mode === 'create') {
+    <button mat-button [mat-dialog-close]="addStudent()" [disabled]="studentForm.invalid">Adăugați</button>
+  } @else if(data.mode === 'edit') {
+    <button mat-button [mat-dialog-close]="editStudent()" [disabled]="studentForm.invalid">Salvați</button>
+  }
 </mat-dialog-actions>

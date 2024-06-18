@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { AuthService, Committee, Domain, Paper, PaperDocument, UserData } from './auth.service';
-import { EditPaperResponse, OfferApplication } from './student.service';
+import { OfferApplication } from './student.service';
 import { Topic } from './topics.service';
 
 @Injectable({
@@ -134,15 +134,6 @@ export class TeacherService {
       )
   }
 
-  editPaper(paperId: number, title: string, description: string, topicIds: number[]): Observable<EditPaperResponse> {
-    const url = `${environment.apiUrl}/teacher/papers/edit`
-    return this.http
-      .post<EditPaperResponse>(url, { paperId, title, description, topicIds }, this.auth.getPrivateHeaders())
-      .pipe(
-        catchError(this.handleError<EditPaperResponse>('editPaper', { success: false }))
-      );
-  }
-
   getStudents(firstName?: string, lastName?: string, email?: string, domainId?: number): Observable<UserData[]> {
     let url = `${environment.apiUrl}/teacher/students?`;
     if(firstName) {
@@ -187,17 +178,6 @@ export class TeacherService {
       .pipe(
         map(_ => true),
         catchError(this.handleError<boolean>('removePaper', false))
-      );
-  }
-
-  unsubmitPaper(paperId: number) {
-    const url = `${environment.apiUrl}/teacher/papers/unsubmit`;
-    const data = { paperId };
-    return this.http
-      .post<any>(url, data, this.auth.getPrivateHeaders())
-      .pipe(
-        map(_ => true),
-        catchError(this.handleError<boolean>('unsubmitPaper', false))
       );
   }
 

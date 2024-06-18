@@ -1,11 +1,10 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { combineLatest, of, Subscription } from 'rxjs';
+import { combineLatest, firstValueFrom, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AreDocumentsUploaded, PaperDocumentEvent, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { EditPaperComponent } from '../../../shared/components/edit-paper/edit-paper.component';
-import { StudentExtraDataEditorComponent } from '../../dialogs/student-extra-data-editor/student-extra-data-editor.component';
+import { StudentExtraDataEditorComponent, StudentExtraDataEditorData } from '../../../shared/components/student-extra-data-editor/student-extra-data-editor.component';
 import { PaperRequiredDocument, StudentExtraData, StudentService } from '../../../services/student.service';
 import { AuthService, Paper, SessionSettings } from '../../../services/auth.service';
 import { PAPER_TYPES } from '../../../lib/constants';
@@ -17,6 +16,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 import { UserSnippetComponent } from '../../../shared/components/user-snippet/user-snippet.component';
 import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { PapersService } from '../../../services/papers.service';
 
 @Component({
   selector: 'app-student-paper',
@@ -42,6 +42,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   constructor(
     private dialog: MatDialog,
     private student: StudentService,
+    private readonly papersService: PapersService,
     private auth: AuthService,
     private cd: ChangeDetectorRef
   ) {}
@@ -119,9 +120,12 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
       });
   }
 
-  editStudentExtraData() {
+  async editStudentExtraData() {
     const dialogRef = this.dialog.open(StudentExtraDataEditorComponent, {
-      data: this.studentExtraData,
+      data: {
+        studentExtraData: this.studentExtraData,
+        student: await firstValueFrom(this.auth.userData),
+      } satisfies StudentExtraDataEditorData
     });
 
     dialogRef.afterClosed().subscribe(data => {
@@ -134,7 +138,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
             }
             return combineLatest([of(null), of([])]);
           })
-        ).subscribe( ([paper, requiredDocuments ]) => {
+        ).subscribe(([paper, requiredDocuments]) => {
           if(paper) {
             this.studentExtraData = data;
             this.paper = paper;
@@ -159,14 +163,15 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
     })
   }
 
-  submitPaper(submit: boolean) {
+  async submitPaper(submit: boolean) {
     this.isLoadingData = true;
-    this.student.submitPaper(submit).subscribe(result => {
-      if(result) {
-        this.getData();
-      } else {
-        this.isLoadingData = false;
-      }
-    });
+    const action = submit
+      ? this.papersService.submitPaper(this.paper.id)
+      : this.papersService.unsubmitPaper(this.paper.id);
+    const result = await firstValueFrom(action);
+    this.isLoadingData = false;
+    if(result) {
+      this.getData();
+    }
   }
 }

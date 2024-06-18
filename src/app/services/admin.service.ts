@@ -6,6 +6,7 @@ import { catchError, first, map, retry, startWith, switchMap, takeWhile } from '
 import { environment } from '../../environments/environment';
 import { AuthService, Domain, Paper, SessionSettings, UserData, Committee, CommitteeMember, PaperType, SignUpRequest } from './auth.service';
 import { Topic } from './topics.service';
+import { StudentExtraData } from './student.service';
 
 @Injectable({
   providedIn: 'any'
@@ -73,6 +74,14 @@ export class AdminService {
       studyForm, fundingForm, matriculationYear };
     return this.http.post<UserData>(url, body, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("editStudent", null))
+    );
+  }
+
+  editStudentExtraData(id: number, data: StudentExtraData): Observable<boolean> {
+    const url = `${environment.apiUrl}/admin/students/${id}/extra-data`;
+    return this.http.post<{ success: boolean }>(url, data, this.auth.getPrivateHeaders()).pipe(
+      map(_ => true),
+      catchError(this.handleError<boolean>('editStudentExtraData', false))
     );
   }
 

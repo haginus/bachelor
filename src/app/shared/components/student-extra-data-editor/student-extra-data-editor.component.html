@@ -8,6 +8,15 @@
 <h2 mat-dialog-title>Completați datele necesare</h2>
 
 <mat-dialog-content class="mat-typography">
+  @if(studentExtraData) {
+    <div class="tip-card translucent">
+      <mat-icon class="tip-icon">warning_amber</mat-icon>
+      <div class="tip-card-content">
+        Editarea datelor suplimentare va duce la regenerarea documentelor necesare înscrierii, acestea
+        trebuind semnate din nou.
+      </div>
+    </div>
+  }
   <form [formGroup]="studentDataForm">
     <div class="section-header">Date personale</div>
     <div fxLayout="row grid" fxLayoutGap="10px grid">
@@ -149,8 +158,11 @@
     </div>
   </form>
 </mat-dialog-content>
-<mat-dialog-actions align="center">
-  <button mat-stroked-button [disabled]="studentDataForm.invalid" (click)="saveData()">
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>
+    Anulați
+  </button>
+  <button mat-button color="primary" [disabled]="studentDataForm.invalid" (click)="saveData()">
     Salvați
   </button>
 </mat-dialog-actions>

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { AuthService, UserData } from '../../../services/auth.service';
+import { UserData } from '../../../services/auth.service';
 import { StudentExtraData } from '../../../services/student.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -9,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-student-extra-data-editor',
@@ -20,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
     FlexLayoutModule,
     MatDialogModule,
     MatButtonModule,
+    MatIconModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -29,11 +31,11 @@ import { MatButtonModule } from '@angular/material/button';
 export class StudentExtraDataEditorComponent implements OnInit {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private dialogData: StudentExtraData,
-    private auth: AuthService,
+    @Inject(MAT_DIALOG_DATA) dialogData: StudentExtraDataEditorData,
     private dialog: MatDialogRef<StudentExtraDataEditorComponent>
   ) {
-    this.studentExtraData = this.dialogData;
+    this.studentExtraData = dialogData.studentExtraData;
+    this.userData = dialogData.student;
   }
 
   studentExtraData: StudentExtraData;
@@ -65,17 +67,16 @@ export class StudentExtraDataEditorComponent implements OnInit {
       "floor": new FormControl(null),
       "apartment": new FormControl(null),
     })
-  })
+  });
 
   ngOnInit(): void {
-    this.auth.userData.subscribe(data => {
-      this.userData = data;
-    })
     if(this.studentExtraData) {
       try {
-        this.studentDataForm.setValue(this.studentExtraData as any);
+        this.studentDataForm.patchValue(this.studentExtraData as any);
         this.studentDataForm.markAllAsTouched();
-      } catch(err) { }
+      } catch(err) {
+        console.error(err);
+      }
     }
   }
 
@@ -86,4 +87,9 @@ export class StudentExtraDataEditorComponent implements OnInit {
     this.dialog.close(this.studentExtraData);
   }
 
+}
+
+export interface StudentExtraDataEditorData {
+  studentExtraData: StudentExtraData | null;
+  student: UserData;
 }

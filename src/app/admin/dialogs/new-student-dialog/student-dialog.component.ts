@@ -1,10 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { AdminService } from '../../../services/admin.service';
 import { Domain, UserData } from '../../../services/auth.service';
 import { CNPValidator } from '../../../validators/CNP-validator';
+import { StudentExtraDataEditorComponent, StudentExtraDataEditorData } from '../../../shared/components/student-extra-data-editor/student-extra-data-editor.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-student-dialog',
@@ -13,7 +15,12 @@ import { CNPValidator } from '../../../validators/CNP-validator';
 })
 export class StudentDialogComponent implements OnInit {
 
-  constructor(private admin: AdminService, @Inject(MAT_DIALOG_DATA) public data: StudentDialogData) { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: StudentDialogData,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    private admin: AdminService,
+  ) { }
 
   domainSubscrition: Subscription;
   loadingDomains: boolean = true;;
@@ -121,6 +128,29 @@ export class StudentDialogComponent implements OnInit {
       studyForm, fundingForm, matriculationYear);
   }
 
+  async editStudentExtraData() {
+    try {
+      this.isLoadingData = true;
+      const user = await firstValueFrom(this.admin.getStudentUser(this.data.data!.id));
+      const dialogRef = this.dialog.open(StudentExtraDataEditorComponent, {
+        data: {
+          studentExtraData: user.student!.studentExtraDatum,
+          student: user
+        } satisfies StudentExtraDataEditorData
+      });
+      const studentExtraData = await firstValueFrom(dialogRef.afterClosed());
+      if(!studentExtraData) return;
+      const result = await firstValueFrom(this.admin.editStudentExtraData(user.id, studentExtraData));
+      if(result) {
+        this.snackBar.open("Datele suplimentare au fost salvate.");
+      }
+    } catch(err) {
+      console.error(err);
+    } finally {
+      this.isLoadingData = false;
+    }
+  }
+
   ngOnDestroy(): void {
     this.domainSubscrition.unsubscribe();
   }
@@ -128,6 +158,6 @@ export class StudentDialogComponent implements OnInit {
 
 export interface StudentDialogData {
   mode: "view" | "create" | "edit";
-  data?: UserData,
-  userId: number
+  data?: UserData;
+  userId: number;
 }
