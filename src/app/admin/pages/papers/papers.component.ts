@@ -6,7 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
-import { BehaviorSubject, merge, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, merge, Observable, of, Subscription } from 'rxjs';
 import { debounceTime, startWith, switchMap } from 'rxjs/operators';
 import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
 import { PaperValidationDialogComponent, PaperValidationDialogData } from '../../dialogs/paper-validation-dialog/paper-validation-dialog.component';
@@ -15,6 +15,8 @@ import { Paper } from '../../../services/auth.service';
 import { DOMAIN_TYPES, PAPER_TYPES, STUDY_FORMS } from '../../../lib/constants';
 import { AreDocumentsUploaded } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { detailExpand, rowAnimation } from '../../../row-animations';
+import { PapersService } from '../../../services/papers.service';
+import { EditPaperComponent } from '../../../shared/components/edit-paper/edit-paper.component';
 
 @Component({
   selector: 'app-papers',
@@ -27,15 +29,19 @@ import { detailExpand, rowAnimation } from '../../../row-animations';
 })
 export class AdminPapersComponent implements OnInit, AfterViewInit {
 
-  constructor(private admin: AdminService, private cd: ChangeDetectorRef, private dialog: MatDialog,
-    private snackbar: MatSnackBar) { }
+  constructor(
+    private admin: AdminService,
+    private readonly papersService: PapersService,
+    private cd: ChangeDetectorRef,
+    private dialog: MatDialog,
+    private snackbar: MatSnackBar
+  ) { }
 
   displayedColumns: string[] = ['status', 'id', 'title', 'type', 'student', 'teacher', 'committee'];
-  expandedPaper: Paper | null;
+  expandedPaperId: string | null;
   resultsLength: number;
   isLoadingResults: boolean = true;
   data: ExtendedPaper[] = [];
-
 
   performedActions: BehaviorSubject<string> = new BehaviorSubject('');
   paperSubscription: Subscription;
@@ -76,8 +82,13 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
       switchMap(() => {
         this.isLoadingResults = true;
         const filter = this.parseFilter();
-        return this.admin.getPapers(this.sort.active, this.sort.direction.toUpperCase(),
-          this.paginator.pageIndex, this.paginator.pageSize, filter);
+        return this.admin.getPapers(
+          this.sort.active,
+          this.sort.direction.toUpperCase(),
+          this.paginator.pageIndex,
+          this.paginator.pageSize,
+          filter
+        );
       }),
     )
    .subscribe(papers => {
@@ -137,14 +148,37 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
     this.cd.detectChanges();
   }
 
-  submitPaper(paper: ExtendedPaper, submit = true) {
+  async submitPaper(paper: ExtendedPaper, submit = true) {
     paper.isLoading = true;
-    this.admin.submitPaper(paper.id, submit).subscribe(result => {
-      if(result) {
-        paper.submitted = submit;
-        this.snackbar.open(submit ? 'Lucrare înscrisă.' : 'Înscriere anulată.');
+    const action = submit
+      ? this.papersService.submitPaper(paper.id)
+      : this.papersService.unsubmitPaper(paper.id);
+    const result = await firstValueFrom(action);
+    paper.isLoading = false;
+    if(result) {
+      paper.submitted = submit;
+      this.snackbar.open(submit ? 'Lucrare înscrisă.' : 'Înscriere anulată.');
+    }
+  }
+
+  editPaper(paper: Paper) {
+    const dialogRef = this.dialog.open<
+      EditPaperComponent,
+      Paper
+    >(EditPaperComponent, {
+      data: paper,
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.success) {
+        this.refreshResults();
+        if (result.documentsGenerated) {
+          this.snackbar.open(
+            'Documente noi au fost generate în urma modificărilor. Cereți studentului să le semneze.',
+            null,
+            { duration: 10000 }
+          );
+        }
       }
-      paper.isLoading = false;
     });
   }
 

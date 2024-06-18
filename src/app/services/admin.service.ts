@@ -383,14 +383,6 @@ export class AdminService {
     );
   }
 
-  submitPaper(paperId: number, submit: boolean): Observable<boolean> {
-    const url = `${environment.apiUrl}/admin/papers/submit`;
-    return this.http.post<any>(url, { paperId, submit }, this.auth.getPrivateHeaders()).pipe(
-      map(_ => true),
-      catchError(this.handleError<boolean>('submitPaper', false))
-    );
-  }
-
   /** Validate/Invalidate a paper by its ID. */
   validatePaper(paperId: number, validate: boolean, generalAverage?: number): Observable<boolean> {
     const url = `${environment.apiUrl}/admin/papers/validate`;

@@ -1,18 +1,21 @@
 <mat-menu #paperMenu="matMenu">
   <ng-template matMenuContent let-paper="paper">
-    <!-- <button mat-menu-item (click)="editPaper(paper)" [disabled]="!canEditPaper(paper)">
-            <mat-icon>edit</mat-icon>
-            <span>Editați lucrarea</span>
-        </button> -->
-    <button *ngIf="paper.submitted" [disabled]="paper.isValid != null" mat-menu-item
-      (click)="submitPaper(paper, false)">
-      <mat-icon>close</mat-icon>
-      <span>Anulați înscrierea</span>
+    <button mat-menu-item (click)="editPaper(paper)" [disabled]="paper.isValid != null">
+      <mat-icon>edit</mat-icon>
+      <span>Editați lucrarea</span>
     </button>
-    <button *ngIf="!paper.submitted" mat-menu-item (click)="submitPaper(paper, true)">
-      <mat-icon>send</mat-icon>
-      <span>Înscrieți lucrarea</span>
-    </button>
+    @if(paper.submitted) {
+      <button mat-menu-item [disabled]="paper.isValid != null" (click)="submitPaper(paper, false)">
+        <mat-icon>close</mat-icon>
+        <span>Anulați înscrierea</span>
+      </button>
+    } @else {
+      <button mat-menu-item (click)="submitPaper(paper, true)">
+        <mat-icon>send</mat-icon>
+        <span>Înscrieți lucrarea</span>
+      </button>
+    }
+
   </ng-template>
 </mat-menu>
 
@@ -26,91 +29,96 @@
       <mat-icon>filter_list</mat-icon>
     </button>
   </mat-toolbar>
-  <div class="table-filters" *ngIf="showFilters">
-    <div class="filter-header">
-      <span class="text">Filtrați după</span>
-      <button mat-button (click)="resetFilterForm()">Resetați</button>
+  @if(showFilters) {
+    <div class="table-filters">
+      <div class="filter-header">
+        <span class="text">Filtrați după</span>
+        <button mat-button (click)="resetFilterForm()">Resetați</button>
+      </div>
+      <form [formGroup]="paperFilterForm" fxLayout="row grid" fxLayoutGap="10px grid">
+        <div fxFlex="50" fxFlex.lt-md="100">
+          <mat-button-toggle-group formControlName="submitted">
+            <mat-button-toggle [value]="true">Înscrise</mat-button-toggle>
+            <mat-button-toggle [value]="false">Neînscrise</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div fxFlex="50" fxFlex.lt-md="100">
+          <mat-button-toggle-group formControlName="assigned">
+            <mat-button-toggle [value]="true">Atribuite</mat-button-toggle>
+            <mat-button-toggle [value]="false">Neatribuite</mat-button-toggle>
+            <mat-button-toggle [value]="null">Toate</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div fxFlex="50" fxFlex.lt-md="100">
+          <mat-button-toggle-group formControlName="validity">
+            <mat-button-toggle value="valid">Valide</mat-button-toggle>
+            <mat-button-toggle value="notValid">Invalide</mat-button-toggle>
+            <mat-button-toggle value="nullValid">Nevalidate</mat-button-toggle>
+            <mat-button-toggle [value]="null">Toate</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+          <mat-label>Tip</mat-label>
+          <mat-select formControlName="type">
+            <mat-option [value]="null">--</mat-option>
+            <mat-option *ngFor="let type of PAPER_TYPES | keyvalue" [value]="type.key">
+              {{ type.value | titlecase }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+          <mat-label>Domeniu</mat-label>
+          <mat-select formControlName="domainId">
+            <mat-option [value]="null">--</mat-option>
+            <mat-option *ngFor="let domain of domains | async" [value]="domain.id">
+              {{ domain.name }}, {{ DOMAIN_TYPES[domain.type] | titlecase }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+          <mat-label>Forma de învățământ</mat-label>
+          <mat-select formControlName="studyForm">
+            <mat-option [value]="null">--</mat-option>
+            <mat-option *ngFor="let type of STUDY_FORMS | keyvalue" [value]="type.key">
+              {{ type.value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+      <form [formGroup]="paperFilterDebouncedForm" fxLayout="row grid" fxLayoutGap="10px grid" style="padding-top: 10px">
+        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+          <mat-label>Titlu lucrare</mat-label>
+          <input matInput formControlName="title" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+          <mat-label>Nume student</mat-label>
+          <input matInput formControlName="studentName" />
+        </mat-form-field>
+      </form>
     </div>
-    <form [formGroup]="paperFilterForm" fxLayout="row grid" fxLayoutGap="10px grid">
-      <div fxFlex="50" fxFlex.lt-md="100">
-        <mat-button-toggle-group formControlName="submitted">
-          <mat-button-toggle [value]="true">Înscrise</mat-button-toggle>
-          <mat-button-toggle [value]="false">Neînscrise</mat-button-toggle>
-        </mat-button-toggle-group>
-      </div>
-      <div fxFlex="50" fxFlex.lt-md="100">
-        <mat-button-toggle-group formControlName="assigned">
-          <mat-button-toggle [value]="true">Atribuite</mat-button-toggle>
-          <mat-button-toggle [value]="false">Neatribuite</mat-button-toggle>
-          <mat-button-toggle [value]="null">Toate</mat-button-toggle>
-        </mat-button-toggle-group>
-      </div>
-      <div fxFlex="50" fxFlex.lt-md="100">
-        <mat-button-toggle-group formControlName="validity">
-          <mat-button-toggle value="valid">Valide</mat-button-toggle>
-          <mat-button-toggle value="notValid">Invalide</mat-button-toggle>
-          <mat-button-toggle value="nullValid">Nevalidate</mat-button-toggle>
-          <mat-button-toggle [value]="null">Toate</mat-button-toggle>
-        </mat-button-toggle-group>
-      </div>
-      <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-        <mat-label>Tip</mat-label>
-        <mat-select formControlName="type">
-          <mat-option [value]="null">--</mat-option>
-          <mat-option *ngFor="let type of PAPER_TYPES | keyvalue" [value]="type.key">
-            {{ type.value | titlecase }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-        <mat-label>Domeniu</mat-label>
-        <mat-select formControlName="domainId">
-          <mat-option [value]="null">--</mat-option>
-          <mat-option *ngFor="let domain of domains | async" [value]="domain.id">
-            {{ domain.name }}, {{ DOMAIN_TYPES[domain.type] | titlecase }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-        <mat-label>Forma de învățământ</mat-label>
-        <mat-select formControlName="studyForm">
-          <mat-option [value]="null">--</mat-option>
-          <mat-option *ngFor="let type of STUDY_FORMS | keyvalue" [value]="type.key">
-            {{ type.value }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </form>
-    <form [formGroup]="paperFilterDebouncedForm" fxLayout="row grid" fxLayoutGap="10px grid" style="padding-top: 10px">
-      <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-        <mat-label>Titlu lucrare</mat-label>
-        <input matInput formControlName="title" />
-      </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-        <mat-label>Nume student</mat-label>
-        <input matInput formControlName="studentName" />
-      </mat-form-field>
-    </form>
-  </div>
-  <div class="loading-shade" *ngIf="isLoadingResults">
-    <mat-spinner></mat-spinner>
-  </div>
+  }
+  @if(isLoadingResults) {
+    <div class="loading-shade">
+      <mat-spinner></mat-spinner>
+    </div>
+  }
   <div class="discrete-scroll">
     <table mat-table [dataSource]="data" multiTemplateDataRows #table matSort matSortActive="id" matSortDisableClear
       matSortDirection="asc">
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let row">
-          <ng-container *ngIf="!row.isLoading">
-            <mat-icon *ngIf="row.isValid == null && row.submitted" class="status-icon warn"
-              matTooltip="Necesită validare/invalidare">pending_actions</mat-icon>
-            <mat-icon *ngIf="row.isValid == true" class="status-icon done" matTooltip="Lucrare validată">done</mat-icon>
-            <mat-icon *ngIf="row.isValid == false" class="status-icon severe"
-              matTooltip="Lucrare invalidată">close</mat-icon>
-          </ng-container>
-          <ng-container *ngIf="row.isLoading">
+          @if(!row.isLoading) {
+            @if(row.isValid === null) {
+              <mat-icon class="status-icon warn" matTooltip="Necesită validare/invalidare">pending_actions</mat-icon>
+            } @else if(row.isValid === true) {
+              <mat-icon class="status-icon done" matTooltip="Lucrare validată">done</mat-icon>
+            } @else if(row.isValid === false) {
+              <mat-icon class="status-icon severe" matTooltip="Lucrare invalidată">close</mat-icon>
+            }
+          } @else {
             <mat-spinner diameter="24"></mat-spinner>
-          </ng-container>
+          }
         </td>
       </ng-container>
 
@@ -146,14 +154,13 @@
       <ng-container matColumnDef="committee">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="committeeId"> Comisie </th>
         <td mat-cell *matCellDef="let row" class="wrap">
-          <ng-container *ngIf="row.committee">{{ row.committee.name }}</ng-container>
-          <ng-container *ngIf="!row.committee">Neatribuit</ng-container>
+          {{ row.committee?.name || 'Neatribuit' }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="expandedDetail">
         <td mat-cell *matCellDef="let paper" [attr.colspan]="displayedColumns.length">
-          <div class="paper-detail" [@detailExpand]="paper == expandedPaper ? 'expanded' : 'collapsed'">
+          <div class="paper-detail" [@detailExpand]="paper.id == expandedPaperId ? 'expanded' : 'collapsed'">
             <div class="paper-header">
               <div class="paper-description">{{paper.description}}</div>
               <div class="actions">
@@ -167,29 +174,38 @@
                 {{topic.name}}
               </span>
             </div>
-            <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px" class="paper-actions"
-              *ngIf="paper.isValid == null && paper.submitted">
-              <div [matTooltip]="!paper.documentsUploaded ? 'Studentul nu a încărcat toate documentele.' : ''">
-                <button mat-raised-button color="primary" (click)="validatePaper(paper, true)"
-                  [disabled]="paper.isLoading">Validați lucrarea</button>
+            @if(paper.isValid !== null) {
+              <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px" class="paper-actions">
+                <div class="validation-result">
+                  @if(paper.isValid) {
+                    <mat-icon class="status-icon done">done</mat-icon>
+                  } @else {
+                    <mat-icon class="status-icon severe">close</mat-icon>
+                  }
+                  <b>Lucrare {{ paper.isValid ? 'validată' : 'invalidată' }}</b>
+                  @if(paper.isValid && paper.student?.generalAverage) {
+                    <b>&nbsp;(M.G. {{ paper.student.generalAverage }})</b>
+                  }
+                </div>
+                <button mat-icon-button matTooltip="Reluați validarea" (click)="undoValidatePaper(paper)">
+                  <mat-icon>undo</mat-icon>
+                </button>
               </div>
-              <button mat-button [disabled]="paper.isLoading" (click)="validatePaper(paper, false)">Invalidați
-                lucrarea</button>
-            </div>
-            <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px" class="paper-actions"
-              *ngIf="paper.isValid != null">
-              <div class="validation-result">
-                <mat-icon *ngIf="paper.isValid" class="status-icon done">done</mat-icon>
-                <mat-icon *ngIf="!paper.isValid" class="status-icon severe">close</mat-icon>
-                <b>Lucrare {{ paper.isValid ? 'validată' : 'invalidată' }}</b>
-                <b *ngIf="paper.isValid && paper.student?.generalAverage">&nbsp;(M.G. {{ paper.student.generalAverage
-                  }})</b>
+            }
+            @else if(paper.submitted) {
+              <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px" class="paper-actions">
+                <div [matTooltip]="!paper.documentsUploaded ? 'Studentul nu a încărcat toate documentele.' : ''">
+                  <button mat-raised-button color="primary" (click)="validatePaper(paper, true)"
+                    [disabled]="paper.isLoading">Validați lucrarea</button>
+                </div>
+                <button mat-button [disabled]="paper.isLoading" (click)="validatePaper(paper, false)">Invalidați
+                  lucrarea</button>
               </div>
-              <button mat-icon-button matTooltip="Reluați validarea" (click)="undoValidatePaper(paper)">
-                <mat-icon>undo</mat-icon>
-              </button>
-            </div>
-            <app-paper-grade-table [paper]="paper" *ngIf="paper.isValid"></app-paper-grade-table>
+            }
+
+            @if(paper.isValid) {
+              <app-paper-grade-table [paper]="paper"></app-paper-grade-table>
+            }
             <div class="document-list">
               <div mat-subheader>Documente</div>
               <app-paper-document-list [paperId]="paper.id" [requiredDocuments]="paper.requiredDocuments"
@@ -201,8 +217,14 @@
       </ng-container>
 
       <tr mat-header-row @rowAnimation *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row @rowAnimation *matRowDef="let row; columns: displayedColumns;" class="paper-row"
-        [class.expanded-row]="expandedPaper === row" (click)="expandedPaper = expandedPaper === row ? null : row">
+      <tr
+        mat-row
+        @rowAnimation
+        *matRowDef="let row; columns: displayedColumns;"
+        class="paper-row"
+        [class.expanded-row]="expandedPaperId === row.id"
+        (click)="expandedPaperId = expandedPaperId === row.id ? null : row.id"
+      >
       </tr>
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail'];" class="detail-row"></tr>
 
