@@ -15,7 +15,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
     provideAnimationsAsync(),
-    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 4000, horizontalPosition: 'start' } },
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 4000, horizontalPosition: 'center' } },
     { provide: MatPaginatorIntl, useClass: MatPaginatorIntlRo },
     { provide: RECAPTCHA_SETTINGS, useValue: { siteKey: environment.captchaKey, } },
     { provide: RECAPTCHA_LANGUAGE, useValue: "ro-RO" },
