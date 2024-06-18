@@ -20,18 +20,22 @@
         <input matInput type="text" disabled [value]="userData.lastName">
       </mat-form-field>
 
-      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="70">
-        <mat-label>Prenume</mat-label>
-        <input matInput type="text" disabled [value]="userData.firstName">
-      </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="30">
-        <mat-label>Inițiala părintelui</mat-label>
-        <input matInput type="text" formControlName="parentInitial" placeholder="Exemplu: A. Gh. B.">
-        <mat-error>
-          Prima literă trebuie să fie majusculă, iar a doua minusculă, urmate de punct.
-          Se acceptă maximum 3 inițiale separate prin spațiu.
-        </mat-error>
-      </mat-form-field>
+      <div fxFlex="100" fxFlex.gt-xs="70">
+        <mat-form-field appearance="outline">
+          <mat-label>Prenume</mat-label>
+          <input matInput type="text" disabled [value]="userData.firstName">
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100" fxFlex.gt-xs="30">
+        <mat-form-field appearance="outline">
+          <mat-label>Inițiala părintelui</mat-label>
+          <input matInput type="text" formControlName="parentInitial" placeholder="Exemplu: A. Gh. B.">
+          <mat-error>Prima literă trebuie să fie majusculă, iar a doua minusculă, urmate de punct.
+            Se acceptă maximum 3 inițiale separate prin spațiu.
+          </mat-error>
+        </mat-form-field>
+      </div>
 
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
         <mat-label>Prenume tată</mat-label>

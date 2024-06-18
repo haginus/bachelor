@@ -385,3 +385,9 @@ app-loading.in-dialog {
 mat-hint.warning {
   color: #f57c00;
 }
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: initial;
+  -webkit-appearance: initial;
+}
