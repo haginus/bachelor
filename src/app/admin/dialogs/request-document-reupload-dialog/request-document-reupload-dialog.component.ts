@@ -11,6 +11,7 @@ import { AdminService } from '../../../services/admin.service';
 import { firstValueFrom } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-request-document-reupload-dialog',
@@ -23,6 +24,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatCheckboxModule,
     MatButtonModule,
     MatMenuModule,
+    LoadingComponent,
   ],
   templateUrl: './request-document-reupload-dialog.component.html',
   styleUrl: './request-document-reupload-dialog.component.scss'
@@ -53,6 +55,7 @@ export class RequestDocumentReuploadDialogComponent {
   }
 
   requiredDocuments!: PaperRequiredDocument[];
+  isSubmitting = false;
 
   requestReuploadForm: FormGroup<{
     documents: FormGroup<Record<string, DocumentFormGroupType>>;
@@ -83,6 +86,7 @@ export class RequestDocumentReuploadDialogComponent {
   ];
 
   async sendRequest() {
+    this.isSubmitting = true;
     const formValue = this.requestReuploadForm.getRawValue();
     const paperId = this.data.paperId;
     const requests = Object.values(formValue.documents)
@@ -97,6 +101,8 @@ export class RequestDocumentReuploadDialogComponent {
     if(results.length > 0) {
       this.snackBar.open('Solicitarea de reîncărcare a documentelor a fost transmisă.');
       this.dialogRef.close(results);
+    } else {
+      this.isSubmitting = false;
     }
   }
 
