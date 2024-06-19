@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { Subscription, firstValueFrom } from 'rxjs';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Subscription, firstValueFrom, of } from 'rxjs';
 import { AdminService } from '../../../services/admin.service';
 import { Domain, UserData } from '../../../services/auth.service';
 import { CNPValidator } from '../../../validators/CNP-validator';
@@ -17,6 +17,7 @@ export class StudentDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: StudentDialogData,
+    private readonly dialogRef: MatDialogRef<StudentDialogComponent>,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private admin: AdminService,
@@ -143,6 +144,7 @@ export class StudentDialogComponent implements OnInit {
       const result = await firstValueFrom(this.admin.editStudentExtraData(user.id, studentExtraData));
       if(result) {
         this.snackBar.open("Datele suplimentare au fost salvate.");
+        this.dialogRef.close(of(true));
       }
     } catch(err) {
       console.error(err);

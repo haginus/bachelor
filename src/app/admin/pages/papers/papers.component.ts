@@ -243,14 +243,18 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
     })
   }
 
-  openStudentDialog(id: number, event: any) {
+  async openStudentDialog(id: number, event: any) {
     event.stopPropagation();
-    this.dialog.open(StudentDialogComponent, {
+    const dialogRef = this.dialog.open(StudentDialogComponent, {
       data: {
         userId: id,
         mode: 'view'
       }
-    })
+    });
+    const result = await firstValueFrom(dialogRef.afterClosed());
+    if(result) {
+      this.refreshResults();
+    }
   }
 
   toggleFilters() {
