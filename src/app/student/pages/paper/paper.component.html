@@ -78,6 +78,13 @@
           </div>
           <mat-progress-bar mode="query" color="primary"></mat-progress-bar>
         </div>
+      } @else if(hasReuploadRequests) {
+        <div class="tip-card warning">
+          <mat-icon class="tip-icon">warning_amber</mat-icon>
+          <div class="tip-card-content">
+            Secretariatul a cerut reîncărcarea unor documente.
+          </div>
+        </div>
       } @else if(deadlinePassed) {
         <div class="tip-card severe">
           <mat-icon class="tip-icon">priority_high</mat-icon>
@@ -166,11 +173,13 @@
           [paperId]="paper.id"
           [requiredDocuments]="requiredDocuments"
           [documents]="paper.documents"
+          [documentReuploadRequests]="documentReuploadRequests"
           [sessionSettings]="sessionSettings"
           perspective="student"
           [canEdit]="paper.isValid == null"
           (documentEvents)="handleDocumentEvents($event)"
           (areDocumentsUploaded)="handleAreDocumentsUploaded($event)"
+          (reuploadRequestsResolved)="handleReuploadRequestsResolved($event)"
         />
       }
     </div>

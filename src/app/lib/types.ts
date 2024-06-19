@@ -4,4 +4,5 @@ export interface DocumentReuploadRequest {
   documentName: string;
   deadline: string;
   comment: string;
+  createdAt: string;
 }

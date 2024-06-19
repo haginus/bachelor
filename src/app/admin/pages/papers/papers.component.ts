@@ -183,14 +183,18 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
     });
   }
 
-  requestDocumentReupload(paper: Paper, checkedDocument?: string) {
-    this.dialog.open(RequestDocumentReuploadDialogComponent, {
+  async requestDocumentReupload(paper: Paper, checkedDocument?: string) {
+    const dialogRef = this.dialog.open(RequestDocumentReuploadDialogComponent, {
       data: {
         paperId: paper.id,
         requiredDocuments: paper.requiredDocuments.filter(doc => doc.uploadBy === 'student'),
         checkedDocuments: checkedDocument ? { [checkedDocument]: true } : null,
       } satisfies RequestDocumentReuploadDialogData
     });
+    const result = await firstValueFrom(dialogRef.afterClosed());
+    if(result?.length) {
+      this.refreshResults();
+    }
   }
 
   validatePaper(paper: ExtendedPaper, validate: boolean) {

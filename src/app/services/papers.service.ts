@@ -4,6 +4,7 @@ import { AuthService } from "./auth.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Observable, catchError, map, of } from "rxjs";
 import { environment } from "../../environments/environment";
+import { DocumentReuploadRequest } from "../lib/types";
 
 @Injectable({
   providedIn: 'any'
@@ -40,6 +41,15 @@ export class PapersService {
       .pipe(
         map(_ => true),
         catchError(this.handleError('unsubmitPaper', { success: false }))
+      );
+  }
+
+  getDocumentReuploadRequests(paperId: number) {
+    const url = `${this.apiUrl}/${paperId}/reupload-requests`;
+    return this.http
+      .get<DocumentReuploadRequest[]>(url, this.auth.getPrivateHeaders())
+      .pipe(
+        catchError(this.handleError('getDocumentReuploadRequests', []))
       );
   }
 

@@ -17,6 +17,7 @@ import { UserSnippetComponent } from '../../../shared/components/user-snippet/us
 import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PapersService } from '../../../services/papers.service';
+import { DocumentReuploadRequest } from '../../../lib/types';
 
 @Component({
   selector: 'app-student-paper',
@@ -51,6 +52,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
 
   paper: Paper = null;
   studentExtraData: StudentExtraData = null;
+  documentReuploadRequests: DocumentReuploadRequest[] = [];
   isLoadingInitialData: boolean = true;
   isLoadingData: boolean;
   isWaitingForDocumentGeneration = false;
@@ -61,15 +63,13 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   submissionStarted: boolean;
   areDocumentsUploaded: boolean;
   deadlinePassed: boolean = false;
+  hasReuploadRequests: boolean = false;
   canEditPaper: boolean;
 
   requiredDocuments: PaperRequiredDocument[] = []
 
-  handleDocumentEvents(event: PaperDocumentEvent) {
-    let sub = this.student.getPaper().subscribe(paper => {
-      this.paper = paper;
-      sub.unsubscribe();
-    });
+  async handleDocumentEvents(_: PaperDocumentEvent) {
+    this.paper = await firstValueFrom(this.student.getPaper());
   }
 
   handleAreDocumentsUploaded(event: AreDocumentsUploaded) {
@@ -77,6 +77,11 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
     this._checkSubmissionPeriod();
     this.deadlinePassed = (!this.canUploadSecretaryFiles && !event.byUploaderCategory.student.secretary_files) ||
       (!this.canUploadPaperFiles && !event.byUploaderCategory.student.paper_files);
+    this.cd.detectChanges();
+  }
+
+  handleReuploadRequestsResolved(resolved: boolean) {
+    this.hasReuploadRequests = !resolved;
     this.cd.detectChanges();
   }
 
@@ -107,17 +112,28 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
     this.sessionSettingsSub.unsubscribe();
   }
 
-  getData() {
+  async getData() {
     this.isLoadingData = true;
-    let subscription = combineLatest([this.student.getPaper(), this.student.getExtraData(), this.student.getPaperRequiredDocuments()])
-      .subscribe(([paper, extraData, requiredDocuments]) => {
-        this.paper = paper;
-        this.requiredDocuments = requiredDocuments;
-        this.studentExtraData = extraData;
-        this.isLoadingInitialData = false;
-        this.isLoadingData = false;
-        subscription.unsubscribe();
-      });
+    const user = await firstValueFrom(this.auth.userData);
+    const paperId = user.student.paper.id;
+    try {
+      const [paper, extraData, requiredDocuments, documentReuploadRequests] = await firstValueFrom(
+        combineLatest([
+          this.student.getPaper(),
+          this.student.getExtraData(),
+          this.student.getPaperRequiredDocuments(),
+          this.papersService.getDocumentReuploadRequests(paperId)
+        ])
+      );
+      this.paper = paper;
+      this.studentExtraData = extraData;
+      this.requiredDocuments = requiredDocuments;
+      this.documentReuploadRequests = documentReuploadRequests;
+      this._checkSubmissionPeriod();
+    } finally {
+      this.isLoadingInitialData = false;
+      this.isLoadingData = false;
+    }
   }
 
   async editStudentExtraData() {
@@ -127,6 +143,26 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
         student: await firstValueFrom(this.auth.userData),
       } satisfies StudentExtraDataEditorData
     });
+
+    const data = await firstValueFrom(dialogRef.afterClosed()) as StudentExtraData | undefined;
+    if(data) {
+      this.isWaitingForDocumentGeneration = true;
+      const result = await firstValueFrom(this.student.setExtraData(data));
+      if(!result) {
+        this.isWaitingForDocumentGeneration = false;
+        return;
+      }
+      this.studentExtraData = data;
+      const [paper, requiredDocuments] = await firstValueFrom(combineLatest([
+        this.student.getPaper(),
+        this.student.getPaperRequiredDocuments()
+      ]));
+      if(paper) {
+        this.paper = paper;
+        this.requiredDocuments = requiredDocuments;
+      }
+      this.isWaitingForDocumentGeneration = false;
+    }
 
     dialogRef.afterClosed().subscribe(data => {
       if(data) {

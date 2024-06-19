@@ -10,6 +10,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
+import { DocumentReuploadRequest } from '../../../lib/types';
+import { inclusiveDate } from '../../../lib/utils';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-paper-document-list',
@@ -21,6 +25,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatIconModule,
     MatProgressSpinnerModule,
     MatMenuModule,
+    MatTooltipModule,
+    DatePipe,
   ]
 })
 export class PaperDocumentListComponent implements OnChanges {
@@ -33,6 +39,7 @@ export class PaperDocumentListComponent implements OnChanges {
 
   @Input() requiredDocuments: PaperRequiredDocument[] = [];
   @Input() documents: PaperDocument[] = [];
+  @Input() documentReuploadRequests: DocumentReuploadRequest[] = [];
   /** In what quality is the viewer of this list */
   @Input() perspective: 'student' | 'teacher' | 'committee' | 'admin' = 'student';
   /** Paper ID (needed for teacher / committee to know where to upload the document) */
@@ -45,6 +52,9 @@ export class PaperDocumentListComponent implements OnChanges {
   @Output() documentEvents = new EventEmitter<PaperDocumentEvent>();
   /**  Output variable that tells whether all the documents are uploaded (by uploader and category) */
   @Output() areDocumentsUploaded = new EventEmitter<AreDocumentsUploaded>();
+  /** Emits whether all document reupload requests are resolved. */
+  @Output() reuploadRequestsResolved = new EventEmitter<boolean>();
+  /** Emit when admin user asks for a document to be reuploaded. */
   @Output() reuploadRequest = new EventEmitter<string>();
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -115,26 +125,48 @@ export class PaperDocumentListComponent implements OnChanges {
     return 'view';
   }
 
+  private _isDocumentUploaded(requiredTypes: PaperDocumentTypes, actualTypes: PaperDocumentTypes): boolean {
+    return Object.keys(requiredTypes).every(type => actualTypes[type]);
+  }
+
   private _generateDocumentMap() {
     const documents = this.documents;
-    let documentMap = { }
+    let documentMap = {};
+    const today = Date.now();
     this.requiredDocuments.forEach(requiredDoc => {
       const docName = requiredDoc.name;
       const currentDocuments = documents.filter(document => document.name == docName);
-      let actualTypes = {}
-      currentDocuments.forEach(doc => {
-        actualTypes[doc.type] = true;
-      })
-      let lastId = currentDocuments.length == 0 ? null : currentDocuments.map(doc => doc.id).reduce((max, id) => (max < id) ? id : max);
-      let doc = { requiredTypes: requiredDoc.types, actualTypes, title: requiredDoc.title, lastId,
-        uploadBy: requiredDoc.uploadBy, category: requiredDoc.category, canChange: true };
-
-      doc.canChange = this.canEdit && this._checkSubmissionDates(doc.category);
+      const reuploadRequest = this.documentReuploadRequests.find(request => (
+        request.documentName == docName && inclusiveDate(request.deadline).getTime() >= today
+      ));
+      let actualTypes = currentDocuments.reduce((acc, doc) => {
+        acc[doc.type] = true;
+        return acc;
+      }, {} as PaperDocumentTypes);
+      let lastId = currentDocuments.length == 0
+        ? null
+        : Math.max(...currentDocuments.map(doc => doc.id));
+      const lastDocument = currentDocuments.find(doc => doc.id == lastId);
+      const isUploaded =
+        this._isDocumentUploaded(requiredDoc.types, actualTypes) &&
+        (!reuploadRequest || new Date(lastDocument?.createdAt) > new Date(reuploadRequest.createdAt));
+      let doc = {
+        requiredTypes: requiredDoc.types,
+        actualTypes,
+        title: requiredDoc.title,
+        lastId,
+        isUploaded,
+        uploadBy: requiredDoc.uploadBy,
+        category: requiredDoc.category,
+        reuploadRequest: !isUploaded ? reuploadRequest : null,
+        canChange: this.canEdit && (this._checkSubmissionDates(requiredDoc.category) || !!reuploadRequest),
+      } satisfies Partial<DocumentMapElement>;
       doc['nextAction'] = this._computeNextAction(doc);
       documentMap[docName] = doc;
     });
     this.documentMap = documentMap;
     this._generateAreDocumentsUploaded();
+    this._emitReuploadRequestsResolved();
   }
 
   private _generateAreDocumentsUploaded(): void {
@@ -166,25 +198,22 @@ export class PaperDocumentListComponent implements OnChanges {
     let docNames = Object.keys(this.documentMap);
     docNames.forEach(docName => {
       let doc = this.documentMap[docName];
-      // Init by category with true
+      // Init byCategory with true
       if(areDocumentsUploaded[doc.category] != undefined) {
         areDocumentsUploaded.byCategory[doc.category] = true;
       }
-      // Get required types
-      let requiredTypes = Object.keys(doc.requiredTypes);
-      // Get uploader
-      let uploader = doc.uploadBy;
-      // For each required type
-      requiredTypes.forEach(type => {
-        // If doc actual type lacks required type set byUploader and byCategory correspondig to the doc to false
-        if(!doc.actualTypes[type]) {
-          areDocumentsUploaded.byUploader[uploader] = false;
-          areDocumentsUploaded.byCategory[doc.category] = false;
-          areDocumentsUploaded.byUploaderCategory[uploader][doc.category] = false;
-        }
-      });
+      if(!doc.isUploaded) {
+        areDocumentsUploaded.byUploader[doc.uploadBy] = false;
+        areDocumentsUploaded.byCategory[doc.category] = false;
+        areDocumentsUploaded.byUploaderCategory[doc.uploadBy][doc.category] = false;
+      }
     });
     this.areDocumentsUploaded.emit(areDocumentsUploaded);
+  }
+
+  private _emitReuploadRequestsResolved() {
+    let unresolvedRequests = Object.values(this.documentMap).filter(doc => doc.reuploadRequest);
+    this.reuploadRequestsResolved.emit(unresolvedRequests.length == 0);
   }
 
   openDocumentDialog(action: 'sign' | 'uploadCopy', documentName: string, documentId?: number) {
@@ -245,7 +274,6 @@ export class PaperDocumentListComponent implements OnChanges {
         this.snackbar.open('Document șters.');
       }
       mapElement.actionPending = false;
-
     });
   }
 
@@ -255,17 +283,17 @@ interface DocumentMap {
   [name: string]: DocumentMapElement
 }
 
-
-
 interface DocumentMapElement {
-  title: string,
-  category: PaperDocumentCategory,
-  requiredTypes: PaperDocumentTypes,
-  actualTypes: PaperDocumentTypes,
-  lastId: number,
-  actionPending?: boolean,
-  nextAction?: DocumentAction,
+  title: string;
+  category: PaperDocumentCategory;
+  requiredTypes: PaperDocumentTypes;
+  actualTypes: PaperDocumentTypes;
+  lastId: number;
+  actionPending?: boolean;
+  nextAction?: DocumentAction;
+  isUploaded: boolean;
   uploadBy: PaperDocumentUploadBy;
+  reuploadRequest?: DocumentReuploadRequest;
   canChange: boolean;
 }
 
@@ -282,8 +310,8 @@ export interface PaperRequiredDocument {
 }
 
 export interface PaperDocumentEvent {
-  documentName: string,
-  action: 'sign' | 'uploadCopy'
+  documentName: string;
+  action: 'sign' | 'uploadCopy';
 }
 
 export interface AreDocumentsUploaded {

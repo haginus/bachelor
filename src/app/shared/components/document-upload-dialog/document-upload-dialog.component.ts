@@ -84,7 +84,6 @@ export class DocumentUploadDialogComponent implements OnInit {
     }
     ob.subscribe(res => {
       if(res == null) {
-        this.snackbar.open("A apărut o eroare.");
         this.isUploadingFile = false;
       } else {
         this.snackbar.open(`Document încărcat.`);

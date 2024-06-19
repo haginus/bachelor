@@ -1,7 +1,3 @@
-.mat-icon {
-  color: rgba(0, 0, 0, 0.54);
-}
-
 .document-item {
   display: flex;
   align-items: center;
@@ -12,6 +8,9 @@
     height: 24px;
     display: flex;
     margin-right: 12px;
+    mat-icon {
+      color: rgba(0, 0, 0, 0.54);
+    }
   }
 
   .content {
@@ -24,5 +23,20 @@
 
   .left-button {
     margin-right: 4px;
+  }
+}
+
+.reupload-request-notice {
+  color: #F57C00;
+
+  span, mat-icon {
+    vertical-align: middle;
+  }
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin-left: 4px;
   }
 }
