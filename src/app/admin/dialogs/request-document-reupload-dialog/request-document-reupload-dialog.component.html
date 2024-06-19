@@ -27,6 +27,11 @@
                 placeholder="Oferiți indicații privind motivul respingerii și modalitatea corectă de încărcare a documentului"
               >
               </textarea>
+              <mat-hint
+                class="hint-link"
+                [mat-menu-trigger-for]="templateMenu"
+                [matMenuTriggerData]="{ control: requestReuploadForm.get('documents').get(document.name).get('comment') }"
+              >Autocompletați cu un șablon</mat-hint>
             </mat-form-field>
           }
         </div>
@@ -41,3 +46,13 @@
     Transmiteți cererea
   </button>
 </mat-dialog-actions>
+
+<mat-menu #templateMenu="matMenu">
+  <ng-template matMenuContent let-control="control">
+    @for(template of commentTemplates; track $index) {
+      <button mat-menu-item (click)="control.setValue(template.value)">
+        <span>{{ template.label }}</span>
+      </button>
+    }
+  </ng-template>
+</mat-menu>

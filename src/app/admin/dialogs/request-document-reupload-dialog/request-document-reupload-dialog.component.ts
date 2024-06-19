@@ -10,6 +10,7 @@ import { formatDate } from '../../../lib/utils';
 import { AdminService } from '../../../services/admin.service';
 import { firstValueFrom } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-request-document-reupload-dialog',
@@ -21,6 +22,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatInputModule,
     MatCheckboxModule,
     MatButtonModule,
+    MatMenuModule,
   ],
   templateUrl: './request-document-reupload-dialog.component.html',
   styleUrl: './request-document-reupload-dialog.component.scss'
@@ -56,6 +58,29 @@ export class RequestDocumentReuploadDialogComponent {
     documents: FormGroup<Record<string, DocumentFormGroupType>>;
     deadline: FormControl<string>;
   }>;
+
+  readonly commentTemplates = [
+    {
+      label: 'Date actualizate. Resemnare document',
+      value: 'Unele date au fost introduse greșit, acestea fiind actualizate de secretariat. Semnați noul document generat.',
+    },
+    {
+      label: 'Document ilizibil',
+      value: 'Documentul încărcat este ilizibil. Reîncărcați documentul în format clar.',
+    },
+    {
+      label: 'Document lipsă',
+      value: 'Documentul nu a fost încărcat. Încărcați documentul solicitat.',
+    },
+    {
+      label: 'Document greșit',
+      value: 'Documentul încărcat este greșit. Reîncărcați documentul corect.',
+    },
+    {
+      label: 'Document incomplet',
+      value: 'Documentul încărcat este incomplet. Reîncărcați documentul complet.',
+    },
+  ];
 
   async sendRequest() {
     const formValue = this.requestReuploadForm.getRawValue();

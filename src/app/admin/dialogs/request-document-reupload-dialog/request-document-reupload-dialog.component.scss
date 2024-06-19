@@ -27,3 +27,11 @@
 mat-form-field {
   width: 100%;
 }
+
+.hint-link {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
