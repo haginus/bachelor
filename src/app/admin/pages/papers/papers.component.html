@@ -4,6 +4,10 @@
       <mat-icon>edit</mat-icon>
       <span>Editați lucrarea</span>
     </button>
+    <button mat-menu-item (click)="requestDocumentReupload(paper)" [disabled]="paper.isValid != null">
+      <mat-icon>file_present</mat-icon>
+      <span>Solicitați reîncărcarea documentelor</span>
+    </button>
     @if(paper.submitted) {
       <button mat-menu-item [disabled]="paper.isValid != null" (click)="submitPaper(paper, false)">
         <mat-icon>close</mat-icon>
@@ -15,7 +19,6 @@
         <span>Înscrieți lucrarea</span>
       </button>
     }
-
   </ng-template>
 </mat-menu>
 
@@ -208,9 +211,15 @@
             }
             <div class="document-list">
               <div mat-subheader>Documente</div>
-              <app-paper-document-list [paperId]="paper.id" [requiredDocuments]="paper.requiredDocuments"
-                [documents]="paper.documents" perspective="admin" [canEdit]="paper.isValid == null"
-                (areDocumentsUploaded)="handleAreDocumentsUploadedEvent($event, paper)"></app-paper-document-list>
+              <app-paper-document-list
+                [paperId]="paper.id"
+                [requiredDocuments]="paper.requiredDocuments"
+                [documents]="paper.documents"
+                perspective="admin"
+                [canEdit]="paper.isValid == null"
+                (areDocumentsUploaded)="handleAreDocumentsUploadedEvent($event, paper)"
+                (reuploadRequest)="requestDocumentReupload(paper, $event)"
+              />
             </div>
           </div>
         </td>

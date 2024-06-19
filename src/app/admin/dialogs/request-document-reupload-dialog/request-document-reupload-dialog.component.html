@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>Cereți reîncărcarea documentelor</h2>
+<mat-dialog-content class="mat-typography">
+  <p>
+    Anunțați studentul că trebuie să reîncarce unele documente în vederea validării lucrării. <br>
+    Acesta va putea reîncărca documentele până la data limită setată de dvs.
+  </p>
+  <form [formGroup]="requestReuploadForm">
+    <mat-form-field>
+      <mat-label>Termen limită (inclusiv)</mat-label>
+      <input matInput type="date" formControlName="deadline">
+    </mat-form-field>
+    <div class="document-list-header">
+      <span>Documente</span>
+    </div>
+    <div formGroupName="documents" class="document-list">
+      @for(document of requiredDocuments; track document.name) {
+        <div [formGroupName]="document.name" class="document-item">
+          <mat-checkbox formControlName="reuploadRequested" class="checkbox">
+            <span>{{ document.title }}</span>
+          </mat-checkbox>
+          @if(requestReuploadForm.get('documents').get(document.name).get('reuploadRequested').value) {
+            <mat-form-field class="document-reason">
+              <mat-label>Comentariu (opțional)</mat-label>
+              <textarea
+                matInput
+                formControlName="comment"
+                placeholder="Oferiți indicații privind motivul respingerii și modalitatea corectă de încărcare a documentului"
+              >
+              </textarea>
+            </mat-form-field>
+          }
+        </div>
+      }
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Anulați</button>
+  <button mat-button (click)="sendRequest()" [disabled]="requestReuploadForm.invalid">
+    Transmiteți cererea
+  </button>
+</mat-dialog-actions>

@@ -17,6 +17,7 @@ import { AreDocumentsUploaded } from '../../../shared/components/paper-document-
 import { detailExpand, rowAnimation } from '../../../row-animations';
 import { PapersService } from '../../../services/papers.service';
 import { EditPaperComponent } from '../../../shared/components/edit-paper/edit-paper.component';
+import { RequestDocumentReuploadDialogComponent, RequestDocumentReuploadDialogData } from '../../dialogs/request-document-reupload-dialog/request-document-reupload-dialog.component';
 
 @Component({
   selector: 'app-papers',
@@ -95,7 +96,7 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
       this.data = papers.rows as ExtendedPaper[];
       this.resultsLength = papers.count;
       this.isLoadingResults = false;
-    })
+    });
   }
 
   parseFilter(): GetPapersFilter {
@@ -179,6 +180,16 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
           );
         }
       }
+    });
+  }
+
+  requestDocumentReupload(paper: Paper, checkedDocument?: string) {
+    this.dialog.open(RequestDocumentReuploadDialogComponent, {
+      data: {
+        paperId: paper.id,
+        requiredDocuments: paper.requiredDocuments.filter(doc => doc.uploadBy === 'student'),
+        checkedDocuments: checkedDocument ? { [checkedDocument]: true } : null,
+      } satisfies RequestDocumentReuploadDialogData
     });
   }
 

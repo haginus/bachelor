@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 import { AuthService, Domain, Paper, SessionSettings, UserData, Committee, CommitteeMember, PaperType, SignUpRequest } from './auth.service';
 import { Topic } from './topics.service';
 import { StudentExtraData } from './student.service';
+import { DocumentReuploadRequest } from '../lib/types';
 
 @Injectable({
   providedIn: 'any'
@@ -380,6 +381,13 @@ export class AdminService {
     }
     return this.http.get<PaperQueryResult>(url, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError<PaperQueryResult>('getPapers', { rows: [], count: 0 }))
+    );
+  }
+
+  requestDocumentsReupload(paperId: number, requests: Omit<DocumentReuploadRequest, 'id' | 'paperId'>[]) {
+    const url = `${environment.apiUrl}/admin/papers/${paperId}/reupload-requests`;
+    return this.http.post<DocumentReuploadRequest[]>(url, requests, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError('requestDocumentsReupload', []))
     );
   }
 

@@ -90,5 +90,9 @@
       <mat-icon>upload</mat-icon>
       <span>Reîncărcați documentul</span>
     </button>
+    <button mat-menu-item (click)="reuploadRequest.emit(document.name)">
+      <mat-icon>file_present</mat-icon>
+      <span>Solicitați reîncărcarea</span>
+    </button>
   </ng-template>
 </mat-menu>

@@ -45,6 +45,7 @@ export class PaperDocumentListComponent implements OnChanges {
   @Output() documentEvents = new EventEmitter<PaperDocumentEvent>();
   /**  Output variable that tells whether all the documents are uploaded (by uploader and category) */
   @Output() areDocumentsUploaded = new EventEmitter<AreDocumentsUploaded>();
+  @Output() reuploadRequest = new EventEmitter<string>();
 
   ngOnChanges(changes: SimpleChanges): void {
     this._generateDocumentMap();
