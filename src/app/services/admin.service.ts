@@ -387,7 +387,7 @@ export class AdminService {
   requestDocumentsReupload(paperId: number, requests: Pick<DocumentReuploadRequest, 'documentName' | 'deadline' | 'comment'>[]) {
     const url = `${environment.apiUrl}/admin/papers/${paperId}/reupload-requests`;
     return this.http.post<DocumentReuploadRequest[]>(url, requests, this.auth.getPrivateHeaders()).pipe(
-      catchError(this.handleError('requestDocumentsReupload', []))
+      catchError(this.handleError<DocumentReuploadRequest[]>('requestDocumentsReupload', []))
     );
   }
 
