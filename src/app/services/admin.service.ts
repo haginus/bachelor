@@ -383,6 +383,14 @@ export class AdminService {
     );
   }
 
+  cancelDocumentReuploadRequest(paperId: number, requestId: number) {
+    const url = `${environment.apiUrl}/admin/papers/${paperId}/reupload-requests/${requestId}`;
+    return this.http.delete<any>(url, this.auth.getPrivateHeaders()).pipe(
+      map(_ => true),
+      catchError(this.handleError<any>('cancelDocumentReuploadRequest', false))
+    );
+  }
+
   /** Validate/Invalidate a paper by its ID. */
   validatePaper(paperId: number, validate: boolean, generalAverage?: number): Observable<boolean> {
     const url = `${environment.apiUrl}/admin/papers/validate`;

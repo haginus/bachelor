@@ -55,7 +55,7 @@ export class PaperDocumentListComponent implements OnChanges {
   /** Emits whether all document reupload requests are resolved. */
   @Output() reuploadRequestsResolved = new EventEmitter<boolean>();
   /** Emit when admin user asks for a document to be reuploaded. */
-  @Output() reuploadRequest = new EventEmitter<string>();
+  @Output() reuploadRequest = new EventEmitter<{ document: DocumentMapElement; reuploadRequested: boolean; }>();
 
   ngOnChanges(changes: SimpleChanges): void {
     this._generateDocumentMap();
@@ -151,6 +151,7 @@ export class PaperDocumentListComponent implements OnChanges {
         this._isDocumentUploaded(requiredDoc.types, actualTypes) &&
         (!reuploadRequest || new Date(lastDocument?.createdAt) > new Date(reuploadRequest.createdAt));
       let doc = {
+        requiredDocument: requiredDoc,
         requiredTypes: requiredDoc.types,
         actualTypes,
         title: requiredDoc.title,
@@ -238,10 +239,9 @@ export class PaperDocumentListComponent implements OnChanges {
     })
   }
 
-  reuploadDocument(document: PaperRequiredDocument) {
-    const mapElement = this.documentMap[document.name];
-    const action = document.types['copy'] ? 'uploadCopy' : 'sign';
-    this.openDocumentDialog(action, document.name, mapElement.lastId);
+  reuploadDocument(document: DocumentMapElement) {
+    const action = document.requiredTypes['copy'] ? 'uploadCopy' : 'sign';
+    this.openDocumentDialog(action, document.requiredDocument.name, document.lastId);
   }
 
   viewDocument(mapElement: DocumentMapElement) {
@@ -283,7 +283,8 @@ interface DocumentMap {
   [name: string]: DocumentMapElement
 }
 
-interface DocumentMapElement {
+export interface DocumentMapElement {
+  requiredDocument: PaperRequiredDocument;
   title: string;
   category: PaperDocumentCategory;
   requiredTypes: PaperDocumentTypes;

@@ -13,7 +13,7 @@ import { PaperValidationDialogComponent, PaperValidationDialogData } from '../..
 import { AdminService, GetPapersFilter } from '../../../services/admin.service';
 import { Paper } from '../../../services/auth.service';
 import { DOMAIN_TYPES, PAPER_TYPES, STUDY_FORMS } from '../../../lib/constants';
-import { AreDocumentsUploaded } from '../../../shared/components/paper-document-list/paper-document-list.component';
+import { AreDocumentsUploaded, DocumentMapElement } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { detailExpand, rowAnimation } from '../../../row-animations';
 import { PapersService } from '../../../services/papers.service';
 import { EditPaperComponent } from '../../../shared/components/edit-paper/edit-paper.component';
@@ -181,6 +181,19 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
         }
       }
     });
+  }
+
+  async handleReuploadRequestEvent(paper: Paper, event: { document: DocumentMapElement; reuploadRequested: boolean }) {
+    if(event.reuploadRequested) {
+      this.requestDocumentReupload(paper, event.document.requiredDocument.name);
+    } else {
+      const requestId = event.document.reuploadRequest!.id;
+      const result = await firstValueFrom(this.admin.cancelDocumentReuploadRequest(paper.id, requestId));
+      if(result) {
+        this.snackbar.open('Solicitarea de reîncărcare a fost anulată.');
+        this.refreshResults();
+      }
+    }
   }
 
   async requestDocumentReupload(paper: Paper, checkedDocument?: string) {

@@ -219,7 +219,7 @@
                 perspective="admin"
                 [canEdit]="paper.isValid == null"
                 (areDocumentsUploaded)="handleAreDocumentsUploadedEvent($event, paper)"
-                (reuploadRequest)="requestDocumentReupload(paper, $event)"
+                (reuploadRequest)="handleReuploadRequestEvent(paper, $event)"
               />
             </div>
           </div>

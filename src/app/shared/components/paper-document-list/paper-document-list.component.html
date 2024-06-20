@@ -88,7 +88,11 @@
       }
     }
     @if(perspective == 'admin' && canEdit) {
-      <button mat-icon-button [matMenuTriggerFor]="moreMenu" [matMenuTriggerData]="{ document: document }">
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="moreMenu"
+        [matMenuTriggerData]="{ document: documentMap[document.name] }"
+      >
         <mat-icon>more_vert</mat-icon>
       </button>
     }
@@ -101,9 +105,16 @@
       <mat-icon>upload</mat-icon>
       <span>Reîncărcați documentul</span>
     </button>
-    <button mat-menu-item (click)="reuploadRequest.emit(document.name)">
-      <mat-icon>file_present</mat-icon>
-      <span>Solicitați reîncărcarea</span>
-    </button>
+    @if(document.reuploadRequest) {
+      <button mat-menu-item (click)="reuploadRequest.emit({ document, reuploadRequested: false })">
+        <mat-icon>cancel</mat-icon>
+        <span>Anulați solicitarea de reîncărcare</span>
+      </button>
+    } @else {
+      <button mat-menu-item (click)="reuploadRequest.emit({ document, reuploadRequested: true })">
+        <mat-icon>file_present</mat-icon>
+        <span>Solicitați reîncărcarea</span>
+      </button>
+    }
   </ng-template>
 </mat-menu>
