@@ -80,11 +80,11 @@
       <!-- View mode -->
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50" *ngIf="data.mode == 'view'">
         <mat-label>Domeniu</mat-label>
-        <input matInput disabled type="text" [value]="data.data?.student.domain.name">
+        <input matInput disabled type="text" [value]="data.user?.student.domain.name">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50" *ngIf="data.mode == 'view'">
         <mat-label>Programul de studii</mat-label>
-        <input matInput disabled type="text" [value]="data.data?.student.specialization?.name">
+        <input matInput disabled type="text" [value]="data.user?.student.specialization?.name">
       </mat-form-field>
 
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
@@ -107,13 +107,14 @@
     <button mat-button mat-dialog-close>Anulați</button>
   } @else {
     <button mat-button mat-dialog-close>Închideți</button>
+    <button mat-button (click)="switchToEdit()">Editați studentul</button>
   }
   @if(data.mode != 'create') {
     <button mat-button (click)="editStudentExtraData()">Editați datele suplimentare</button>
   }
   @if(data.mode === 'create') {
-    <button mat-button [mat-dialog-close]="addStudent()" [disabled]="studentForm.invalid">Adăugați</button>
+    <button mat-button (click)="addStudent()" [disabled]="studentForm.invalid">Adăugați</button>
   } @else if(data.mode === 'edit') {
-    <button mat-button [mat-dialog-close]="editStudent()" [disabled]="studentForm.invalid">Salvați</button>
+    <button mat-button (click)="editStudent()" [disabled]="studentForm.invalid">Salvați</button>
   }
 </mat-dialog-actions>

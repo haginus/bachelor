@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Subscription, firstValueFrom, of } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { AdminService } from '../../../services/admin.service';
 import { Domain, UserData } from '../../../services/auth.service';
 import { CNPValidator } from '../../../validators/CNP-validator';
@@ -30,29 +30,26 @@ export class StudentDialogComponent implements OnInit {
   isLoadingData: boolean = false;
 
   ngOnInit(): void {
-    if(this.data.mode == 'create') {
-      this.studentForm.get('email').enable();
-    }
     this.domainSubscrition = this.admin.getDomains().subscribe(domains => {
       this.loadingDomains = false;
       this.domains = domains;
-      if(this.data.mode != 'view') { // create or edit
+      if(this.data.mode != 'view') {
         this.studentForm.get('domainId').enable();
         this.studentForm.get('specializationId').enable();
-        this.chosenDomain = domains.find(domain => domain.id == this.data.data?.student.domain.id);
-        this.studentForm.get('domainId').valueChanges.subscribe(domainId => {
-          this.chosenDomain = domains.find(domain => domain.id == domainId);
-          this.specializationId.reset();
-        })
       }
+      this.chosenDomain = domains.find(domain => domain.id == this.data.user?.student.domain.id);
+      this.studentForm.get('domainId').valueChanges.subscribe(domainId => {
+        this.chosenDomain = domains.find(domain => domain.id == domainId);
+        this.specializationId.reset();
+      });
     });
     if(this.data.mode == 'view') {
       this.studentForm.disable();
     }
-    if(this.data.data == null && this.data.userId) {
+    if(this.data.user == null && this.data.userId) {
       this.isLoadingData = true;
       this.admin.getStudentUser(this.data.userId).subscribe(data => {
-        this.data.data = data;
+        this.data.user = data;
         this.setControlValues();
         this.isLoadingData = false;
       });
@@ -60,18 +57,18 @@ export class StudentDialogComponent implements OnInit {
   }
 
   studentForm = new FormGroup({
-    'firstName': new FormControl(this.data.data?.firstName, [Validators.required]),
-    'lastName': new FormControl(this.data.data?.lastName, [Validators.required]),
-    'CNP': new FormControl(this.data.data?.CNP, [CNPValidator]),
-    'identificationCode': new FormControl(this.data.data?.student?.identificationCode, [Validators.required]),
-    'email': new FormControl(this.data.data?.email, [Validators.email, Validators.required]),
-    'domainId': new FormControl({ value: this.data.data?.student?.domainId, disabled: true }, [Validators.required]),
-    'specializationId': new FormControl({ value: this.data.data?.student?.specializationId, disabled: true }, [Validators.required]),
-    'promotion': new FormControl(this.data.data?.student?.promotion, [Validators.required]),
-    'group': new FormControl(this.data.data?.student?.group, [Validators.required]),
-    'matriculationYear': new FormControl(this.data.data?.student?.matriculationYear, [Validators.required]),
-    'studyForm': new FormControl(this.data.data?.student?.studyForm, [Validators.required]),
-    'fundingForm': new FormControl(this.data.data?.student?.fundingForm, [Validators.required])
+    'firstName': new FormControl(this.data.user?.firstName, [Validators.required]),
+    'lastName': new FormControl(this.data.user?.lastName, [Validators.required]),
+    'CNP': new FormControl(this.data.user?.CNP, [CNPValidator]),
+    'identificationCode': new FormControl(this.data.user?.student?.identificationCode, [Validators.required]),
+    'email': new FormControl(this.data.user?.email, [Validators.email, Validators.required]),
+    'domainId': new FormControl({ value: this.data.user?.student?.domainId, disabled: true }, [Validators.required]),
+    'specializationId': new FormControl({ value: this.data.user?.student?.specializationId, disabled: true }, [Validators.required]),
+    'promotion': new FormControl(this.data.user?.student?.promotion, [Validators.required]),
+    'group': new FormControl(this.data.user?.student?.group, [Validators.required]),
+    'matriculationYear': new FormControl(this.data.user?.student?.matriculationYear, [Validators.required]),
+    'studyForm': new FormControl(this.data.user?.student?.studyForm, [Validators.required]),
+    'fundingForm': new FormControl(this.data.user?.student?.fundingForm, [Validators.required])
   });
 
   get specializationId() {
@@ -79,60 +76,62 @@ export class StudentDialogComponent implements OnInit {
   }
 
   get emailChanged() {
-    return this.data.mode == 'edit' && this.studentForm.get("email").value != this.data.data?.email;
+    return this.data.mode == 'edit' && this.studentForm.get("email").value != this.data.user?.email;
   }
 
   private setControlValues() {
-    this.studentForm.get("firstName").setValue(this.data.data.firstName);
-    this.studentForm.get("lastName").setValue(this.data.data.lastName);
-    this.studentForm.get("CNP").setValue(this.data.data.CNP);
-    this.studentForm.get("email").setValue(this.data.data.email);
-    this.studentForm.get("domainId").setValue(this.data.data.student.domainId);
-    this.studentForm.get("specializationId").setValue(this.data.data.student.specializationId);
-    this.studentForm.get("group").setValue(this.data.data.student.group);
-    this.studentForm.get("identificationCode").setValue(this.data.data.student.identificationCode);
-    this.studentForm.get("promotion").setValue(this.data.data.student.promotion);
-    this.studentForm.get("matriculationYear").setValue(this.data.data.student.matriculationYear);
-    this.studentForm.get("studyForm").setValue(this.data.data.student.studyForm);
-    this.studentForm.get("fundingForm").setValue(this.data.data.student.fundingForm);
+    this.studentForm.get("firstName").setValue(this.data.user.firstName);
+    this.studentForm.get("lastName").setValue(this.data.user.lastName);
+    this.studentForm.get("CNP").setValue(this.data.user.CNP);
+    this.studentForm.get("email").setValue(this.data.user.email);
+    this.studentForm.get("domainId").setValue(this.data.user.student.domainId);
+    this.studentForm.get("specializationId").setValue(this.data.user.student.specializationId);
+    this.studentForm.get("group").setValue(this.data.user.student.group);
+    this.studentForm.get("identificationCode").setValue(this.data.user.student.identificationCode);
+    this.studentForm.get("promotion").setValue(this.data.user.student.promotion);
+    this.studentForm.get("matriculationYear").setValue(this.data.user.student.matriculationYear);
+    this.studentForm.get("studyForm").setValue(this.data.user.student.studyForm);
+    this.studentForm.get("fundingForm").setValue(this.data.user.student.fundingForm);
   }
 
-  private getControlValues() {
-    const firstName = this.studentForm.get("firstName").value;
-    const lastName = this.studentForm.get("lastName").value;
-    const CNP = this.studentForm.get("CNP").value;
-    const email = this.studentForm.get("email").value;
-    const domainId = this.studentForm.get("domainId").value;
-    const specializationId = this.studentForm.get("specializationId").value;
-    const group = this.studentForm.get("group").value;
-    const identificationCode = this.studentForm.get("identificationCode").value;
-    const promotion = this.studentForm.get("promotion").value;
-    const matriculationYear = this.studentForm.get("matriculationYear").value;
-    const studyForm = this.studentForm.get("studyForm").value;
-    const fundingForm = this.studentForm.get("fundingForm").value;
-
-    return { firstName, lastName, CNP, email, group, domainId, specializationId, identificationCode, promotion,
-    matriculationYear, studyForm, fundingForm };
-  }
-  addStudent() {
-    const { firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion,
-      studyForm, fundingForm, matriculationYear, } = this.getControlValues();
-    return this.admin.addStudent(firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion,
-      studyForm, fundingForm, matriculationYear);
+  async addStudent() {
+    const formData = this.studentForm.getRawValue();
+    this.isLoadingData = true;
+    const result = await firstValueFrom(this.admin.addStudent(formData));
+    this.isLoadingData = false;
+    if(result) {
+      this.snackBar.open("Studentul a fost adăugat.");
+      this.dialogRef.close(result);
+    }
   }
 
-  editStudent() {
-    const { firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion,
-      studyForm, fundingForm, matriculationYear} = this.getControlValues();
-    const id = this.data.data.id;
-    return this.admin.editStudent(id, firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion,
-      studyForm, fundingForm, matriculationYear);
+  async editStudent() {
+    const formData = {
+      ...this.studentForm.getRawValue(),
+      id: this.data.user.id
+    };
+    this.isLoadingData = true;
+    const result = await firstValueFrom(this.admin.editStudent(formData));
+    this.isLoadingData = false;
+    if(result) {
+      let message = "Studentul a fost modificat.";
+      if(result.documentsGenerated) {
+        message += " Documentele au fost regenerate.";
+      }
+      this.snackBar.open(message, null, { duration: 8000 });
+      this.dialogRef.close(result);
+    }
+  }
+
+  switchToEdit() {
+    this.studentForm.enable({ emitEvent: false });
+    this.data.mode = 'edit';
   }
 
   async editStudentExtraData() {
     try {
       this.isLoadingData = true;
-      const user = await firstValueFrom(this.admin.getStudentUser(this.data.data!.id));
+      const user = await firstValueFrom(this.admin.getStudentUser(this.data.user!.id));
       const dialogRef = this.dialog.open(StudentExtraDataEditorComponent, {
         data: {
           studentExtraData: user.student!.studentExtraDatum,
@@ -144,7 +143,7 @@ export class StudentDialogComponent implements OnInit {
       const result = await firstValueFrom(this.admin.editStudentExtraData(user.id, studentExtraData));
       if(result) {
         this.snackBar.open("Datele suplimentare au fost salvate.");
-        this.dialogRef.close(of(true));
+        this.dialogRef.close(true);
       }
     } catch(err) {
       console.error(err);
@@ -160,6 +159,6 @@ export class StudentDialogComponent implements OnInit {
 
 export interface StudentDialogData {
   mode: "view" | "create" | "edit";
-  data?: UserData;
+  user?: UserData;
   userId: number;
 }

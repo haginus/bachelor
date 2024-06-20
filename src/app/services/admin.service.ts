@@ -56,25 +56,17 @@ export class AdminService {
       );
   }
 
-  addStudent(firstName: string, lastName: string, CNP: string, email: string,
-    group: string, specializationId: number, identificationCode: string, promotion: string,
-    studyForm: string, fundingForm: string, matriculationYear: string): Observable<UserData | null> {
+  addStudent(data: Omit<EditStudentData, 'id'>): Observable<UserData | null> {
     const url = `${environment.apiUrl}/admin/students/add`;
-    const body = { firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion,
-      studyForm, fundingForm, matriculationYear };
-    return this.http.post<UserData>(url, body, this.auth.getPrivateHeaders()).pipe(
+    return this.http.post<UserData>(url, data, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("addStudent", null))
     );
   }
 
-  editStudent(id: number, firstName: string, lastName: string, CNP: string, email: string,
-    group: string, specializationId: number, identificationCode: string, promotion: string,
-    studyForm: string, fundingForm: string, matriculationYear: string): Observable<UserData | null> {
+  editStudent(data: EditStudentData) {
     const url = `${environment.apiUrl}/admin/students/edit`;
-    const body = { id, firstName, lastName, CNP, email, group, specializationId, identificationCode, promotion,
-      studyForm, fundingForm, matriculationYear };
-    return this.http.post<UserData>(url, body, this.auth.getPrivateHeaders()).pipe(
-      catchError(this.handleError("editStudent", null))
+    return this.http.post<{ user: UserData, documentsGenerated: boolean }>(url, data, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError<null>("editStudent", null))
     );
   }
 
@@ -544,6 +536,21 @@ export class AdminService {
       return of(result as T);
     };
   }
+}
+
+interface EditStudentData {
+  id: number;
+  firstName: string;
+  lastName: string;
+  CNP: string;
+  email: string;
+  group: string;
+  specializationId: number;
+  identificationCode: string;
+  promotion: string;
+  studyForm: string;
+  fundingForm: string;
+  matriculationYear: string;
 }
 
 export interface StudentQueryFilters {

@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
-import { BehaviorSubject, merge, Observable, of as observableOf, Subscription } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, merge, Observable, of as observableOf, Subscription } from 'rxjs';
 import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
 import { StudentDeleteDialogComponent } from '../../dialogs/student-delete-dialog/student-delete-dialog.component';
@@ -99,86 +99,64 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
     this.admin.getDomains().subscribe(domains => this.domains = domains);
   }
 
-  openNewStudentDialog() {
+  async openNewStudentDialog() {
     let dialogRef = this.dialog.open(StudentDialogComponent, {
       data: {
         mode: "create"
       }
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        result.subscribe(res => {
-          if (res) {
-            this.snackbar.open("Student adăugat.");
-            this.performedActions.next("studentAdded");
-          }
-        })
-      }
-    });
+    if(await firstValueFrom(dialogRef.afterClosed())) {
+      this.performedActions.next("studentAdded");
+    }
   }
 
-  viewStudent(studentId: number) {
-    let dialogRef = this.dialog.open(StudentDialogComponent, {
+  async viewStudent(user: UserData) {
+    const dialogRef = this.dialog.open(StudentDialogComponent, {
       data: {
         mode: "view",
-        data: this.data.find(student => student.id == studentId)
+        user,
       }
     });
-
+    if(await firstValueFrom(dialogRef.afterClosed())) {
+      this.performedActions.next("studentEdited");
+    }
   }
 
-  editStudent(studentId: number) {
+  async editStudent(user: UserData) {
     let dialogRef = this.dialog.open(StudentDialogComponent, {
       data: {
         mode: "edit",
-        data: this.data.find(student => student.id == studentId)
+        user,
       }
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        result.subscribe(res => {
-          if (res) {
-            this.snackbar.open("Student editat.");
-            this.performedActions.next("studentEdited");
-          }
-        })
-      }
-    })
+    if(await firstValueFrom(dialogRef.afterClosed())) {
+      this.performedActions.next("studentEdited");
+    }
   }
 
-  deleteStudent(studentId: number) {
+  async deleteStudent(user: UserData) {
     let dialogRef = this.dialog.open(StudentDeleteDialogComponent, {
-      data: this.data.find(student => student.id == studentId)
+      data: user,
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        result.subscribe(res => {
-          if (res != null) {
-            this.snackbar.open("Student șters.");
-            this.performedActions.next("studentDeleted");
-          }
-        })
-      }
-    })
+    const deleteObservable = await firstValueFrom(dialogRef.afterClosed());
+    if(!deleteObservable) return;
+    if(await firstValueFrom(deleteObservable)) {
+      this.performedActions.next("studentDeleted");
+    }
   }
 
-  resendActivationCode(teacherId: number) {
-    this.admin.resendUserActivationCode(teacherId).subscribe(result => {
-      if(result) {
-        this.snackbar.open("Link de activare trimis.");
-      }
-    });
+  async resendActivationCode(student: UserData) {
+    const result = await firstValueFrom(this.admin.resendUserActivationCode(student.id));
+    if(result) {
+      this.snackbar.open("Link de activare trimis.");
+    }
   }
 
-  impersonateStudent(teacherId: number) {
-    this.auth.impersonateUser(teacherId).subscribe(result => {
-      if(!result.error) {
-        this.router.navigate(['student']);
-      }
-    })
+  async impersonateStudent(student: UserData) {
+    const result = await firstValueFrom(this.auth.impersonateUser(student.id));
+    if(!result.error) {
+      this.router.navigate(['student']);
+    }
   }
 
   refreshResults() {
