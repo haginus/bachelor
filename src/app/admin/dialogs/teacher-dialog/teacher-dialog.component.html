@@ -1,9 +1,17 @@
-<h2 mat-dialog-title *ngIf="data.mode == 'create'">Adăugați profesor</h2>
-<h2 mat-dialog-title *ngIf="data.mode == 'edit'">Editați profesor</h2>
-<h2 mat-dialog-title *ngIf="data.mode == 'view'">Vizualizare profesor</h2>
+@switch (data.mode) {
+  @case('create') {
+    <h2 mat-dialog-title>Adăugați profesor</h2>
+  }
+  @case ('edit') {
+    <h2 mat-dialog-title>Editați profesor</h2>
+  }
+  @case ('view') {
+    <h2 mat-dialog-title>Vizualizare profesor</h2>
+  }
+}
 <mat-dialog-content class="mat-typography" *ngIf="data.mode == 'edit' || data.mode == 'create'">
-  <form [formGroup]="teacherForm">
-    <mat-form-field appearance="outline">
+  <form [formGroup]="teacherForm" fxLayout="row grid" fxLayoutGap="10px grid">
+    <mat-form-field appearance="outline" fxFlex="100">
       <mat-label>Titlu</mat-label>
       <mat-select formControlName="title">
         <mat-option [value]="null">-- Fără titlu --</mat-option>
@@ -16,20 +24,20 @@
         <mat-option value="Drd.">Drd.</mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" fxFlex="100">
       <mat-label>Nume</mat-label>
       <input matInput type="text" formControlName="lastName" name="teacherLastName">
     </mat-form-field>
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" fxFlex="100">
       <mat-label>Prenume</mat-label>
       <input matInput type="text" formControlName="firstName" name="teacherFirstName">
     </mat-form-field>
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" fxFlex="100">
       <mat-label>CNP</mat-label>
       <input matInput type="text" formControlName="CNP" name="teacherCNP">
       <mat-error>{{ teacherForm.get("CNP").errors?.['CNPValidator'].message }}</mat-error>
     </mat-form-field>
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" fxFlex="100">
       <mat-label>E-mail</mat-label>
       <input matInput type="email" formControlName="email" name="teacherEmail">
       <mat-hint *ngIf="emailChanged" class="warning">
@@ -40,7 +48,6 @@
 </mat-dialog-content>
 <mat-dialog-content *ngIf="data.mode =='view'">
   <mat-list>
-    <div mat-subheader>Date personale</div>
     <mat-list-item>
       <div matListItemTitle>Titlu</div>
       <div matListItemLine>{{ data.data.title || '-' }}</div>

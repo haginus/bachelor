@@ -1,84 +1,87 @@
 <div class="splash-loading" *ngIf="isLoadingCommittee">
-    <mat-spinner diameter="48"></mat-spinner>
+  <mat-spinner diameter="48"></mat-spinner>
 </div>
 
 <mat-toolbar *ngIf="committee" class="committee-toolbar">
-    <button mat-icon-button (click)="goBack()">
-        <mat-icon>arrow_back</mat-icon>
-    </button>
-    <div class="committee-info">
-        <div class="committee-name">{{ committee.name }}</div>
-        <div class="committer-domains">
-            Domenii:
-            <ng-container *ngFor="let domain of committee.domains; let isLast = last">
-                {{ domain.name }}<ng-container *ngIf="!isLast">, </ng-container>
-            </ng-container>
-        </div>
+  <button mat-icon-button (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <div class="committee-info">
+    <div class="committee-name">{{ committee.name }}</div>
+    <div class="committer-domains">
+      Domenii:
+      <ng-container *ngFor="let domain of committee.domains; let isLast = last">
+        {{ domain.name }}<ng-container *ngIf="!isLast">, </ng-container>
+      </ng-container>
     </div>
-    <button mat-raised-button color="primary" fxHide.lt-sm (click)="saveChanges()">Salvați modificările</button>
-    <button mat-icon-button fxHide.gt-xs>
-        <mat-icon>save</mat-icon>
-    </button>
+  </div>
+  <button mat-raised-button color="primary" fxHide.lt-sm (click)="saveChanges()">Salvați modificările</button>
+  <button mat-icon-button fxHide.gt-xs>
+    <mat-icon>save</mat-icon>
+  </button>
 </mat-toolbar>
 
 <div cdkDropListGroup class="paper-assign-container" fxLayout="grid" fxLayoutGap="16px">
-    <div class="list-container" fxFlex="50">
-        <h2>Lucrări atribuite acestei comisii</h2>
-        <div cdkDropList [cdkDropListData]="assignedPappers" class="paper-list" cdkDropListSortingDisabled
-            (cdkDropListDropped)="drop($event)">
-            <div class="spinner-container" *ngIf="isLoadingAssignedPapers">
-                <mat-spinner diameter="36"></mat-spinner>
-            </div>
-            <div class="paper-box" *ngFor="let paper of assignedPappers" cdkDrag>
-                <ng-template *ngTemplateOutlet="paperTemplate; context: { paper: paper }"></ng-template>
-            </div>
-            <div class="no-results" *ngIf="assignedPappers.length == 0">Nu există lucrări.</div>
-        </div>
+  <div class="list-container" fxFlex="50">
+    <h2>Lucrări atribuite acestei comisii</h2>
+    <div cdkDropList [cdkDropListData]="assignedPappers" class="paper-list" cdkDropListSortingDisabled
+      (cdkDropListDropped)="drop($event)">
+      <div class="spinner-container" *ngIf="isLoadingAssignedPapers">
+        <mat-spinner diameter="36"></mat-spinner>
+      </div>
+      <div class="paper-box" *ngFor="let paper of assignedPappers" cdkDrag>
+        <ng-template *ngTemplateOutlet="paperTemplate; context: { paper: paper }"></ng-template>
+      </div>
+      <div class="no-results" *ngIf="assignedPappers.length == 0">Nu există lucrări.</div>
     </div>
+  </div>
 
-    <div class="list-container" fxFlex="50">
-        <h2>Alte lucrări</h2>
-        <mat-card class="filters" fxLayout="row grid" fxLayoutGap="10px grid" [formGroup]="paperFilter">
-            <mat-form-field appearance="outline" fxFlex="70">
-                <mat-label>Titlu lucrare</mat-label>
-                <input matInput formControlName="title" name="paperTitle">
-            </mat-form-field>
-            <mat-form-field appearance="outline" fxFlex="30">
-                <mat-label>Tip</mat-label>
-                <mat-select formControlName="type" name="paperType">
-                    <mat-option [value]="null">--</mat-option>
-                    <mat-option *ngFor="let paperType of PAPER_TYPES | keyvalue" [value]="paperType.key">
-                        {{ paperType.value | titlecase }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="outline" fxFlex="100">
-                <mat-label>Nume student</mat-label>
-                <input matInput formControlName="studentName" name="studentName">
-            </mat-form-field>
-        </mat-card>
-        <div cdkDropList [cdkDropListData]="otherPapers" class="paper-list" cdkDropListSortingDisabled
-        (cdkDropListDropped)="drop($event)">
-            <div class="spinner-container" *ngIf="isLoadingOtherPapers">
-                <mat-spinner diameter="36"></mat-spinner>
-            </div>
-            <div class="paper-box" *ngFor="let paper of otherPapers" cdkDrag>
-                <ng-template *ngTemplateOutlet="paperTemplate; context: { paper: paper }"></ng-template>
-            </div>
-            <div class="no-results" *ngIf="otherPapers.length == 0">Nu există lucrări.</div>
-        </div>
+  <div class="list-container" fxFlex="50">
+    <h2>Alte lucrări</h2>
+    <div class="filters mat-elevation-z1">
+      <div fxLayout="row grid" fxLayoutGap="10px grid" [formGroup]="paperFilter">
+        <mat-form-field appearance="outline" fxFlex="70">
+          <mat-label>Titlu lucrare</mat-label>
+          <input matInput formControlName="title" name="paperTitle">
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="30">
+          <mat-label>Tip</mat-label>
+          <mat-select formControlName="type" name="paperType">
+            <mat-option [value]="null">--</mat-option>
+            <mat-option *ngFor="let paperType of PAPER_TYPES | keyvalue" [value]="paperType.key">
+              {{ paperType.value | titlecase }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100">
+          <mat-label>Nume student</mat-label>
+          <input matInput formControlName="studentName" name="studentName">
+        </mat-form-field>
+      </div>
     </div>
+    <div cdkDropList [cdkDropListData]="otherPapers" class="paper-list" cdkDropListSortingDisabled
+      (cdkDropListDropped)="drop($event)">
+      <div class="spinner-container" *ngIf="isLoadingOtherPapers">
+        <mat-spinner diameter="36"></mat-spinner>
+      </div>
+      <div class="paper-box" *ngFor="let paper of otherPapers" cdkDrag>
+        <ng-template *ngTemplateOutlet="paperTemplate; context: { paper: paper }"></ng-template>
+      </div>
+      <div class="no-results" *ngIf="otherPapers.length == 0">Nu există lucrări.</div>
+    </div>
+  </div>
 </div>
 
 <ng-template let-paper="paper" #paperTemplate>
-    <div class="paper-title">{{ paper.title }}</div>
-    <div class="paper-description" [matTooltip]="paper.description">{{paper.description}}</div>
-    <div class="paper-topics">
-        <span class="badge" *ngFor="let topic of paper.topics">{{ topic.name }}</span>
-    </div>
-    <div class="paper-authors">
-        <div>Student: {{ paper.student?.lastName }} {{ paper.student?.firstName }}</div>
-        <div>Profesor: {{ paper.teacher?.lastName }} {{ paper.teacher?.firstName }}</div>
-        <i class="warn-text" *ngIf="teacherIsInCommittee(paper.teacherId)">Profesorul coordonator face parte din comisie.</i>
-    </div>
+  <div class="paper-title">{{ paper.title }}</div>
+  <div class="paper-description" [matTooltip]="paper.description">{{paper.description}}</div>
+  <div class="paper-topics">
+    <span class="badge" *ngFor="let topic of paper.topics">{{ topic.name }}</span>
+  </div>
+  <div class="paper-authors">
+    <div>Student: {{ paper.student?.lastName }} {{ paper.student?.firstName }}</div>
+    <div>Profesor: {{ paper.teacher?.lastName }} {{ paper.teacher?.firstName }}</div>
+    <i class="warn-text" *ngIf="teacherIsInCommittee(paper.teacherId)">Profesorul coordonator face parte din
+      comisie.</i>
+  </div>
 </ng-template>

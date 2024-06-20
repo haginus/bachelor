@@ -1,16 +1,20 @@
+h2 {
+  margin-bottom: 0;
+}
+
 mat-form-field {
-    display: block;
+  display: block;
 }
 
 @media (min-width: 550px) {
-    mat-dialog-content {
-        min-width: 280px;
-    }
+  mat-dialog-content {
+    min-width: 280px;
+  }
 }
 
 .select-spinner {
-    position: absolute;
-    top: 6px;
-    right: 4px;
-    background: white;
+  position: absolute;
+  top: 6px;
+  right: 4px;
+  background: white;
 }
