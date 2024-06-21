@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer, MatDrawerMode, MatSidenavModule } from '@angular/material/sidenav';
-import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators'
 import { routerFadeAnimation } from './animations';
@@ -14,6 +14,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 
 const SideWidth = 800;
@@ -26,6 +28,7 @@ const DEFAULT_TITLE = 'Finalizare studii';
   animations: [routerFadeAnimation],
   standalone: true,
   imports: [
+    FlexLayoutModule,
     MatProgressSpinnerModule,
     MatMenuModule,
     MatButtonModule,
@@ -33,6 +36,7 @@ const DEFAULT_TITLE = 'Finalizare studii';
     MatToolbarModule,
     MatDrawer,
     MatSidenavModule,
+    MatProgressBarModule,
     RouterModule,
     ProblemReportButtonComponent,
   ],
@@ -54,6 +58,7 @@ export class AppComponent implements OnInit {
   user: UserData | undefined = undefined;
   sessionSettings: SessionSettings;
   loading = true;
+  loadingRoute = false;
   backendDown = false;
   appVersion = environment.appVersion;
 
@@ -61,6 +66,18 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.drawerMode = window.innerWidth < SideWidth ? "over" : "side";
+    this.router.events.subscribe((event) => {
+      switch (true) {
+        case event instanceof NavigationStart:
+          this.loadingRoute = true;
+          break;
+        case event instanceof NavigationEnd:
+        case event instanceof NavigationCancel:
+        case event instanceof NavigationError:
+          this.loadingRoute = false;
+          break;
+      }
+    });
     this.router.events.pipe(  // code to check for route changes and get route data
       filter(event => event instanceof NavigationEnd),
       map(() => this.route),

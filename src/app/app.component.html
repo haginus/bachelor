@@ -31,6 +31,9 @@
 </mat-menu>
 
 <div class="flex-container fullscreen main-container" [hidden]="loading">
+  @if(loadingRoute) {
+    <mat-progress-bar class="loading-route-bar" mode="indeterminate"></mat-progress-bar>
+  }
   @if(!hideToolbar) {
     <mat-toolbar>
       @if(!hideDrawer) {
