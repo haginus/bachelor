@@ -259,7 +259,7 @@ export class PaperDocumentListComponent implements OnChanges {
         return;
       }
       snackbarRef.dismiss();
-      this.document.viewDocument(data, type);
+      this.document.viewDocument(data, type, mapElement.title);
     })
   }
 

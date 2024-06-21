@@ -210,19 +210,14 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private downloadDocument(buffer: ArrayBuffer, documentName: CommitteeDocument) {
-    let downloadTitle = this.committee.name;
-    if (documentName == 'catalog') {
-      downloadTitle += '-CATALOG-COMISIE';
-    } else if (documentName == 'final_catalog') {
-      downloadTitle += '-CATALOG-FINAL';
+  private viewDocument(buffer: ArrayBuffer, documentName: CommitteeDocument) {
+    const [mimeType, title] = CommitteeDocumentsFormat[documentName];
+    const documentTitle = [this.committee.name, title].join(' - ');
+    if(mimeType === 'application/pdf') {
+      this.documentService.viewDocument(buffer, mimeType, documentTitle);
+    } else {
+      this.documentService.downloadDocument(buffer, documentTitle, mimeType);
     }
-    downloadTitle += `.${CommitteeDocumentsFormat[documentName][0]}`;
-    this.documentService.downloadDocument(
-      buffer,
-      downloadTitle,
-      CommitteeDocumentsFormat[documentName][1]
-    );
   }
 
   generateCommitteeDocument(documentName: CommitteeDocument) {
@@ -231,7 +226,7 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
       .getCommitteeDocument(this.committee.id, documentName)
       .subscribe((buffer) => {
         if (buffer) {
-          this.downloadDocument(buffer, documentName);
+          this.viewDocument(buffer, documentName);
         }
         this.isLoadingResults = false;
       });

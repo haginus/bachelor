@@ -1,0 +1,33 @@
+<mat-toolbar>
+  <span class="document-title">{{ documentTitle }}</span>
+  <button mat-icon-button matTooltip="Deschideți într-o filă nouă" (click)="openInNewTab()">
+    <mat-icon>open_in_new</mat-icon>
+  </button>
+  <button mat-icon-button matTooltip="Descărcați" (click)="downloadResource()">
+    <mat-icon>download</mat-icon>
+  </button>
+  <button mat-icon-button matTooltip="Închideți" mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-toolbar>
+<div class="preview-container">
+  @if(isLoading) {
+    <app-loading type="spinner" color="primary" />
+  }
+  @if(previewSupported && !errorLoading) {
+    <iframe
+      [src]="resourceUrl"
+      [hidden]="isLoading"
+      (error)="errorLoading = true"
+      (load)="isLoading = false"
+    ></iframe>
+  } @else {
+    <div class="no-preview">
+      <mat-icon>insert_drive_file</mat-icon>
+      <div class="text">
+        Previzualizare indisponibilă.<br>
+        Descărcați fișierul pentru a-l vizualiza.
+      </div>
+    </div>
+  }
+</div>

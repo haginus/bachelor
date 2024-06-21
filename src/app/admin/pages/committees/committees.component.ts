@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { CommitteeDialogComponent } from '../../dialogs/committee-dialog/committee-dialog.component';
 import { AdminService } from '../../../services/admin.service';
@@ -118,11 +118,12 @@ export class CommitteesComponent implements OnInit, OnDestroy {
   getCommitteeDocument(committee: Committee, documentName: CommitteeDocument) {
     let sbRef = this.snackbar.open('Se generează documentul...');
     this.document.getCommitteeDocument(committee.id, documentName).subscribe(document => {
-      const format = CommitteeDocumentsFormat[documentName];
-      if(format[0] == 'pdf') {
-        this.document.viewDocument(document, format[1]);
+      const [mimeType, title] = CommitteeDocumentsFormat[documentName];
+      const documentTitle = [committee.name, title].join(' - ');
+      if(mimeType === 'application/pdf') {
+        this.document.viewDocument(document, mimeType, documentTitle);
       } else {
-        this.document.downloadDocument(document, `Catalog ${committee.name}.${format[0]}`, format[1]);
+        this.document.downloadDocument(document, documentTitle, mimeType);
       }
       sbRef.dismiss();
     });
@@ -156,20 +157,24 @@ export class CommitteesComponent implements OnInit, OnDestroy {
     this.performedActions.next("refresh");
   }
 
-  generateCommitteeDocument(documentName: 'committee_compositions' | 'committee_students' | 'committee_students_excel') {
+  async generateCommitteeDocument(documentName: 'committee_compositions' | 'committee_students' | 'committee_students_excel') {
+    const documentFormats: Record<typeof documentName, [string, string]> = {
+      committee_compositions: ['application/pdf', 'Componența comisiilor'],
+      committee_students: ['application/pdf', 'Repartizare comisii'],
+      committee_students_excel: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Repartizare comisii']
+    }
     let sbRef = this.snackbar.open('Se generează documentul...', null, {
       duration: null
     });
-    this.admin.generateCommitteeDocument(documentName).subscribe(doc => {
-      if(doc) {
-        if(documentName == 'committee_students_excel') {
-          this.document.downloadDocument(doc, 'Repartizare comisii.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        } else {
-          this.document.viewDocument(doc, 'application/pdf');
-        }
-        sbRef.dismiss();
-      }
-    })
+    const document = await firstValueFrom(this.admin.generateCommitteeDocument(documentName));
+    if(!document) return;
+    sbRef.dismiss();
+    const [mimeType, title] = documentFormats[documentName];
+    if(mimeType === 'application/pdf') {
+      this.document.viewDocument(document, mimeType, title);
+    } else {
+      this.document.downloadDocument(document, title, mimeType);
+    }
   }
 
 }

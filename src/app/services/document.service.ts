@@ -5,23 +5,36 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { AuthService, PaperDocument } from './auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DocumentViewerDialogComponent } from '../shared/components/document-viewer-dialog/document-viewer-dialog.component';
 
 @Injectable({
   providedIn: 'any'
 })
 export class DocumentService {
 
-  constructor(private auth: AuthService, private http: HttpClient, private snackbar: MatSnackBar) { }
+  constructor(
+    private auth: AuthService,
+    private http: HttpClient,
+    private snackbar: MatSnackBar,
+    private dialog: MatDialog,
+  ) { }
 
-  viewDocument(data: ArrayBuffer, type: string) {
+  viewDocument(data: ArrayBuffer, type: string, title?: string) {
     const blob = new Blob([data], { type });
     const url = window.URL.createObjectURL(blob);
-    const windowRef = window.open(url);
-    if(!windowRef || windowRef.closed || typeof windowRef.closed == "undefined") {
-      const sbRef = this.snackbar.open("Deschiderea documentului a fost blocată de browserul " +
-        "dvs. Asigurați-vă că permiteți ferestrele pop-up.", "Reîncercați");
-      sbRef.onAction().subscribe(() => this.viewDocument(data, type));
-    }
+    this.dialog.open(DocumentViewerDialogComponent, {
+      width: '100%',
+      height: '100%',
+      maxWidth: '100%',
+      maxHeight: '100%',
+      data: {
+        url,
+        type,
+        title,
+      },
+      autoFocus: 'dialog',
+    });
   }
 
   downloadDocument(buffer: ArrayBuffer, downloadTitle: string, type: string) {
@@ -103,7 +116,7 @@ export class DocumentService {
 
 export type CommitteeDocument = 'catalog' | 'catalog_docx' | 'final_catalog';
 export const CommitteeDocumentsFormat: Record<CommitteeDocument, [string, string]> = {
-  'catalog': ['pdf', 'application/pdf'],
-  'catalog_docx': ['docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
-  'final_catalog': ['pdf', 'application/pdf'],
+  'catalog': ['application/pdf', 'Catalog'],
+  'catalog_docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Catalog'],
+  'final_catalog': ['application/pdf', 'Catalog final'],
 }

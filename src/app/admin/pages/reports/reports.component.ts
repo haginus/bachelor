@@ -18,11 +18,12 @@ export class ReportsComponent implements OnInit {
     this.getFinalReportStatus();
   }
 
-  getFinalCatalog(mode: string) {
+  getFinalCatalog(mode: 'final' | 'centralizing') {
     let sbRef = this.snackbar.open('Se generează documentul...', null, { duration: null });
     this.admin.getFinalCatalog(mode).subscribe(data => {
       if(!data) return;
-      this.document.viewDocument(data, 'application/pdf');
+      const documentTitle = mode == 'final' ? 'Catalog final' : 'Catalog centralizator';
+      this.document.viewDocument(data, 'application/pdf', documentTitle);
       sbRef.dismiss();
     });
   }
@@ -34,7 +35,7 @@ export class ReportsComponent implements OnInit {
       if(download) {
         this.document.downloadDocument(buffer, report.name, report.mimeType);
       } else {
-        this.document.viewDocument(buffer, report.mimeType);
+        this.document.viewDocument(buffer, report.mimeType, report.name);
       }
     });
   }
