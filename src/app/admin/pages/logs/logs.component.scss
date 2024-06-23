@@ -17,10 +17,12 @@
     }
   }
 
-  .logs {
+  .logs-container {
     border-top: 1px solid #e0e0e0;
     flex: 1;
-    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 
     .header-toolbar {
       display: flex;
@@ -62,13 +64,21 @@
       }
     }
 
+    .results {
+      overflow: auto;
+      flex: 1;
+    }
+
     .footer {
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 12px;
-      height: 56px;
       text-align: center;
+
+      &:not(:empty) {
+        margin: 12px 0;
+      }
     }
   }
 }

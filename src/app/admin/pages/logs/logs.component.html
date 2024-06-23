@@ -17,7 +17,7 @@
     />
   </div>
 </div>
-<div class="logs">
+<div class="logs-container">
   @if(isLoadingResults) {
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   }
@@ -29,17 +29,19 @@
     <div class="timestamp">Timp</div>
     <div class="summary">Sumar</div>
   </div>
-  @for(log of logs; track log.id) {
-    <app-log-entry [log]="log" (filterChanged)="handleFilterChange($event)" />
-  }
-  <div class="footer">
-    @if(logs.length === 0 && !isLoadingResults) {
-      <div class="no-logs">Nu există loguri care să corespundă criteriilor de căutare.</div>
+  <div class="results">
+    @for(log of logs; track log.id) {
+      <app-log-entry [log]="log" (filterChanged)="handleFilterChange($event)" />
     }
-    @if(logs.length < logsCount && !isLoadingResults) {
-      <button mat-flat-button color="primary" (click)="queryLogs(false)">
-        <span>Încărcați mai multe</span>
-      </button>
-    }
+    <div class="footer">
+      @if(logs.length === 0 && !isLoadingResults) {
+        <div class="no-logs">Nu există loguri care să corespundă criteriilor de căutare.</div>
+      }
+      @if(logs.length < logsCount && !isLoadingResults) {
+        <button mat-stroked-button color="primary" (click)="queryLogs(false)">
+          <span>Încărcați mai multe</span>
+        </button>
+      }
+    </div>
   </div>
 </div>
