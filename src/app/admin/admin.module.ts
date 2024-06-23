@@ -42,6 +42,7 @@ import { SudoDialogComponent } from './dialogs/sudo-dialog/sudo-dialog.component
 import { ImportResultDialogComponent } from './dialogs/import-result-dialog/import-result-dialog.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { UploadFileDirective } from '../shared/directives/upload-file.directive';
+import { CodeEditorModule } from '@ngstack/code-editor';
 
 const materialDeps = [
   MatPaginatorModule,

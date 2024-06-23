@@ -1,0 +1,51 @@
+<mat-menu #resourceMenu="matMenu">
+  <ng-template matMenuContent let-resource="resource">
+    <button mat-menu-item (click)="filterChanged.emit({ resource, show: true })">
+      <span>Arată intrările care se potrivesc</span>
+    </button>
+    <button mat-menu-item (click)="filterChanged.emit({ resource, show: false })">
+      <span>Ascunde intrările care se potrivesc</span>
+    </button>
+  </ng-template>
+</mat-menu>
+
+<div class="log-row" (click)="toggle()" [class.expanded]="expanded">
+  <div class="severity">
+    <button mat-icon-button class="small-icon-button">
+      <mat-icon>{{ expanded ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}</mat-icon>
+    </button>
+    <mat-icon
+      (click)="handleResourceClick(severityResource, $event)"
+      [matMenuTriggerFor]="resourceMenu"
+      [matMenuTriggerData]="{ resource: severityResource }"
+      [matTooltip]="severityResource | resourceTooltip"
+    >
+      {{ severityResource.icon }}
+    </mat-icon>
+  </div>
+  <div class="timestamp">
+    {{ log.timestamp | date:"yyyy-MM-dd HH:mm:ss" }}
+  </div>
+  <div class="summary">
+    @for(resource of resources; track $index) {
+      <div
+        class="resource-field"
+        (click)="handleResourceClick(resource, $event)"
+        [matMenuTriggerFor]="resourceMenu"
+        [matMenuTriggerData]="{ resource: resource }"
+        [matTooltip]="resource | resourceTooltip"
+      >
+        <mat-icon>{{ resource.icon }}</mat-icon>
+        <span>{{ resource.displayName }}</span>
+      </div>
+    }
+    <span class="message">{{ message }}</span>
+  </div>
+</div>
+@if(expanded) {
+  <div class="log-detail">
+    <div class="json-container">
+      <ngx-json-viewer [json]="filteredLog" [expanded]="false"></ngx-json-viewer>
+    </div>
+  </div>
+}

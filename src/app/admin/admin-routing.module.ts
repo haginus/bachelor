@@ -81,6 +81,12 @@ const routes: Routes = [
     component: PaperAssignComponent,
     canActivate: [RoleGuard],
     data: { title: 'Atribuire lucrări', role: 'admin' }
+  },
+  {
+    path: 'logs',
+    loadComponent: () => import('./pages/logs/logs.component').then(m => m.LogsComponent),
+    canActivate: [RoleGuard],
+    data: { title: 'Loguri', role: 'admin' }
   }
 ];
 

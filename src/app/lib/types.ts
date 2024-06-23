@@ -6,3 +6,8 @@ export interface DocumentReuploadRequest {
   comment: string;
   createdAt: string;
 }
+
+export interface Paginated<T> {
+  count: number;
+  rows: T[];
+}

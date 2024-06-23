@@ -1,0 +1,45 @@
+<div class="header">
+  <div class="toolbar">
+    <button mat-stroked-button (click)="resetFilters()">
+      <mat-icon>clear</mat-icon>
+      <span>Resetați filtrele</span>
+    </button>
+    <span class="flex-spacer"></span>
+    <button mat-flat-button color="primary" (click)="queryLogs()" [disabled]="!logsQuery || invalidQuery">
+      <span>Rulați</span>
+    </button>
+  </div>
+  <div class="filter-editor">
+    <ngs-code-editor
+      [codeModel]="model"
+      [options]="options"
+      (valueChanged)="handleValueChange($event)"
+    />
+  </div>
+</div>
+<div class="logs">
+  @if(isLoadingResults) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+  <div class="header-toolbar">
+    <b>{{ logsCount }} rezultate</b>
+  </div>
+  <div class="table-header">
+    <div class="severity">Severitate</div>
+    <div class="timestamp">Timp</div>
+    <div class="summary">Sumar</div>
+  </div>
+  @for(log of logs; track log.id) {
+    <app-log-entry [log]="log" (filterChanged)="handleFilterChange($event)" />
+  }
+  <div class="footer">
+    @if(logs.length === 0 && !isLoadingResults) {
+      <div class="no-logs">Nu există loguri care să corespundă criteriilor de căutare.</div>
+    }
+    @if(logs.length < logsCount && !isLoadingResults) {
+      <button mat-flat-button color="primary" (click)="queryLogs(false)">
+        <span>Încărcați mai multe</span>
+      </button>
+    }
+  </div>
+</div>
