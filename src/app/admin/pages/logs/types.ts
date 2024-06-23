@@ -4,6 +4,7 @@ export interface LogEntryResourcesSpec {
   label: string;
   icon: string;
   getDisplayName: (resource: any) => string;
+  defaultResource?: any;
 }
 
 export interface LogEntryResource {

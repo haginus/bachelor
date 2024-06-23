@@ -1,3 +1,5 @@
+import { LogName } from "./log-name.enum";
+
 export const logFilterSchema = {
   type: 'object',
   additionalProperties: false,
@@ -47,9 +49,25 @@ export const logFilterSchema = {
           $ref: '#/$defs/matchOrNotMatchNumbersOrNull',
           description: 'ID-ul utilizatorului care a efectuat acțiunea impersonând un alt utilizator',
         },
+        userId: {
+          $ref: '#/$defs/matchOrNotMatchNumbersOrNull',
+          description: 'ID-ul utilizatorului afectat de acțiune',
+        },
+        studentExtraDataId: {
+          $ref: '#/$defs/matchOrNotMatchNumbersOrNull',
+          description: 'ID-ul datelor suplimentare ale studentului',
+        },
         paperId: {
           $ref: '#/$defs/matchOrNotMatchNumbersOrNull',
           description: 'ID-ul lucrării',
+        },
+        documentId: {
+          $ref: '#/$defs/matchOrNotMatchNumbersOrNull',
+          description: 'ID-ul documentului',
+        },
+        documentReuploadRequestId: {
+          $ref: '#/$defs/matchOrNotMatchNumbersOrNull',
+          description: 'ID-ul cererii de reîncărcare a documentului',
         },
       },
     }
@@ -58,7 +76,7 @@ export const logFilterSchema = {
   $defs: {
     logNameEnum: {
       type: 'string',
-      enum: ['paper.created', 'paper.updated', 'paper.deleted', 'paper.submitted', 'paper.unsubmitted'],
+      enum: Object.values(LogName),
     },
     logSeverityEnum: {
       type: 'string',

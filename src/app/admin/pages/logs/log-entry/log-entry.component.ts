@@ -81,9 +81,22 @@ export class LogEntryComponent {
       case LogName.PaperDeleted:
       case LogName.PaperSubmitted:
       case LogName.PaperUnsubmitted:
+      case LogName.PaperValidated:
+      case LogName.PaperInvalidated:
+      case LogName.PaperCancelledValidation:
         byLogAttributes = [
           'paperId',
           'paper',
+        ];
+        break;
+      case LogName.DocumentCreated:
+      case LogName.DocumentContentUpdated:
+      case LogName.DocumentDeleted:
+        byLogAttributes = [
+          'paperId',
+          'paper',
+          'documentId',
+          'document',
         ];
         break;
     }
@@ -96,7 +109,7 @@ export class LogEntryComponent {
     const resourcesSpecs = attributes.map(key => logEntryResourcesSpecs[key]).filter(Boolean);
     this.resources = resourcesSpecs.map(spec => {
       const resourceId = this.log[spec.resourceIdField];
-      const resource = this.log[spec.resourceField];
+      const resource = this.log[spec.resourceField] || spec.defaultResource;
       return {
         resourceFilterField: spec.resourceIdField,
         resourceId,
@@ -105,7 +118,7 @@ export class LogEntryComponent {
         icon: spec.icon,
         displayName: resource ? spec.getDisplayName(resource) : `#${resourceId}`,
       }
-    }).filter(resource => resource.resourceId);
+    }).filter(resource => resource.resourceId || resource.resource);
     switch(this.log.name) {
       case LogName.PaperCreated:
         this.message = 'Lucrarea a fost creată.';

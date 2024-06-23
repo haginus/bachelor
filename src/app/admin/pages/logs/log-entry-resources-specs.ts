@@ -13,7 +13,12 @@ const _logEntryResourcesSpecs: LogEntryResourcesSpec[] = [
     resourceField: 'byUser',
     label: 'Utilizator',
     icon: 'account_circle',
-    getDisplayName: (resource) => `${resource.firstName} ${resource.lastName}`
+    getDisplayName: (resource) => `${resource.firstName} ${resource.lastName}`,
+    defaultResource: {
+      id: null,
+      firstName: '[SISTEM]',
+      lastName: '',
+    }
   },
   {
     resourceIdField: 'impersonatedByUserId',
@@ -28,6 +33,13 @@ const _logEntryResourcesSpecs: LogEntryResourcesSpec[] = [
     label: 'Lucrare',
     icon: 'description',
     getDisplayName: (resource) => resource.title,
+  },
+  {
+    resourceIdField: 'documentId',
+    resourceField: 'document',
+    label: 'Document',
+    icon: 'insert_drive_file',
+    getDisplayName: (resource) => `${resource.name}:${resource.type}`,
   }
 ];
 

@@ -91,15 +91,20 @@
   padding: 0 6px;
   background-color: #f5f5f5;
   border-radius: 8px;
-  white-space: nowrap;
-  max-width: 160px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  max-width: 210px;
 
   mat-icon {
     font-size: 14px;
     width: 14px;
     height: 14px;
+    min-width: 14px;
+  }
+
+  span {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
