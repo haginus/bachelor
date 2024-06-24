@@ -76,6 +76,14 @@ export class LogEntryComponent {
     ];
     let byLogAttributes: string[] = [];
     switch(this.log.name) {
+      case LogName.StudentExtraDataCreated:
+      case LogName.StudentExtraDataUpdated:
+      case LogName.StudentExtraDataDeleted:
+        byLogAttributes = [
+          'studentExtraDataId',
+          'studentExtraData',
+        ];
+        break;
       case LogName.PaperCreated:
       case LogName.PaperUpdated:
       case LogName.PaperDeleted:
@@ -84,6 +92,9 @@ export class LogEntryComponent {
       case LogName.PaperValidated:
       case LogName.PaperInvalidated:
       case LogName.PaperCancelledValidation:
+      case LogName.PaperAssigned:
+      case LogName.PaperUnassigned:
+      case LogName.PaperGraded:
         byLogAttributes = [
           'paperId',
           'paper',
@@ -97,6 +108,15 @@ export class LogEntryComponent {
           'paper',
           'documentId',
           'document',
+        ];
+        break;
+      case LogName.DocumentReuploadRequestCreated:
+      case LogName.DocumentReuploadRequestDeleted:
+        byLogAttributes = [
+          'paperId',
+          'paper',
+          'documentReuploadRequestId',
+          'documentReuploadRequest',
         ];
         break;
     }

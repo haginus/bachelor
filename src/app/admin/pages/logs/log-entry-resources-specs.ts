@@ -1,3 +1,4 @@
+import { DocumentReuploadRequest } from "../../../lib/types";
 import { LogEntryResourcesSpec } from "./types";
 
 const _logEntryResourcesSpecs: LogEntryResourcesSpec[] = [
@@ -28,6 +29,20 @@ const _logEntryResourcesSpecs: LogEntryResourcesSpec[] = [
     getDisplayName: (resource) => `${resource.firstName} ${resource.lastName}`
   },
   {
+    resourceIdField: 'userId',
+    resourceField: 'user',
+    label: 'Utilizator afectat',
+    icon: 'person',
+    getDisplayName: (resource) => `${resource.firstName} ${resource.lastName}`
+  },
+  {
+    resourceIdField: 'studentExtraDataId',
+    resourceField: 'studentExtraData',
+    label: 'Date suplimentare student',
+    icon: 'school',
+    getDisplayName: (resource) => `${resource.studentId}`
+  },
+  {
     resourceIdField: 'paperId',
     resourceField: 'paper',
     label: 'Lucrare',
@@ -40,6 +55,13 @@ const _logEntryResourcesSpecs: LogEntryResourcesSpec[] = [
     label: 'Document',
     icon: 'insert_drive_file',
     getDisplayName: (resource) => `${resource.name}:${resource.type}`,
+  },
+  {
+    resourceIdField: 'documentReuploadRequestId',
+    resourceField: 'documentReuploadRequest',
+    label: 'Cerere reîncărcare document',
+    icon: 'sync',
+    getDisplayName: (resource: DocumentReuploadRequest) => `${resource.documentName}`
   }
 ];
 
