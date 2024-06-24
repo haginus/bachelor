@@ -157,6 +157,7 @@
                 [documents]="paper.documents"
                 [canEdit]="canUploadDocuments"
                 perspective="teacher"
+                [documentNameSuffix]="paper | paperTitle"
                 (documentEvents)="handleDocumentEvents($event, paper.id)"
                 (areDocumentsUploaded)="handleAreDocumentsUploadedEvent($event, paper)"
               />

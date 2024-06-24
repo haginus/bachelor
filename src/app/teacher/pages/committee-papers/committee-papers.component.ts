@@ -30,6 +30,7 @@ import { PaperGradeTableComponent } from '../../../shared/components/paper-grade
 import { TitleCasePipe } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { PaperTitlePipe } from '../../../shared/pipes/paper-title.pipe';
 
 @Component({
   selector: 'app-committee-papers',
@@ -55,6 +56,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     PaperGradeTableComponent,
     PaperDocumentListComponent,
     TitleCasePipe,
+    PaperTitlePipe,
   ],
 })
 export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {

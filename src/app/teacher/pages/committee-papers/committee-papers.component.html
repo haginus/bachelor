@@ -132,6 +132,7 @@
                 [requiredDocuments]="paper.requiredDocuments"
                 [documents]="paper.documents"
                 perspective="committee"
+                [documentNameSuffix]="paper | paperTitle"
                 (areDocumentsUploaded)="handleAreDocumentsUploadedEvent($event, paper)"
               />
             </div>
