@@ -35,6 +35,7 @@ import { DecimalPipe, KeyValuePipe, TitleCasePipe } from '@angular/common';
 import { UserSnippetComponent } from '../../../shared/components/user-snippet/user-snippet.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { PapersService } from '../../../services/papers.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-papers',
@@ -53,6 +54,7 @@ import { PapersService } from '../../../services/papers.service';
     MatButtonModule,
     MatIconModule,
     MatToolbarModule,
+    MatTooltipModule,
     MatMenuModule,
     MatProgressSpinnerModule,
     MatTableModule,
