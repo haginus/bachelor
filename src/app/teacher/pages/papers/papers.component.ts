@@ -35,6 +35,7 @@ import { DecimalPipe, KeyValuePipe, TitleCasePipe } from '@angular/common';
 import { UserSnippetComponent } from '../../../shared/components/user-snippet/user-snippet.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { PapersService } from '../../../services/papers.service';
+import { PaperTitlePipe } from '../../../shared/pipes/paper-title.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
@@ -51,6 +52,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FlexLayoutModule,
     MatDialogModule,
     MatSnackBarModule,
+    MatTooltipModule,
     MatButtonModule,
     MatIconModule,
     MatToolbarModule,
@@ -66,6 +68,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     TitleCasePipe,
     DecimalPipe,
     KeyValuePipe,
+    PaperTitlePipe,
   ],
 })
 export class TeacherPapersComponent

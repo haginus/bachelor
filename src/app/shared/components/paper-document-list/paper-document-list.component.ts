@@ -48,6 +48,8 @@ export class PaperDocumentListComponent implements OnChanges {
   @Input() canEdit: boolean = true;
   /** Session Settings needed to determine whether the user can upload certain docs. */
   @Input() sessionSettings: SessionSettings;
+  /** Suffix for all document names. Useful when viewing multiple papers in the same view. */
+  @Input() documentNameSuffix?: string;
   /**  Emit events when documents change (signed / copy uploaded) */
   @Output() documentEvents = new EventEmitter<PaperDocumentEvent>();
   /**  Output variable that tells whether all the documents are uploaded (by uploader and category) */
@@ -259,7 +261,8 @@ export class PaperDocumentListComponent implements OnChanges {
         return;
       }
       snackbarRef.dismiss();
-      this.document.viewDocument(data, type, mapElement.title);
+      const title = [mapElement.title, this.documentNameSuffix].filter(Boolean).join(' - ').slice(0, 255);
+      this.document.viewDocument(data, type, title);
     })
   }
 

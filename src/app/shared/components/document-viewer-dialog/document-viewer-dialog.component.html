@@ -15,12 +15,17 @@
     <app-loading type="spinner" color="primary" />
   }
   @if(previewSupported && !errorLoading) {
-    <iframe
-      [src]="resourceUrl"
-      [hidden]="isLoading"
-      (error)="errorLoading = true"
-      (load)="isLoading = false"
-    ></iframe>
+    @if(data.type === 'application/pdf') {
+      @defer {
+        <app-pdf-viewer
+          [src]="data.url"
+          (pdfLoaded)="isLoading = false"
+          (findbarVisibleChange)="findbarVisibleChange($event)"
+        />
+      }
+    } @else {
+      <img [src]="data.url" (load)="isLoading = false" />
+    }
   } @else {
     <div class="no-preview">
       <mat-icon>insert_drive_file</mat-icon>

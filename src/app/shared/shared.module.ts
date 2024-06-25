@@ -34,6 +34,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { EditPaperComponent } from './components/edit-paper/edit-paper.component';
 import { PluckPipe } from './pipes/pluck.pipe';
 import { JoinPipe } from './pipes/join.pipe';
+import { PaperTitlePipe } from './pipes/paper-title.pipe';
 
 const deps = [
   MatProgressBarModule,
@@ -77,6 +78,7 @@ const deps = [
     FixedPipe,
     PluckPipe,
     JoinPipe,
+    PaperTitlePipe,
     ...deps
   ],
   exports: [
@@ -96,6 +98,7 @@ const deps = [
     FixedPipe,
     PluckPipe,
     JoinPipe,
+    PaperTitlePipe,
     ...deps,
   ],
 })

@@ -218,6 +218,7 @@
                 [documents]="paper.documents"
                 perspective="admin"
                 [canEdit]="paper.isValid == null"
+                [documentNameSuffix]="paper | paperTitle"
                 (areDocumentsUploaded)="handleAreDocumentsUploadedEvent($event, paper)"
                 (reuploadRequest)="handleReuploadRequestEvent(paper, $event)"
               />

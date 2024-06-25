@@ -19,10 +19,10 @@ mat-toolbar {
   overflow: hidden;
   position: relative;
 
-  iframe {
+  img {
     width: 100%;
     height: 100%;
-    border: none;
+    object-fit: contain;
   }
 
   .no-preview {
