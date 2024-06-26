@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { BehaviorSubject, combineLatest, merge, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, merge, Subscription } from 'rxjs';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -146,6 +146,16 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
       }
     };
     this.dataSource.sort = this.sort;
+  }
+
+  async getPapersArchive() {
+    const sbRef = this.snackbar.open('Se descarcă arhiva...', null, { duration: null });
+    const archieveBuffer = await firstValueFrom(this.teacher.getCommitteePapersArchieve(this.committee.id));
+    sbRef.dismiss();
+    if (archieveBuffer) {
+      const title = `${this.committee.name} - Arhiva Lucrărilor`;
+      this.documentService.downloadDocument(archieveBuffer, title, 'application/zip');
+    }
   }
 
   refreshResults() {
