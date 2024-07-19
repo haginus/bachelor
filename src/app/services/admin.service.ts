@@ -468,8 +468,8 @@ export class AdminService {
     );
   }
 
-  getFinalCatalog(mode: string): Observable<ArrayBuffer> {
-    const url = `${environment.apiUrl}/documents/final_catalog?mode=${mode}`;
+  getFinalCatalog(mode: string, format: 'pdf' | 'docx' = 'pdf'): Observable<ArrayBuffer> {
+    const url = `${environment.apiUrl}/documents/final_catalog?mode=${mode}&format=${format}`;
     const options = this.auth.getPrivateHeaders();
     return this.http
       .get<any>(url, {...options, responseType: 'arraybuffer' as 'json'})

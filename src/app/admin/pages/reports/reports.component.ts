@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DocumentService } from '../../../services/document.service';
 import { AdminService, FinalReportStatus } from '../../../services/admin.service';
+import { firstValueFrom } from 'rxjs';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-reports',
@@ -10,7 +12,12 @@ import { AdminService, FinalReportStatus } from '../../../services/admin.service
 })
 export class ReportsComponent implements OnInit {
 
-  constructor(private document: DocumentService, private admin: AdminService, private snackbar: MatSnackBar) { }
+  constructor(
+    private document: DocumentService,
+    private admin: AdminService,
+    private snackbar: MatSnackBar,
+    private auth: AuthService,
+  ) { }
 
   finalReportStatus: FinalReportStatus;
 
@@ -18,14 +25,24 @@ export class ReportsComponent implements OnInit {
     this.getFinalReportStatus();
   }
 
-  getFinalCatalog(mode: 'final' | 'centralizing') {
+  async getFinalCatalog(mode: 'final' | 'centralizing', format: 'pdf' | 'docx' = 'pdf') {
     let sbRef = this.snackbar.open('Se generează documentul...', null, { duration: null });
-    this.admin.getFinalCatalog(mode).subscribe(data => {
-      if(!data) return;
-      const documentTitle = mode == 'final' ? 'Catalog final' : 'Catalog centralizator';
-      this.document.viewDocument(data, 'application/pdf', documentTitle);
+    const data = await firstValueFrom(this.admin.getFinalCatalog(mode, format));
+    const mimeTypes: Record<typeof format, string> = {
+      pdf: 'application/pdf',
+      docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    };
+    if(data) {
+      const { sessionName } = await firstValueFrom(this.auth.sessionSettings);
+      const catalogName = mode == 'final' ? 'Catalog final' : 'Catalog centralizator';
+      const documentTitle = `${catalogName} - Sesiunea ${sessionName}`;
+      if(format == 'pdf') {
+        this.document.viewDocument(data, mimeTypes[format], documentTitle);
+      } else {
+        this.document.downloadDocument(data, documentTitle, mimeTypes[format]);
+      }
       sbRef.dismiss();
-    });
+    }
   }
 
   getReportFile(reportName: any, download = false, query?: Record<string, any>) {
