@@ -71,7 +71,7 @@
       @case ('sign') {
         <button
           mat-stroked-button
-          (click)="openDocumentDialog('sign', document.name, documentMap[document.name].lastId)"
+          (click)="signDocument(documentMap[document.name])"
           [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange"
         >
           Semnați

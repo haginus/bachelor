@@ -14,6 +14,7 @@ import { DocumentReuploadRequest } from '../../../lib/types';
 import { inclusiveDate } from '../../../lib/utils';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DatePipe } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-paper-document-list',
@@ -241,29 +242,21 @@ export class PaperDocumentListComponent implements OnChanges {
     })
   }
 
+  async signDocument(mapElement: DocumentMapElement) {
+    const { buffer, type, title } = await this.getDocument(mapElement);
+    if(!buffer) return;
+    this.document.viewDocument(buffer, type, title, { requiredDocument: mapElement.requiredDocument });
+  }
+
   reuploadDocument(document: DocumentMapElement) {
     const action = document.requiredTypes['copy'] ? 'uploadCopy' : 'sign';
     this.openDocumentDialog(action, document.requiredDocument.name, document.lastId);
   }
 
-  viewDocument(mapElement: DocumentMapElement) {
-    mapElement.actionPending = true;
-    let snackbarRef = this.snackbar.open("Se descarcă documentul...", null, {
-      duration: null // infinite duration
-    });
-
-    const id = mapElement.lastId;
-    const type = this.documents.find(doc => doc.id == id).mimeType;
-    this.document.getDocument(id).subscribe(data => {
-      mapElement.actionPending = false;
-      if(!data) {
-        this.snackbar.open("A apărut o eroare.");
-        return;
-      }
-      snackbarRef.dismiss();
-      const title = [mapElement.title, this.documentNameSuffix].filter(Boolean).join(' - ').slice(0, 255);
-      this.document.viewDocument(data, type, title);
-    })
+  async viewDocument(mapElement: DocumentMapElement) {
+    const { buffer, type, title } = await this.getDocument(mapElement);
+    if(!buffer) return;
+    this.document.viewDocument(buffer, type, title);
   }
 
   deleteDocument(mapElement: DocumentMapElement) {
@@ -278,6 +271,24 @@ export class PaperDocumentListComponent implements OnChanges {
       }
       mapElement.actionPending = false;
     });
+  }
+
+  private async getDocument(mapElement: DocumentMapElement) {
+    mapElement.actionPending = true;
+    let snackbarRef = this.snackbar.open("Se descarcă documentul...", null, {
+      duration: null,
+    });
+    const id = mapElement.lastId;
+    const type = this.documents.find(doc => doc.id == id).mimeType;
+    const title = [mapElement.title, this.documentNameSuffix].filter(Boolean).join(' - ').slice(0, 255);
+    const buffer = await firstValueFrom(this.document.getDocument(id));
+    mapElement.actionPending = false;
+    snackbarRef.dismiss();
+    return {
+      buffer,
+      type,
+      title
+    };
   }
 
 }

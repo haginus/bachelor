@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, Component, HostListener, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LoadingComponent } from '../loading/loading.component';
 import { PdfViewerComponent } from '../pdf-viewer/pdf-viewer.component';
+import { PaperRequiredDocument } from '../paper-document-list/paper-document-list.component';
+import { SignDialogComponent } from '../sign-dialog/sign-dialog.component';
 
 @Component({
   selector: 'app-document-viewer-dialog',
@@ -28,6 +30,7 @@ export class DocumentViewerDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) protected data: DocumentViewerDialogData,
     private readonly dialogRef: MatDialogRef<DocumentViewerDialogComponent>,
+    private readonly dialog: MatDialog,
     sanitizer: DomSanitizer,
   ) {
     const supportedTypes = ['application/pdf', 'image/*'];
@@ -70,10 +73,17 @@ export class DocumentViewerDialogComponent {
     anchor.click();
   }
 
+  openSignDialog() {
+    this.dialog.open(SignDialogComponent);
+  }
+
 }
 
-interface DocumentViewerDialogData {
+export interface DocumentViewerDialogData {
   url: string;
   type: string;
   title: string;
+  signOptions?: {
+    requiredDocument: PaperRequiredDocument;
+  }
 }

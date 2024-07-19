@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { AuthService, PaperDocument } from './auth.service';
 import { MatDialog } from '@angular/material/dialog';
-import { DocumentViewerDialogComponent } from '../shared/components/document-viewer-dialog/document-viewer-dialog.component';
+import { DocumentViewerDialogComponent, DocumentViewerDialogData } from '../shared/components/document-viewer-dialog/document-viewer-dialog.component';
 
 @Injectable({
   providedIn: 'any'
@@ -20,7 +20,7 @@ export class DocumentService {
     private dialog: MatDialog,
   ) { }
 
-  viewDocument(data: ArrayBuffer, type: string, title?: string) {
+  viewDocument(data: ArrayBuffer, type: string, title?: string, signOptions?: DocumentViewerDialogData['signOptions']) {
     const blob = new Blob([data], { type });
     const url = window.URL.createObjectURL(blob);
     this.dialog.open(DocumentViewerDialogComponent, {
@@ -32,6 +32,7 @@ export class DocumentService {
         url,
         type,
         title,
+        signOptions,
       },
       autoFocus: 'dialog',
     });

@@ -1,0 +1,18 @@
+<div class="container" [style]="{ width: canvasWidth }">
+  <canvas
+    #signaturePadCanvas
+    [width]="canvasWidth"
+    [height]="canvasHeight"
+    (pointerdown)="onStartDrawing($event)"
+    (pointermove)="onDraw($event)"
+    (pointerup)="onEndDrawing()"
+  >
+  </canvas>
+  <div class="toolbar">
+    <span class="flex-spacer"></span>
+    <button mat-button (click)="clear()">
+      <mat-icon>clear</mat-icon>
+      Ștergeți
+    </button>
+  </div>
+</div>
