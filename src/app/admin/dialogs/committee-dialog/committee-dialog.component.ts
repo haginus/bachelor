@@ -19,8 +19,8 @@ export class CommitteeDialogComponent implements OnInit {
 
   isLoading: boolean = false;
   domains: Domain[];
-  teachers: UserData[];
-  filteredTeachers: UserData[];
+  teachers: UserData[] = [];
+  filteredTeachers: UserData[] = [];
   selectedDomainType: string = null;
 
   teacherNameMatcher = new TeacherNameMatcher();

@@ -1,3 +1,16 @@
+<mat-menu #catalogFormatMenu="matMenu">
+  <ng-template matMenuContent let-mode="mode">
+    <button mat-menu-item (click)="getFinalCatalog(mode, 'pdf')">
+      <mat-icon>picture_as_pdf</mat-icon>
+      <span>Format PDF</span>
+    </button>
+    <button mat-menu-item (click)="getFinalCatalog(mode, 'docx')">
+      <mat-icon>description</mat-icon>
+      <span>Format DOCX</span>
+    </button>
+  </ng-template>
+</mat-menu>
+
 <mat-card>
   <mat-card-header>
     <mat-card-title>Cataloage</mat-card-title>
@@ -8,14 +21,20 @@
         <div>Generați catalogul final</div>
         <div>Conține notele studenților din această sesiune</div>
       </div>
-      <button mat-stroked-button (click)="getFinalCatalog('final')">Generați</button>
+      <button mat-stroked-button [matMenuTriggerFor]="catalogFormatMenu" [matMenuTriggerData]="{ mode: 'final' }">
+        <span>Generați</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
     </div>
     <div class="list-item">
       <div class="content">
         <div>Generați catalogul centralizator</div>
         <div>Conține notele studenților din această sesiune care au fost declarați admiși</div>
       </div>
-      <button mat-stroked-button (click)="getFinalCatalog('centralizing')">Generați</button>
+      <button mat-stroked-button [matMenuTriggerFor]="catalogFormatMenu" [matMenuTriggerData]="{ mode: 'centralizing' }">
+        <span>Generați</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
     </div>
   </div>
 </mat-card>
@@ -30,7 +49,7 @@
         <div>Generați listă lucrări înscrise</div>
         <div>Conține toate lucrările înscrise în această sesiune</div>
       </div>
-      <button mat-stroked-button (click)="getReportFile('paper_list', true, { submitted: false })">
+      <button mat-stroked-button (click)="getReportFile('paper_list', true, { submitted: true })">
         Generați
       </button>
     </div>

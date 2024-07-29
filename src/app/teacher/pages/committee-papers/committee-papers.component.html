@@ -19,8 +19,19 @@
   }
   <mat-toolbar color="white">
     @if(hasGenerationRights && (gradingAllowed || committee.finalGrades)) {
-      <button mat-raised-button color="warn" (click)="markGradesAsFinal()" [disabled]="committee.finalGrades">
+      <button fxHide.lt-sm mat-raised-button color="warn" (click)="markGradesAsFinal()" [disabled]="committee.finalGrades">
         {{ committee.finalGrades ? 'Note marcate drept finale' : 'Marcați notele drept finale' }}
+      </button>
+      <button
+        fxHide
+        fxShow.lt-sm
+        mat-icon-button
+        color="warn"
+        (click)="markGradesAsFinal()"
+        [disabled]="committee.finalGrades"
+        matTooltip="Marcați notele drept finale"
+      >
+        <mat-icon>published_with_changes</mat-icon>
       </button>
       <button mat-button [matMenuTriggerFor]="documentGeneration">
         <span>Generați catalogul</span>
@@ -28,6 +39,9 @@
       </button>
     }
     <span class="toolbar-spacer"></span>
+    <button mat-icon-button matTooltip="Descărcați toate lucrările" (click)="getPapersArchive()">
+      <mat-icon>archive</mat-icon>
+    </button>
     <button mat-icon-button (click)="refreshResults()">
       <mat-icon>refresh</mat-icon>
     </button>

@@ -221,6 +221,18 @@ export class TeacherService {
       );
   }
 
+  getCommitteePapersArchieve(committeeId: number): Observable<ArrayBuffer> {
+    const url = `${environment.apiUrl}/teacher/committees/${committeeId}/papers-archive`;
+    const options = this.auth.getPrivateHeaders();
+    options.headers.append('Cache-Control', 'no-store');
+    options['responseType'] = 'arraybuffer' as 'json';
+    return this.http
+      .get<any>(url, options)
+      .pipe(
+        catchError(this.handleError<null>('getCommitteePapersArchieve', null))
+      );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       this.snackbar.open(error.error?.message || "A apărut o eroare.");
