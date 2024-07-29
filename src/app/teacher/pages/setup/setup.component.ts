@@ -8,6 +8,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatListModule } from '@angular/material/list';
 import { UserProfileEditorComponent } from '../../../shared/components/user-profile-editor/user-profile-editor.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'teacher-setup',
@@ -16,6 +17,7 @@ import { UserProfileEditorComponent } from '../../../shared/components/user-prof
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    MatButtonModule,
     MatCheckboxModule,
     MatStepperModule,
     MatProgressSpinnerModule,
