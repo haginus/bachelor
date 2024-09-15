@@ -16,10 +16,11 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class SignaturePadComponent {
 
-  @Input() canvasWidth = 250;
-  @Input() canvasHeight = 120;
-  @ViewChild('signaturePadCanvas', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
+  @Input() canvasWidth = 270;
+  @Input() canvasHeight = 130;
+  @ViewChild('signaturePadCanvas', { static: true }) private canvas: ElementRef<HTMLCanvasElement>;
 
+  public dirty = false;
   private writingMode = false;
   private ctx: CanvasRenderingContext2D;
 
@@ -39,6 +40,9 @@ export class SignaturePadComponent {
   }
 
   protected onEndDrawing() {
+    if(this.writingMode === true) {
+      this.dirty = true;
+    }
     this.writingMode = false;
   }
 
@@ -52,17 +56,22 @@ export class SignaturePadComponent {
 
   clear() {
     this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.dirty = false;
   }
 
   private getCursorPosition(event: PointerEvent) {
-    console.log(event);
-    const target = event.target as HTMLCanvasElement;
     const positionX = event.offsetX;
     const positionY = event.offsetY;
     if(positionX < 0 || positionX > this.canvasWidth || positionY < 0 || positionY > this.canvasHeight) {
       this.writingMode = false;
     }
     return [positionX, positionY];
+  }
+
+  getBlob() {
+    return new Promise<Blob>((resolve) => {
+      this.canvas.nativeElement.toBlob(resolve, "image/png");
+    });
   }
 
 }
