@@ -1,0 +1,49 @@
+.sample-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 250px;
+  margin: 0 auto;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  overflow: hidden;
+
+  .header {
+    padding: 6px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+  }
+
+  .sample-box {
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 14px;
+    line-height: normal;
+    gap: 8px;
+    padding: 6px;
+
+    &.np {
+      padding: 0;
+    }
+
+    img {
+      width: 250px;
+      height: 120px;
+    }
+  }
+
+  .footer {
+    display: flex;
+    justify-content: center;
+    visibility: hidden;
+    padding: 6px 0;
+    border-top: 1px solid #eee;
+
+    &.visible {
+      visibility: visible;
+    }
+  }
+}

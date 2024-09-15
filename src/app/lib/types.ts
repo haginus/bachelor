@@ -6,3 +6,10 @@ export interface DocumentReuploadRequest {
   comment: string;
   createdAt: string;
 }
+
+export interface Signature {
+  id: number;
+  userId: number;
+  sample: string;
+  createdAt: string;
+}

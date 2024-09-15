@@ -1,3 +1,50 @@
+<div mat-dialog-title>Semnați documentul</div>
 <div mat-dialog-content>
-  <app-signature-pad />
+  <p>
+    Sunteți pe cale să semnați documentul „PLACEHOLDER”. Semnând acest document, vă asumați că
+    l-ați citit în totalitate și sunteți de acord cu conținutul acestuia.
+  </p>
+  <div class="sample-container">
+    <div class="header">Speciment semnătură</div>
+    <div class="sample-box" [class]="{ np: !!signature }">
+      @if(loadingSignature) {
+        <mat-progress-spinner mode="indeterminate" [diameter]="48"></mat-progress-spinner>
+      } @else {
+        @if(signature) {
+          <img [src]="signature.sample" />
+        } @else {
+          @if(signatureError) {
+            <mat-icon>warning_amber</mat-icon>
+            A apărut o eroare. <br> Dacă problema persistă, contactați administratorul.
+          } @else {
+            <mat-icon>draw</mat-icon>
+            Adăugați un specimen de semnătură.
+          }
+        }
+      }
+    </div>
+    <div class="footer" [class]="{ visible: !loadingSignature && !signatureError }">
+      <button mat-button (click)="openSampleEditor()">
+        {{ !signature ? 'Adăugați specimenul' : 'Editați specimenul' }}
+      </button>
+    </div>
+  </div>
 </div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Anulați</button>
+  <button mat-button [disabled]="!signature" (click)="sign()" class="sign-button">Semnați</button>
+</div>
+
+<ng-template #createSampleTemplate>
+  <div mat-dialog-title>Adăugați un specimen de semnătură</div>
+  <div mat-dialog-content>
+    <p>Glisați în interiorul căsuței pentru a vă desena semnătura.</p>
+    <app-signature-pad #signaturePad />
+  </div>
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Anulați</button>
+    <button mat-button mat-dialog-close [disabled]="!signaturePad.dirty" (click)="saveSample(signaturePad.getBlob())">
+      Salvați
+    </button>
+  </div>
+</ng-template>

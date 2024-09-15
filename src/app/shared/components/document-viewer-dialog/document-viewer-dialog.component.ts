@@ -74,7 +74,7 @@ export class DocumentViewerDialogComponent {
   }
 
   openSignDialog() {
-    this.dialog.open(SignDialogComponent);
+    this.dialog.open(SignDialogComponent, { autoFocus: '.sign-button' });
   }
 
 }

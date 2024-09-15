@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { UploadFileDirective } from '../../directives/upload-file.directive';
+import { fileToBase64 } from '../../../lib/utils';
 
 @Component({
   selector: 'app-user-profile-editor',
@@ -84,7 +85,7 @@ export class UserProfileEditorComponent implements OnInit {
 
   async handleFileChange(file: File) {
     this.profilePictureFile = file;
-    this.base64Photo = await toBase64(file) as ArrayBuffer;
+    this.base64Photo = await fileToBase64(file) as any;
   }
 }
 
@@ -96,9 +97,3 @@ function websiteValidator(control: AbstractControl): ValidationErrors | null {
   return !regex.test(value) ? { notWebsite: true } : null;
 }
 
-const toBase64 = (file: File) => new Promise((resolve, reject) => {
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = () => resolve(reader.result);
-  reader.onerror = error => reject(error);
-});
