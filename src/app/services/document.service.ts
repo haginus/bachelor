@@ -23,7 +23,7 @@ export class DocumentService {
   viewDocument(data: ArrayBuffer, type: string, title?: string, signOptions?: DocumentViewerDialogData['signOptions']) {
     const blob = new Blob([data], { type });
     const url = window.URL.createObjectURL(blob);
-    this.dialog.open(DocumentViewerDialogComponent, {
+    return this.dialog.open(DocumentViewerDialogComponent, {
       width: '100%',
       height: '100%',
       maxWidth: '100%',
@@ -61,6 +61,13 @@ export class DocumentService {
     formData.append('perspective', perspective);
     return this.http.post<PaperDocument>(url, formData, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("uploadDocument", null))
+    );
+  }
+
+  signDocument(paperId: number, name: string) {
+    const url = `${environment.apiUrl}/student/paper/documents/sign`;
+    return this.http.post<PaperDocument>(url, { name }, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError("signDocument", null))
     );
   }
 

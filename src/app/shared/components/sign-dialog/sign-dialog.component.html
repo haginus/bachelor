@@ -1,11 +1,14 @@
+@if(loadingSubmit) {
+  <app-loading type="bar" color="primary"></app-loading>
+}
 <div mat-dialog-title>Semnați documentul</div>
 <div mat-dialog-content>
   <p>
-    Sunteți pe cale să semnați documentul „PLACEHOLDER”. Semnând acest document, vă asumați că
-    l-ați citit în totalitate și sunteți de acord cu conținutul acestuia.
+    Sunteți pe cale să semnați documentul „{{ signOptions.requiredDocument.title }}”. <br>
+    Semnând acest document, vă asumați că l-ați citit în totalitate și sunteți de acord cu conținutul acestuia.
   </p>
   <div class="sample-container">
-    <div class="header">Speciment semnătură</div>
+    <div class="header">Specimen semnătură</div>
     <div class="sample-box" [class]="{ np: !!signature }">
       @if(loadingSignature) {
         <mat-progress-spinner mode="indeterminate" [diameter]="48"></mat-progress-spinner>

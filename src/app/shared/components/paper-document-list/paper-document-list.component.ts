@@ -245,7 +245,15 @@ export class PaperDocumentListComponent implements OnChanges {
   async signDocument(mapElement: DocumentMapElement) {
     const { buffer, type, title } = await this.getDocument(mapElement);
     if(!buffer) return;
-    this.document.viewDocument(buffer, type, title, { requiredDocument: mapElement.requiredDocument });
+    const dialogRef = this.document.viewDocument(buffer, type, title, { requiredDocument: mapElement.requiredDocument, paperId: this.paperId });
+    dialogRef.componentInstance.documentSigned.subscribe(document => {
+      this.documentEvents.emit({
+        documentName: document.name,
+        action: 'sign',
+      });
+      this.documents.push(document);
+      this._generateDocumentMap();
+    });
   }
 
   reuploadDocument(document: DocumentMapElement) {
