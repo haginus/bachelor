@@ -12,6 +12,7 @@ import { DocumentService } from '../../../services/document.service';
 import { firstValueFrom } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoadingComponent } from '../loading/loading.component';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-sign-dialog',
@@ -32,6 +33,7 @@ export class SignDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) protected readonly signOptions: DocumentViewerDialogData['signOptions'],
     private readonly dialogRef: MatDialogRef<SignDialogComponent>,
+    private readonly auth: AuthService,
     private readonly signaturesService: SignaturesService,
     private readonly documentsService: DocumentService,
     private readonly dialog: MatDialog,
@@ -45,11 +47,14 @@ export class SignDialogComponent {
   loadingSignature = true;
   signatureError = false;
   loadingSubmit = false;
+  userId!: number;
 
   private async loadSignature() {
     this.loadingSignature = true;
+    this.userId = (await firstValueFrom(this.auth.userData)).id;
+    const signatureUserId = this.signOptions.signUserId || this.userId;
     try {
-      this.signature = await this.signaturesService.getUserSignature();
+      this.signature = await this.signaturesService.getUserSignature(signatureUserId);
     } catch {
       this.signatureError = true;
     } finally {

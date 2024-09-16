@@ -20,8 +20,8 @@ export class SignaturesService {
     private snackbar: MatSnackBar,
   ) { }
 
-  async getUserSignature() {
-    const signature = await firstValueFrom(this.http.get<Signature>(`${this.url}/me`, this.auth.getPrivateHeaders()));
+  async getUserSignature(userId: number) {
+    const signature = await firstValueFrom(this.http.get<Signature>(`${this.url}/user/${userId}`, this.auth.getPrivateHeaders()));
     if(!signature) {
       return null;
     }

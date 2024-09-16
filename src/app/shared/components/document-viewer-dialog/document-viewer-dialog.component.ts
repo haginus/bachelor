@@ -95,5 +95,6 @@ export interface DocumentViewerDialogData {
   signOptions?: {
     requiredDocument: PaperRequiredDocument;
     paperId: number;
+    signUserId?: number;
   }
 }

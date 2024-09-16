@@ -213,6 +213,7 @@
               <div mat-subheader>Documente</div>
               <app-paper-document-list
                 [paperId]="paper.id"
+                [signUserId]="paper.studentId"
                 [requiredDocuments]="paper.requiredDocuments"
                 [documentReuploadRequests]="paper.documentReuploadRequests"
                 [documents]="paper.documents"

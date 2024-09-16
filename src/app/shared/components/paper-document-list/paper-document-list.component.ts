@@ -45,6 +45,8 @@ export class PaperDocumentListComponent implements OnChanges {
   @Input() perspective: 'student' | 'teacher' | 'committee' | 'admin' = 'student';
   /** Paper ID (needed for teacher / committee to know where to upload the document) */
   @Input() paperId: number;
+  /** The user expected to sign the documents */
+  @Input() signUserId: number;
   /** Whether the user can upload/remove documents. */
   @Input() canEdit: boolean = true;
   /** Session Settings needed to determine whether the user can upload certain docs. */
@@ -245,7 +247,12 @@ export class PaperDocumentListComponent implements OnChanges {
   async signDocument(mapElement: DocumentMapElement) {
     const { buffer, type, title } = await this.getDocument(mapElement);
     if(!buffer) return;
-    const dialogRef = this.document.viewDocument(buffer, type, title, { requiredDocument: mapElement.requiredDocument, paperId: this.paperId });
+    const dialogRef = this.document.viewDocument(
+      buffer,
+      type,
+      title,
+      { requiredDocument: mapElement.requiredDocument, paperId: this.paperId, signUserId: this.signUserId }
+    );
     dialogRef.componentInstance.documentSigned.subscribe(document => {
       this.documentEvents.emit({
         documentName: document.name,
@@ -257,8 +264,11 @@ export class PaperDocumentListComponent implements OnChanges {
   }
 
   reuploadDocument(document: DocumentMapElement) {
-    const action = document.requiredTypes['copy'] ? 'uploadCopy' : 'sign';
-    this.openDocumentDialog(action, document.requiredDocument.name, document.lastId);
+    if(document.requiredTypes['copy']) {
+      this.openDocumentDialog('uploadCopy', document.requiredDocument.name, document.lastId);
+    } else {
+      this.signDocument(document);
+    }
   }
 
   async viewDocument(mapElement: DocumentMapElement) {
