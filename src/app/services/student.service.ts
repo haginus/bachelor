@@ -105,17 +105,6 @@ export class StudentService {
       );
   }
 
-  uploadDocument(file: File, name: string, type: string): Observable<PaperDocument> {
-    const url = `${environment.apiUrl}/student/paper/documents/upload`;
-    const formData: FormData = new FormData();
-    formData.append('file', file, file.name);
-    formData.append('name', name);
-    formData.append('type', type);
-    return this.http.post<PaperDocument>(url, formData, this.auth.getPrivateHeaders()).pipe(
-      catchError(this.handleError("uploadDocument", null))
-    );
-  }
-
   getPaperRequiredDocuments(): Observable<PaperRequiredDocument[]> {
     const url = `${environment.apiUrl}/student/paper/documents/get-required`;
     return this.http

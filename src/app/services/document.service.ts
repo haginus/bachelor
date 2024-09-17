@@ -47,26 +47,21 @@ export class DocumentService {
     anchor.click();
   }
 
-  uploadDocument(paperId: number, perspective: 'student' | 'teacher' | 'committee' | 'admin',
-    file: File, name: string, type: string): Observable<PaperDocument> {
-
-    const perspectivePath = perspective == 'committee' ? 'teacher' : perspective;
-
-    const url = `${environment.apiUrl}/${perspectivePath}/papers/documents/upload`;
+  uploadDocument(paperId: number, name: string, type: string, file: File): Observable<PaperDocument> {
+    const url = `${environment.apiUrl}/documents/upload`;
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
     formData.append('name', name);
     formData.append('type', type);
     formData.append('paperId', String(paperId));
-    formData.append('perspective', perspective);
     return this.http.post<PaperDocument>(url, formData, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("uploadDocument", null))
     );
   }
 
   signDocument(paperId: number, name: string) {
-    const url = `${environment.apiUrl}/student/paper/documents/sign`;
-    return this.http.post<PaperDocument>(url, { name }, this.auth.getPrivateHeaders()).pipe(
+    const url = `${environment.apiUrl}/documents/sign`;
+    return this.http.post<PaperDocument>(url, { name, paperId }, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("signDocument", null))
     );
   }

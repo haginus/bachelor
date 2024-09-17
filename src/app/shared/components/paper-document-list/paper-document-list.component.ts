@@ -230,7 +230,6 @@ export class PaperDocumentListComponent implements OnChanges {
         document,
         documentId,
         paperId: this.paperId,
-        perspective: this.perspective
       },
       width: '80%',
       maxWidth: '500px'
