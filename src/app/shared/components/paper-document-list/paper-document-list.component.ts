@@ -222,13 +222,10 @@ export class PaperDocumentListComponent implements OnChanges {
     this.reuploadRequestsResolved.emit(unresolvedRequests.length == 0);
   }
 
-  openDocumentDialog(action: 'sign' | 'uploadCopy', documentName: string, documentId?: number) {
-    const document = this.requiredDocuments.find(doc => doc.name == documentName);
+  openUploadDialog(mapElement: DocumentMapElement) {
     let dialogRef = this.dialog.open<DocumentUploadDialogComponent, DocumentUploadDialogData>(DocumentUploadDialogComponent, {
       data: {
-        action,
-        document,
-        documentId,
+        document: mapElement.requiredDocument,
         paperId: this.paperId,
       },
       width: '80%',
@@ -236,7 +233,7 @@ export class PaperDocumentListComponent implements OnChanges {
     });
     dialogRef.afterClosed().subscribe(document => {
       if(document) {
-        this.documentEvents.emit({ documentName, action });
+        this.documentEvents.emit({ documentName: mapElement.requiredDocument.name, action: 'uploadCopy' });
         this.documents.push(document);
         this._generateDocumentMap();
       }
@@ -262,11 +259,11 @@ export class PaperDocumentListComponent implements OnChanges {
     });
   }
 
-  reuploadDocument(document: DocumentMapElement) {
-    if(document.requiredTypes['copy']) {
-      this.openDocumentDialog('uploadCopy', document.requiredDocument.name, document.lastId);
+  reuploadDocument(mapElement: DocumentMapElement) {
+    if(mapElement.requiredTypes['copy']) {
+      this.openUploadDialog(mapElement);
     } else {
-      this.signDocument(document);
+      this.signDocument(mapElement);
     }
   }
 

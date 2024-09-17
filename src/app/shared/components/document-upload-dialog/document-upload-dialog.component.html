@@ -1,70 +1,25 @@
 <div class="header">
-  @if(mode === 'signDocument') {
-    <h2 class="title">Semnați documentul</h2>
-  } @else if(mode === 'uploadDocument') {
-    <h2 class="title">Încărcați documentul</h2>
-  }
+  <h2 class="title">Încărcați documentul</h2>
   <h3 class="subtitle">{{ data.document.title }}</h3>
 </div>
 
-@if(mode === 'signDocument') {
-  <mat-dialog-content class="mat-typography">
-    <div>
-      <p>
-        Pași: <br>
-        1. Descărcați documentul generat.
-      </p>
-      @if(!isLoadingFile) {
-        <button mat-stroked-button (click)="downloadDocument()" class="document-button">
-          <mat-icon>cloud_download</mat-icon>
-          <span>Descărcați documentul</span>
-        </button>
-      } @else {
-        <mat-spinner [diameter]="36"></mat-spinner>
-      }
-      <p>
-        2. Semnați documentul.
-      </p>
-      <p>
-        3. Încărcați documentul semnat. <br>
-      </p>
-      @if(!isUploadingFile) {
-        <button
-          class="document-button"
-          mat-stroked-button
-          appUploadFile
-          [accept]="data.document.acceptedMimeTypes"
-          (file)="handleFileInput($event, 'signed')"
-          [disabled]="state != 'docDownloaded'"
-        >
-          <mat-icon>cloud_upload</mat-icon>
-          <span>Încărcați documentul</span>
-        </button>
-      } @else {
-        <mat-spinner [diameter]="36"></mat-spinner>
-      }
-      <p>Fișiere acceptate: {{ acceptedExtensions }}</p>
-    </div>
-  </mat-dialog-content>
-} @else if(mode == 'uploadDocument') {
-  <mat-dialog-content class="mat-typography">
-    <p>
-      Fișiere acceptate:
-      {{ acceptedExtensions }}
-    </p>
-    @if(!isUploadingFile) {
-      <button
-        class="document-button"
-        mat-stroked-button
-        appUploadFile
-        [accept]="data.document.acceptedMimeTypes"
-        (file)="handleFileInput($event, 'copy')"
-      >
-        <mat-icon>cloud_upload</mat-icon>
-        <span>Încărcați documentul</span>
-      </button>
-    } @else {
-      <mat-spinner [diameter]="36"></mat-spinner>
-    }
-  </mat-dialog-content>
-}
+<mat-dialog-content class="mat-typography">
+  <p>
+    Fișiere acceptate:
+    {{ acceptedExtensions }}
+  </p>
+  @if(!isUploadingFile) {
+    <button
+      class="document-button"
+      mat-stroked-button
+      appUploadFile
+      [accept]="data.document.acceptedMimeTypes"
+      (file)="handleFileInput($event)"
+    >
+      <mat-icon>cloud_upload</mat-icon>
+      <span>Încărcați documentul</span>
+    </button>
+  } @else {
+    <mat-spinner [diameter]="36"></mat-spinner>
+  }
+</mat-dialog-content>

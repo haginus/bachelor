@@ -80,7 +80,7 @@
       @case ('upload') {
         <button
           mat-stroked-button
-          (click)="openDocumentDialog('uploadCopy', document.name)"
+          (click)="openUploadDialog(documentMap[document.name])"
           [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange"
         >
           Încărcați

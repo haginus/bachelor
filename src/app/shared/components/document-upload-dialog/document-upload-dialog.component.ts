@@ -31,45 +31,16 @@ export class DocumentUploadDialogComponent implements OnInit {
     private snackbar: MatSnackBar,
   ) {}
 
-  mode: 'signDocument' | 'uploadDocument';
-  state: 'initial' | 'docDownloaded';
-  documentId: number = null;
-  isLoadingFile: boolean = false;
   isUploadingFile: boolean = false;
   acceptedExtensions: string;
 
   ngOnInit(): void {
-    if(this.data.action == 'sign') {
-      this.mode = 'signDocument';
-      this.state = 'initial';
-      this.documentId = this.data.documentId;
-    } else {
-      this.mode = 'uploadDocument';
-    }
     this.acceptedExtensions = this.data.document.acceptedExtensions.join(', ');
   }
 
-  downloadDocument() {
-    this.isLoadingFile = true;
-    this.document.getDocument(this.documentId).subscribe(data => {
-      if(data) {
-        const blob = new Blob([data], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
-        let anchor = document.createElement("a");
-        anchor.download = this.data.document.title;
-        anchor.href = url;
-        anchor.click();
-        this.state = 'docDownloaded';
-      } else {
-        this.snackbar.open("Descărcarea nu a reușit.");
-      }
-      this.isLoadingFile = false;
-    })
-  }
-
-  handleFileInput(file: File, type: string) {
+  handleFileInput(file: File) {
     this.isUploadingFile = true;
-    this.document.uploadDocument(this.data.paperId, this.data.document.name, type, file).subscribe(res => {
+    this.document.uploadDocument(this.data.paperId, this.data.document.name, 'copy', file).subscribe(res => {
       if(res == null) {
         this.isUploadingFile = false;
       } else {
@@ -81,8 +52,6 @@ export class DocumentUploadDialogComponent implements OnInit {
 }
 
 export interface DocumentUploadDialogData {
-  document: PaperRequiredDocument,
-  action: 'sign' | 'uploadCopy',
-  documentId: number,
+  document: PaperRequiredDocument;
   paperId: number;
 }
