@@ -3,9 +3,10 @@ import { FormArray, FormControl, FormGroup, FormGroupDirective, ValidationErrors
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
-import { Observable } from 'rxjs';
 import { AdminService } from '../../../services/admin.service';
 import { Committee, CommitteeMember, Domain, UserData } from '../../../services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-committee-dialog',
@@ -14,8 +15,12 @@ import { Committee, CommitteeMember, Domain, UserData } from '../../../services/
 })
 export class CommitteeDialogComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: CommitteeDialogData, private admin: AdminService,
-    private dialog: MatDialogRef<CommitteeDialogComponent>) { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: CommitteeDialogData,
+    private admin: AdminService,
+    private dialog: MatDialogRef<CommitteeDialogComponent>,
+    private readonly snackBar: MatSnackBar,
+  ) { }
 
   isLoading: boolean = false;
   domains: Domain[];
@@ -101,37 +106,37 @@ export class CommitteeDialogComponent implements OnInit {
     return { id, name, domains, members }
   }
 
-  addCommittee() {
+  async addCommittee() {
     const { name, domains, members } = this._getFormData();
     this.isLoading = true;
-    this.admin.addCommittee(name, domains, members).subscribe(result => {
-      this.isLoading = false;
-      if(result) {
-        this.dialog.close(result);
-      }
-    })
+    const result = await firstValueFrom(this.admin.addCommittee(name, domains, members));
+    this.isLoading = false;
+    if(result) {
+      this.dialog.close(result);
+      this.snackBar.open("Comisie adăugată.");
+    }
   }
 
-  editCommittee() {
+  async editCommittee() {
     const { id, name, domains, members } = this._getFormData();
     this.isLoading = true;
-    this.admin.editCommittee(id, name, domains, members).subscribe(result => {
-      this.isLoading = false;
-      if(result) {
-        this.dialog.close(result);
-      }
-    })
+    const result = await firstValueFrom(this.admin.editCommittee(id, name, domains, members))
+    this.isLoading = false;
+    if(result) {
+      this.dialog.close(result);
+      this.snackBar.open("Comisie salvată.");
+    }
   }
 
-  deleteCommittee() {
+  async deleteCommittee() {
     const { id } = this._getFormData();
     this.isLoading = true;
-    this.admin.deleteCommittee(id).subscribe(result => {
-      this.isLoading = false;
-      if(result) {
-        this.dialog.close(result);
-      }
-    })
+    const result = await firstValueFrom(this.admin.deleteCommittee(id));
+    this.isLoading = false;
+    if(result) {
+      this.dialog.close(result);
+      this.snackBar.open("Comisie ștearsă.");
+    }
   }
 
   // Handle value change event of teacher name control

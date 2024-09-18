@@ -13,3 +13,8 @@ export interface Signature {
   sample: string;
   createdAt: string;
 }
+
+export interface Paginated<T> {
+  count: number;
+  rows: T[];
+}

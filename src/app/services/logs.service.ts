@@ -1,0 +1,62 @@
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { AuthService } from "./auth.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { Observable, catchError, filter, of } from "rxjs";
+import { environment } from "../../environments/environment";
+import { Paginated } from "../lib/types";
+
+@Injectable({
+  providedIn: 'any'
+})
+export class LogsService {
+
+  constructor(private http: HttpClient, private auth: AuthService, private snackbar: MatSnackBar) { }
+
+  private readonly apiUrl = `${environment.apiUrl}/logs`;
+
+  findAll(query: LogsQuery) {
+    let url = `${this.apiUrl}?limit=${query.pagination.limit}&offset=${query.pagination.offset || 0}`;
+    if(query.filters) {
+      Object.keys(query.filters).forEach(key => {
+        const value = query.filters[key] as MathchingOrNotMatching<any>;
+        const join = (v?: any[], prefix: string = '') => v?.map(v => `${prefix}${v}`).join(',');
+        let result = [join(value.matching), join(value.notMatching, '-')].filter(Boolean).join(',');
+        if(result) {
+          url += `&${key}=${result}`;
+        }
+      });
+    }
+    return this.http
+      .get<Paginated<any>>(url, this.auth.getPrivateHeaders())
+      .pipe(
+        catchError(this.handleError<Paginated<any>>('findAll', { count: 0, rows: [] }))
+      );
+  }
+
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+      this.snackbar.open(error?.error.message || 'A apărut o eroare.');
+      return of(result as T);
+    };
+  }
+}
+
+export interface LogsQuery {
+  pagination: {
+    limit: number;
+    offset?: number;
+  };
+  filters?: {
+    severity?: MathchingOrNotMatching<LogSeverity>;
+    name?: MathchingOrNotMatching<any>;
+    paperId?: MathchingOrNotMatching<number | null>;
+  };
+}
+
+type MathchingOrNotMatching<T> = {
+  matching?: T[];
+  notMatching?: T[];
+};
+
+type LogSeverity = 'info' | 'warning' | 'error' | 'critical';

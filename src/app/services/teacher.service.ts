@@ -235,7 +235,11 @@ export class TeacherService {
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      this.snackbar.open(error.error?.message || "A apărut o eroare.");
+      let errorObj = error.error;
+      if(errorObj instanceof ArrayBuffer) {
+        errorObj = JSON.parse(new TextDecoder().decode(errorObj));
+      }
+      this.snackbar.open(errorObj?.message || "A apărut o eroare.");
       return of(result as T);
     };
   }

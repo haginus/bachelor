@@ -1,4 +1,4 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { routes } from './app.routes';
@@ -9,6 +9,7 @@ import { MatPaginatorIntlRo } from './providers/mat-paginator-intl-ro';
 import { environment } from '../environments/environment';
 import { RECAPTCHA_LANGUAGE, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { CodeEditorModule } from '@ngstack/code-editor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +23,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: { appearance: 'outline', subscriptSizing: 'dynamic' }
-    }
+    },
+    importProvidersFrom(CodeEditorModule.forRoot()),
   ],
 };
