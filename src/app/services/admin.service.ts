@@ -272,16 +272,16 @@ export class AdminService {
     );
   }
 
-  addCommittee(name: string, domains: number[], members: CommitteeMember[]): Observable<any> {
+  addCommittee(committee: Omit<Committee, 'id' | 'domains' | 'papers' | 'finalGrades'> & { domains: number[]; }): Observable<any> {
     const url = `${environment.apiUrl}/admin/committees/add`;
-    return this.http.post<any>(url, { name, domains, members }, this.auth.getPrivateHeaders()).pipe(
+    return this.http.post<any>(url, committee, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError<any>('addCommittee', null))
     );
   }
 
-  editCommittee(id: number, name: string, domains: number[], members: CommitteeMember[]): Observable<any> {
+  editCommittee(committee: Omit<Committee, 'domains' | 'papers' | 'finalGrades'> & { domains: number[]; }): Observable<any> {
     const url = `${environment.apiUrl}/admin/committees/edit`;
-    return this.http.post<any>(url, { id, name, domains, members }, this.auth.getPrivateHeaders()).pipe(
+    return this.http.post<any>(url, committee, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError<any>('editCommittee', null))
     );
   }

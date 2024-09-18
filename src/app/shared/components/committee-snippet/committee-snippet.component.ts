@@ -2,6 +2,7 @@ import { Component, computed, input, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { Committee } from '../../../services/auth.service';
+import { DatetimePipe } from '../../pipes/datetime.pipe';
 
 @Component({
   selector: 'app-committee-snippet',
@@ -9,6 +10,7 @@ import { Committee } from '../../../services/auth.service';
   imports: [
     MatMenuModule,
     MatIconModule,
+    DatetimePipe,
   ],
   templateUrl: './committee-snippet.component.html',
   styleUrl: './committee-snippet.component.scss'

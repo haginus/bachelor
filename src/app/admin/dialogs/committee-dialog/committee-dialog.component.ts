@@ -7,6 +7,7 @@ import { AdminService } from '../../../services/admin.service';
 import { Committee, CommitteeMember, Domain, UserData } from '../../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { firstValueFrom } from 'rxjs';
+import { dateToDatetimeLocal } from '../../../lib/utils';
 
 @Component({
   selector: 'app-committee-dialog',
@@ -33,6 +34,8 @@ export class CommitteeDialogComponent implements OnInit {
   editCommitteeForm = new FormGroup({
     "id": new FormControl(this.data.data?.id),
     "name": new FormControl(this.data.data?.name, [Validators.required]),
+    "location": new FormControl(this.data.data?.location || ''),
+    "activityStartTime": new FormControl(dateToDatetimeLocal(this.data.data?.activityStartTime || null)),
     "members": new FormArray([], [CommitteeMembersValidator]), // Validate that the committee componence is OK
     "domains": new FormControl([], [Validators.required])
   })
@@ -99,17 +102,18 @@ export class CommitteeDialogComponent implements OnInit {
 
   private _getFormData() {
     let committee: any = { ... this.editCommitteeForm.value };
-    const { id, name, domains } = committee;
+    let { id, name, domains, location, activityStartTime } = committee;
+    location = location ? location : null;
+    activityStartTime = activityStartTime ? new Date(activityStartTime).toISOString() : null;
     const members: CommitteeMember[] = committee.members.map(member => {
       return { teacherId: member.teacherId, role: member.role }
     });
-    return { id, name, domains, members }
+    return { id, name, domains, location, activityStartTime, members }
   }
 
   async addCommittee() {
-    const { name, domains, members } = this._getFormData();
     this.isLoading = true;
-    const result = await firstValueFrom(this.admin.addCommittee(name, domains, members));
+    const result = await firstValueFrom(this.admin.addCommittee(this._getFormData()));
     this.isLoading = false;
     if(result) {
       this.dialog.close(result);
@@ -118,9 +122,8 @@ export class CommitteeDialogComponent implements OnInit {
   }
 
   async editCommittee() {
-    const { id, name, domains, members } = this._getFormData();
     this.isLoading = true;
-    const result = await firstValueFrom(this.admin.editCommittee(id, name, domains, members))
+    const result = await firstValueFrom(this.admin.editCommittee(this._getFormData()));
     this.isLoading = false;
     if(result) {
       this.dialog.close(result);
@@ -174,8 +177,8 @@ export class CommitteeDialogComponent implements OnInit {
 }
 
 export interface CommitteeDialogData {
-  mode: 'create' | 'edit' | 'delete',
-  data?: Committee
+  mode: 'create' | 'edit' | 'delete';
+  data?: Committee;
 }
 
 

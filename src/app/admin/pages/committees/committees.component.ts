@@ -23,7 +23,7 @@ export class CommitteesComponent implements OnInit, OnDestroy {
   constructor(private admin: AdminService, private dialog: MatDialog, private document: DocumentService,
     private auth: AuthService, private snackbar: MatSnackBar) { }
 
-  displayedColumns: string[] = ['status', 'id', 'name', 'domains', 'president', 'secretary', 'members', 'paperNumber', 'actions'];
+  displayedColumns: string[] = ['status', 'id', 'name', 'domains', 'locationAndTime', 'president', 'secretary', 'members', 'paperNumber', 'actions'];
   resultsLength: number;
   isLoadingResults: boolean = true;
   isError: boolean = false;
@@ -159,7 +159,7 @@ export class CommitteesComponent implements OnInit, OnDestroy {
 
   async generateCommitteeDocument(documentName: 'committee_compositions' | 'committee_students' | 'committee_students_excel') {
     const documentFormats: Record<typeof documentName, [string, string]> = {
-      committee_compositions: ['application/pdf', 'Componența comisiilor'],
+      committee_compositions: ['application/pdf', 'Componența comisiilor și planificarea pe săli și zile'],
       committee_students: ['application/pdf', 'Repartizare comisii'],
       committee_students_excel: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Repartizare comisii']
     }

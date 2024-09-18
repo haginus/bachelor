@@ -43,6 +43,7 @@ import { ImportResultDialogComponent } from './dialogs/import-result-dialog/impo
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { UploadFileDirective } from '../shared/directives/upload-file.directive';
 import { CodeEditorModule } from '@ngstack/code-editor';
+import { DatetimePipe } from '../shared/pipes/datetime.pipe';
 
 const materialDeps = [
   MatPaginatorModule,
@@ -94,6 +95,7 @@ const materialDeps = [
     SharedModule,
     NgxJsonViewerModule,
     UploadFileDirective,
+    DatetimePipe,
     ...materialDeps
   ]
 })

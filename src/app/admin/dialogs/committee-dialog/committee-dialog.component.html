@@ -24,6 +24,16 @@
         </mat-select>
         <mat-hint>Puteți selecta numai domenii de același tip.</mat-hint>
       </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Locație</mat-label>
+        <input matInput type="text" formControlName="location" placeholder="Ex.: Sala 6">
+        <mat-hint>Locul în care comisia își va desfășura activitatea</mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Dată începere activitate</mat-label>
+        <input matInput type="datetime-local" formControlName="activityStartTime">
+        <mat-hint>Data și ora la care comisia va începe activitatea</mat-hint>
+      </mat-form-field>
     </div>
     <div formArrayName="members" class="member-list">
       <h3>Membri</h3>

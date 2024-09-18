@@ -9,9 +9,27 @@
       </div>
     </div>
     <div class="list">
+      @if(committee().location) {
+        <div class="list-item">
+          <mat-icon>location_on</mat-icon>
+          <div class="content">
+            <div>Locație</div>
+            <div>{{ committee().location }}</div>
+          </div>
+        </div>
+      }
+      @if(committee().activityStartTime) {
+        <div class="list-item">
+          <mat-icon>event</mat-icon>
+          <div class="content">
+            <div>Data începerii activității</div>
+            <div>{{ committee().activityStartTime | datetime }}</div>
+          </div>
+        </div>
+      }
       @for(member of sortedMembers(); track member.user.id) {
         <div class="list-item">
-          <mat-icon>mail</mat-icon>
+          <mat-icon>school</mat-icon>
           <div class="content">
             <div>{{ roles[member.committeeMember.role] }}</div>
             <div>{{ member.user.fullName }}</div>
