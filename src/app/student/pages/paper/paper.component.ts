@@ -19,6 +19,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PapersService } from '../../../services/papers.service';
 import { DocumentReuploadRequest } from '../../../lib/types';
 import { SubmitPaperDialogComponent } from '../../dialogs/submit-paper-dialog/submit-paper-dialog.component';
+import { CommitteeSnippetComponent } from '../../../shared/components/committee-snippet/committee-snippet.component';
 
 @Component({
   selector: 'app-student-paper',
@@ -33,6 +34,7 @@ import { SubmitPaperDialogComponent } from '../../dialogs/submit-paper-dialog/su
     MatProgressBarModule,
     LoadingComponent,
     UserSnippetComponent,
+    CommitteeSnippetComponent,
     PaperDocumentListComponent,
     NgClass,
     DecimalPipe,

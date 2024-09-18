@@ -1,0 +1,40 @@
+<mat-menu #menu="matMenu">
+  <div (click)="$event.stopPropagation()" class="committee-card">
+    <div class="committee-card-header">
+      <div class="profile-picture">
+        <mat-icon>group</mat-icon>
+      </div>
+      <div class="header-text">
+        <h2>{{ committee().name }}</h2>
+      </div>
+    </div>
+    <div class="list">
+      @for(member of sortedMembers(); track member.user.id) {
+        <div class="list-item">
+          <mat-icon>mail</mat-icon>
+          <div class="content">
+            <div>{{ roles[member.committeeMember.role] }}</div>
+            <div>{{ member.user.fullName }}</div>
+            <div>
+              <a class="link" href="mailto:{{ member.user.email }}" target="_blank">
+                {{ member.user.email }}
+              </a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</mat-menu>
+
+<div class="committee-snippet" [matMenuTriggerFor]="menu">
+  <div class="profile-picture">
+    <mat-icon>group</mat-icon>
+  </div>
+  <div class="text">
+    <div class="first-line">{{ committee().name }}</div>
+    <div>
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>
