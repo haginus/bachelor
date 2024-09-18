@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { combineLatest, firstValueFrom, of, Subscription } from 'rxjs';
+import { combineLatest, firstValueFrom, Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AreDocumentsUploaded, PaperDocumentEvent, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { EditPaperComponent } from '../../../shared/components/edit-paper/edit-paper.component';
@@ -18,6 +18,8 @@ import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PapersService } from '../../../services/papers.service';
 import { DocumentReuploadRequest } from '../../../lib/types';
+import { SubmitPaperDialogComponent } from '../../dialogs/submit-paper-dialog/submit-paper-dialog.component';
+import { CommitteeSnippetComponent } from '../../../shared/components/committee-snippet/committee-snippet.component';
 
 @Component({
   selector: 'app-student-paper',
@@ -32,6 +34,7 @@ import { DocumentReuploadRequest } from '../../../lib/types';
     MatProgressBarModule,
     LoadingComponent,
     UserSnippetComponent,
+    CommitteeSnippetComponent,
     PaperDocumentListComponent,
     NgClass,
     DecimalPipe,
@@ -200,10 +203,21 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   }
 
   async submitPaper(submit: boolean) {
+    let action: Observable<any>;
+    if(submit) {
+      const confirmDialogRef = this.dialog.open(SubmitPaperDialogComponent, {
+        autoFocus: 'dialog',
+        data: this.paper,
+      });
+      if(await firstValueFrom(confirmDialogRef.afterClosed())) {
+        action = this.papersService.submitPaper(this.paper.id);
+      } else {
+        return;
+      }
+    } else {
+      action = this.papersService.unsubmitPaper(this.paper.id);
+    }
     this.isLoadingData = true;
-    const action = submit
-      ? this.papersService.submitPaper(this.paper.id)
-      : this.papersService.unsubmitPaper(this.paper.id);
     const result = await firstValueFrom(action);
     this.isLoadingData = false;
     if(result) {

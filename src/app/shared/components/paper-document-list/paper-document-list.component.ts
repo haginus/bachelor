@@ -14,6 +14,7 @@ import { DocumentReuploadRequest } from '../../../lib/types';
 import { inclusiveDate } from '../../../lib/utils';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DatePipe } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-paper-document-list',
@@ -44,6 +45,8 @@ export class PaperDocumentListComponent implements OnChanges {
   @Input() perspective: 'student' | 'teacher' | 'committee' | 'admin' = 'student';
   /** Paper ID (needed for teacher / committee to know where to upload the document) */
   @Input() paperId: number;
+  /** The user expected to sign the documents */
+  @Input() signUserId: number;
   /** Whether the user can upload/remove documents. */
   @Input() canEdit: boolean = true;
   /** Session Settings needed to determine whether the user can upload certain docs. */
@@ -219,51 +222,55 @@ export class PaperDocumentListComponent implements OnChanges {
     this.reuploadRequestsResolved.emit(unresolvedRequests.length == 0);
   }
 
-  openDocumentDialog(action: 'sign' | 'uploadCopy', documentName: string, documentId?: number) {
-    const document = this.requiredDocuments.find(doc => doc.name == documentName);
+  openUploadDialog(mapElement: DocumentMapElement) {
     let dialogRef = this.dialog.open<DocumentUploadDialogComponent, DocumentUploadDialogData>(DocumentUploadDialogComponent, {
       data: {
-        action,
-        document,
-        documentId,
+        document: mapElement.requiredDocument,
         paperId: this.paperId,
-        perspective: this.perspective
       },
       width: '80%',
       maxWidth: '500px'
     });
     dialogRef.afterClosed().subscribe(document => {
       if(document) {
-        this.documentEvents.emit({ documentName, action });
+        this.documentEvents.emit({ documentName: mapElement.requiredDocument.name, action: 'uploadCopy' });
         this.documents.push(document);
         this._generateDocumentMap();
       }
     })
   }
 
-  reuploadDocument(document: DocumentMapElement) {
-    const action = document.requiredTypes['copy'] ? 'uploadCopy' : 'sign';
-    this.openDocumentDialog(action, document.requiredDocument.name, document.lastId);
+  async signDocument(mapElement: DocumentMapElement) {
+    const { buffer, type, title } = await this.getDocument(mapElement);
+    if(!buffer) return;
+    const dialogRef = this.document.viewDocument(
+      buffer,
+      type,
+      title,
+      { requiredDocument: mapElement.requiredDocument, paperId: this.paperId, signUserId: this.signUserId }
+    );
+    dialogRef.componentInstance.documentSigned.subscribe(document => {
+      this.documentEvents.emit({
+        documentName: document.name,
+        action: 'sign',
+      });
+      this.documents.push(document);
+      this._generateDocumentMap();
+    });
   }
 
-  viewDocument(mapElement: DocumentMapElement) {
-    mapElement.actionPending = true;
-    let snackbarRef = this.snackbar.open("Se descarcă documentul...", null, {
-      duration: null // infinite duration
-    });
+  reuploadDocument(mapElement: DocumentMapElement) {
+    if(mapElement.requiredTypes['copy']) {
+      this.openUploadDialog(mapElement);
+    } else {
+      this.signDocument(mapElement);
+    }
+  }
 
-    const id = mapElement.lastId;
-    const type = this.documents.find(doc => doc.id == id).mimeType;
-    this.document.getDocument(id).subscribe(data => {
-      mapElement.actionPending = false;
-      if(!data) {
-        this.snackbar.open("A apărut o eroare.");
-        return;
-      }
-      snackbarRef.dismiss();
-      const title = [mapElement.title, this.documentNameSuffix].filter(Boolean).join(' - ').slice(0, 255);
-      this.document.viewDocument(data, type, title);
-    })
+  async viewDocument(mapElement: DocumentMapElement) {
+    const { buffer, type, title } = await this.getDocument(mapElement);
+    if(!buffer) return;
+    this.document.viewDocument(buffer, type, title);
   }
 
   deleteDocument(mapElement: DocumentMapElement) {
@@ -278,6 +285,24 @@ export class PaperDocumentListComponent implements OnChanges {
       }
       mapElement.actionPending = false;
     });
+  }
+
+  private async getDocument(mapElement: DocumentMapElement) {
+    mapElement.actionPending = true;
+    let snackbarRef = this.snackbar.open("Se descarcă documentul...", null, {
+      duration: null,
+    });
+    const id = mapElement.lastId;
+    const type = this.documents.find(doc => doc.id == id).mimeType;
+    const title = [mapElement.title, this.documentNameSuffix].filter(Boolean).join(' - ').slice(0, 255);
+    const buffer = await firstValueFrom(this.document.getDocument(id));
+    mapElement.actionPending = false;
+    snackbarRef.dismiss();
+    return {
+      buffer,
+      type,
+      title
+    };
   }
 
 }

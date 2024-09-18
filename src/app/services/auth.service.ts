@@ -479,9 +479,12 @@ export interface Committee {
 }
 
 export interface CommitteeMember {
-  teacherId: number,
-  role: 'president' | 'secretary' | 'member',
-  user?: UserDataMin
+  committeeMember?: {
+    role: 'president' | 'secretary' | 'member';
+  };
+  teacherId: number;
+  role: 'president' | 'secretary' | 'member';
+  user?: UserDataMin;
 }
 
 export interface SignUpRequest {

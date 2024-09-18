@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { AuthService, PaperDocument } from './auth.service';
 import { MatDialog } from '@angular/material/dialog';
-import { DocumentViewerDialogComponent } from '../shared/components/document-viewer-dialog/document-viewer-dialog.component';
+import { DocumentViewerDialogComponent, DocumentViewerDialogData } from '../shared/components/document-viewer-dialog/document-viewer-dialog.component';
 
 @Injectable({
   providedIn: 'any'
@@ -20,10 +20,10 @@ export class DocumentService {
     private dialog: MatDialog,
   ) { }
 
-  viewDocument(data: ArrayBuffer, type: string, title?: string) {
+  viewDocument(data: ArrayBuffer, type: string, title?: string, signOptions?: DocumentViewerDialogData['signOptions']) {
     const blob = new Blob([data], { type });
     const url = window.URL.createObjectURL(blob);
-    this.dialog.open(DocumentViewerDialogComponent, {
+    return this.dialog.open(DocumentViewerDialogComponent, {
       width: '100%',
       height: '100%',
       maxWidth: '100%',
@@ -32,6 +32,7 @@ export class DocumentService {
         url,
         type,
         title,
+        signOptions,
       },
       autoFocus: 'dialog',
     });
@@ -46,20 +47,22 @@ export class DocumentService {
     anchor.click();
   }
 
-  uploadDocument(paperId: number, perspective: 'student' | 'teacher' | 'committee' | 'admin',
-    file: File, name: string, type: string): Observable<PaperDocument> {
-
-    const perspectivePath = perspective == 'committee' ? 'teacher' : perspective;
-
-    const url = `${environment.apiUrl}/${perspectivePath}/papers/documents/upload`;
+  uploadDocument(paperId: number, name: string, type: string, file: File): Observable<PaperDocument> {
+    const url = `${environment.apiUrl}/documents/upload`;
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
     formData.append('name', name);
     formData.append('type', type);
     formData.append('paperId', String(paperId));
-    formData.append('perspective', perspective);
     return this.http.post<PaperDocument>(url, formData, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("uploadDocument", null))
+    );
+  }
+
+  signDocument(paperId: number, name: string) {
+    const url = `${environment.apiUrl}/documents/sign`;
+    return this.http.post<PaperDocument>(url, { name, paperId }, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError("signDocument", null))
     );
   }
 

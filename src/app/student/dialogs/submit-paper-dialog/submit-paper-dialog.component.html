@@ -1,0 +1,31 @@
+<div mat-dialog-title>Înscrieți-vă în această sesiune</div>
+<div mat-dialog-content>
+  <p>
+    Înainte de a vă înscrie la examenul de finalizare studii, asigurați-vă că:
+  </p>
+  <ul>
+    <li>Ați completat corect toate datele cerute în procesul de înscriere, în special numele, prenumele și inițiala părintelui;</li>
+    <button mat-button [mat-dialog-close]="false" (click)="reportInvalidData()">
+      <mat-icon>feedback</mat-icon>
+      <span>Date incorecte?</span>
+    </button>
+    <li>
+      Titlul lucrării înscris în platformă este <b>exact la fel</b> ca cel înscris în documentul predat comisiei (verificați inclusiv diacriticele);
+      <br>
+      În prezent, titlul lucrării este: <i>„{{ paper.title }}”</i>.
+    </li>
+  </ul>
+  <p>
+    Este imperios necesar ca datele să fie corecte, deoarece acestea vor fi prezente în cataloagele folosite la notare
+    și, implicit, pe diploma pe care o veți primi în urma promovării examenului.
+  </p>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Anulați</button>
+  <button mat-button [mat-dialog-close]="true" [disabled]="cooldownSeconds > 0">
+    Am citit și doresc înscrierea
+    @if(cooldownSeconds > 0) {
+      ({{ cooldownSeconds }})
+    }
+  </button>
+</div>

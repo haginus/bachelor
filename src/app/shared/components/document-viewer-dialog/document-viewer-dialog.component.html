@@ -35,4 +35,10 @@
       </div>
     </div>
   }
+  @if(!isLoading && data.signOptions) {
+    <button mat-fab extended color="primary" class="sign-fab" (click)="openSignDialog()">
+      <mat-icon>draw</mat-icon>
+      <span>Semnați</span>
+    </button>
+  }
 </div>

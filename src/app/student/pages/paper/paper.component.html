@@ -15,9 +15,16 @@
           }
         </div>
         <p class="paper-description">{{ paper.description }}</p>
-        <p class="paper-teacher">
-          <app-user-snippet [user]="paper.teacher">Profesor coordonator</app-user-snippet>
-        </p>
+        <div class="paper-snippets">
+          <app-user-snippet [user]="paper.teacher">
+            <span class="paper-teacher">Profesor coordonator</span>
+          </app-user-snippet>
+          @if(paper.committee) {
+            @defer {
+              <app-committee-snippet [committee]="paper.committee" />
+            }
+          }
+        </div>
       </div>
       <div class="paper-header-actions">
         <button mat-icon-button [disabled]="!canEditPaper || paper.isValid != null" (click)="openEditDialog()">
