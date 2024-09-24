@@ -31,6 +31,7 @@ import { TitleCasePipe } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { PaperTitlePipe } from '../../../shared/pipes/paper-title.pipe';
+import { PaperSchedulerNoticeComponent } from '../../../shared/components/paper-scheduler-notice/paper-scheduler-notice.component';
 
 @Component({
   selector: 'app-committee-papers',
@@ -57,6 +58,7 @@ import { PaperTitlePipe } from '../../../shared/pipes/paper-title.pipe';
     PaperDocumentListComponent,
     TitleCasePipe,
     PaperTitlePipe,
+    PaperSchedulerNoticeComponent,
   ],
 })
 export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {

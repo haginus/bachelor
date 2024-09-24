@@ -46,6 +46,9 @@
       <mat-icon>refresh</mat-icon>
     </button>
   </mat-toolbar>
+  @defer () {
+    <app-paper-scheduler-notice [committee]="committee" />
+  }
   <div class="discrete-scroll">
     <table mat-table [dataSource]="dataSource" multiTemplateDataRows #table matSort matSortActive="id"
       matSortDisableClear matSortDirection="asc">

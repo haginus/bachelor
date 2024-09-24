@@ -1,0 +1,16 @@
+.notice {
+  display: flex;
+  align-items: center;
+  min-height: 64px;
+  background-color: #42A5F5;
+  box-sizing: border-box;
+  padding-left: 12px;
+  padding-right: 4px;
+
+  .text {
+    flex: 1;
+    padding: 6px 0;
+    margin-left: 12px;
+    margin-right: 8px;
+  }
+}
