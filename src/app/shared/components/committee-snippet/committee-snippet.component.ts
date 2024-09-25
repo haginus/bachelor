@@ -1,7 +1,7 @@
 import { Component, computed, input, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { Committee } from '../../../services/auth.service';
+import { Committee, Paper } from '../../../services/auth.service';
 import { DatetimePipe } from '../../pipes/datetime.pipe';
 
 @Component({
@@ -18,6 +18,7 @@ import { DatetimePipe } from '../../pipes/datetime.pipe';
 export class CommitteeSnippetComponent {
 
   committee = input.required<Committee>();
+  paper = input<Paper>();
 
   roles = {
     president: 'Președinte',
@@ -35,6 +36,10 @@ export class CommitteeSnippetComponent {
       }
       return 0;
     })
-  ))
+  ));
+
+  sortedDays = computed(() => (
+    [...this.committee().activityDays].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+  )));
 
 }

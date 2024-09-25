@@ -34,13 +34,16 @@ export class CommitteeDialogComponent implements OnInit {
   editCommitteeForm = new FormGroup({
     "id": new FormControl(this.data.data?.id),
     "name": new FormControl(this.data.data?.name, [Validators.required]),
-    "location": new FormControl(this.data.data?.location || ''),
-    "activityStartTime": new FormControl(dateToDatetimeLocal(this.data.data?.activityStartTime || null)),
+    "activityDays": new FormArray([]),
     "members": new FormArray([], [CommitteeMembersValidator]), // Validate that the committee componence is OK
     "domains": new FormControl([], [Validators.required])
   })
 
-  get formMembers() { return this.editCommitteeForm.get("members") as FormArray }
+  get formMembers() { return this.editCommitteeForm.get("members") as FormArray };
+
+  get activityDays() {
+    return this.editCommitteeForm.get('activityDays') as FormArray;
+  }
 
   ngOnInit(): void {
     this.admin.getDomains().subscribe(domains => {
@@ -61,6 +64,12 @@ export class CommitteeDialogComponent implements OnInit {
       let domainIds = this.data.data.domains.map(domain => domain.id);
       this.selectedDomainType = this.data.data.domains[0]?.type;
       this.editCommitteeForm.get("domains").setValue(domainIds);
+      this.editCommitteeForm.setControl('activityDays', new FormArray(
+        this.data.data.activityDays.map(day => new FormGroup({
+          'location': new FormControl<string>(day.location, [Validators.required]),
+          'startTime': new FormControl<string>(dateToDatetimeLocal(day.startTime), [Validators.required]),
+        }))
+      ));
     }
 
     // Get teachers for filtering
@@ -77,6 +86,13 @@ export class CommitteeDialogComponent implements OnInit {
     } else {
       this.selectedDomainType = null;
     }
+  }
+
+  addActivityDay() {
+    this.activityDays.push(new FormGroup({
+      'location': new FormControl<string>('', [Validators.required]),
+      'startTime': new FormControl<string>('', [Validators.required]),
+    }));
   }
 
   // If committeeCreation is true, the function will init empty fields
@@ -102,13 +118,12 @@ export class CommitteeDialogComponent implements OnInit {
 
   private _getFormData() {
     let committee: any = { ... this.editCommitteeForm.value };
-    let { id, name, domains, location, activityStartTime } = committee;
-    location = location ? location : null;
-    activityStartTime = activityStartTime ? new Date(activityStartTime).toISOString() : null;
+    let { id, name, domains, activityDays } = committee;
+    activityDays = activityDays.map((day => ({ ...day, startTime: new Date(day.startTime).toISOString() })));
     const members: CommitteeMember[] = committee.members.map(member => {
       return { teacherId: member.teacherId, role: member.role }
     });
-    return { id, name, domains, location, activityStartTime, members }
+    return { id, name, domains, location, members, activityDays }
   }
 
   async addCommittee() {

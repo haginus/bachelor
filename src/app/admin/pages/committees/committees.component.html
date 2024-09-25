@@ -122,9 +122,10 @@
 
       <ng-container matColumnDef="locationAndTime">
         <th mat-header-cell *matHeaderCellDef> Locația și data </th>
-        <td mat-cell *matCellDef="let row" class="wrap">
-          <div>{{ row.location || '-' }}</div>
-          <div>{{ row.activityStartTime | datetime }}</div>
+        <td mat-cell *matCellDef="let row">
+          @for(day of row.activityDays; track day.id) {
+            <div>{{ day.location }} | {{ day.startTime | datetime }} </div>
+          }
         </td>
       </ng-container>
 

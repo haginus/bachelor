@@ -469,14 +469,19 @@ export class SessionSettings implements SessionSettingsI {
   }
 }
 
+export interface CommitteeActivityDay {
+  id: number;
+  location: string;
+  startTime: string;
+}
+
 export interface Committee {
   id: number;
   name: string;
-  location: string | null;
-  activityStartTime: string | null;
   finalGrades: boolean;
   domains: Domain[];
   members: CommitteeMember[];
+  activityDays: CommitteeActivityDay[];
   papers: Paper[];
 }
 

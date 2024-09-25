@@ -9,24 +9,28 @@
       </div>
     </div>
     <div class="list">
-      @if(committee().location) {
-        <div class="list-item">
-          <mat-icon>location_on</mat-icon>
-          <div class="content">
-            <div>Locație</div>
-            <div>{{ committee().location }}</div>
-          </div>
-        </div>
-      }
-      @if(committee().activityStartTime) {
+      @if(paper()) {
         <div class="list-item">
           <mat-icon>event</mat-icon>
           <div class="content">
-            <div>Data începerii activității</div>
-            <div>{{ committee().activityStartTime | datetime }}</div>
+            <div>Programarea lucrării dvs.</div>
+            <div>Nespecificat</div>
           </div>
         </div>
       }
+      @if(sortedDays().length > 0) {
+        <div class="list-header">Zile de activitate</div>
+        @for(day of sortedDays(); track day.id) {
+          <div class="list-item">
+            <mat-icon>event</mat-icon>
+            <div class="content">
+              <div>{{ day.startTime | datetime }}</div>
+              <div>{{ day.location }}</div>
+            </div>
+          </div>
+        }
+      }
+      <div class="list-header">Membri</div>
       @for(member of sortedMembers(); track member.user.id) {
         <div class="list-item">
           <mat-icon>school</mat-icon>
