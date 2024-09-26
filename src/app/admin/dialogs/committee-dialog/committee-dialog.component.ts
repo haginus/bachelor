@@ -95,6 +95,10 @@ export class CommitteeDialogComponent implements OnInit {
     }));
   }
 
+  removeActivityDay(index: number) {
+    this.activityDays.removeAt(index);
+  }
+
   // If committeeCreation is true, the function will init empty fields
   addMember(member?: CommitteeMember, committeeCreation: boolean = false) {
     let name: string;
