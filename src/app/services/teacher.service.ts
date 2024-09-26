@@ -211,6 +211,15 @@ export class TeacherService {
       );
   }
 
+  schedulePapers(committeeId: number, papers: { paperId: number; scheduledGrading: string }[]): Observable<Paper[]> {
+    const url = `${environment.apiUrl}/teacher/committees/${committeeId}/scheduled-papers`;
+    return this.http
+      .patch<any>(url, papers, this.auth.getPrivateHeaders())
+      .pipe(
+        catchError(this.handleError<Paper[]>('schedulePapers', []))
+      );
+  }
+
   markGradesAsFinal(committeeId: number): Observable<boolean> {
     const url = `${environment.apiUrl}/teacher/committees/${committeeId}/mark-grades-final`;
     return this.http

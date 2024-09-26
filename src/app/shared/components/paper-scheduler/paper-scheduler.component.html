@@ -1,3 +1,6 @@
+@if(isSubmitting) {
+  <app-loading color="primary"></app-loading>
+}
 <div matDialogTitle>Programați lucrările</div>
 <div matDialogContent>
   <p>
@@ -5,7 +8,7 @@
     Studenții vor putea vedea în platformă programarea pentru lucrările acestora.
   </p>
   <mat-form-field appearance="outline">
-    <mat-label>Tip acordat pe lucrare</mat-label>
+    <mat-label>Timp acordat pe lucrare</mat-label>
     <mat-select [formControl]="minutesPerPaper">
       <mat-option [value]="10">10 min.</mat-option>
       <mat-option [value]="15">15 min.</mat-option>
@@ -48,7 +51,7 @@
       <div class="paper-container">
         <div class="container-header">
           <h2>Ziua {{ $index + 1 }}</h2>
-          <div>{{ day.activityStartTime | datetime }}</div>
+          <div>{{ day.startTime | datetime }}</div>
         </div>
 
         <div cdkDropList [id]="day.id.toString()" [cdkDropListData]="papersPerDay[day.id]" class="paper-list" (cdkDropListDropped)="drop($event)">
@@ -59,7 +62,7 @@
                 <div>{{ paper.student.fullName }} · {{ paper.teacher.lastName }} {{ paper.teacher.firstName }}</div>
               </div>
               <button mat-button color="primary" class="edit-time" (click)="changePaperTime(day, $index)">
-                <span>{{ paper.scheduledGrading | time }}</span>
+                <span>{{ paper.scheduledGradingDraft | time }}</span>
                 <mat-icon>edit</mat-icon>
               </button>
             </div>
@@ -71,5 +74,5 @@
 </div>
 <div matDialogActions align="end">
   <button mat-button mat-dialog-close>Anulați</button>
-  <button mat-button>Salvați</button>
+  <button mat-button (click)="saveSchedule()">Salvați</button>
 </div>

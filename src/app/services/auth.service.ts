@@ -398,6 +398,7 @@ export interface Paper {
   gradeAverage: number;
   createdAt: string;
   submitted: boolean;
+  scheduledGrading: string;
 }
 
 export interface PaperDocument {
