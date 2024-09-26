@@ -1,4 +1,4 @@
-<mat-menu #documentGeneration="matMenu">
+<mat-menu #catalogGeneration="matMenu">
   <ng-template matMenuContent>
     <button mat-menu-item (click)="generateCommitteeDocument('catalog')">
       <mat-icon>description</mat-icon>
@@ -11,6 +11,19 @@
   </ng-template>
 </mat-menu>
 
+<mat-menu #documentGeneration="matMenu">
+  <ng-template matMenuContent>
+    <button mat-menu-item>
+      <mat-icon>description</mat-icon>
+      <span>[PDF] Programarea lucrărilor</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>description</mat-icon>
+      <span>[Excel] Programarea lucrărilor</span>
+    </button>
+  </ng-template>
+</mat-menu>
+
 <div class="mat-elevation-z8 table-container">
   @if(isLoadingResults) {
     <div class="loading-shade">
@@ -18,10 +31,11 @@
     </div>
   }
   <mat-toolbar color="white">
-    @if(committee) {
-      <app-committee-snippet [committee]="committee" />
-    }
-    <span class="toolbar-spacer"></span>
+    <div class="toolbar-spacer">
+      @if(committee) {
+        <app-committee-snippet [committee]="committee" />
+      }
+    </div>
     <button mat-icon-button (click)="refreshResults()">
       <mat-icon>refresh</mat-icon>
     </button>
@@ -42,12 +56,18 @@
       >
         <mat-icon>published_with_changes</mat-icon>
       </button>
-      <button mat-button [matMenuTriggerFor]="documentGeneration">
+      <button mat-button [matMenuTriggerFor]="catalogGeneration">
         <span>Generați catalogul</span>
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
     }
     <span class="toolbar-spacer"></span>
+    <button mat-icon-button matTooltip="Programați lucrările">
+      <mat-icon>schedule</mat-icon>
+    </button>
+    <button mat-icon-button matTooltip="Generați documente" [matMenuTriggerFor]="documentGeneration">
+      <mat-icon>description</mat-icon>
+    </button>
     <button mat-icon-button matTooltip="Descărcați toate lucrările" (click)="getPapersArchive()">
       <mat-icon>archive</mat-icon>
     </button>

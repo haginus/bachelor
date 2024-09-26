@@ -7,6 +7,18 @@ mat-toolbar:not(:last-of-type) {
   border-bottom: 1px solid #ddd;
 }
 
+mat-toolbar {
+  .toolbar-spacer {
+    min-width: 0;
+  }
+  app-committee-snippet::ng-deep .committee-snippet {
+    width: 100%;
+    .text {
+      overflow: hidden;
+    }
+  }
+}
+
 mat-toolbar button {
   margin-right: 5px;
 }
