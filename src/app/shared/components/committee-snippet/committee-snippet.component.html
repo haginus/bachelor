@@ -14,7 +14,13 @@
           <mat-icon>event</mat-icon>
           <div class="content">
             <div>Programarea lucrării dvs.</div>
-            <div>Nespecificat</div>
+            <div>
+              @if(paper().scheduledGrading) {
+                {{ paper().scheduledGrading | datetime }}
+              } @else {
+                TBA
+              }
+            </div>
           </div>
         </div>
       }

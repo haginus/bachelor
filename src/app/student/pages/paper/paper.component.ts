@@ -20,6 +20,7 @@ import { PapersService } from '../../../services/papers.service';
 import { DocumentReuploadRequest } from '../../../lib/types';
 import { SubmitPaperDialogComponent } from '../../dialogs/submit-paper-dialog/submit-paper-dialog.component';
 import { CommitteeSnippetComponent } from '../../../shared/components/committee-snippet/committee-snippet.component';
+import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';
 
 @Component({
   selector: 'app-student-paper',
@@ -39,6 +40,7 @@ import { CommitteeSnippetComponent } from '../../../shared/components/committee-
     NgClass,
     DecimalPipe,
     DatePipe,
+    DatetimePipe,
   ],
 })
 export class StudentPaperComponent implements OnInit, OnDestroy {

@@ -21,7 +21,14 @@
           </app-user-snippet>
           @if(paper.committee) {
             @defer {
-              <app-committee-snippet [committee]="paper.committee" />
+              <app-committee-snippet [committee]="paper.committee" [paper]="paper">
+                Programare susținere:
+                @if(paper.scheduledGrading) {
+                  {{ paper.scheduledGrading | datetime }}
+                } @else {
+                  TBA
+                }
+              </app-committee-snippet>
             }
           }
         </div>
