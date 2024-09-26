@@ -7,7 +7,7 @@
     Stabiliți un timp estimativ pentru prezentarea lucrărilor atribuite acestei comisii.
     Studenții vor putea vedea în platformă programarea pentru lucrările acestora.
   </p>
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" style="margin-bottom: 12px;">
     <mat-label>Timp acordat pe lucrare</mat-label>
     <mat-select [formControl]="minutesPerPaper">
       <mat-option [value]="10">10 min.</mat-option>
@@ -29,8 +29,8 @@
             <div class="explanation">
               <mat-icon>lightbulb</mat-icon>
               <span>
-                Grupați automat lucrările pe zilele de activitate ale comisiei. Acestea vor fi balansate automat și sortate
-                după data înscrierii, lucrările încă nevalidate de secretariat fiind lăsate la urmă.
+                Grupați automat lucrările neprogramate pe zilele de activitate ale comisiei. Acestea vor fi balansate
+                automat și sortate după data înscrierii, lucrările încă nevalidate de secretariat fiind lăsate la urmă.
               </span>
             </div>
             <button mat-button (click)="autoSchedule()">Grupați</button>
@@ -39,7 +39,12 @@
         @for (paper of papersPerDay[0]; track paper) {
           <div class="paper-box" cdkDrag>
             <div class="paper-text">
-              <div>{{ paper.title }}</div>
+              <div class="paper-title">
+                <span>{{ paper.title }}</span>
+                @if(paper.isValid) {
+                  <mat-icon class="valid-icon">verified</mat-icon>
+                }
+              </div>
               <div>{{ paper.student.fullName }} · {{ paper.teacher.lastName }} {{ paper.teacher.firstName }}</div>
             </div>
           </div>
@@ -58,7 +63,12 @@
           @for (paper of papersPerDay[day.id]; track paper) {
             <div class="paper-box" cdkDrag>
               <div class="paper-text">
-                <div>{{ paper.title }}</div>
+                <div class="paper-title">
+                  <span>{{ paper.title }}</span>
+                  @if(paper.isValid) {
+                    <mat-icon class="valid-icon">verified</mat-icon>
+                  }
+                </div>
                 <div>{{ paper.student.fullName }} · {{ paper.teacher.lastName }} {{ paper.teacher.firstName }}</div>
               </div>
               <button mat-button color="primary" class="edit-time" (click)="changePaperTime(day, $index)">

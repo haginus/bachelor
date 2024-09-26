@@ -40,12 +40,30 @@
   background: white;
   border-bottom: solid 1px #ccc;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 16px;
+  letter-spacing: .0178571429em;
   color: rgba(0, 0, 0, 0.87);
 
   .paper-text {
     flex: 1;
     min-width: 0;
+
+    .paper-title {
+      margin-bottom: 4px;
+
+      .valid-icon {
+        font-size: 16px;
+        height: 16px;
+        width: 16px;
+        color: #1976D2;
+        vertical-align: middle;
+        margin-left: 4px;
+      }
+
+      span {
+        vertical-align: middle;
+      }
+    }
   }
 
   .edit-time {

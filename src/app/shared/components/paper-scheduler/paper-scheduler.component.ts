@@ -235,7 +235,15 @@ export class PaperSchedulerComponent {
   }
 
   autoSchedule() {
-    const unassignedPapers = this.papersPerDay[0];
+    const unassignedPapers = this.papersPerDay[0].sort((a, b) => {
+      if(a.isValid === null) {
+        return Infinity;
+      }
+      if(b.isValid === null) {
+        return -Infinity;
+      }
+      return a.id - b.id;
+    });
     const dayContainers = this.days.map((day) => ({
       data: this.papersPerDay[day.id],
       day,
