@@ -177,6 +177,19 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
     } catch {}
   }
 
+  async getCommitteeDocument(documentName: 'committee_students', format: 'pdf' | 'excel' = 'pdf') {
+    const sbRef = this.snackbar.open('Se generează documentul...', null, { duration: -1 });
+    const result = await firstValueFrom(this.teacher.getCommitteeDocument(this.committee.id, documentName, format));
+    sbRef.dismiss();
+    if(!result) return;
+    const documentTitle = `Programarea lucrărilor - ${this.committee.name}`;
+    if(format === 'pdf') {
+      this.documentService.viewDocument(result, 'application/pdf', documentTitle);
+    } else if(format === 'excel') {
+      this.documentService.downloadDocument(result, documentTitle, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    }
+  }
+
   async getPapersArchive() {
     const sbRef = this.snackbar.open('Se descarcă arhiva...', null, { duration: null });
     const archieveBuffer = await firstValueFrom(this.teacher.getCommitteePapersArchieve(this.committee.id));

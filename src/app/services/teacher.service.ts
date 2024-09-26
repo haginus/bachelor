@@ -230,6 +230,18 @@ export class TeacherService {
       );
   }
 
+  getCommitteeDocument(committeeId: number, documentName: 'committee_students', format: 'pdf' | 'excel' = 'pdf'): Observable<ArrayBuffer> {
+    const url = `${environment.apiUrl}/teacher/committees/${committeeId}/documents/${documentName}?format=${format}`;
+    const options = this.auth.getPrivateHeaders();
+    options.headers.append('Cache-Control', 'no-store');
+    options['responseType'] = 'arraybuffer' as 'json';
+    return this.http
+      .get<any>(url, options)
+      .pipe(
+        catchError(this.handleError<null>('getCommitteeDocument', null))
+      );
+  }
+
   getCommitteePapersArchieve(committeeId: number): Observable<ArrayBuffer> {
     const url = `${environment.apiUrl}/teacher/committees/${committeeId}/papers-archive`;
     const options = this.auth.getPrivateHeaders();
