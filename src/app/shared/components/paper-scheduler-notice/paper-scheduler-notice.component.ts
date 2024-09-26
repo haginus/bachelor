@@ -1,9 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Committee } from '../../../services/auth.service';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { PaperSchedulerComponent } from '../paper-scheduler/paper-scheduler.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-paper-scheduler-notice',
@@ -18,19 +16,6 @@ import { PaperSchedulerComponent } from '../paper-scheduler/paper-scheduler.comp
 })
 export class PaperSchedulerNoticeComponent {
 
-  constructor(
-    private readonly dialog: MatDialog,
-  ) {
-  }
-
-  showNotice = true;
-  @Input({ required: true }) committee: Committee;
-
-  openScheduler() {
-    this.dialog.open(PaperSchedulerComponent, {
-      data: this.committee,
-      width: '95vw',
-      maxWidth: '95vw'
-    });
-  }
+  @Output() schedulePress = new EventEmitter<void>();
+  @Output() close = new EventEmitter<void>();
 }

@@ -1,15 +1,13 @@
-@if(showNotice) {
-  <div class="notice">
-    <mat-icon>tips_and_updates</mat-icon>
-    <div class="text">
-      Unele lucrări nu au fost programate pentru evaluare.
-    </div>
-    <button mat-button (click)="openScheduler()">
-      <mat-icon>schedule</mat-icon>
-      <span>Programați</span>
-    </button>
-    <button mat-icon-button (click)="showNotice = false">
-      <mat-icon>close</mat-icon>
-    </button>
+<div class="notice">
+  <mat-icon>tips_and_updates</mat-icon>
+  <div class="text">
+    Unele lucrări nu au fost programate pentru evaluare.
   </div>
-}
+  <button mat-button (click)="schedulePress.emit()">
+    <mat-icon>schedule</mat-icon>
+    <span>Programați</span>
+  </button>
+  <button mat-icon-button (click)="close.emit()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>

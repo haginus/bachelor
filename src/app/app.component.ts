@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { LoaderService } from './services/loader.service';
 
 
 const SideWidth = 800;
@@ -52,7 +53,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private auth: AuthService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private loader: LoaderService,
   ) {}
 
   user: UserData | undefined = undefined;
@@ -74,6 +76,16 @@ export class AppComponent implements OnInit {
         case event instanceof NavigationEnd:
         case event instanceof NavigationCancel:
         case event instanceof NavigationError:
+          this.loadingRoute = false;
+          break;
+      }
+    });
+    this.loader.events.subscribe(event => {
+      switch(event.type) {
+        case 'LoadStart':
+          this.loadingRoute = true;
+          break;
+        case 'LoadEnd':
           this.loadingRoute = false;
           break;
       }

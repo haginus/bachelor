@@ -62,7 +62,7 @@
       </button>
     }
     <span class="toolbar-spacer"></span>
-    <button mat-icon-button matTooltip="Programați lucrările">
+    <button mat-icon-button matTooltip="Programați lucrările" (click)="schedulePapers()">
       <mat-icon>schedule</mat-icon>
     </button>
     <button mat-icon-button matTooltip="Generați documente" [matMenuTriggerFor]="documentGeneration">
@@ -72,8 +72,10 @@
       <mat-icon>archive</mat-icon>
     </button>
   </mat-toolbar>
-  @defer () {
-    <app-paper-scheduler-notice [committee]="committee" />
+  @if(showScheduleNotice) {
+    @defer {
+      <app-paper-scheduler-notice (close)="showScheduleNotice = false" (schedulePress)="schedulePapers()" />
+    }
   }
   <div class="discrete-scroll">
     <table mat-table [dataSource]="dataSource" multiTemplateDataRows #table matSort matSortActive="scheduledGrading"

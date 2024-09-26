@@ -34,6 +34,7 @@ import { PaperTitlePipe } from '../../../shared/pipes/paper-title.pipe';
 import { PaperSchedulerNoticeComponent } from '../../../shared/components/paper-scheduler-notice/paper-scheduler-notice.component';
 import { CommitteeSnippetComponent } from '../../../shared/components/committee-snippet/committee-snippet.component';
 import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';
+import { LoaderService } from '../../../services/loader.service';
 
 @Component({
   selector: 'app-committee-papers',
@@ -75,7 +76,8 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
     private auth: AuthService,
     private dialog: MatDialog,
     private documentService: DocumentService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private loader: LoaderService,
   ) {}
 
   displayedColumns: string[] = [
@@ -96,6 +98,7 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
   user: UserData;
   hasGenerationRights: boolean = false;
   member!: CommitteeMember;
+  showScheduleNotice = false;
 
   // Map to store whether paper needs attention.
   paperNeedsAttentionMap: PaperNeedsAttentionMap = {};
@@ -138,6 +141,7 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
           this.hasGenerationRights = ['president', 'secretary'].includes(
             this.member.role
           );
+          this.showScheduleNotice = !this.committee.finalGrades && this.committee.papers.some(paper => !paper.scheduledGrading);
         }
       });
   }
@@ -154,6 +158,23 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
       }
     };
     this.dataSource.sort = this.sort;
+  }
+
+  async schedulePapers() {
+    try {
+      const [{ PaperSchedulerComponent }] = await this.loader.loadResources(
+        [import('../../../shared/components/paper-scheduler/paper-scheduler.component')]
+      );
+      const dialogRef = this.dialog.open(PaperSchedulerComponent, {
+        data: this.committee,
+        width: '95vw',
+        maxWidth: '95vw'
+      });
+      await firstValueFrom(dialogRef.afterClosed());
+      this.showScheduleNotice = this.committee.papers.some((paper) => !paper.scheduledGrading);
+      this.dataSource.data = this.committee.papers;
+      this.cd.detectChanges();
+    } catch {}
   }
 
   async getPapersArchive() {
