@@ -11,6 +11,7 @@ import { RouterLink } from '@angular/router';
 import { PluckPipe } from '../../../shared/pipes/pluck.pipe';
 import { JoinPipe } from '../../../shared/pipes/join.pipe';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';
 
 @Component({
   selector: 'teacher-committees',
@@ -26,6 +27,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     RouterLink,
     PluckPipe,
     JoinPipe,
+    DatetimePipe,
   ]
 })
 export class TeacherCommitteesComponent implements OnInit, OnDestroy {

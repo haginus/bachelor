@@ -12,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { GradePaperComponent } from '../../dialogs/grade-paper/grade-paper.component';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { TeacherService } from '../../../services/teacher.service';
 import { AuthService, Committee, CommitteeMember, Paper, UserData } from '../../../services/auth.service';
 import { CommitteeDocument, CommitteeDocumentsFormat, DocumentService } from '../../../services/document.service';
@@ -32,6 +32,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { PaperTitlePipe } from '../../../shared/pipes/paper-title.pipe';
 import { PaperSchedulerNoticeComponent } from '../../../shared/components/paper-scheduler-notice/paper-scheduler-notice.component';
+import { CommitteeSnippetComponent } from '../../../shared/components/committee-snippet/committee-snippet.component';
+import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';
 
 @Component({
   selector: 'app-committee-papers',
@@ -48,6 +50,7 @@ import { PaperSchedulerNoticeComponent } from '../../../shared/components/paper-
     MatSnackBarModule,
     MatTooltipModule,
     MatTableModule,
+    MatSortModule,
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
@@ -56,9 +59,11 @@ import { PaperSchedulerNoticeComponent } from '../../../shared/components/paper-
     UserSnippetComponent,
     PaperGradeTableComponent,
     PaperDocumentListComponent,
+    PaperSchedulerNoticeComponent,
+    CommitteeSnippetComponent,
     TitleCasePipe,
     PaperTitlePipe,
-    PaperSchedulerNoticeComponent,
+    DatetimePipe,
   ],
 })
 export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
@@ -80,6 +85,7 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
     'type',
     'student',
     'teacher',
+    'scheduledGrading'
   ];
   expandedPaper: Paper | null;
   resultsLength: number;

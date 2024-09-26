@@ -3,6 +3,10 @@
   display: block;
 }
 
+mat-toolbar:not(:last-of-type) {
+  border-bottom: 1px solid #ddd;
+}
+
 mat-toolbar button {
   margin-right: 5px;
 }

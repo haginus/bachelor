@@ -18,6 +18,15 @@
     </div>
   }
   <mat-toolbar color="white">
+    @if(committee) {
+      <app-committee-snippet [committee]="committee" />
+    }
+    <span class="toolbar-spacer"></span>
+    <button mat-icon-button (click)="refreshResults()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </mat-toolbar>
+  <mat-toolbar color="white">
     @if(hasGenerationRights && (gradingAllowed || committee.finalGrades)) {
       <button fxHide.lt-sm mat-raised-button color="warn" (click)="markGradesAsFinal()" [disabled]="committee.finalGrades">
         {{ committee.finalGrades ? 'Note marcate drept finale' : 'Marcați notele drept finale' }}
@@ -42,15 +51,12 @@
     <button mat-icon-button matTooltip="Descărcați toate lucrările" (click)="getPapersArchive()">
       <mat-icon>archive</mat-icon>
     </button>
-    <button mat-icon-button (click)="refreshResults()">
-      <mat-icon>refresh</mat-icon>
-    </button>
   </mat-toolbar>
   @defer () {
     <app-paper-scheduler-notice [committee]="committee" />
   }
   <div class="discrete-scroll">
-    <table mat-table [dataSource]="dataSource" multiTemplateDataRows #table matSort matSortActive="id"
+    <table mat-table [dataSource]="dataSource" multiTemplateDataRows #table matSort matSortActive="scheduledGrading"
       matSortDisableClear matSortDirection="asc">
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef></th>
@@ -102,6 +108,11 @@
       <ng-container matColumnDef="teacher">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Profesor </th>
         <td mat-cell *matCellDef="let row"> {{row.teacher?.lastName}} {{row.teacher?.firstName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="scheduledGrading">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Programare </th>
+        <td mat-cell *matCellDef="let row"> {{ row.scheduledGrading | datetime }} </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">

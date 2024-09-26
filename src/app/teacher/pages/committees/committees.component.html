@@ -20,6 +20,18 @@
               <div>{{ committee.domains | pluck:'name' | join }}</div>
             </div>
           </div>
+          @if(committee.activityDays.length > 0) {
+            <div class="list-item">
+              <div class="content">
+                <div>Zile de activitate</div>
+                <div>
+                  @for(day of committee.activityDays; track day.id) {
+                    <div>{{ day.location }} | {{ day.startTime | datetime }}</div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
           <div class="list-item">
             <div class="content">
               <div>Membri</div>
