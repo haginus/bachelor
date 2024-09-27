@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { Paper } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-grade-paper',
@@ -22,7 +23,9 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class GradePaperComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) protected readonly paper: Paper,
+  ) {}
 
   gradeForm = new FormGroup({
     // only integer numbers ranged from 1 to 10

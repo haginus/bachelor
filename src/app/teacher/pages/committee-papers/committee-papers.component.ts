@@ -230,7 +230,9 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
   }
 
   gradePaper(paper: Paper) {
-    const dialogRef = this.dialog.open(GradePaperComponent);
+    const dialogRef = this.dialog.open(GradePaperComponent, {
+      data: paper,
+    });
 
     let sub = dialogRef.afterClosed().subscribe((result) => {
       if (result) {

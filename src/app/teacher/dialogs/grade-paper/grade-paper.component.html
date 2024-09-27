@@ -1,5 +1,10 @@
-<h2 mat-dialog-title>Notați lucrarea</h2>
+<div matDialogTitle>Notați lucrarea</div>
 <mat-dialog-content>
+  <p class="paper-description">
+    Titlu lucrare: <b>{{ paper.title }}</b> <br>
+    Student: <b>{{ paper.student.fullName }} </b> <br>
+    Profesor coordonator: <b>{{ paper.teacher.fullName }} </b>
+  </p>
   <form [formGroup]="gradeForm" fxLayout="row grid" fxLayoutGap="10px grid">
     <mat-form-field appearance="outline" fxFlex="100">
       <input matInput type="number" formControlName="forPaper">
