@@ -137,6 +137,7 @@ export class PaperSchedulerComponent {
 
   protected papersPerDay: Record<number, ExtendedPaper[]>;
   protected minutesPerPaper = new FormControl<number>(15);
+  protected minutesPerPaperOptions = [10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 26, 28, 30];
   protected isSubmitting = false;
 
   /** Calculates the most common difference in time between papers */
@@ -149,13 +150,7 @@ export class PaperSchedulerComponent {
         deltaCount[delta] = (deltaCount[delta] + 1) || 1;
       }
     }
-    const allowedDeltas = {
-      10: true,
-      15: true,
-      20: true,
-      25: true,
-      30: true,
-    };
+    const allowedDeltas = arrayMap(this.minutesPerPaperOptions, value => value);
     Object.keys(deltaCount).forEach(key => {
       if(!allowedDeltas[key]) delete deltaCount[key];
     });
