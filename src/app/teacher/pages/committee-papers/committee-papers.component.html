@@ -63,7 +63,7 @@
     }
     <span class="toolbar-spacer"></span>
     @if(hasGenerationRights) {
-      <button mat-icon-button matTooltip="Programați lucrările" (click)="schedulePapers()">
+      <button mat-icon-button matTooltip="Programați lucrările" (click)="schedulePapers()" [disabled]="committee.finalGrades || committee.activityDays.length == 0">
         <mat-icon>schedule</mat-icon>
       </button>
     }

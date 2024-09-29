@@ -141,7 +141,7 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
           this.hasGenerationRights = ['president', 'secretary'].includes(
             this.member.role
           );
-          this.showScheduleNotice = !this.committee.finalGrades && this.committee.papers.some(paper => !paper.scheduledGrading);
+          this.updateScheduleNotice();
         }
       });
   }
@@ -160,6 +160,13 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
+  updateScheduleNotice() {
+    this.showScheduleNotice =
+      !this.committee.finalGrades &&
+      this.committee.activityDays.length > 0 &&
+      this.committee.papers.some(paper => !paper.scheduledGrading);
+  }
+
   async schedulePapers() {
     try {
       const [{ PaperSchedulerComponent }] = await this.loader.loadResources(
@@ -171,7 +178,7 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
         maxWidth: '95vw'
       });
       await firstValueFrom(dialogRef.afterClosed());
-      this.showScheduleNotice = this.committee.papers.some((paper) => !paper.scheduledGrading);
+      this.updateScheduleNotice();
       this.dataSource.data = this.committee.papers;
       this.cd.detectChanges();
     } catch {}
@@ -307,6 +314,7 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
           if (res) {
             this.committee.finalGrades = true;
             this.snackbar.open('Note marcate drept finale.');
+            this.updateScheduleNotice();
           }
           this.isLoadingResults = false;
         });
