@@ -142,6 +142,7 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
     if(!deleteObservable) return;
     if(await firstValueFrom(deleteObservable)) {
       this.performedActions.next("studentDeleted");
+      this.snackbar.open("Studentul a fost șters.");
     }
   }
 
