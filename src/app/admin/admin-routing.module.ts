@@ -63,8 +63,7 @@ const routes: Routes = [
   {
     path: 'reports',
     component: ReportsComponent,
-    canActivate: [RoleGuard],
-    data: { title: 'Rapoarte', role: 'admin' }
+    data: { title: 'Rapoarte' }
   },
   {
     path: 'papers',

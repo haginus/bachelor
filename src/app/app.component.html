@@ -184,20 +184,22 @@
               <span>Comisii</span>
             </a>
           </div>
-          @if(user.type === 'admin') {
+          @if(['secretary', 'admin'].includes(user?.type)) {
             <div class="nav-list">
-              <a class="nav-list-item" routerLink="admin/session" routerLinkActive="active">
-                <mat-icon>settings</mat-icon>
-                <span>Setări sesiune de examinare</span>
-              </a>
               <a class="nav-list-item" routerLink="admin/reports" routerLinkActive="active">
                 <mat-icon>save</mat-icon>
                 <span>Rapoarte</span>
               </a>
-              <a class="nav-list-item" routerLink="admin/logs" routerLinkActive="active">
-                <mat-icon>history</mat-icon>
-                <span>Loguri</span>
-              </a>
+              @if(user.type === 'admin') {
+                <a class="nav-list-item" routerLink="admin/session" routerLinkActive="active">
+                  <mat-icon>settings</mat-icon>
+                  <span>Setări sesiune de examinare</span>
+                </a>
+                <a class="nav-list-item" routerLink="admin/logs" routerLinkActive="active">
+                  <mat-icon>history</mat-icon>
+                  <span>Loguri</span>
+                </a>
+              }
             </div>
           }
         }
