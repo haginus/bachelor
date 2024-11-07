@@ -76,10 +76,20 @@ export class LogEntryComponent {
     ];
     let byLogAttributes: string[] = [];
     switch(this.log.name) {
+      case LogName.UserCreated:
+      case LogName.UserUpdated:
+      case LogName.UserDeleted:
+        byLogAttributes = [
+          'userId',
+          'user'
+        ];
+        break;
       case LogName.StudentExtraDataCreated:
       case LogName.StudentExtraDataUpdated:
       case LogName.StudentExtraDataDeleted:
         byLogAttributes = [
+          'userId',
+          'user',
           'studentExtraDataId',
           'studentExtraData',
         ];

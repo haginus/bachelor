@@ -40,7 +40,7 @@ const _logEntryResourcesSpecs: LogEntryResourcesSpec[] = [
     resourceField: 'studentExtraData',
     label: 'Date suplimentare student',
     icon: 'school',
-    getDisplayName: (resource) => `${resource.studentId}`
+    getDisplayName: (resource) => `${resource.id}`
   },
   {
     resourceIdField: 'paperId',
