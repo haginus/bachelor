@@ -19,11 +19,15 @@ export class LogsService {
     let url = `${this.apiUrl}?limit=${query.pagination.limit}&offset=${query.pagination.offset || 0}`;
     if(query.filters) {
       Object.keys(query.filters).forEach(key => {
-        const value = query.filters[key] as MathchingOrNotMatching<any>;
-        const join = (v?: any[], prefix: string = '') => v?.map(v => `${prefix}${v}`).join(',');
-        let result = [join(value.matching), join(value.notMatching, '-')].filter(Boolean).join(',');
-        if(result) {
-          url += `&${key}=${result}`;
+        const value = query.filters[key] as MatchingOrNotMatching<any>;
+        if(key === 'meta') {
+          url += `&meta=${JSON.stringify(value)}`;
+        } else {
+          const join = (v?: any[], prefix: string = '') => v?.map(v => `${prefix}${v}`).join(',');
+          let result = [join(value.matching), join(value.notMatching, '-')].filter(Boolean).join(',');
+          if(result) {
+            url += `&${key}=${result}`;
+          }
         }
       });
     }
@@ -48,13 +52,13 @@ export interface LogsQuery {
     offset?: number;
   };
   filters?: {
-    severity?: MathchingOrNotMatching<LogSeverity>;
-    name?: MathchingOrNotMatching<any>;
-    paperId?: MathchingOrNotMatching<number | null>;
+    severity?: MatchingOrNotMatching<LogSeverity>;
+    name?: MatchingOrNotMatching<any>;
+    paperId?: MatchingOrNotMatching<number | null>;
   };
 }
 
-type MathchingOrNotMatching<T> = {
+type MatchingOrNotMatching<T> = {
   matching?: T[];
   notMatching?: T[];
 };

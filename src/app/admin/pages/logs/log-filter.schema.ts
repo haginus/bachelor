@@ -69,6 +69,10 @@ export const logFilterSchema = {
           $ref: '#/$defs/matchOrNotMatchNumbersOrNull',
           description: 'ID-ul cererii de reîncărcare a documentului',
         },
+        meta: {
+          $ref: '#/$defs/meta',
+          description: 'Alte date incluse în log',
+        },
       },
     }
   },
@@ -118,5 +122,78 @@ export const logFilterSchema = {
         notMatching: { $ref: '#/$defs/arrayOfNumbers' },
       },
     },
+    meta: {
+      $ref: '#/$defs/metaOperators'
+    },
+    metaOperators: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        '$and': {
+          description: "Operatorul 'și'",
+          type: 'object',
+          additionalProperties: false,
+          patternProperties: {
+            '^.*$': { $ref: '#/$defs/metaNestOrLeaf' },
+          },
+        },
+        '$or': {
+          description: "Operatorul 'sau'",
+          type: 'array',
+          items: { $ref: '#/$defs/metaNestOrLeaf' },
+        },
+        '$ne': {
+          description: "Operatorul '!='",
+          type: ['string', 'number']
+        },
+        '$lt': {
+          description: "Operatorul '<'",
+          type: 'number'
+        },
+        '$lte': {
+          description: "Operatorul '<='",
+          type: 'number'
+        },
+        '$gt': {
+          description: "Operatorul '>'",
+          type: 'number'
+        },
+        '$gte': {
+          description: "Operatorul '>='",
+          type: 'number'
+        },
+        '$in': {
+          description: "Operatorul 'în'",
+          type: 'array'
+        },
+        '$notIn': {
+          description: "Operatorul 'nu în'",
+          type: 'array'
+        },
+        '$substring': {
+          description: "Operatorul 'LIKE %abc%'",
+          type: 'string'
+        },
+        '$startsWith': {
+          description: "Operatorul 'LIKE abc%'",
+          type: 'string'
+        },
+        '$endsWith': {
+          description: "Operatorul 'LIKE %abc'",
+          type: 'string'
+        }
+      },
+      patternProperties: {
+        '^.*$': { $ref: '#/$defs/metaNestOrLeaf' },
+      },
+    },
+    metaNestOrLeaf: {
+      "anyOf": [
+        { $ref: '#/$defs/metaOperators' },
+        { type: 'string' },
+        { type: 'number' },
+        { type: 'array' },
+      ]
+    }
   }
 };
