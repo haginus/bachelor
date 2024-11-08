@@ -79,6 +79,7 @@ export class LogEntryComponent {
       case LogName.UserCreated:
       case LogName.UserUpdated:
       case LogName.UserDeleted:
+      case LogName.UserValidated:
         byLogAttributes = [
           'userId',
           'user'
