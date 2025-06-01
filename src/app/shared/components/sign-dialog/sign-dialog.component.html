@@ -26,7 +26,7 @@
         }
       }
     </div>
-    <div class="footer" [class]="{ visible: !loadingSignature && !signatureError && signature.userId === userId }">
+    <div class="footer" [class]="{ visible: !loadingSignature && !signatureError && signatureUserId === userId }">
       <button mat-button (click)="openSampleEditor()">
         {{ !signature ? 'Adăugați specimenul' : 'Editați specimenul' }}
       </button>

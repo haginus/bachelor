@@ -48,13 +48,14 @@ export class SignDialogComponent {
   signatureError = false;
   loadingSubmit = false;
   userId!: number;
+  signatureUserId!: number;
 
   private async loadSignature() {
     this.loadingSignature = true;
     this.userId = (await firstValueFrom(this.auth.userData)).id;
-    const signatureUserId = this.signOptions.signUserId || this.userId;
+    this.signatureUserId = this.signOptions.signUserId || this.userId;
     try {
-      this.signature = await this.signaturesService.getUserSignature(signatureUserId);
+      this.signature = await this.signaturesService.getUserSignature(this.signatureUserId);
     } catch {
       this.signatureError = true;
     } finally {
