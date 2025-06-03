@@ -31,6 +31,7 @@ export class DocumentUploadDialogComponent implements OnInit {
     private snackbar: MatSnackBar,
   ) {}
 
+  isDownloadingGeneratedDocument: boolean = false;
   isUploadingFile: boolean = false;
   acceptedExtensions: string;
 
@@ -49,9 +50,27 @@ export class DocumentUploadDialogComponent implements OnInit {
       }
     })
   }
+
+  downloadGeneratedDocument() {
+    this.isDownloadingGeneratedDocument = true;
+    this.document.getDocument(this.data.generatedDocumentId).subscribe(data => {
+      if(data) {
+        const blob = new Blob([data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        let anchor = document.createElement("a");
+        anchor.download = this.data.document.title;
+        anchor.href = url;
+        anchor.click();
+      } else {
+        this.snackbar.open("Descărcarea nu a reușit.");
+      }
+      this.isDownloadingGeneratedDocument = false;
+    })
+  }
 }
 
 export interface DocumentUploadDialogData {
   document: PaperRequiredDocument;
+  generatedDocumentId?: number;
   paperId: number;
 }

@@ -114,6 +114,15 @@ export class PaperDocumentListComponent implements OnChanges {
             return canUpload ? 'sign' : null;
           }
         }
+        if(needsUploaded) {
+          // If it is signed, return 'view' action
+          if(isUploaded) {
+            return 'view';
+          } else {
+            // Else check if user can upload and return the correct action
+            return canUpload ? 'upload' : null;
+          }
+        }
         // If it does not need to be signed, then we can view it
         return 'view';
       }
@@ -227,6 +236,7 @@ export class PaperDocumentListComponent implements OnChanges {
       data: {
         document: mapElement.requiredDocument,
         paperId: this.paperId,
+        generatedDocumentId: mapElement.actualTypes.generated ? mapElement.lastId : undefined,
       },
       width: '80%',
       maxWidth: '500px'
@@ -336,8 +346,8 @@ export interface PaperRequiredDocument {
   acceptedMimeTypes: string,
   acceptedExtensions: string[],
   uploadBy: PaperDocumentUploadBy;
+  uploadInstructions?: string;
 }
-
 export interface PaperDocumentEvent {
   documentName: string;
   action: 'sign' | 'uploadCopy';

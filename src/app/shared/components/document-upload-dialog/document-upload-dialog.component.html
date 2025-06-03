@@ -1,9 +1,27 @@
 <div class="header">
   <h2 class="title">Încărcați documentul</h2>
   <h3 class="subtitle">{{ data.document.title }}</h3>
+  @if(data.document.uploadInstructions) {
+    <p>{{ data.document.uploadInstructions }}</p>
+  }
 </div>
 
 <mat-dialog-content class="mat-typography">
+  @if(data.generatedDocumentId) {
+    <div class="download-generated-container">
+      <button
+        mat-stroked-button
+        (click)="downloadGeneratedDocument()"
+        [disabled]="isDownloadingGeneratedDocument"
+      >
+        <mat-icon>cloud_upload</mat-icon>
+        <span>Descărcați șablonul generat</span>
+      </button>
+      @if(isDownloadingGeneratedDocument) {
+        <mat-spinner [diameter]="36"></mat-spinner>
+      }
+    </div>
+  }
   <p>
     Fișiere acceptate:
     {{ acceptedExtensions }}

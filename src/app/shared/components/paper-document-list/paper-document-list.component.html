@@ -11,7 +11,7 @@
       <div class="title">{{ document.title }}</div>
       <div>
         @if(documentMap[document.name].reuploadRequest) {
-          <div class="reupload-request-notice">
+          <div class="reupload-request-notice upload-request-notice">
             <span>
               Reîncărcare solicitată până pe {{ documentMap[document.name].reuploadRequest.deadline | date:"dd.MM.yyyy" }}
             </span>
@@ -21,20 +21,24 @@
           </div>
         } @else {
           @if(documentMap[document.name].nextAction == null || documentMap[document.name].nextAction == 'upload') {
-            <span>
-              Document lipsă
+            <div class="upload-request-notice">
+              <span>
+                Document lipsă
+              </span>
               @if(documentMap[document.name].uploadBy != perspective) {
                 <span>
                   | Se încarcă de către {{ USER_TYPES[documentMap[document.name].uploadBy] }}
                 </span>
+              } @else if(documentMap[document.name].requiredDocument.uploadInstructions) {
+                <mat-icon [matTooltip]="documentMap[document.name].requiredDocument.uploadInstructions">info</mat-icon>
               }
-            </span>
+            </div>
           }
           @if(documentMap[document.name].nextAction == 'sign') {
             <span>Necesită semnătură</span>
           }
           @if(documentMap[document.name].nextAction == 'view') {
-            @if(documentMap[document.name].actualTypes.generated && !documentMap[document.name].requiredTypes.signed) {
+            @if(documentMap[document.name].actualTypes.generated && !documentMap[document.name].requiredTypes.signed && !documentMap[document.name].requiredTypes.copy) {
               <span>Document generat</span>
             }
             @if(documentMap[document.name].actualTypes.signed) {

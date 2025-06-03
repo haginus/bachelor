@@ -180,7 +180,8 @@ export interface PaperRequiredDocument {
   types: PaperDocumentTypes,
   acceptedMimeTypes: string,
   acceptedExtensions: string[],
-  uploadBy: PaperDocumentUploadBy
+  uploadBy: PaperDocumentUploadBy;
+  uploadInstructions?: string;
 }
 
 export interface StudentExtraData {
