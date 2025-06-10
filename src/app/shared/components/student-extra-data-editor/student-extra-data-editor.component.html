@@ -87,14 +87,30 @@
 
     <div class="section-header">Locul nașterii</div>
     <div fxLayout="row grid" fxLayoutGap="10px grid">
-      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+      <mat-form-field appearance="outline" fxFlex="100">
         <mat-label>Țară</mat-label>
-        <input matInput type="text" formControlName="placeOfBirthCountry">
+        <mat-select formControlName="placeOfBirthCountry">
+          @for(country of countries; track country) {
+            <mat-option [value]="country">{{ country }}</mat-option>
+          }
+        </mat-select>
       </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Județ</mat-label>
-        <input matInput type="text" formControlName="placeOfBirthCounty">
-      </mat-form-field>
+
+      @if(placeOfBirthCountry.value === 'România') {
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Județ/Sector</mat-label>
+          <mat-select formControlName="placeOfBirthCounty">
+            @for(county of counties_ro; track county) {
+              <mat-option [value]="county">{{ county }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      } @else {
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Regiune</mat-label>
+          <input matInput type="text" formControlName="placeOfBirthCounty">
+        </mat-form-field>
+      }
 
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
         <mat-label>Localitate</mat-label>
@@ -121,10 +137,31 @@
 
     <div class="section-header">Adresă de domiciliu</div>
     <div fxLayout="row grid" fxLayoutGap="10px grid" formGroupName="address">
-      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Județ</mat-label>
-        <input matInput type="text" formControlName="county">
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Țară</mat-label>
+        <mat-select formControlName="country">
+          @for(country of countries; track country) {
+            <mat-option [value]="country">{{ country }}</mat-option>
+          }
+        </mat-select>
       </mat-form-field>
+
+      @if(addressCountry.value === 'România') {
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Județ/Sector</mat-label>
+          <mat-select formControlName="county">
+            @for(county of counties_ro; track county) {
+              <mat-option [value]="county">{{ county }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      } @else {
+        <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+          <mat-label>Regiune</mat-label>
+          <input matInput type="text" formControlName="county">
+        </mat-form-field>
+      }
+
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
         <mat-label>Localitate</mat-label>
         <input matInput type="text" formControlName="locality">

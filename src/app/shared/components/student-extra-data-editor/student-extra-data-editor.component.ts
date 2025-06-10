@@ -10,6 +10,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { countries } from '../../../lib/countries';
+import { counties_ro } from '../../../lib/counties_ro';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-student-extra-data-editor',
@@ -36,11 +39,41 @@ export class StudentExtraDataEditorComponent implements OnInit {
   ) {
     this.studentExtraData = dialogData.studentExtraData;
     this.userData = dialogData.student;
+
+    this.placeOfBirthCountry.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.placeOfBirthCounty.setValue('');
+    });
+
+    this.placeOfBirthCounty.valueChanges.pipe(takeUntilDestroyed()).subscribe((county) => {
+      if(this.placeOfBirthCountry.value === 'România' && county.startsWith('Sector')) {
+        this.placeOfBirthLocality.setValue('București');
+        this.placeOfBirthLocality.disable();
+      } else {
+        this.placeOfBirthLocality.enable();
+      }
+    });
+
+    this.addressCountry.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.addressCounty.setValue('');
+    });
+
+    this.addressCounty.valueChanges.pipe(takeUntilDestroyed()).subscribe((county) => {
+      if(this.addressCountry.value === 'România' && county.startsWith('Sector')) {
+        this.addressLocality.setValue('București');
+        this.addressLocality.disable();
+      } else {
+        this.addressLocality.enable();
+      }
+    });
+
   }
 
   studentExtraData: StudentExtraData;
   userData: UserData;
   isSavingData: boolean = false;
+
+  countries = Object.values(countries);
+  counties_ro = Object.values(counties_ro);
 
   studentDataForm = new FormGroup({
     "birthLastName": new FormControl(null, [Validators.required, Validators.maxLength(128)]),
@@ -51,13 +84,14 @@ export class StudentExtraDataEditorComponent implements OnInit {
     "dateOfBirth": new FormControl(null, [Validators.required]),
     "citizenship": new FormControl(null, [Validators.required, Validators.maxLength(128)]),
     "ethnicity": new FormControl(null, [Validators.required, Validators.maxLength(128)]),
-    "placeOfBirthCountry": new FormControl(null, [Validators.required, Validators.maxLength(128)]),
+    "placeOfBirthCountry": new FormControl('România', [Validators.required, Validators.maxLength(128)]),
     "placeOfBirthCounty": new FormControl(null, [Validators.required, Validators.maxLength(128)]),
     "placeOfBirthLocality": new FormControl(null, [Validators.required, Validators.maxLength(128)]),
     "landline": new FormControl(null, [Validators.required, Validators.pattern(/^((\+[0-9]{11})|([0-9]{10}))$/)]),
     "mobilePhone": new FormControl(null, [Validators.required, Validators.pattern(/^((\+[0-9]{11})|([0-9]{10}))$/)]),
     "personalEmail": new FormControl(null, [Validators.required, Validators.email]),
     "address": new FormGroup({
+      "country": new FormControl('România', [Validators.required]),
       "county": new FormControl(null, [Validators.required]),
       "locality": new FormControl(null, [Validators.required]),
       "street": new FormControl(null, [Validators.required]),
@@ -68,6 +102,30 @@ export class StudentExtraDataEditorComponent implements OnInit {
       "apartment": new FormControl(null),
     })
   });
+
+  get placeOfBirthCountry() {
+    return this.studentDataForm.get('placeOfBirthCountry') as FormControl<string>;
+  }
+
+  get placeOfBirthCounty() {
+    return this.studentDataForm.get('placeOfBirthCounty') as FormControl<string>;
+  }
+
+  get placeOfBirthLocality() {
+    return this.studentDataForm.get('placeOfBirthLocality') as FormControl<string>;
+  }
+
+  get addressCountry() {
+    return this.studentDataForm.get('address')!.get('country')! as FormControl<string>;
+  }
+
+  get addressCounty() {
+    return this.studentDataForm.get('address')!.get('county')! as FormControl<string>;
+  }
+
+  get addressLocality() {
+    return this.studentDataForm.get('address')!.get('locality')! as FormControl<string>;
+  }
 
   ngOnInit(): void {
     if(this.studentExtraData) {
@@ -82,7 +140,7 @@ export class StudentExtraDataEditorComponent implements OnInit {
 
   saveData() {
     this.isSavingData = true;
-    const formValue = this.studentDataForm.value as StudentExtraData;
+    const formValue = this.studentDataForm.getRawValue() as StudentExtraData;
     this.studentExtraData = formValue;
     this.dialog.close(this.studentExtraData);
   }
