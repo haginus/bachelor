@@ -9,7 +9,7 @@
       <div class="content">
         <div class="title">Versiunea {{ history.length - $index }} (#{{ document.id }})</div>
         <div>Tip: {{ documentTypes[document.type] }}</div>
-        <div>Încărcat la {{ document.createdAt | date:'medium' }} de {{ document.uploadedByUser?.fullName || 'Sistem' }}</div>
+        <div>Creat la {{ document.createdAt | date:'medium' }} de {{ document.uploadedByUser?.fullName || 'Sistem' }}</div>
         @if(document.deletedAt) {
           <div>Șters la {{ document.deletedAt | date:'medium' }}</div>
         } @else {
