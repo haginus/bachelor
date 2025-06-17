@@ -91,7 +91,7 @@
         </button>
       }
     }
-    @if(perspective == 'admin' && canEdit) {
+    @if(perspective == 'admin') {
       <button
         mat-icon-button
         [matMenuTriggerFor]="moreMenu"
@@ -105,20 +105,26 @@
 
 <mat-menu #moreMenu="matMenu">
   <ng-template matMenuContent let-document="document">
-    <button mat-menu-item (click)="reuploadDocument(document)">
-      <mat-icon>upload</mat-icon>
-      <span>Reîncărcați documentul</span>
-    </button>
-    @if(document.reuploadRequest) {
-      <button mat-menu-item (click)="reuploadRequest.emit({ document, reuploadRequested: false })">
-        <mat-icon>cancel</mat-icon>
-        <span>Anulați solicitarea de reîncărcare</span>
+    @if(canEdit) {
+      <button mat-menu-item (click)="reuploadDocument(document)">
+        <mat-icon>upload</mat-icon>
+        <span>Reîncărcați documentul</span>
       </button>
-    } @else {
-      <button mat-menu-item (click)="reuploadRequest.emit({ document, reuploadRequested: true })">
-        <mat-icon>file_present</mat-icon>
-        <span>Solicitați reîncărcarea</span>
-      </button>
+      @if(document.reuploadRequest) {
+        <button mat-menu-item (click)="reuploadRequest.emit({ document, reuploadRequested: false })">
+          <mat-icon>cancel</mat-icon>
+          <span>Anulați solicitarea de reîncărcare</span>
+        </button>
+      } @else {
+        <button mat-menu-item (click)="reuploadRequest.emit({ document, reuploadRequested: true })">
+          <mat-icon>file_present</mat-icon>
+          <span>Solicitați reîncărcarea</span>
+        </button>
+      }
     }
+    <button mat-menu-item (click)="openDocumentHistory(document)">
+      <mat-icon>history</mat-icon>
+      <span>Vedeți istoricul încărcărilor</span>
+    </button>
   </ng-template>
 </mat-menu>

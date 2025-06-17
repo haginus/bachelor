@@ -98,6 +98,13 @@ export class DocumentService {
       );
   }
 
+  getDocumentUploadHistory(paperId: number, name: string): Observable<PaperDocument[]> {
+    const url = `${environment.apiUrl}/documents/history?paperId=${paperId}&name=${name}`;
+    return this.http.get<PaperDocument[]>(url, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError<PaperDocument[]>('getDocumentUploadHistory', []))
+    );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       let msg = 'A apărut o eroare.';

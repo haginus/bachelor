@@ -408,6 +408,9 @@ export interface PaperDocument {
   type: 'generated' | 'signed' | 'copy';
   createdAt: string;
   updatedAt: string;
+  deletedAt: string | null;
+  uploadedBy: number | null;
+  uploadedByUser?: UserDataMin;
 }
 
 export interface PaperGrade {

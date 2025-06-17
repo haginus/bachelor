@@ -1,0 +1,37 @@
+<div mat-dialog-title>Istoric încărcări - {{ data.document.title }}</div>
+<div mat-dialog-content class="mat-typography">
+
+  @for(document of history; track document.id) {
+    <div class="document-item">
+      <div class="icon">
+        <mat-icon>description</mat-icon>
+      </div>
+      <div class="content">
+        <div class="title">Versiunea {{ history.length - $index }} (#{{ document.id }})</div>
+        <div>Tip: {{ documentTypes[document.type] }}</div>
+        <div>Încărcat la {{ document.createdAt | date:'medium' }} de {{ document.uploadedByUser?.fullName || 'Sistem' }}</div>
+        @if(document.deletedAt) {
+          <div>Șters la {{ document.deletedAt | date:'medium' }}</div>
+        } @else {
+          <div>Versiunea curentă</div>
+        }
+      </div>
+      <button mat-stroked-button (click)="viewDocument(document, history.length - $index)">
+        Vizualizați
+      </button>
+    </div>
+  } @empty {
+    <div class="centered">
+      @if(isLoading) {
+        <mat-progress-spinner [diameter]="36" mode="indeterminate" />
+      } @else {
+        <div>Nu există documente încărcate.</div>
+      }
+    </div>
+
+  }
+
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Închideți</button>
+</div>

@@ -15,6 +15,7 @@ import { inclusiveDate } from '../../../lib/utils';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DatePipe } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
+import { DocumentUploadHistoryDialogComponent, DocumentUploadHistoryDialogData } from '../document-upload-history-dialog/document-upload-history-dialog.component';
 
 @Component({
   selector: 'app-paper-document-list',
@@ -294,6 +295,16 @@ export class PaperDocumentListComponent implements OnChanges {
         this.snackbar.open('Document șters.');
       }
       mapElement.actionPending = false;
+    });
+  }
+
+  openDocumentHistory(mapElement: DocumentMapElement) {
+    this.dialog.open<DocumentUploadHistoryDialogComponent, DocumentUploadHistoryDialogData>(DocumentUploadHistoryDialogComponent, {
+      data: {
+        paperId: this.paperId,
+        document: mapElement.requiredDocument,
+      },
+      autoFocus: 'dialog',
     });
   }
 
