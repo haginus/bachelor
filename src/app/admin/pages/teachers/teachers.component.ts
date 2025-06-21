@@ -29,7 +29,7 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
   }
 
-  displayedColumns: string[] = ['status', 'id', 'lastName', 'firstName', 'email', 'offerNumber', 'paperNumber', 'actions'];
+  displayedColumns: string[] = ['status', 'id', 'lastName', 'firstName', 'email', 'offerCount', 'paperCount', 'plagiarismReportCount', 'actions'];
   data: UserDataExtented[] = [];
 
   resultsLength = 0;
@@ -169,7 +169,7 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
 interface UserDataExtented extends UserData {
   teacher: {
     id: number;
-    offerNumber: number;
-    paperNumber: number;
+    offerCount: number;
+    paperCount: number;
   }
 }
