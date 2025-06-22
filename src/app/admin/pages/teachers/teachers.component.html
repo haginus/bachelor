@@ -37,10 +37,33 @@
       <button mat-icon-button (click)="refreshResults()">
         <mat-icon>refresh</mat-icon>
       </button>
-      <button mat-icon-button>
-        <mat-icon>more_vert</mat-icon>
+      <button mat-icon-button (click)="toggleFilters()" [color]="showFilters ? 'primary' : ''">
+        <mat-icon>filter_list</mat-icon>
       </button>
     </mat-toolbar>
+    <div class="table-filters" *ngIf="showFilters">
+      <div class="filter-header">
+        <span class="text">Filtrați după</span>
+        <button mat-button (click)="teacherFilter.reset()">Resetați</button>
+      </div>
+      <form autocomplete="off" [formGroup]="teacherFilter" fxLayout="row grid" fxLayoutGap="10px grid">
+        <mat-form-field appearance="outline" fxFlex="50">
+          <mat-label>Nume</mat-label>
+          <input matInput type="text" formControlName="lastName" name="teacher_last_name" autocomplete="off" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="50">
+          <mat-label>Prenume</mat-label>
+          <input matInput type="text" formControlName="firstName" name="teacher_first_name" autocomplete="off" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="50">
+          <mat-label>E-mail</mat-label>
+          <input matInput type="text" formControlName="email" name="student_email" autocomplete="off" />
+        </mat-form-field>
+        <mat-checkbox formControlName="onlyMissingReports" fxFlex="100">
+          Doar profesori cu referate lipsă
+        </mat-checkbox>
+      </form>
+    </div>
     <div class="loading-shade" *ngIf="isLoadingResults">
       <mat-spinner></mat-spinner>
     </div>

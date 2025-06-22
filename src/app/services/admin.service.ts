@@ -91,9 +91,14 @@ export class AdminService {
 
   // Teachers
 
-  getTeacherUsers(sort: string = 'id', order: string = 'ASC', page: number = 0, pageSize: number = 20):
+  getTeacherUsers(sort: string = 'id', order: string = 'ASC', page: number = 0, pageSize: number = 20, filters: Record<string, any> = {}):
     Observable<TeacherQueryResult> {
-    const url = `${environment.apiUrl}/admin/teachers?sort=${sort}&order=${order}&page=${page}&pageSize=${pageSize}`;
+    let url = `${environment.apiUrl}/admin/teachers?sort=${sort}&order=${order}&page=${page}&pageSize=${pageSize}`;
+    Object.keys(filters).forEach(filterKey => {
+      if(filters[filterKey]) {
+        url += `&${filterKey}=${filters[filterKey]}`;
+      }
+    });
     return this.http
       .get<TeacherQueryResult>(url, this.auth.getPrivateHeaders(),)
       .pipe(
