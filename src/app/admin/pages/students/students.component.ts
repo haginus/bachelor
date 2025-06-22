@@ -55,6 +55,8 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
     specializationId: new FormControl({ value: null, disabled: true }),
     group: new FormControl(null),
     promotion: new FormControl(null),
+    lastName: new FormControl(null),
+    firstName: new FormControl(null),
     email: new FormControl(null)
   });
 
