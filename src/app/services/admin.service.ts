@@ -364,6 +364,9 @@ export class AdminService {
     if(filter?.domainId != undefined) {
       url += `&domainId=${filter.domainId}`;
     }
+    if(filter?.specializationId != undefined) {
+      url += `&specializationId=${filter.specializationId}`;
+    }
     if(filter?.studyForm != undefined) {
       url += `&studyForm=${filter.studyForm}`;
     }
@@ -606,6 +609,8 @@ export interface GetPapersFilter {
   type?: PaperType;
   /** Student domain */
   domainId?: number;
+  /** Student specialization */
+  specializationId?: number;
   /** Student study form */
   studyForm?: 'if' | 'id' | 'ifr';
   /** Paper title */

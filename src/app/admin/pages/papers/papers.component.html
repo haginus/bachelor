@@ -38,66 +38,81 @@
         <span class="text">Filtrați după</span>
         <button mat-button (click)="resetFilterForm()">Resetați</button>
       </div>
-      <form [formGroup]="paperFilterForm" fxLayout="row grid" fxLayoutGap="10px grid">
-        <div fxFlex="50" fxFlex.lt-md="100">
-          <mat-button-toggle-group formControlName="submitted">
-            <mat-button-toggle [value]="true">Înscrise</mat-button-toggle>
-            <mat-button-toggle [value]="false">Neînscrise</mat-button-toggle>
-          </mat-button-toggle-group>
-        </div>
-        <div fxFlex="50" fxFlex.lt-md="100">
-          <mat-button-toggle-group formControlName="assigned">
-            <mat-button-toggle [value]="true">Atribuite</mat-button-toggle>
-            <mat-button-toggle [value]="false">Neatribuite</mat-button-toggle>
-            <mat-button-toggle [value]="null">Toate</mat-button-toggle>
-          </mat-button-toggle-group>
-        </div>
-        <div fxFlex="50" fxFlex.lt-md="100">
-          <mat-button-toggle-group formControlName="validity">
-            <mat-button-toggle value="valid">Valide</mat-button-toggle>
-            <mat-button-toggle value="notValid">Invalide</mat-button-toggle>
-            <mat-button-toggle value="nullValid">Nevalidate</mat-button-toggle>
-            <mat-button-toggle [value]="null">Toate</mat-button-toggle>
-          </mat-button-toggle-group>
-        </div>
-        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-          <mat-label>Tip</mat-label>
-          <mat-select formControlName="type">
-            <mat-option [value]="null">--</mat-option>
-            <mat-option *ngFor="let type of PAPER_TYPES | keyvalue" [value]="type.key">
-              {{ type.value | titlecase }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-          <mat-label>Domeniu</mat-label>
-          <mat-select formControlName="domainId">
-            <mat-option [value]="null">--</mat-option>
-            <mat-option *ngFor="let domain of domains | async" [value]="domain.id">
-              {{ domain.name }}, {{ DOMAIN_TYPES[domain.type] | titlecase }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-          <mat-label>Forma de învățământ</mat-label>
-          <mat-select formControlName="studyForm">
-            <mat-option [value]="null">--</mat-option>
-            <mat-option *ngFor="let type of STUDY_FORMS | keyvalue" [value]="type.key">
-              {{ type.value }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </form>
-      <form [formGroup]="paperFilterDebouncedForm" fxLayout="row grid" fxLayoutGap="10px grid" style="padding-top: 10px">
-        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-          <mat-label>Titlu lucrare</mat-label>
-          <input matInput formControlName="title" />
-        </mat-form-field>
-        <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-          <mat-label>Nume student</mat-label>
-          <input matInput formControlName="studentName" />
-        </mat-form-field>
-      </form>
+      <div fxLayout="row grid" fxLayoutGap="10px grid">
+        <ng-container [formGroup]="paperFilterForm">
+          <div fxFlex="50" fxFlex.lt-md="100">
+            <mat-button-toggle-group formControlName="submitted">
+              <mat-button-toggle [value]="true">Înscrise</mat-button-toggle>
+              <mat-button-toggle [value]="false">Neînscrise</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+          <div fxFlex="50" fxFlex.lt-md="100">
+            <mat-button-toggle-group formControlName="assigned">
+              <mat-button-toggle [value]="true">Atribuite</mat-button-toggle>
+              <mat-button-toggle [value]="false">Neatribuite</mat-button-toggle>
+              <mat-button-toggle [value]="null">Toate</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+          <div fxFlex="100" fxFlex.lt-md="100">
+            <mat-button-toggle-group formControlName="validity">
+              <mat-button-toggle value="valid">Valide</mat-button-toggle>
+              <mat-button-toggle value="notValid">Invalide</mat-button-toggle>
+              <mat-button-toggle value="nullValid">Nevalidate</mat-button-toggle>
+              <mat-button-toggle [value]="null">Toate</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+        </ng-container>
+        <ng-container [formGroup]="paperFilterDebouncedForm">
+          <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+            <mat-label>Titlu lucrare</mat-label>
+            <input matInput formControlName="title" />
+          </mat-form-field>
+        </ng-container>
+        <ng-container [formGroup]="paperFilterForm">
+          <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+            <mat-label>Tip lucrare</mat-label>
+            <mat-select formControlName="type">
+              <mat-option [value]="null">--</mat-option>
+              <mat-option *ngFor="let type of PAPER_TYPES | keyvalue" [value]="type.key">
+                {{ type.value | titlecase }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+            <mat-label>Domeniu</mat-label>
+            <mat-select formControlName="domain">
+              <mat-option [value]="null">--</mat-option>
+              <mat-option *ngFor="let domain of domains | async" [value]="domain">
+                {{ domain.name }}, {{ DOMAIN_TYPES[domain.type] | titlecase }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+            <mat-label>Specializare</mat-label>
+            <mat-select formControlName="specializationId">
+              <mat-option [value]="null">--</mat-option>
+              <mat-option *ngFor="let specialization of paperFilterForm.get('domain').value?.specializations" [value]="specialization.id">
+                {{ specialization.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+            <mat-label>Forma de învățământ</mat-label>
+            <mat-select formControlName="studyForm">
+              <mat-option [value]="null">--</mat-option>
+              <mat-option *ngFor="let type of STUDY_FORMS | keyvalue" [value]="type.key">
+                {{ type.value }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </ng-container>
+        <ng-container [formGroup]="paperFilterDebouncedForm">
+          <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
+            <mat-label>Nume student</mat-label>
+            <input matInput formControlName="studentName" />
+          </mat-form-field>
+        </ng-container>
+      </div>
     </div>
   }
   @if(isLoadingResults) {

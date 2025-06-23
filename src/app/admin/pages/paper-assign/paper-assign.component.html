@@ -40,16 +40,25 @@
     <h2>Alte lucrări</h2>
     <div class="filters mat-elevation-z1">
       <div fxLayout="row grid" fxLayoutGap="10px grid" [formGroup]="paperFilter">
-        <mat-form-field appearance="outline" fxFlex="70">
+        <mat-form-field appearance="outline" fxFlex="50">
           <mat-label>Titlu lucrare</mat-label>
           <input matInput formControlName="title" name="paperTitle">
         </mat-form-field>
-        <mat-form-field appearance="outline" fxFlex="30">
+        <mat-form-field appearance="outline" fxFlex="50">
           <mat-label>Tip</mat-label>
           <mat-select formControlName="type" name="paperType">
             <mat-option [value]="null">--</mat-option>
             <mat-option *ngFor="let paperType of PAPER_TYPES | keyvalue" [value]="paperType.key">
               {{ paperType.value | titlecase }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100">
+          <mat-label>Specializare student</mat-label>
+          <mat-select formControlName="specializationId">
+            <mat-option [value]="null">--</mat-option>
+            <mat-option *ngFor="let specialization of specializations" [value]="specialization.id">
+              {{ specialization.name }}
             </mat-option>
           </mat-select>
         </mat-form-field>

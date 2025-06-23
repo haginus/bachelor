@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { AdminService } from '../../../services/admin.service';
-import { Committee, Paper } from '../../../services/auth.service';
+import { Committee, DomainSpecialization, Paper } from '../../../services/auth.service';
 import { PAPER_TYPES } from '../../../lib/constants';
 import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
 
@@ -25,6 +25,7 @@ export class PaperAssignComponent implements OnInit {
   committee: Committee;
   memberIds: number[]; // Array to keep member IDs, used to not allow papers from a teacher that is in this committee
   isMasterCommittee: boolean = false;
+  specializations: DomainSpecialization[];
 
   isLoadingCommittee: boolean = true;
   isLoadingAssignedPapers: boolean;
@@ -37,6 +38,7 @@ export class PaperAssignComponent implements OnInit {
   paperFilter = new FormGroup({
     title: new FormControl(''),
     type: new FormControl(null),
+    specializationId: new FormControl(null),
     studentName: new FormControl(''),
   });
 
@@ -68,6 +70,7 @@ export class PaperAssignComponent implements OnInit {
       this.memberIds = this.committee.members.map(m => m.teacherId);
       this.isMasterCommittee = this.committee.domains.some(d => d.type == 'master');
       this.isLoadingCommittee = false;
+      this.specializations = this.committee.domains.flatMap(d => d.specializations || []);
       this.getLeftPapers();
       this.getRightPapers();
     });
@@ -87,9 +90,9 @@ export class PaperAssignComponent implements OnInit {
       startWith({}),
       switchMap(() => {
         this.isLoadingOtherPapers = true;
-        const { title, type, studentName } = this.paperFilter.value;
+        const { title, type, specializationId, studentName } = this.paperFilter.value;
         return this.admin.getPapers(undefined, undefined, null, null,
-        { assigned: false, forCommittee: this.committeeId, submitted: true, isNotValid: false, title, type, studentName }, true)
+        { assigned: false, forCommittee: this.committeeId, submitted: true, isNotValid: false, title, type, specializationId, studentName }, true)
       })
     ).subscribe(papers => {
       this.otherPapers = papers.rows;

@@ -53,10 +53,3 @@ tr.paper-row:not(.expanded-row):hover {
 tr.paper-row:not(.expanded-row):active {
   background: #efefef;
 }
-
-.table-filters {
-  ::ng-deep mat-form-field .mat-form-field-wrapper {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-}

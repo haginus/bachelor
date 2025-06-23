@@ -11,13 +11,14 @@ import { debounceTime, startWith, switchMap } from 'rxjs/operators';
 import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
 import { PaperValidationDialogComponent, PaperValidationDialogData } from '../../dialogs/paper-validation-dialog/paper-validation-dialog.component';
 import { AdminService, GetPapersFilter } from '../../../services/admin.service';
-import { Paper } from '../../../services/auth.service';
+import { Domain, Paper } from '../../../services/auth.service';
 import { DOMAIN_TYPES, PAPER_TYPES, STUDY_FORMS } from '../../../lib/constants';
 import { AreDocumentsUploaded, DocumentMapElement } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { detailExpand, rowAnimation } from '../../../row-animations';
 import { PapersService } from '../../../services/papers.service';
 import { EditPaperComponent } from '../../../shared/components/edit-paper/edit-paper.component';
 import { RequestDocumentReuploadDialogComponent, RequestDocumentReuploadDialogData } from '../../dialogs/request-document-reupload-dialog/request-document-reupload-dialog.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-papers',
@@ -36,7 +37,16 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private dialog: MatDialog,
     private snackbar: MatSnackBar
-  ) { }
+  ) {
+    this.paperFilterForm.get('domain')!.valueChanges.pipe(takeUntilDestroyed(), startWith(null)).subscribe((value) => {
+      if(value) {
+        this.paperFilterForm.get('specializationId')!.enable();
+      } else {
+        this.paperFilterForm.get('specializationId')!.disable();
+      }
+      this.paperFilterForm.get('specializationId')!.setValue(null);
+    })
+  }
 
   displayedColumns: string[] = ['status', 'id', 'title', 'type', 'student', 'teacher', 'committee'];
   expandedPaperId: string | null;
@@ -55,6 +65,7 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
   PAPER_TYPES = PAPER_TYPES;
   STUDY_FORMS = STUDY_FORMS;
   domains = this.admin.getDomains();
+
   showFilters: boolean = false;
 
   paperFilterForm = new FormGroup({
@@ -62,7 +73,8 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
     submitted: new FormControl(true),
     assigned: new FormControl(null),
     type: new FormControl(null),
-    domainId: new FormControl(null),
+    domain: new FormControl<Domain>(null),
+    specializationId: new FormControl(null),
     studyForm: new FormControl(null),
   });
 
@@ -124,8 +136,11 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
         filter.isNotValid = false;
       }
     }
-    if(filterForm.domainId != null) {
-      filter.domainId = filterForm.domainId;
+    if(filterForm.domain != null) {
+      filter.domainId = filterForm.domain.id;
+    }
+    if(filterForm.specializationId != null) {
+      filter.specializationId = filterForm.specializationId;
     }
     if(filterForm.studyForm != null) {
       filter.studyForm = filterForm.studyForm;
@@ -283,7 +298,8 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
       submitted: true,
       assigned: null,
       type: null,
-      domainId: null,
+      domain: null,
+      specializationId: null,
       studyForm: null
     });
     this.paperFilterDebouncedForm.setValue({
