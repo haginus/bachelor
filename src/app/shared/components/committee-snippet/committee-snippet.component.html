@@ -16,7 +16,7 @@
             <div>Programarea lucrării dvs.</div>
             <div>
               @if(paper().scheduledGrading) {
-                {{ paper().scheduledGrading | datetime }}
+                {{ paper().scheduledGrading | datetime }} - Timp alocat {{ committee().paperPresentationTime }} min.
               } @else {
                 TBA
               }

@@ -6,7 +6,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormControl, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgFor } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -16,6 +15,7 @@ import { TeacherService } from '../../../services/teacher.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { arrayMap } from '../../../lib/utils';
 import { LoadingComponent } from '../loading/loading.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 const MINUTE = 60 * 1000;
 
@@ -32,7 +32,7 @@ export class TimePipe implements PipeTransform {
 }
 
 @Component({
-  selector: 'app',
+  selector: 'app-change-time-dialog',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -88,12 +88,12 @@ class ChangeTimeDialogComponent {
     MatIconModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatSlideToggleModule,
     MatSnackBarModule,
     LoadingComponent,
     CdkDropListGroup,
     CdkDropList,
     CdkDrag,
-    NgFor,
     TimePipe,
     DatetimePipe,
   ],
@@ -122,7 +122,6 @@ export class PaperSchedulerComponent {
       paper.scheduledGradingDraft = paperDayId ? new Date(paper.scheduledGrading) : null;
       this.papersPerDay[paperDayId].push(paper);
     });
-    this.minutesPerPaper.setValue(this.getMedianPaperDelta(), { emitEvent: false });
     this.minutesPerPaper.valueChanges.pipe(takeUntilDestroyed()).subscribe(minutesPerPaper => {
       const scheduledPapers = Object.entries(this.papersPerDay).filter(([key]) => +key !== 0).map(([_, value]) => value);
       scheduledPapers.forEach(group => {
@@ -136,28 +135,10 @@ export class PaperSchedulerComponent {
   protected readonly days = this.committee.activityDays;
 
   protected papersPerDay: Record<number, ExtendedPaper[]>;
-  protected minutesPerPaper = new FormControl<number>(15);
+  protected minutesPerPaper = new FormControl<number>(this.committee.paperPresentationTime, { nonNullable: true });
+  protected publicScheduling = new FormControl<boolean>(this.committee.publicScheduling, { nonNullable: true });
   protected minutesPerPaperOptions = [10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 26, 28, 30];
   protected isSubmitting = false;
-
-  /** Calculates the most common difference in time between papers */
-  private getMedianPaperDelta() {
-    const deltaCount: Record<number, number> = {};
-    for(const day of this.days) {
-      const papers = this.papersPerDay[day.id];
-      for(let i = 1; i < papers.length; i++) {
-        const delta = (papers[i].scheduledGradingDraft.getTime() - papers[i - 1].scheduledGradingDraft.getTime()) / MINUTE;
-        deltaCount[delta] = (deltaCount[delta] + 1) || 1;
-      }
-    }
-    const allowedDeltas = arrayMap(this.minutesPerPaperOptions, value => value);
-    Object.keys(deltaCount).forEach(key => {
-      if(!allowedDeltas[key]) delete deltaCount[key];
-    });
-    const maxOcc = Math.max(...Object.values(deltaCount));
-    const commonDelta = Object.entries(deltaCount).find(([_, occ]) => occ === maxOcc)?.[0];
-    return commonDelta ? +commonDelta : 15;
-  }
 
   drop(event: CdkDragDrop<ExtendedPaper[], ExtendedPaper[], ExtendedPaper>) {
     if(event.previousContainer === event.container && event.previousIndex === event.currentIndex) {
@@ -267,12 +248,19 @@ export class PaperSchedulerComponent {
     }));
     const paperMap = arrayMap(papers, paper => paper.paperId);
     this.isSubmitting = true;
-    const result = await firstValueFrom(this.teacherService.schedulePapers(this.committee.id, papers));
-    if(result.length > 0) {
+    const dto = {
+      paperPresentationTime: this.minutesPerPaper.value,
+      publicScheduling: this.publicScheduling.value,
+      papers,
+    }
+    const result = await firstValueFrom(this.teacherService.schedulePapers(this.committee.id, dto));
+    if(result) {
       this.snackBar.open('Lucrările au fost programate.');
       this.committee.papers.forEach(paper => {
         paper.scheduledGrading = paperMap[paper.id].scheduledGrading;
       });
+      this.committee.paperPresentationTime = this.minutesPerPaper.value;
+      this.committee.publicScheduling = this.publicScheduling.value;
       this.dialogRef.close(result);
     }
     this.isSubmitting = false;

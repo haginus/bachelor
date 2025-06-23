@@ -24,7 +24,7 @@
               <app-committee-snippet [committee]="paper.committee" [paper]="paper">
                 Programare susținere:
                 @if(paper.scheduledGrading) {
-                  {{ paper.scheduledGrading | datetime }}
+                  {{ paper.scheduledGrading | datetime }} ({{ paper.committee.paperPresentationTime }} min.)
                 } @else {
                   TBA
                 }

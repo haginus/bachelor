@@ -5,7 +5,7 @@
 <div matDialogContent>
   <p>
     Stabiliți un timp estimativ pentru prezentarea lucrărilor atribuite acestei comisii.
-    Studenții vor putea vedea în platformă programarea pentru lucrările acestora.
+    Studenții vor putea vedea în platformă programarea pentru lucrările acestora și timpul acordat pentru prezentare, odată ce ați bifat publicarea.
   </p>
   <mat-form-field appearance="outline" style="margin-bottom: 12px;">
     <mat-label>Timp acordat pe lucrare</mat-label>
@@ -15,6 +15,10 @@
       }
     </mat-select>
   </mat-form-field>
+
+  <mat-slide-toggle [formControl]="publicScheduling">
+    Faceți programările publice
+  </mat-slide-toggle>
   <div cdkDropListGroup class="group-container">
     <div class="paper-container">
       <div class="container-header">

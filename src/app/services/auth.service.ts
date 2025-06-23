@@ -482,6 +482,8 @@ export interface CommitteeActivityDay {
 export interface Committee {
   id: number;
   name: string;
+  paperPresentationTime: number;
+  publicScheduling: boolean;
   finalGrades: boolean;
   domains: Domain[];
   members: CommitteeMember[];

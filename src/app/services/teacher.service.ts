@@ -211,12 +211,12 @@ export class TeacherService {
       );
   }
 
-  schedulePapers(committeeId: number, papers: { paperId: number; scheduledGrading: string }[]): Observable<Paper[]> {
+  schedulePapers(committeeId: number, dto: { paperPresentationTime: number; publicScheduling: boolean; papers: { paperId: number; scheduledGrading: string | null }[]; }): Observable<Committee> {
     const url = `${environment.apiUrl}/teacher/committees/${committeeId}/scheduled-papers`;
     return this.http
-      .patch<any>(url, papers, this.auth.getPrivateHeaders())
+      .patch<any>(url, dto, this.auth.getPrivateHeaders())
       .pipe(
-        catchError(this.handleError<Paper[]>('schedulePapers', []))
+        catchError(this.handleError<Committee>('schedulePapers', null))
       );
   }
 

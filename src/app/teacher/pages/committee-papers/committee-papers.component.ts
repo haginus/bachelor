@@ -164,7 +164,10 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
     this.showScheduleNotice =
       !this.committee.finalGrades &&
       this.committee.activityDays.length > 0 &&
-      this.committee.papers.some(paper => !paper.scheduledGrading);
+      (
+        !this.committee.publicScheduling ||
+        this.committee.papers.some(paper => !paper.scheduledGrading)
+      );
   }
 
   async schedulePapers() {
