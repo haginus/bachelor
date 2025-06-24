@@ -163,6 +163,7 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
   updateScheduleNotice() {
     this.showScheduleNotice =
       !this.committee.finalGrades &&
+      this.hasGenerationRights &&
       this.committee.activityDays.length > 0 &&
       (
         !this.committee.publicScheduling ||
