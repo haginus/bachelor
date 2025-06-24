@@ -31,10 +31,20 @@
             <div class="explanation">
               <mat-icon>lightbulb</mat-icon>
               <span>
-                Grupați automat lucrările neprogramate pe zilele de activitate ale comisiei. Acestea vor fi balansate
-                automat și sortate după data înscrierii, lucrările încă nevalidate de secretariat fiind lăsate la urmă.
+                Grupați automat lucrările neprogramate pe zilele de activitate ale comisiei. Acestea vor fi
+                sortate după criteriul selectat și balansate automat, lucrările încă nevalidate de secretariat fiind lăsate la urmă.
               </span>
             </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Sortare</mat-label>
+              <mat-select [formControl]="autoScheduleSort">
+                <mat-option value="byId">După data înscrierii</mat-option>
+                <mat-option value="byStudentName">După numele studentului</mat-option>
+                <mat-option value="byTeacherName">După numele profesorului, apoi al studentului</mat-option>
+                <mat-option value="bySpecializationStudent">După specializare, apoi după numele studentului</mat-option>
+                <mat-option value="bySpecializationTeacher">După specializare, apoi după numele profesorului și al studentului</mat-option>
+              </mat-select>
+            </mat-form-field>
             <button mat-button (click)="autoSchedule()">Grupați</button>
           </div>
         }

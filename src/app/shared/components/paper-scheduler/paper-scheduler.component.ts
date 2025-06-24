@@ -78,6 +78,25 @@ class ChangeTimeDialogComponent {
   }
 }
 
+const autoScheduleSortOptions = {
+  byId: (a: ExtendedPaper, b: ExtendedPaper) => a.id - b.id,
+  byStudentName: (a: ExtendedPaper, b: ExtendedPaper) => a.student.fullName.toLocaleLowerCase().localeCompare(b.student.fullName),
+  byTeacherName: (a: ExtendedPaper, b: ExtendedPaper) => {
+    const teacherA = [a.teacher.lastName, a.teacher.firstName].filter(Boolean).join(' ').toLocaleLowerCase();
+    const teacherB = [b.teacher.lastName, b.teacher.firstName].filter(Boolean).join(' ').toLocaleLowerCase();
+    const teacherSort = teacherA.localeCompare(teacherB);
+    return teacherSort === 0 ? autoScheduleSortOptions.byStudentName(a, b) : teacherSort;
+  },
+  bySpecializationStudent: (a: ExtendedPaper, b: ExtendedPaper) => {
+    const specializationSort = a.student.student.specializationId - b.student.student.specializationId;
+    return specializationSort === 0 ? autoScheduleSortOptions.byStudentName(a, b) : specializationSort;
+  },
+  bySpecializationTeacher: (a: ExtendedPaper, b: ExtendedPaper) => {
+    const specializationSort = a.student.student.specializationId - b.student.student.specializationId;
+    return specializationSort === 0 ? autoScheduleSortOptions.byTeacherName(a, b) : specializationSort;
+  },
+};
+
 @Component({
   selector: 'app-paper-scheduler',
   standalone: true,
@@ -130,13 +149,18 @@ export class PaperSchedulerComponent {
         }
       });
     });
+    this.autoScheduleSort.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.sortUnassignedPapers();
+    });
+    this.sortUnassignedPapers();
   }
 
-  protected readonly days = this.committee.activityDays;
+  protected readonly days = this.committee.activityDays.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 
   protected papersPerDay: Record<number, ExtendedPaper[]>;
   protected minutesPerPaper = new FormControl<number>(this.committee.paperPresentationTime, { nonNullable: true });
   protected publicScheduling = new FormControl<boolean>(this.committee.publicScheduling, { nonNullable: true });
+  protected autoScheduleSort = new FormControl<keyof typeof autoScheduleSortOptions>('byStudentName', { nonNullable: true });
   protected minutesPerPaperOptions = [10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 26, 28, 30];
   protected isSubmitting = false;
 
@@ -210,35 +234,52 @@ export class PaperSchedulerComponent {
     }
   }
 
-  autoSchedule() {
-    const unassignedPapers = this.papersPerDay[0].sort((a, b) => {
+  sortUnassignedPapers() {
+    return this.papersPerDay[0].sort((a, b) => {
+      const sortResult = autoScheduleSortOptions[this.autoScheduleSort.value](a, b);
       if(a.isValid === null) {
-        return Infinity;
+        return 10000 + sortResult;
       }
       if(b.isValid === null) {
-        return -Infinity;
+        return -10000 + sortResult;
       }
-      return a.id - b.id;
+      return sortResult;
     });
-    const dayContainers = this.days.map((day) => ({
-      data: this.papersPerDay[day.id],
-      day,
-    }));
+  }
+
+  autoSchedule() {
+    const unassignedPapers = this.sortUnassignedPapers();
+    const targetPaperCountPerDay = Math.floor(this.committee.papers.length / this.days.length);
+    let remainder = this.committee.papers.length % this.days.length;
+    const dayContainers = this.days.map((day) => {
+      const data = this.papersPerDay[day.id];
+      let includeCount = targetPaperCountPerDay - data.length;
+      if(remainder > 0) {
+        includeCount++;
+        remainder--;
+      }
+      return {
+        data,
+        day,
+        includeCount,
+      };
+    }).sort((a, b) => a.data.length - b.data.length);
     const minutesPerPaperMs = this.minutesPerPaper.value * MINUTE;
-    while(unassignedPapers.length > 0) {
-      const leastPapersContainer = dayContainers
-        .reduce((acc, container) => container.data.length < acc.data.length ? container : acc, dayContainers[0]);
-      const paper = unassignedPapers[0];
-      paper.scheduledGradingDraft = leastPapersContainer.data.length > 0
-        ? new Date(leastPapersContainer.data[leastPapersContainer.data.length - 1].scheduledGradingDraft.getTime() + minutesPerPaperMs)
-        : new Date(leastPapersContainer.day.startTime);
-      transferArrayItem(
-        unassignedPapers,
-        leastPapersContainer.data,
-        0,
-        leastPapersContainer.data.length,
-      );
-    }
+    dayContainers.forEach((container => {
+      for(let i = 0; i < container.includeCount; i++) {
+        if(unassignedPapers.length === 0) return;
+        const paper = unassignedPapers[0];
+        paper.scheduledGradingDraft = container.data.length > 0
+          ? new Date(container.data[container.data.length - 1].scheduledGradingDraft.getTime() + minutesPerPaperMs)
+          : new Date(container.day.startTime);
+        transferArrayItem(
+          unassignedPapers,
+          container.data,
+          0,
+          container.data.length,
+        );
+      }
+    }));
   }
 
   async saveSchedule() {
