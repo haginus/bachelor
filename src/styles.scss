@@ -348,6 +348,8 @@ app-loading.in-dialog {
 
     .content {
       flex: 1;
+      min-width: 0;
+      overflow: hidden;
       &>:not(:last-child) {
         margin-bottom: 4px;
       }
