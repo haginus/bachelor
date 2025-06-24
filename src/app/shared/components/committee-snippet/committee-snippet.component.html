@@ -37,7 +37,7 @@
         }
       }
       <div class="list-header">Membri</div>
-      @for(member of sortedMembers(); track member.user.id) {
+      @for(member of committee().members; track member.user.id) {
         <div class="list-item">
           <mat-icon>school</mat-icon>
           <div class="content">

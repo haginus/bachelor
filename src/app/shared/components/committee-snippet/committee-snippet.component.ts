@@ -26,18 +26,6 @@ export class CommitteeSnippetComponent {
     member: 'Membru',
   }
 
-  sortedMembers = computed(() => (
-    [...this.committee().members].sort((a, b) => {
-      if(a.committeeMember?.role === 'president') {
-        return -1;
-      }
-      if(a.committeeMember?.role === 'secretary') {
-        return 1;
-      }
-      return 0;
-    })
-  ));
-
   sortedDays = computed(() => (
     [...this.committee().activityDays].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
   )));
