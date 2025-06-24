@@ -77,7 +77,7 @@ export class StudentExtraDataEditorComponent implements OnInit {
 
   studentDataForm = new FormGroup({
     "birthLastName": new FormControl(null, [Validators.required, Validators.maxLength(128)]),
-    "parentInitial": new FormControl(null, [Validators.required, Validators.pattern(/^[A-Z]\.( [A-Z]\.){0,2}$/)]),
+    "parentInitial": new FormControl(null, [Validators.required, Validators.pattern(/^[A-ZĂÎȘȚ]\.( [A-ZĂÎȘȚ]\.){0,2}$/)]),
     "fatherName": new FormControl(null, [Validators.required, Validators.maxLength(128)]),
     "motherName": new FormControl(null, [Validators.required, Validators.maxLength(128)]),
     "civilState": new FormControl(null, [Validators.required]),
