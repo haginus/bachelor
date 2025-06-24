@@ -25,6 +25,9 @@
                 Programare susținere:
                 @if(paper.scheduledGrading) {
                   {{ paper.scheduledGrading | datetime }} ({{ paper.committee.paperPresentationTime }} min.)
+                  @if(paperSchedulingLocation) {
+                    - {{ paperSchedulingLocation }}
+                  }
                 } @else {
                   TBA
                 }

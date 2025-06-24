@@ -8,7 +8,7 @@ import { StudentExtraDataEditorComponent, StudentExtraDataEditorData } from '../
 import { PaperRequiredDocument, StudentExtraData, StudentService } from '../../../services/student.service';
 import { AuthService, Paper, SessionSettings } from '../../../services/auth.service';
 import { PAPER_TYPES } from '../../../lib/constants';
-import { inclusiveDate, parseDate } from '../../../lib/utils';
+import { formatDate, inclusiveDate, parseDate } from '../../../lib/utils';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -70,6 +70,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   deadlinePassed: boolean = false;
   hasReuploadRequests: boolean = false;
   canEditPaper: boolean;
+  paperSchedulingLocation: string | null = null;
 
   requiredDocuments: PaperRequiredDocument[] = []
 
@@ -134,6 +135,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
       this.studentExtraData = extraData;
       this.requiredDocuments = requiredDocuments;
       this.documentReuploadRequests = documentReuploadRequests;
+      this.paperSchedulingLocation = paper.scheduledGrading ? paper.committee.activityDays.find(day => formatDate(day.startTime) === formatDate(paper.scheduledGrading))?.location : null;
       this._checkSubmissionPeriod();
     } finally {
       this.isLoadingInitialData = false;
