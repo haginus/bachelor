@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, of, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { SudoDialogComponent } from '../admin/dialogs/sudo-dialog/sudo-dialog.component';
 import { inclusiveDate, parseDate } from '../lib/utils';
@@ -16,12 +16,15 @@ import { environment } from '../../environments/environment';
 })
 export class AuthService {
 
-  constructor(private http: HttpClient, private router: Router, private snackbar: MatSnackBar, private dialog: MatDialog) {    if(this.isSignedIn()) {
-      this.getUserData().subscribe(res => {
-        this.userDataSource.next(res);
+  constructor(private http: HttpClient, private router: Router, private snackbar: MatSnackBar, private dialog: MatDialog) {
+    if(this.isSignedIn()) {
+      combineLatest([this.getUserData(), this.getAlternativeIdentities()]).subscribe(([user, alternativeIdentities]) => {
+        this.userDataSource.next(user);
+        this.alternativeIdentitiesSource.next(alternativeIdentities);
       })
     } else {
       this.userDataSource.next(undefined);
+      this.alternativeIdentitiesSource.next([]);
     }
     let sub = this.getSessionSettings().subscribe(settings => {
       this.sessionSettingsSource.next(settings);
@@ -57,7 +60,8 @@ export class AuthService {
       map(res => {
         this.setToken((res as any).token);
         this.userDataSource.next((res as any).user);
-        return res
+        this.alternativeIdentitiesSource.next((res as any).alternativeIdentities || []);
+        return res;
       }),
       catchError(this.handleAuthError('signInWithEmailAndPassword'))
     );
@@ -75,6 +79,19 @@ export class AuthService {
     );
   }
 
+  switchUser(userId: number): Observable<AuthResponse> {
+    const url = `${environment.apiUrl}/auth/switch`;
+    return this.http.post<AuthResponse>(url, { userId }, this.getPrivateHeaders()).pipe(
+      map(res => {
+        this.setToken((res as any).token);
+        this.userDataSource.next((res as any).user);
+        this.alternativeIdentitiesSource.next((res as any).alternativeIdentities || []);
+        return res;
+      }),
+      catchError(this.handleAuthError('switchUser'))
+    );
+  }
+
   impersonateUser(userId: number): Observable<AuthResponse> {
     const url = `${environment.apiUrl}/auth/impersonate`;
     // @ts-ignore
@@ -89,6 +106,7 @@ export class AuthService {
         }
         this.setToken((res as any).token);
         this.userDataSource.next((res as any).user);
+        this.alternativeIdentitiesSource.next((res as any).alternativeIdentities || []);
         return res;
       }),
       catchError(this.handleAuthError('impersonateUser'))
@@ -101,6 +119,7 @@ export class AuthService {
       map(res => {
         this.setToken((res as any).token);
         this.userDataSource.next((res as any).user);
+        this.alternativeIdentitiesSource.next((res as any).alternativeIdentities || []);
         return res;
       }),
       catchError(this.handleAuthError('releaseUser'))
@@ -177,11 +196,20 @@ export class AuthService {
   userDataSource: ReplaySubject<UserData | undefined> = new ReplaySubject<UserData | undefined>(1);
   userData = this.userDataSource.asObservable();
   sudoPasswordSource: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+  alternativeIdentitiesSource: ReplaySubject<UserData[]> = new ReplaySubject<UserData[]>(1);
+  alternativeIdentities = this.alternativeIdentitiesSource.asObservable();
 
-  getUserData() : Observable<UserData | undefined> {
+  getUserData(): Observable<UserData | undefined> {
     const url = `${environment.apiUrl}/auth/user`;
     return this.http.get<UserData>(url, this.getPrivateHeaders()).pipe(
       catchError(this.handleUserError('getUserData'))
+    );
+  }
+
+  getAlternativeIdentities(): Observable<UserData[]> {
+    const url = `${environment.apiUrl}/auth/alternative-identities`;
+    return this.http.get<UserData[]>(url, this.getPrivateHeaders()).pipe(
+      catchError(this.handleError('getAlternativeIdentities', []))
     );
   }
 
@@ -298,9 +326,10 @@ export class AuthService {
 }
 
 interface AuthResponse {
-  token?: string,
-  user?: UserData,
-  error?: string
+  token?: string;
+  user?: UserData;
+  alternativeIdentities?: UserData[];
+  error?: string;
 }
 
 export interface Profile {

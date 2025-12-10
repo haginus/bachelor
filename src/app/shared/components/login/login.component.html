@@ -39,6 +39,15 @@
               (click)="sendForgotPasswordEmail()">Trimiteți e-mail de resetare</button>
           </div>
         </form>
+      } @else if(view === 'pickIdentity') {
+        <div>
+          <h2>Alegeți identitatea cu care doriți să vă autentificați:</h2>
+          <div class="identity-list">
+            @for (identity of identities; track identity.id) {
+              <app-identity-list-item [user]="identity" (click)="pickIdentity($index)" />
+            }
+          </div>
+        </div>
       }
       <div class="divider"></div>
 
@@ -52,7 +61,7 @@
               <span>Creare cont student</span>
             </button>
           </router-link>
-        } @else if(view === 'forgotPassword') {
+        } @else if(view === 'forgotPassword' || view === 'pickIdentity') {
           <button mat-button (click)="changeView('login')">
             <span>Înapoi la autentificare</span>
           </button>

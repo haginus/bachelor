@@ -4,13 +4,14 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { RecaptchaComponent, RecaptchaModule } from 'ng-recaptcha';
-import { Subscription } from 'rxjs';
-import { AuthService } from '../../../services/auth.service';
+import { firstValueFrom, Subscription } from 'rxjs';
+import { AuthService, UserData } from '../../../services/auth.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { LoadingComponent } from '../loading/loading.component';
 import { ProblemReportButtonComponent } from '../../../components/problem-report/problem-report.component';
+import { IdentityListItemComponent } from '../identity-list-item/identity-list-item.component';
 
 @Component({
   selector: 'app-login',
@@ -28,6 +29,7 @@ import { ProblemReportButtonComponent } from '../../../components/problem-report
     ProblemReportButtonComponent,
     LoadingComponent,
     RouterLink,
+    IdentityListItemComponent,
   ],
 })
 export class LoginComponent implements OnInit, OnDestroy {
@@ -63,7 +65,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     'email': new FormControl(null, [Validators.email, Validators.required]),
   });
 
-  view: 'login' | 'forgotPassword' = 'login';
+  identities: UserData[] = [];
+
+  view: 'login' | 'forgotPassword' | 'pickIdentity' = 'login';
 
   nextRoute: string = null;
 
@@ -75,9 +79,17 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.captchaToken = captchaToken;
   }
 
-  changeView(view: 'login' | 'forgotPassword') {
+  changeView(view: typeof this.view) {
     this.view = view;
     this.captchaToken = null;
+  }
+
+  handleSuccessfulLogin(user: UserData) {
+    if(this.nextRoute) {
+      this.router.navigateByUrl(this.nextRoute);
+    } else {
+      this.router.navigate([user.type]);
+    }
   }
 
   signIn() {
@@ -89,13 +101,30 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.handleError(res.error);
         this.loading = false;
       } else {
-        if(this.nextRoute) {
-          this.router.navigateByUrl(this.nextRoute);
+        if(res.alternativeIdentities?.length > 0) {
+          this.identities = [res.user, ...res.alternativeIdentities];
+          this.changeView('pickIdentity');
+          this.loading = false;
         } else {
-          this.router.navigate([res.user.type]);
+          this.handleSuccessfulLogin(res.user);
         }
       }
     })
+  }
+
+  async pickIdentity(identityIndex: number) {
+    this.loading = true;
+    try {
+      if(identityIndex != 0) {
+        const result = await firstValueFrom(this.auth.switchUser(this.identities[identityIndex].id));
+        if(result.error) {
+          return;
+        }
+      }
+      this.handleSuccessfulLogin(this.identities[identityIndex]);
+    } finally {
+      this.loading = false;
+    }
   }
 
   sendForgotPasswordEmail() {

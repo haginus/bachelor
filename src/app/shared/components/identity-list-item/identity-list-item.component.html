@@ -1,0 +1,13 @@
+<div class="wrapper" matRipple>
+  <div class="profile-picture">
+    @if(!user.profile?.picture) {
+      <mat-icon>person</mat-icon>
+    } @else {
+      <img [src]="user.profile.picture | apiUrl" />
+    }
+  </div>
+  <div class="identity-details">
+    <div class="first-row">{{ user.fullName }}</div>
+    <div class="second-row">{{ getUserDescription(user) }}</div>
+  </div>
+</div>

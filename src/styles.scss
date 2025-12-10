@@ -405,3 +405,14 @@ input[type="time"]::-webkit-inner-spin-button {
   display: initial;
   -webkit-appearance: initial;
 }
+
+
+.account-menu-panel {
+  min-width: 320px!important;
+  max-width: 400px!important;
+  width: 80vw!important;
+  margin-right: 8px;
+  .mat-mdc-menu-content {
+    padding: 0;
+  }
+}

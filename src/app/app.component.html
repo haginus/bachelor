@@ -12,22 +12,46 @@
     <button mat-raised-button color="primary" (click)="reloadApp()">Reîncercați</button>
   </div>
 }
+<div [matMenuTriggerFor]="userMenu" #userMenuTrigger="matMenuTrigger"></div>
 
-<mat-menu #userMenu="matMenu">
-  @if(user?.isImpersonated) {
-    <button mat-menu-item (click)="release()">
-      <mat-icon>undo</mat-icon>
-      <span>Opriți impersonarea</span>
-    </button>
-  }
-  <button mat-menu-item (click)="editProfile()">
-    <mat-icon>person</mat-icon>
-    <span>Profilul dvs.</span>
-  </button>
-  <button mat-menu-item (click)="signOut()">
-    <mat-icon>logout</mat-icon>
-    <span>Deconectare</span>
-  </button>
+<mat-menu #userMenu="matMenu" class="account-menu-panel">
+  <div class="account-menu-content" (click)="$event.stopPropagation()">
+    <div class="email">{{ user?.email }}</div>
+    <div class="current-identity">
+      <div class="profile-picture">
+        @if(!user?.profile?.picture) {
+          <mat-icon>person</mat-icon>
+        } @else {
+          <img [src]="user?.profile.picture | apiUrl" />
+        }
+      </div>
+      <div class="identity-details">
+        <div class="first-row">{{ user?.fullName }}</div>
+        <div class="second-row">{{ user && getUserDescription(user) }}</div>
+      </div>
+      <div class="actions">
+        <button mat-stroked-button color="primary" (click)="editProfile(); userMenuTrigger.closeMenu()">
+          <mat-icon>edit</mat-icon>
+          <span>Editați profilul</span>
+        </button>
+      </div>
+    </div>
+    <div class="section">
+      @for(identity of alternativeIdentities; track identity.id) {
+        <app-identity-list-item [user]="identity" (click)="switchUser(identity); userMenuTrigger.closeMenu()" />
+      }
+      @if(user?.isImpersonated) {
+        <button mat-button (click)="release(); userMenuTrigger.closeMenu()">
+          <mat-icon>undo</mat-icon>
+          <span>Opriți impersonarea</span>
+        </button>
+      }
+      <button mat-button (click)="signOut(); userMenuTrigger.closeMenu()">
+        <mat-icon>logout</mat-icon>
+        <span>Deconectare</span>
+      </button>
+    </div>
+  </div>
 </mat-menu>
 
 <div class="flex-container fullscreen main-container" [hidden]="loading">
@@ -44,15 +68,23 @@
       <span class="toolbar-title">{{ title }}</span>
       <span class="toolbar-spacer"></span>
       <button mat-button class="user-preview-container" [matMenuTriggerFor]="userMenu">
-        @if(user) {
-          <div class="user-name" fxHide.lt-sm>
-            <div>{{ user.firstName }} {{ user.lastName }}</div>
-            @if(user.student) {
-              <div>Gr. {{ user.student.group }}</div>
+        <div class="content">
+          @if(user) {
+            <div class="user-name" fxHide.lt-sm>
+              <div>{{ user.firstName }} {{ user.lastName }}</div>
+              @if(user.student) {
+                <div>Gr. {{ user.student.group }}</div>
+              }
+            </div>
+          }
+          <div class="profile-picture">
+            @if(!user?.profile?.picture) {
+              <mat-icon>person</mat-icon>
+            } @else {
+              <img [src]="user?.profile.picture | apiUrl" />
             }
           </div>
-        }
-        <mat-icon>{{ user?.isImpersonated ? 'people' : 'person' }}</mat-icon>
+        </div>
       </button>
     </mat-toolbar>
   }

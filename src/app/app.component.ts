@@ -17,6 +17,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { LoaderService } from './services/loader.service';
+import { IdentityListItemComponent } from "./shared/components/identity-list-item/identity-list-item.component";
+import { ApiUrlPipe } from './shared/pipes/api-url';
+import { getUserDescription } from './lib/utils';
 
 
 const SideWidth = 800;
@@ -40,6 +43,8 @@ const DEFAULT_TITLE = 'Finalizare studii';
     MatProgressBarModule,
     RouterModule,
     ProblemReportButtonComponent,
+    IdentityListItemComponent,
+    ApiUrlPipe,
   ],
 })
 
@@ -58,6 +63,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   user: UserData | undefined = undefined;
+  alternativeIdentities: UserData[] = [];
   sessionSettings: SessionSettings;
   loading = true;
   loadingRoute = false;
@@ -113,9 +119,10 @@ export class AppComponent implements OnInit {
       }
     })
 
-    combineLatest([this.auth.userData, this.auth.sessionSettings]).subscribe(([user, settings]) => {
+    combineLatest([this.auth.userData, this.auth.alternativeIdentities, this.auth.sessionSettings]).subscribe(([user, alternativeIdentities, settings]) => {
       this.loading = false;
       this.user = user;
+      this.alternativeIdentities = alternativeIdentities;
       this.sessionSettings = settings;
       if(settings == null) {
         this.backendDown = true;
@@ -134,6 +141,14 @@ export class AppComponent implements OnInit {
   signOut() {
     this.auth.signOut().subscribe(res => {
       this.router.navigate(['login']);
+    });
+  }
+
+  switchUser(user: UserData) {
+    this.auth.switchUser(user.id).subscribe(res => {
+      if(!res.error) {
+        this.router.navigate([user.type]);
+      }
     });
   }
 
@@ -162,4 +177,6 @@ export class AppComponent implements OnInit {
   reloadApp() {
     window.location.reload();
   }
+
+  getUserDescription = getUserDescription;
 }
