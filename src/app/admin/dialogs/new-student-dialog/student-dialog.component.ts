@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Subscription, firstValueFrom } from 'rxjs';
+import { Observable, Subscription, delay, firstValueFrom, map, of, switchMap, tap } from 'rxjs';
 import { AdminService } from '../../../services/admin.service';
 import { Domain, UserData } from '../../../services/auth.service';
 import { CNPValidator } from '../../../validators/CNP-validator';
@@ -56,27 +56,57 @@ export class StudentDialogComponent implements OnInit {
     }
   }
 
+  private readonly emailValidator = (existingId?: number) => {
+    let prevEmail = '', prevResult: ValidationErrors | null = null;
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      const email = control.value?.trim() || '';
+      if(!email) {
+        return of(null);
+      }
+      if(email === prevEmail) {
+        return of(prevResult);
+      }
+      return of(email).pipe(
+        delay(500),
+        switchMap(() => this.admin.checkEmail(email)),
+        map((result) => (result.existingId == null || result.existingId === existingId) ? null : { emailUnique: 'Emailul este deja folosit.' }),
+        tap(result => {
+          prevEmail = email;
+          prevResult = result;
+        })
+      );
+    };
+  }
+
   studentForm = new FormGroup({
     'firstName': new FormControl(this.data.user?.firstName, [Validators.required]),
     'lastName': new FormControl(this.data.user?.lastName, [Validators.required]),
     'CNP': new FormControl(this.data.user?.CNP, [CNPValidator]),
     'identificationCode': new FormControl(this.data.user?.student?.identificationCode, [Validators.required]),
-    'email': new FormControl(this.data.user?.email, [Validators.email, Validators.required]),
+    'email': new FormControl(this.data.user?.email, {
+      validators: [Validators.required, Validators.email],
+      asyncValidators: this.emailValidator(this.data.user?.id || this.data.userId),
+    }),
     'domainId': new FormControl({ value: this.data.user?.student?.domainId, disabled: true }, [Validators.required]),
     'specializationId': new FormControl({ value: this.data.user?.student?.specializationId, disabled: true }, [Validators.required]),
     'promotion': new FormControl(this.data.user?.student?.promotion, [Validators.required]),
     'group': new FormControl(this.data.user?.student?.group, [Validators.required]),
     'matriculationYear': new FormControl(this.data.user?.student?.matriculationYear, [Validators.required]),
     'studyForm': new FormControl(this.data.user?.student?.studyForm, [Validators.required]),
-    'fundingForm': new FormControl(this.data.user?.student?.fundingForm, [Validators.required])
+    'fundingForm': new FormControl(this.data.user?.student?.fundingForm, [Validators.required]),
+    'merge': new FormControl(false),
   });
 
   get specializationId() {
     return this.studentForm.get("specializationId")
   }
 
+  get email() {
+    return this.studentForm.get("email")!;
+  }
+
   get emailChanged() {
-    return this.data.mode == 'edit' && this.studentForm.get("email").value != this.data.user?.email;
+    return this.data.mode == 'edit' && this.email.value != this.data.user?.email;
   }
 
   private setControlValues() {
@@ -92,6 +122,12 @@ export class StudentDialogComponent implements OnInit {
     this.studentForm.get("matriculationYear").setValue(this.data.user.student.matriculationYear);
     this.studentForm.get("studyForm").setValue(this.data.user.student.studyForm);
     this.studentForm.get("fundingForm").setValue(this.data.user.student.fundingForm);
+    this.studentForm.get("merge").setValue(false);
+  }
+
+  mergeAccounts() {
+    this.studentForm.get("merge")!.setValue(true);
+    this.email.setErrors(null);
   }
 
   async addStudent() {

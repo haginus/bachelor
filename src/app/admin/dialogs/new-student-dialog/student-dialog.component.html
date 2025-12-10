@@ -34,6 +34,12 @@
         <mat-hint *ngIf="emailChanged" class="warning">
           E-mail modificat. Utilizatorul va avea noi credențiale.
         </mat-hint>
+        @if(email.hasError('emailUnique')) {
+          <mat-error>
+            Acest e-mail este deja luat.
+            Apăsați <a class="link" (click)="mergeAccounts()">aici</a> pentru a fuziona conturile.
+          </mat-error>
+        }
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
         <mat-label>Număr matricol</mat-label>
@@ -99,6 +105,9 @@
           <mat-option value="id">Învățământ la distanță</mat-option>
         </mat-select>
       </mat-form-field>
+      @if(studentForm.hasError('emailUnique')) {
+        <p>blaaa</p>
+      }
     </div>
   </form>
 </mat-dialog-content>

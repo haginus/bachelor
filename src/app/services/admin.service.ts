@@ -26,6 +26,11 @@ export class AdminService {
       );
   }
 
+  checkEmail(email: string): Observable<{ existingId?: number | null }> {
+    const url = `${environment.apiUrl}/admin/users/check-email`;
+    return this.http.get<{ existingId?: number | null }>(url, { params: { email }, ...this.auth.getPrivateHeaders() });
+  }
+
   // Students
 
   getStudentUsers(sort: string = 'id', order: string = 'ASC', page: number = 0, pageSize: number = 20, filters?: StudentQueryFilters):
