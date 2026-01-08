@@ -147,7 +147,7 @@ export class AppComponent implements OnInit {
   switchUser(user: UserData) {
     this.auth.switchUser(user.id).subscribe(res => {
       if(!res.error) {
-        this.router.navigate([user.type]);
+        this.router.navigate([user.type], { onSameUrlNavigation: 'reload' });
       }
     });
   }

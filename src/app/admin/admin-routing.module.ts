@@ -18,7 +18,8 @@ import { sudoModeGuard } from '../guards/sudo-mode.guard';
 const routes: Routes = [
   {
     path: '',
-    component: AdminComponent
+    component: AdminComponent,
+    runGuardsAndResolvers: 'always',
   },
   {
     path: 'students',

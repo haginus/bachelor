@@ -8,6 +8,7 @@ const routes: Routes = [
     path: '',
     loadComponent: () => import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
     canActivate: [ValidatedGuard],
+    runGuardsAndResolvers: 'always',
   },
   {
     path: 'setup',
