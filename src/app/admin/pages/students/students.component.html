@@ -127,20 +127,20 @@
         <ng-container matColumnDef="domain">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Domeniu </th>
           <td mat-cell *matCellDef="let row">
-            <span>{{row.student.domain.name}}</span>
-            <span *ngIf="row.student.domain.type == 'bachelor'">, Licență</span>
-            <span *ngIf="row.student.domain.type == 'master'">, Master</span>
+            <span>{{row.specialization.domain.name}}</span>
+            <span *ngIf="row.specialization.domain.type == 'bachelor'">, Licență</span>
+            <span *ngIf="row.specialization.domain.type == 'master'">, Master</span>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="group">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Grupă </th>
-          <td mat-cell *matCellDef="let row"> {{row.student.group}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.group}} </td>
         </ng-container>
 
         <ng-container matColumnDef="promotion">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Promoție </th>
-          <td mat-cell *matCellDef="let row"> {{row.student.promotion}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.promotion}} </td>
         </ng-container>
 
         <ng-container matColumnDef="actions">

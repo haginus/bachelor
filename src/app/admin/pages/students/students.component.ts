@@ -11,9 +11,12 @@ import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student
 import { StudentDeleteDialogComponent } from '../../dialogs/student-delete-dialog/student-delete-dialog.component';
 import { StudentsBulkAddDialogComponent } from '../../dialogs/students-bulk-add-dialog/students-bulk-add-dialog.component';
 import { AdminService } from '../../../services/admin.service';
-import { AuthService, Domain, UserData } from '../../../services/auth.service';
+import { AuthService, UserData } from '../../../services/auth.service';
 import { DOMAIN_TYPES } from '../../../lib/constants';
 import { rowAnimation } from '../../../row-animations';
+import { Domain, Student } from '../../../lib/types';
+import { StudentsService } from '../../../services/students.service';
+import { DomainsService } from '../../../services/domains.service';
 
 @Component({
   selector: 'app-students',
@@ -25,8 +28,15 @@ import { rowAnimation } from '../../../row-animations';
 })
 export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  constructor(private admin: AdminService, private auth: AuthService, private router: Router,
-    private dialog: MatDialog, private snackbar: MatSnackBar) { }
+  constructor(
+    private admin: AdminService,
+    private studentsService: StudentsService,
+    private domainsService: DomainsService,
+    private auth: AuthService,
+    private router: Router,
+    private dialog: MatDialog,
+    private snackbar: MatSnackBar
+  ) {}
 
   user: UserData;
   userSubscription: Subscription;
@@ -42,7 +52,7 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   displayedColumns: string[] = ['status', 'id', 'lastName', 'firstName', 'domain', 'group', 'promotion', 'email', 'actions'];
-  data: UserData[] = [];
+  data: Student[] = [];
 
   resultsLength = 0;
   isLoadingResults = true;
@@ -51,13 +61,13 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
   domains: Domain[];
 
   studentFilter = new FormGroup({
-    domainId: new FormControl(null),
-    specializationId: new FormControl({ value: null, disabled: true }),
-    group: new FormControl(null),
-    promotion: new FormControl(null),
-    lastName: new FormControl(null),
-    firstName: new FormControl(null),
-    email: new FormControl(null)
+    domainId: new FormControl<number | undefined>(undefined, { nonNullable: true }),
+    specializationId: new FormControl<number | undefined>({ value: undefined, disabled: true }, { nonNullable: true }),
+    group: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+    promotion: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+    lastName: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+    firstName: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+    email: new FormControl<string | undefined>(undefined, { nonNullable: true }),
   });
 
   showFilters = false;
@@ -79,9 +89,14 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          const filters = this.studentFilter.value as any;
-          return this.admin.getStudentUsers(
-            this.sort.active, this.sort.direction.toUpperCase(), this.paginator.pageIndex, this.paginator.pageSize, filters);
+          const filters = this.studentFilter.getRawValue();
+          return this.studentsService.findAll({
+            limit: this.paginator.pageSize,
+            offset: this.paginator.pageIndex * this.paginator.pageSize,
+            sortBy: this.sort.active || 'id',
+            sortDirection: this.sort.direction || 'asc',
+            ...filters
+          });
         }),
         map(data => {
           // Flip flag to show that loading has finished.
@@ -98,7 +113,7 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
         })
       ).subscribe(data => this.data = data);
 
-    this.admin.getDomains().subscribe(domains => this.domains = domains);
+    this.domainsService.findAll().subscribe(domains => this.domains = domains);
   }
 
   async openNewStudentDialog() {
@@ -142,10 +157,11 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
     });
     const deleteObservable = await firstValueFrom(dialogRef.afterClosed());
     if(!deleteObservable) return;
-    if(await firstValueFrom(deleteObservable)) {
+    try {
+      await firstValueFrom(deleteObservable);
       this.performedActions.next("studentDeleted");
       this.snackbar.open("Studentul a fost șters.");
-    }
+    } catch(err) {}
   }
 
   async resendActivationCode(student: UserData) {
@@ -185,7 +201,7 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
   handleFilterDomainChange(value: number) {
     const specializationControl = this.studentFilter.get("specializationId");
     if(value) {
-      specializationControl.setValue(null);
+      specializationControl.setValue(undefined);
       specializationControl.enable();
     } else {
       specializationControl.disable();

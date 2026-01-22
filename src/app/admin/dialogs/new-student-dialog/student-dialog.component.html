@@ -86,27 +86,19 @@
       <!-- View mode -->
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50" *ngIf="data.mode == 'view'">
         <mat-label>Domeniu</mat-label>
-        <input matInput disabled type="text" [value]="data.user?.student.domain.name">
+        <input matInput disabled type="text" [value]="data.user?.specialization.domain.name">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50" *ngIf="data.mode == 'view'">
         <mat-label>Programul de studii</mat-label>
-        <input matInput disabled type="text" [value]="data.user?.student.specialization?.name">
+        <input matInput disabled type="text" [value]="data.user?.specialization.name">
       </mat-form-field>
 
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
         <mat-label>Anul înmatriculării</mat-label>
         <input matInput type="text" formControlName="matriculationYear" name="studentMatriculationYear">
       </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Forma de învățământ</mat-label>
-        <mat-select formControlName="studyForm">
-          <mat-option value="if">Învățământ cu frecvență</mat-option>
-          <mat-option value="ifr">Învățământ cu frecvență redusă</mat-option>
-          <mat-option value="id">Învățământ la distanță</mat-option>
-        </mat-select>
-      </mat-form-field>
       @if(studentForm.hasError('emailUnique')) {
-        <p>blaaa</p>
+        <p>E-mailul este deja folosit.</p>
       }
     </div>
   </form>
@@ -122,8 +114,8 @@
     <button mat-button (click)="editStudentExtraData()">Editați datele suplimentare</button>
   }
   @if(data.mode === 'create') {
-    <button mat-button (click)="addStudent()" [disabled]="studentForm.invalid">Adăugați</button>
+    <button mat-button (click)="saveStudent()" [disabled]="studentForm.invalid">Adăugați</button>
   } @else if(data.mode === 'edit') {
-    <button mat-button (click)="editStudent()" [disabled]="studentForm.invalid">Salvați</button>
+    <button mat-button (click)="saveStudent()" [disabled]="studentForm.invalid">Salvați</button>
   }
 </mat-dialog-actions>
