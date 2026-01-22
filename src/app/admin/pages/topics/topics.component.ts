@@ -1,13 +1,11 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { BehaviorSubject, merge, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { TopicBulkDeleteDialogComponent } from '../../dialogs/topic-bulk-delete-dialog/topic-bulk-delete-dialog.component';
 import { AdminTopicDialogComponent } from '../../dialogs/topic-dialog/topic-dialog.component';
-import { AdminService } from '../../../services/admin.service';
-import { Topic } from '../../../services/topics.service';
+import { Topic, TopicsService } from '../../../services/topics.service';
 import { Selectable } from '../../../lib/models/Selectable';
 import { rowAnimation } from '../../../row-animations';
 
@@ -21,7 +19,7 @@ import { rowAnimation } from '../../../row-animations';
 })
 export class AdminTopicsComponent implements OnInit, AfterViewInit {
 
-  constructor(private admin: AdminService, private dialog: MatDialog) { }
+  constructor(private topics: TopicsService, private dialog: MatDialog) { }
 
   displayedColumns: string[] = ['id', 'name', 'actions'];
   resultsLength: number;
@@ -31,8 +29,6 @@ export class AdminTopicsComponent implements OnInit, AfterViewInit {
   topicsSelectable = new Selectable<Topic>((topic) => topic.id);
   selectableOpen: boolean = false;
 
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   performedActions: BehaviorSubject<string> = new BehaviorSubject('');
@@ -41,21 +37,21 @@ export class AdminTopicsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-
-    merge(this.sort.sortChange, this.paginator.page, this.performedActions)
+    merge(this.sort.sortChange, this.performedActions)
       .pipe(
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          return this.admin.getTopics(
-            this.sort.active, this.sort.direction.toUpperCase(), this.paginator.pageIndex, this.paginator.pageSize);
+          return this.topics.findAll({
+            sortBy: this.sort.active,
+            sortDirection: this.sort.direction || undefined,
+          });
         }),
         map(data => {
           this.isLoadingResults = false;
-          this.resultsLength = data.count;
-          this.topicsSelectable.setCurrentPage(data.rows);
-          return data.rows;
+          this.resultsLength = data.length;
+          this.topicsSelectable.setCurrentPage(data);
+          return data;
         }),
         catchError(() => {
           this.isLoadingResults = false;

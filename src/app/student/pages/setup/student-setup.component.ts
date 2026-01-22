@@ -73,7 +73,7 @@ export class StudentSetupComponent implements OnInit, OnDestroy {
   });
 
 
-  topics: Observable<Topic[]> = this.topicsService.getTopics();
+  topics: Observable<Topic[]> = this.topicsService.findAll();
 
   selectionChange(ev:StepperSelectionEvent) {
     if(ev.selectedIndex == 3) {

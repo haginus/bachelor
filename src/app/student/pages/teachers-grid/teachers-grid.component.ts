@@ -89,7 +89,7 @@ export class StudentTeachersGridComponent implements OnInit, OnDestroy {
       })
     ).subscribe(result => this.canApply = result);
 
-    this.topicSubscription = this.topicService.getTopics().subscribe(topics => {
+    this.topicSubscription = this.topicService.findAll().subscribe(topics => {
       this.topics = topics;
       this.setAllTopics();
     });

@@ -71,7 +71,7 @@ export class EditPaperComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedTopics = [...this.paper.topics];
-    let subscription = this.topic.getTopics().subscribe(topics => {
+    let subscription = this.topic.findAll().subscribe(topics => {
       // remove the currently selected topics from the topics list
       this.selectedTopics.forEach(selectedTopic => {
         const idx = topics.findIndex(topic => topic.id == selectedTopic.id);

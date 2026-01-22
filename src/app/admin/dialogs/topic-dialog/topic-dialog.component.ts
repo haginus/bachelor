@@ -3,8 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map } from 'rxjs/operators';
-import { AdminService } from '../../../services/admin.service';
 import { Topic, TopicsService } from '../../../services/topics.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-topic-dialog',
@@ -13,9 +13,12 @@ import { Topic, TopicsService } from '../../../services/topics.service';
 })
 export class AdminTopicDialogComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: TopicDialogData, private admin: AdminService,
-    private dialogRef: MatDialogRef<AdminTopicDialogComponent>, private snackbar: MatSnackBar,
-    private topicsService: TopicsService) { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: TopicDialogData,
+    private topics: TopicsService,
+    private dialogRef: MatDialogRef<AdminTopicDialogComponent>,
+    private snackbar: MatSnackBar,
+  ) {}
 
   isLoading = false;
   remainingTopics = []
@@ -28,63 +31,51 @@ export class AdminTopicDialogComponent implements OnInit {
     "moveTo": new FormControl(null, [Validators.required])
   })
 
-  ngOnInit(): void {
+  async ngOnInit() {
     if(this.data.mode == 'delete') {
-      let sub = this.topicsService.getTopics().pipe(
-        map(topics => {
-          let idx = topics.findIndex(topic => topic.id == this.data.topic.id);
-          if(idx >= 0) {
-            topics.splice(idx, 1);
-          }
-          return topics;
-        })
-      ).subscribe(topics => {
-        this.remainingTopics = topics;
-        sub.unsubscribe();
-      });
+      const allTopics = await firstValueFrom(this.topics.findAll());
+      this.remainingTopics = allTopics.filter(topic => topic.id != this.data.topic.id);
     }
   }
 
   get topicName() { return this.editTopicForm.get("name") }
 
-  addTopic() {
+  async addTopic() {
     const name = this.topicName.value;
     this.isLoading = true;
-    this.admin.addTopic(name).subscribe(res => {
-      if(res) {
-        this.snackbar.open("Temă salvată.");
-        this.dialogRef.close(res);
-      } else {
-        this.isLoading = false;
-      }
-    });
+    try {
+      await firstValueFrom(this.topics.create(name));
+      this.dialogRef.close(true);
+      this.snackbar.open("Temă salvată.");
+    } finally {
+      this.isLoading = false;
+    }
   }
 
-  editTopic() {
+  async editTopic() {
     const name = this.topicName.value;
     const id = this.data.topic.id;
     this.isLoading = true;
-    this.admin.editTopic(id, name).subscribe(res => {
-      if(res) {
-        this.snackbar.open("Temă salvată.");
-        this.dialogRef.close(res);
-      } else {
-        this.isLoading = false;
-      }
-    });
+    try {
+      await firstValueFrom(this.topics.update(id, name));
+      this.snackbar.open("Temă salvată.");
+      this.dialogRef.close(true);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
-  deleteTopic() {
+  async deleteTopic() {
     const id = this.data.topic.id;
     const moveId = this.deleteTopicForm.get('moveTo').value;
     this.isLoading = true;
-    this.admin.deleteTopic(id, moveId).subscribe(res => {
-      if(res) {
-        this.snackbar.open("Temă ștearsă.");
-        this.dialogRef.close(res);
-      }
+    try {
+      await firstValueFrom(this.topics.delete(id, moveId));
+      this.snackbar.open("Temă ștearsă.");
+      this.dialogRef.close(true);
+    } finally {
       this.isLoading = false;
-    });
+    }
   }
 
 }

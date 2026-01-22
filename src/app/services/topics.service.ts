@@ -1,34 +1,43 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'any'
 })
 export class TopicsService {
 
-  constructor(private http: HttpClient, private auth: AuthService) { }
+  constructor(private http: HttpClient) {}
 
-  getTopics(): Observable<Topic[]> {
-    const url = `${environment.apiUrl}/topics/`
-    return this.http
-      .get<Topic[]>(url, this.auth.getPrivateHeaders())
-      .pipe(
-        retry(3),
-        catchError(this.handleError<Topic[]>('getTopics', []))
-      );
+  private readonly baseUrl = `${environment.apiUrl}/topics`;
+
+  findAll(params?: { sortBy?: string, sortDirection?: 'asc' | 'desc' }): Observable<Topic[]> {
+    return this.http.get<Topic[]>(this.baseUrl, { params }).pipe(
+      catchError(this.handleError<Topic[]>('findAll', []))
+    );
   }
 
-  addTopics(names: string[]): Observable<Topic[]> {
-    const url = `${environment.apiUrl}/topics/add-bulk`
-    return this.http
-      .post<Topic[]>(url, { names }, this.auth.getPrivateHeaders())
-      .pipe(
-        catchError(this.handleError<Topic[]>('addTopics', []))
-      );
+  create(name: string): Observable<Topic> {
+    return this.http.post<Topic>(this.baseUrl, { name });
+  }
+
+  bulkCreate(names: string[]): Observable<Topic[]> {
+    const dtos = names.map(name => ({ name }));
+    return this.http.post<Topic[]>(`${this.baseUrl}/bulk`, dtos);
+  }
+
+  update(id: number, name: string): Observable<Topic> {
+    return this.http.put<Topic>(`${this.baseUrl}/${id}`, { name });
+  }
+
+  delete(id: number, moveTo: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`, { params: { moveTo } });
+  }
+
+  bulkDelete(ids: number[], moveTo: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/bulk`, { params: { ids: ids.join(','), moveTo } });
   }
 
   private handleError<T>(operation = 'operation', result?: T) {

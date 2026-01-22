@@ -142,7 +142,7 @@ export class TeacherOfferDialogComponent implements OnInit {
       this.offerForm.get("limit").setValidators([Validators.required, Validators.min(this.data.offer.takenPlaces)]);
       this.offerForm.get("limit").updateValueAndValidity(); // ensure user can't change limit below taken places
     }
-    this.topicService.getTopics().subscribe(topics => {
+    this.topicService.findAll().subscribe(topics => {
       this.remainingTopics =
         topics.filter(topic => !this.selectedTopics.find(t => t.id == topic.id));
     });
@@ -167,7 +167,7 @@ export class TeacherOfferDialogComponent implements OnInit {
   private addOrEditOffer(isEdit: boolean = false) {
     this.isLoadingQuery = true;
     const topicNames = this._getNewTopics();
-    this.topicService.addTopics(topicNames).pipe(
+    this.topicService.bulkCreate(topicNames).pipe(
       switchMap(topics => {
         let topicIds = this.selectedTopics.filter(topic => topic.id != 0).map(topic => topic.id);
         topicIds = topicIds.concat(topics.map(topic => topic.id)); // get IDs for newly added topics

@@ -104,7 +104,7 @@ export class AddPaperComponent implements OnInit {
       this.userResults = results;
       this.isLoadingUsers = false;
     });
-    this.topicService.getTopics().subscribe(topics => {
+    this.topicService.findAll().subscribe(topics => {
       this.remainingTopics =
         topics.filter(topic => !this.selectedTopics.find(t => t.id == topic.id));
     });
@@ -113,7 +113,7 @@ export class AddPaperComponent implements OnInit {
   savePaper() {
     this.isLoadingQuery = true;
     const topicNames = this.selectedTopics.filter(topic => topic.id == 0).map(topic => topic.name);
-    this.topicService.addTopics(topicNames).pipe(
+    this.topicService.bulkCreate(topicNames).pipe(
       switchMap(topics => {
         let topicIds = this.selectedTopics.filter(topic => topic.id != 0).map(topic => topic.id);
         topicIds = topicIds.concat(topics.map(topic => topic.id));

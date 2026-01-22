@@ -3,8 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Topic, TopicsService } from '../../../services/topics.service';
-import { AdminService } from '../../../services/admin.service';
 import { arrayMap } from '../../../lib/utils';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-topic-bulk-delete-dialog',
@@ -13,9 +13,12 @@ import { arrayMap } from '../../../lib/utils';
 })
 export class TopicBulkDeleteDialogComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public topicsToDelete: Topic[], private admin: AdminService,
-    private dialogRef: MatDialogRef<TopicBulkDeleteDialogComponent>, private snackbar: MatSnackBar,
-    private topicsService: TopicsService) { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public topicsToDelete: Topic[],
+    private topicsService: TopicsService,
+    private dialogRef: MatDialogRef<TopicBulkDeleteDialogComponent>,
+    private snackbar: MatSnackBar,
+  ) {}
 
   remainingTopics: Topic[] = [];
   isLoading: boolean = false;
@@ -24,27 +27,27 @@ export class TopicBulkDeleteDialogComponent implements OnInit {
     "moveTo": new FormControl(null, [Validators.required])
   });
 
-  ngOnInit(): void {
-    this.topicsService.getTopics().subscribe(topics => {
+  async ngOnInit() {
+    try {
+      const allTopics = await firstValueFrom(this.topicsService.findAll());
       const toDelete = arrayMap(this.topicsToDelete, (topic) => topic.id);
-      this.remainingTopics = topics.filter(topic => !toDelete[topic.id]);
-    });
+      this.remainingTopics = allTopics.filter(topic => !toDelete[topic.id]);
+    } catch {
+      this.remainingTopics = [];
+    }
   }
 
-
-  deleteTopics() {
+  async deleteTopics() {
     const ids = this.topicsToDelete.map(topic => topic.id);
     const moveId = this.deleteTopicForm.get('moveTo').value;
     this.isLoading = true;
-    this.admin.deleteTopics(ids, moveId).subscribe(res => {
-      if(res) {
-        this.snackbar.open("Teme șterse.");
-        this.dialogRef.close(res);
-      }
+    try {
+      await firstValueFrom(this.topicsService.bulkDelete(ids, moveId));
+      this.snackbar.open("Teme șterse.");
+      this.dialogRef.close(true);
+    } finally {
       this.isLoading = false;
-    });
+    }
   }
-
-
 
 }
