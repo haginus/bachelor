@@ -27,37 +27,37 @@
           </mat-list-item>
           <mat-list-item>
             <div matListItemTitle>Număr matricol</div>
-            <div matListItemLine>{{ user.student.identificationCode }}</div>
+            <div matListItemLine>{{ user.identificationCode }}</div>
           </mat-list-item>
           <mat-divider></mat-divider>
           <div mat-subheader>Formațiune de studiu</div>
           <mat-list-item>
             <div matListItemTitle>Formă de învățământ</div>
-            <div matListItemLine>{{ STUDY_FORMS[user.student.studyForm] }}</div>
+            <div matListItemLine>{{ STUDY_FORMS[user.specialization.studyForm] }}</div>
           </mat-list-item>
           <mat-list-item>
             <div matListItemTitle>Domeniu</div>
-            <div matListItemLine>{{ user.student.domain?.name }}</div>
+            <div matListItemLine>{{ user.specialization.domain?.name }}</div>
           </mat-list-item>
           <mat-list-item>
             <div matListItemTitle>Program de studiu</div>
-            <div matListItemLine>{{ user.student.specialization?.name }}</div>
+            <div matListItemLine>{{ user.specialization?.name }}</div>
           </mat-list-item>
           <mat-list-item>
             <div matListItemTitle>Grupă</div>
-            <div matListItemLine>{{ user.student.group }}</div>
+            <div matListItemLine>{{ user.group }}</div>
           </mat-list-item>
           <mat-list-item>
             <div matListItemTitle>Promoție</div>
-            <div matListItemLine>{{ user.student.promotion }}</div>
+            <div matListItemLine>{{ user.promotion }}</div>
           </mat-list-item>
           <mat-list-item>
             <div matListItemTitle>An de înmatriculare</div>
-            <div matListItemLine>{{ user.student.matriculationYear }}</div>
+            <div matListItemLine>{{ user.matriculationYear }}</div>
           </mat-list-item>
           <mat-list-item>
             <div matListItemTitle>Formă de finanțare</div>
-            <div matListItemLine>{{ FUNDING_FORMS[user.student.fundingForm] | titlecase }}</div>
+            <div matListItemLine>{{ FUNDING_FORMS[user.fundingForm] | titlecase }}</div>
           </mat-list-item>
         </mat-list>
         <mat-checkbox formControlName="isValid" class="v-checkbox wrap">

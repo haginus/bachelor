@@ -2,13 +2,15 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService, UserData } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatListModule } from '@angular/material/list';
 import { UserProfileEditorComponent } from '../../../shared/components/user-profile-editor/user-profile-editor.component';
 import { MatButtonModule } from '@angular/material/button';
+import { firstValueFrom } from 'rxjs';
+import { Teacher } from '../../../lib/types';
 
 @Component({
   selector: 'teacher-setup',
@@ -33,18 +35,15 @@ export class TeacherSetupComponent implements OnInit {
   loadingUser: boolean = true;
   loadingValidation: boolean = true;
 
+  user!: Teacher;
 
-  user!: UserData;
-
-  ngOnInit(): void {
-    this.userObservable = this.auth.getUserData().subscribe(user => {
-      this.user = (user as UserData);
-      if(!this.user.validated) {
-        this.loadingUser = false;
-      } else {
-        this.router.navigate(['dashboard']);
-      }
-    });
+  async ngOnInit() {
+    this.user = await firstValueFrom(this.auth.getUserData()) as Teacher;
+    if(!this.user.validated) {
+      this.loadingUser = false;
+    } else {
+      this.router.navigate(['dashboard']);
+    }
   }
 
   validationForm = new FormGroup({
@@ -57,15 +56,14 @@ export class TeacherSetupComponent implements OnInit {
     }
   }
 
-  validateTeacher() {
+  async validateTeacher() {
     this.loadingValidation = true;
-    this.auth.validateTeacher().subscribe(res => {
-      if(!res) {
-        this.loadingValidation = false;
-      } else {
-        this.router.navigate(['dashboard']);
-      }
-    })
+    try {
+      await firstValueFrom(this.auth.validateUser());
+      this.router.navigate(['dashboard']);
+    } finally {
+      this.loadingValidation = false;
+    }
   }
 
 }

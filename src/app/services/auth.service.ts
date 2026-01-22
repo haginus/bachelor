@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, Observable, of, ReplaySubject } from 'rxjs';
-import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of, ReplaySubject } from 'rxjs';
+import { catchError, first, map, switchMap, take, tap } from 'rxjs/operators';
 import { SudoDialogComponent } from '../admin/dialogs/sudo-dialog/sudo-dialog.component';
 import { inclusiveDate, parseDate } from '../lib/utils';
 import { PaperRequiredDocument, StudentExtraData } from './student.service';
@@ -26,10 +26,9 @@ export class AuthService {
       this.userDataSource.next(undefined);
       this.alternativeIdentitiesSource.next([]);
     }
-    let sub = this.getSessionSettings().subscribe(settings => {
+    this.getSessionSettings().pipe(first()).subscribe(settings => {
       this.sessionSettingsSource.next(settings);
-      sub.unsubscribe();
-    })
+    });
   }
 
   private setToken(token : string) {
@@ -55,10 +54,10 @@ export class AuthService {
   }
 
   signInWithEmailAndPassword(email: string, password: string, captcha: string) : Observable<AuthResponse> {
-    const url = `${environment.apiUrl}/auth/login`;
+    const url = `${environment.apiUrl}/auth/sign-in`;
     return this.http.post<AuthResponse>(url, { email, password, captcha }).pipe(
       map(res => {
-        this.setToken((res as any).token);
+        this.setToken((res as any).accessToken);
         this.userDataSource.next((res as any).user);
         this.alternativeIdentitiesSource.next((res as any).alternativeIdentities || []);
         return res;
@@ -71,7 +70,7 @@ export class AuthService {
     const url = `${environment.apiUrl}/auth/change-password-token`;
     return this.http.post<AuthResponse>(url, { token, password }).pipe(
       map(res => {
-        this.setToken((res as any).token);
+        this.setToken((res as any).accessToken);
         this.userDataSource.next((res as any).user);
         return res
       }),
@@ -83,7 +82,7 @@ export class AuthService {
     const url = `${environment.apiUrl}/auth/switch`;
     return this.http.post<AuthResponse>(url, { userId }, this.getPrivateHeaders()).pipe(
       map(res => {
-        this.setToken((res as any).token);
+        this.setToken((res as any).accessToken);
         this.userDataSource.next((res as any).user);
         this.alternativeIdentitiesSource.next((res as any).alternativeIdentities || []);
         return res;
@@ -104,7 +103,7 @@ export class AuthService {
         if(!res) {
           return { error: { message: "Ați renunțat la intrarea în modul sudo." } };
         }
-        this.setToken((res as any).token);
+        this.setToken((res as any).accessToken);
         this.userDataSource.next((res as any).user);
         this.alternativeIdentitiesSource.next((res as any).alternativeIdentities || []);
         return res;
@@ -117,7 +116,7 @@ export class AuthService {
     const url = `${environment.apiUrl}/auth/release`;
     return this.http.post<AuthResponse>(url, {}, this.getPrivateHeaders()).pipe(
       map(res => {
-        this.setToken((res as any).token);
+        this.setToken((res as any).accessToken);
         this.userDataSource.next((res as any).user);
         this.alternativeIdentitiesSource.next((res as any).alternativeIdentities || []);
         return res;
@@ -217,7 +216,7 @@ export class AuthService {
   sessionSettings = this.sessionSettingsSource.asObservable();
 
   getSessionSettings(): Observable<SessionSettings> {
-    const url = `${environment.apiUrl}/auth/session`;
+    const url = `${environment.apiUrl}/session`;
     return this.http.get<SessionSettingsI>(url).pipe(
       map(settings => new SessionSettings(settings)),
       catchError((err, caught) => {
@@ -240,46 +239,20 @@ export class AuthService {
     localStorage.setItem('language', language);
   }
 
-  validateStudent(topics: Topic[]) : Observable<boolean> {
-    const url = `${environment.apiUrl}/student/validate`;
-    return this.http.post(url, { topics }, this.getPrivateHeaders()).pipe(
-      tap(res => {
-        this.userData.pipe(take(1)).subscribe(user => { // change
+  validateUser(topicIds?: number[]) : Observable<void> {
+    const url = `${environment.apiUrl}/users/me/validate`;
+    return this.http.post<void>(url, { topicIds }).pipe(
+      tap(() => {
+        firstValueFrom(this.userData).then(user => {
           (user as UserData).validated = true;
           this.userDataSource.next(user);
         });
       }),
-      map(res => (res as any).success === true),
-      catchError((err, caught) => {
-        if(err.error == "ALREADY_VALIDATED") {
-          return of(true);
-        }
-        return of(false);
-      })
-    );
-  }
-
-  validateTeacher() : Observable<boolean> {
-    const url = `${environment.apiUrl}/teacher/validate`;
-    return this.http.post(url, {}, this.getPrivateHeaders()).pipe(
-      tap(res => {
-        this.userData.pipe(take(1)).subscribe(user => { // change
-          (user as UserData).validated = true;
-          this.userDataSource.next(user);
-        });
-      }),
-      map(res => (res as any).success === true),
-      catchError((err, caught) => {
-        if(err.error == "ALREADY_VALIDATED") {
-          return of(true);
-        }
-        return of(false);
-      })
     );
   }
 
   editProfile(picture: File, bio: string, website: string): Observable<Profile> {
-    const url = `${environment.apiUrl}/auth/profile`;
+    const url = `${environment.apiUrl}/users/me/profile`;
     const formData: FormData = new FormData();
     if(picture) {
       formData.append('picture', picture, picture.name);
@@ -320,7 +293,7 @@ export class AuthService {
   private handleAuthError(result?: any) {
     return (error: HttpErrorResponse): Observable<AuthResponse> => {
       this.snackbar.open(error.error?.message || "A apărut o eroare.");
-      return of({ error: error.error.name || true } as AuthResponse);
+      return of({ error: error.error.error || true } as AuthResponse);
     };
   }
 }

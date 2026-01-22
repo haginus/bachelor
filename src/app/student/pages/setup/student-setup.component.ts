@@ -1,8 +1,8 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { Topic, TopicsService } from '../../../services/topics.service';
 import { AuthService, UserData } from '../../../services/auth.service';
@@ -15,6 +15,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatListModule } from '@angular/material/list';
 import { UserProfileEditorComponent } from '../../../shared/components/user-profile-editor/user-profile-editor.component';
 import { AsyncPipe, TitleCasePipe } from '@angular/common';
+import { Student } from '../../../lib/types';
 
 @Component({
   selector: 'student-setup',
@@ -33,34 +34,30 @@ import { AsyncPipe, TitleCasePipe } from '@angular/common';
     AsyncPipe,
   ],
 })
-export class StudentSetupComponent implements OnInit, OnDestroy {
+export class StudentSetupComponent implements OnInit {
 
   constructor(
     private topicsService: TopicsService,
-    private userService: AuthService,
+    private authService: AuthService,
     private router: Router,
     private dialog: MatDialog
   ) {}
 
-  userObservable: any;
   loadingUser: boolean = true;
   loadingValidation: boolean = true;
 
-
-  user!: UserData;
+  user!: Student;
 
   STUDY_FORMS = STUDY_FORMS;
   FUNDING_FORMS = FUNDING_FORMS;
 
-  ngOnInit(): void {
-    this.userObservable = this.userService.getUserData().subscribe(user => {
-      this.user = (user as UserData);
-      if(!this.user.validated) {
-        this.loadingUser = false;
-      } else {
-        this.router.navigate(['student']);
-      }
-    });
+  async ngOnInit() {
+    this.user = await firstValueFrom(this.authService.userData) as any;
+    if(!this.user.validated) {
+      this.loadingUser = false;
+    } else {
+      this.router.navigate(['student']);
+    }
   }
 
   validationForm = new FormGroup({
@@ -69,7 +66,7 @@ export class StudentSetupComponent implements OnInit, OnDestroy {
   });
 
   topicsForm = new FormGroup({
-    'selectedTopics': new FormControl(null, [Validators.required])
+    'selectedTopics': new FormControl<number[]>([], [Validators.required])
   });
 
 
@@ -81,16 +78,15 @@ export class StudentSetupComponent implements OnInit, OnDestroy {
     }
   }
 
-  validateStudent() {
+  async validateStudent() {
     this.loadingValidation = true;
     const topics = this.topicsForm.get("selectedTopics")?.value;
-    this.userService.validateStudent(topics).subscribe(res => {
-      if(!res) {
-        this.loadingValidation = false;
-      } else {
-        this.router.navigate(['student']);
-      }
-    })
+    try {
+      await firstValueFrom(this.authService.validateUser(topics));
+      this.router.navigate(['student']);
+    } finally {
+      this.loadingValidation = false;
+    }
   }
 
   sendProblem(event: Event) {
@@ -102,7 +98,4 @@ export class StudentSetupComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.userObservable.unsubscribe();
-  }
 }

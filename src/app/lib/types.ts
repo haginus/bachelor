@@ -1,3 +1,61 @@
+export type StudyForm = 'if' | 'ifr' | 'id';
+export type DomainType = 'bachelor' | 'master';
+export type PaperType = 'bachelor' | 'diploma' | 'master';
+export type FundingForm = 'budget' | 'tax';
+
+export interface Specialization {
+  id: number;
+  name: string;
+  studyYears: number;
+  studyForm: StudyForm;
+  domain?: Domain;
+}
+
+export interface Domain {
+  id: number;
+  name: string;
+  type: DomainType;
+  paperType: PaperType;
+  specializations: Specialization[];
+}
+
+export type UserType = 'admin' | 'secretary' | 'teacher' | 'student';
+
+export interface User {
+  id: number;
+  type: UserType;
+  email: string;
+  validated: boolean;
+  firstName: string;
+  lastName: string;
+  title?: string;
+  fullName: string;
+  CNP: string;
+}
+
+export interface Admin extends User {
+  type: 'admin';
+}
+
+export interface Secretary extends User {
+  type: 'secretary';
+}
+
+export interface Teacher extends User {
+  type: 'teacher';
+}
+
+export interface Student extends User {
+  type: 'student';
+  group: string;
+  promotion: string;
+  identificationCode: string;
+  matriculationYear: number;
+  fundingForm: FundingForm;
+  generalAverage: number;
+  specialization: Specialization;
+}
+
 export interface DocumentReuploadRequest {
   id: number;
   paperId: number;
