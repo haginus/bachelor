@@ -7,6 +7,7 @@ import { NewSessionDialogComponent } from '../../dialogs/new-session-dialog/new-
 import { AuthService, SessionSettings } from '../../../services/auth.service';
 import { AdminService } from '../../../services/admin.service';
 import { DocumentService } from '../../../services/document.service';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-session-settings',
@@ -29,14 +30,15 @@ export class SessionSettingsComponent implements OnInit {
   }
 
   private setFormValue(sessionSettings: SessionSettings) {
+    const _formatDate = (date: string) => formatDate(date, 'yyyy-MM-dd', 'en-US', 'Europe/Bucharest');
     const settings = {
       sessionName: sessionSettings.sessionName,
       currentPromotion: sessionSettings.currentPromotion,
-      applyStartDate: sessionSettings.applyStartDate.split('T')[0],
-      applyEndDate: sessionSettings.applyEndDate.split('T')[0],
-      fileSubmissionStartDate: sessionSettings.fileSubmissionStartDate.split('T')[0],
-      fileSubmissionEndDate: sessionSettings.fileSubmissionEndDate.split('T')[0],
-      paperSubmissionEndDate: sessionSettings.paperSubmissionEndDate.split('T')[0],
+      applyStartDate: _formatDate(sessionSettings.applyStartDate),
+      applyEndDate: _formatDate(sessionSettings.applyEndDate),
+      fileSubmissionStartDate: _formatDate(sessionSettings.fileSubmissionStartDate),
+      fileSubmissionEndDate: _formatDate(sessionSettings.fileSubmissionEndDate),
+      paperSubmissionEndDate: _formatDate(sessionSettings.paperSubmissionEndDate),
       allowGrading: sessionSettings.allowGrading
     };
     this.settingsForm.setValue(settings);
