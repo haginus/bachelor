@@ -33,14 +33,14 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="studentNumber">
+        <ng-container matColumnDef="studentCount">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Număr studenți </th>
-          <td mat-cell *matCellDef="let row"> {{row.studentNumber}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.studentCount}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="offerNumber">
+        <ng-container matColumnDef="offerCount">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Număr oferte </th>
-          <td mat-cell *matCellDef="let row"> {{row.offerNumber}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.offerCount}} </td>
         </ng-container>
 
         <ng-container matColumnDef="actions">
@@ -50,8 +50,8 @@
               <mat-icon>mode</mat-icon>
             </button>
             <span
-              [matTooltip]="element.studentNumber > 0 ? 'Mutați întâi studenții în alt domeniu.' : 'Ștergeți domeniul' ">
-              <button mat-icon-button (click)="deleteDomain(element.id)" [disabled]="element.studentNumber > 0">
+              [matTooltip]="element.studentCount > 0 ? 'Mutați întâi studenții în alt domeniu.' : 'Ștergeți domeniul' ">
+              <button mat-icon-button (click)="deleteDomain(element.id)" [disabled]="element.studentCount > 0">
                 <mat-icon>delete</mat-icon>
               </button>
             </span>

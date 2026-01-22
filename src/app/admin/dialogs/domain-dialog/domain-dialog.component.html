@@ -6,19 +6,19 @@
 
 <mat-dialog-content class="mat-typography" *ngIf="data.mode == 'edit' || data.mode == 'create'">
   <form [formGroup]="editDomainForm" autocomplete="off">
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" subscriptSizing="fixed">
       <mat-label>Nume domeniu</mat-label>
       <input matInput type="text" formControlName="name" name="domainName">
     </mat-form-field>
     <div fxLayout="row" fxLayoutGap="5px">
-      <mat-form-field appearance="outline" fxFlex="50">
+      <mat-form-field appearance="outline" subscriptSizing="fixed" fxFlex="50">
         <mat-label>Tip</mat-label>
         <mat-select formControlName="type" (valueChange)="paperType.setValue(null)">
           <mat-option value="bachelor">Licență</mat-option>
           <mat-option value="master">Master</mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="50">
+      <mat-form-field appearance="outline" subscriptSizing="fixed" fxFlex="50">
         <mat-label>Tip lucrare</mat-label>
         <mat-select formControlName="paperType">
           <mat-option value="bachelor" *ngIf="domainType.value == 'bachelor'">
@@ -36,18 +36,23 @@
 
     <div formArrayName="specializations">
       <h3>Programe de studii</h3>
-      <div *ngFor="let specialization of formSpecializations.controls; let i = index" [formGroupName]="i"
-        class="specialization-row">
-        <div fxLayout="row" fxLayoutGap="5px" class="flex-spacer">
-          <mat-form-field appearance="outline" fxFlex="70">
-            <mat-label>Nume program de studiu</mat-label>
-            <input matInput type="text" formControlName="name" name="specializationName">
-          </mat-form-field>
-          <mat-form-field appearance="outline" fxFlex="30">
-            <mat-label>Ani de studiu</mat-label>
-            <input matInput type="number" formControlName="studyYears" min="1">
-          </mat-form-field>
-        </div>
+      <div *ngFor="let specialization of formSpecializations.controls; let i = index" [formGroupName]="i" class="specialization-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Nume program de studiu</mat-label>
+          <input matInput type="text" formControlName="name" name="specializationName">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Ani de studiu</mat-label>
+          <input matInput type="number" formControlName="studyYears" min="1">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Forma de învățământ</mat-label>
+          <mat-select formControlName="studyForm">
+            <mat-option value="if">Învățământ cu frecvență</mat-option>
+            <mat-option value="ifr">Învățământ cu frecvență redusă</mat-option>
+            <mat-option value="id">Învățământ la distanță</mat-option>
+          </mat-select>
+        </mat-form-field>
         <div
           [matTooltip]="specialization.get('studentNumber')?.value > 0 ? 'Mutați întâi studenții la alt program de studiu' : 'Ștergeți programul de studiu'">
           <button mat-icon-button (click)="$event.preventDefault(); removeSpecialization(i)"
@@ -70,9 +75,9 @@
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Anulați</button>
-  <button mat-button (click)="addDomain()" *ngIf="data.mode == 'create'"
+  <button mat-button (click)="saveDomain()" *ngIf="data.mode == 'create'"
     [disabled]="editDomainForm.invalid">Adăugați</button>
-  <button mat-button (click)="editDomain()" *ngIf="data.mode == 'edit'"
+  <button mat-button (click)="saveDomain()" *ngIf="data.mode == 'edit'"
     [disabled]="editDomainForm.invalid">Salvați</button>
   <button mat-button (click)="deleteDomain()" *ngIf="data.mode == 'delete'">Ștergeți</button>
 </mat-dialog-actions>

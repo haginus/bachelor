@@ -8,6 +8,7 @@ export interface Specialization {
   name: string;
   studyYears: number;
   studyForm: StudyForm;
+  studentCount?: number;
   domain?: Domain;
 }
 

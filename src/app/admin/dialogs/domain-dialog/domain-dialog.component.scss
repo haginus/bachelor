@@ -1,32 +1,35 @@
 :host {
-    position: relative;
-    display: block;
+  position: relative;
+  display: block;
 }
 
 mat-form-field {
-    width: 100%;
+  width: 100%;
 }
 
 .loading-container {
-    display: block;
-    margin: -24px;
-    width: calc(100% + 48px);
-    height: calc(100% + 24px);
-    background-color: rgba(255, 255, 255, 0.1);
-    position: absolute;
-    z-index: 2;
+  display: block;
+  margin: -24px;
+  width: calc(100% + 48px);
+  height: calc(100% + 24px);
+  background-color: rgba(255, 255, 255, 0.1);
+  position: absolute;
+  z-index: 2;
 }
 
 .specialization-row {
-    display: flex;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  margin-bottom: 16px;
 
-    .flex-spacer {
-        min-width: 0;
-    }
+  mat-form-field {
+    flex: 1;
+  }
 
-    button {
-        margin-bottom: 22px;
-    }
+  .flex-spacer {
+    min-width: 0;
+  }
+
 }

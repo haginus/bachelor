@@ -3,9 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTable } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { AdminDomainDialogComponent } from '../../dialogs/domain-dialog/domain-dialog.component';
-import { AdminService } from '../../../services/admin.service';
 import { Domain } from '../../../services/auth.service';
 import { rowAnimation } from '../../../row-animations';
+import { DomainsService } from '../../../services/domains.service';
 
 @Component({
   selector: 'app-domains',
@@ -17,12 +17,12 @@ import { rowAnimation } from '../../../row-animations';
 })
 export class AdminDomainsComponent implements OnInit, OnDestroy {
 
-  constructor(private admin: AdminService, private dialog: MatDialog) { }
+  constructor(private domains: DomainsService, private dialog: MatDialog) { }
 
   @ViewChild('table') table: MatTable<Domain>;
   data: Domain[]
   isLoadingResults: boolean = true;
-  displayedColumns: string[] = ['id', 'name', 'type', 'studentNumber', 'offerNumber', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'type', 'studentCount', 'offerCount', 'actions'];
 
   private domainSub: Subscription;
 
@@ -31,7 +31,7 @@ export class AdminDomainsComponent implements OnInit, OnDestroy {
       this.domainSub.unsubscribe();
     }
     this.isLoadingResults = true;
-    this.domainSub = this.admin.getDomains(true).subscribe(domains => {
+    this.domainSub = this.domains.findAll({ detailed: true }).subscribe(domains => {
       this.data = domains;
       this.isLoadingResults = false;
     });
