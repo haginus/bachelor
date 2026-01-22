@@ -17,6 +17,13 @@ import { DOMAIN_TYPES, USER_TYPES } from "./constants";
 //   })
 // }
 
+export function getErrorMessage(err: any) {
+  function maybeTakeFirst(message: any) {
+    return message instanceof Array ? message[0] : message;
+  }
+  return err.error?.message || maybeTakeFirst(err.message) || err.error?.error || 'A apărut o eroare.';
+}
+
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
