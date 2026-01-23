@@ -1,14 +1,13 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { Observable, Subscription } from 'rxjs';
+import { firstValueFrom, Observable, Subscription } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Topic, TopicsService } from '../../../services/topics.service';
-import { TeacherService } from '../../../services/teacher.service';
 import { Domain } from '../../../services/auth.service';
 import { Offer } from '../../../services/student.service';
 import { DOMAIN_TYPES } from '../../../lib/constants';
@@ -20,6 +19,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AsyncPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
+import { DomainsService } from '../../../services/domains.service';
+import { OffersService } from '../../../services/offers.service';
 
 @Component({
   selector: 'app-teacher-offer-dialog',
@@ -45,10 +46,11 @@ export class TeacherOfferDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: TeacherOfferDialogData,
-    private topicService: TopicsService,
-    private teacher: TeacherService,
-    private dialog: MatDialogRef<TeacherOfferDialogComponent>,
-    private snackbar: MatSnackBar
+    private readonly topicsService: TopicsService,
+    private readonly domainsService: DomainsService,
+    private readonly offersService: OffersService,
+    private readonly dialog: MatDialogRef<TeacherOfferDialogComponent>,
+    private readonly snackbar: MatSnackBar
   ) {
     this.filteredTopics = this.offerForm.get("topics").valueChanges.pipe(
       startWith(null),
@@ -126,7 +128,7 @@ export class TeacherOfferDialogComponent implements OnInit {
   }
 
   offerForm = new FormGroup({
-    "domainId": new FormControl(this.data.offer?.domainId, [Validators.required]),
+    "domainId": new FormControl(this.data.offer?.domain!.id, [Validators.required]),
     "topics": new FormControl(null),
     "limit": new FormControl(this.data.offer?.limit, [Validators.required, Validators.min(1)]),
     "description": new FormControl(this.data.offer?.description, [Validators.maxLength(1024)])
@@ -136,24 +138,20 @@ export class TeacherOfferDialogComponent implements OnInit {
   get limit() { return this.offerForm.get("limit") }
   get description() { return this.offerForm.get("description") }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     if(this.data.offer) {
       this.selectedTopics = [...this.data.offer.topics];
       this.offerForm.get("limit").setValidators([Validators.required, Validators.min(this.data.offer.takenPlaces)]);
       this.offerForm.get("limit").updateValueAndValidity(); // ensure user can't change limit below taken places
     }
-    this.topicService.findAll().subscribe(topics => {
-      this.remainingTopics =
-        topics.filter(topic => !this.selectedTopics.find(t => t.id == topic.id));
+    this.topicsService.findAll().subscribe(topics => {
+      this.remainingTopics = topics.filter(topic => !this.selectedTopics.find(t => t.id == topic.id));
     });
-    this.domainSubscription = this.teacher.getDomains().subscribe(domains => {
-      this.domains = domains;
+    try {
+      this.domains = await firstValueFrom(this.domainsService.findAll());
+    } finally {
       this.isLoadingDomains = false;
-    });
-  }
-
-  private _getNewTopics(): string[] {
-    return this.selectedTopics.filter(topic => topic.id == 0).map(topic => topic.name);
+    }
   }
 
   addOffer() {
@@ -164,30 +162,29 @@ export class TeacherOfferDialogComponent implements OnInit {
     this.addOrEditOffer(true);
   }
 
-  private addOrEditOffer(isEdit: boolean = false) {
+  private async addOrEditOffer(isEdit: boolean = false) {
     this.isLoadingQuery = true;
-    const topicNames = this._getNewTopics();
-    this.topicService.bulkCreate(topicNames).pipe(
-      switchMap(topics => {
-        let topicIds = this.selectedTopics.filter(topic => topic.id != 0).map(topic => topic.id);
-        topicIds = topicIds.concat(topics.map(topic => topic.id)); // get IDs for newly added topics
-        return isEdit ?
-          this.teacher.editOffer(this.data.offer.id, this.domainId.value, topicIds, this.limit.value, this.description.value) :
-          this.teacher.addOffer(this.domainId.value, topicIds, this.limit.value, this.description.value);
-      })
-    ).subscribe(res => {
-      if(res) {
-        this.dialog.close(true);
-        this.snackbar.open("Ofertă salvată.");
-      } else {
-        let snackbarRef = this.snackbar.open("A apărut o eroare.", "Reîncercați");
-        let sub = snackbarRef.onAction().subscribe(() => {
-          this.addOrEditOffer(isEdit);
-          sub.unsubscribe();
-        })
+    try {
+      let topicIds = this.selectedTopics.filter(topic => topic.id != 0).map(topic => topic.id);
+      const newTopicNames = this.selectedTopics.filter(topic => topic.id == 0).map(topic => topic.name);
+      if(newTopicNames.length > 0) {
+        const topics = await firstValueFrom(this.topicsService.bulkCreate(newTopicNames));
+        topicIds = [...topicIds, ...topics.map(topic => topic.id)];
       }
+      const dto = {
+        domainId: this.domainId.value,
+        topicIds,
+        limit: this.limit.value,
+        description: this.description.value
+      }
+      const offer = isEdit
+        ? await firstValueFrom(this.offersService.update(this.data.offer.id, dto))
+        : await firstValueFrom(this.offersService.create(dto));
+      this.dialog.close(offer);
+      this.snackbar.open("Ofertă salvată.");
+    } finally {
       this.isLoadingQuery = false;
-    })
+    }
   }
 
   handleTopicBlur(event: FocusEvent, value: string) {

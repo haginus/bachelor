@@ -43,7 +43,7 @@
             <div class="list-item">
               <div class="content">
                 <div>Locuri ocupate</div>
-                <div>{{ offer.takenPlaces }} / {{ offer.limit }}</div>
+                <div>{{ offer.takenSeats }} / {{ offer.limit }}</div>
               </div>
             </div>
             @if(offer.description) {
@@ -57,7 +57,7 @@
           </div>
           <div class="offer-card-footer">
             <a class="card-action" [routerLink]="['/teacher', 'applications', 'pending', offer.id]">
-              <span>{{ offer.pendingApplications }} cereri în așteptare</span>
+              <span>{{ offer.pendingApplicationCount }} cereri în așteptare</span>
               <mat-icon>arrow_forward</mat-icon>
             </a>
           </div>

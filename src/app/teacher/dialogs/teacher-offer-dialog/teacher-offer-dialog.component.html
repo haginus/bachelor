@@ -15,7 +15,7 @@
       <mat-select formControlName="domainId">
         @for(domain of domains; track domain.id) {
           <mat-option [value]="domain.id">
-            <span>{{ domain.name }} {{ DOMAIN_TYPES[domain.type] }}</span>
+            <span>{{ domain.name }}, {{ DOMAIN_TYPES[domain.type] }}</span>
           </mat-option>
         }
       </mat-select>
@@ -24,9 +24,9 @@
       }
     </mat-form-field>
 
-    <mat-form-field appearance="outline" fxFlex="100">
-      <mat-label>Teme ofertă</mat-label>
-      <mat-chip-grid #chipList aria-label="Selectare teme">
+    <mat-form-field appearance="outline" fxFlex="100" floatLabel="always">
+      <mat-label>Categorii ofertă</mat-label>
+      <mat-chip-grid #chipList aria-label="Selectare categorii">
         @for(topic of selectedTopics; track $index) {
           <mat-chip [removable]="true" (removed)="removeTopic(topic)">
             {{ topic.name }}
@@ -35,7 +35,7 @@
         }
         <input
           #topicInput
-          placeholder="Temă nouă..."
+          placeholder="Categorie nouă..."
           formControlName="topics"
           [matAutocomplete]="auto"
           [matChipInputFor]="chipList"
@@ -51,7 +51,10 @@
           </mat-option>
         }
       </mat-autocomplete>
-      <mat-hint>Adăugați o temă înscriind numele și apăsând <b>Virgulă</b> sau <b>Enter.</b></mat-hint>
+      <mat-hint>
+        Adăugați o categorie înscriind numele și apăsând <b>Virgulă</b> sau <b>Enter.</b> <br/>
+        <b>Nu folosiți acest câmp pentru a introduce titlul lucrărilor. Încercați să definiți o arie mai largă în care s-ar încadra lucrarea.</b>
+      </mat-hint>
     </mat-form-field>
 
     <mat-form-field appearance="outline" fxFlex="100">

@@ -58,6 +58,32 @@ export interface Student extends User {
   specialization: Specialization;
 }
 
+export interface Topic {
+  id: number;
+  name: string;
+}
+
+export interface Offer {
+  id: number;
+  description: string;
+  limit: number;
+  pendingApplicationCount: number;
+  takenSeats: number;
+  teacher: Teacher;
+  domain: Domain;
+  topics: Topic[];
+  applications: Application[];
+}
+
+export interface Application {
+  id: number;
+  title: string;
+  description: string;
+  usedTechnologies: string;
+  offer: Offer;
+  student: Student;
+}
+
 export interface DocumentReuploadRequest {
   id: number;
   paperId: number;

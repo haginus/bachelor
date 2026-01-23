@@ -1,10 +1,8 @@
-import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { Subscription } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { TeacherOfferDialogComponent } from '../../dialogs/teacher-offer-dialog/teacher-offer-dialog.component';
-import { TeacherService } from '../../../services/teacher.service';
-import { Offer } from '../../../services/student.service';
 import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
 import { DOMAIN_TYPES } from '../../../lib/constants';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -15,6 +13,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { RouterLink } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { OffersService } from '../../../services/offers.service';
+import { Offer } from '../../../lib/types';
 
 @Component({
   selector: 'teacher-offers',
@@ -34,12 +34,15 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     RouterLink,
   ]
 })
-export class TeacherOffersComponent implements OnInit, OnDestroy {
+export class TeacherOffersComponent implements OnInit {
 
-  constructor(private teacher: TeacherService, private dialog: MatDialog, private snackbar: MatSnackBar) { }
+  constructor(
+    private readonly offersService: OffersService,
+    private dialog: MatDialog,
+    private snackbar: MatSnackBar
+  ) {}
 
   offers: Offer[] = []
-  offerSubscription: Subscription;
   isLoadingOffers: boolean = true;
 
   DOMAIN_TYPES = DOMAIN_TYPES;
@@ -48,16 +51,16 @@ export class TeacherOffersComponent implements OnInit, OnDestroy {
     this.getOffers();
   }
 
-  getOffers() {
+  async getOffers() {
     this.isLoadingOffers = true;
-    this.offerSubscription = this.teacher.getOffers().subscribe(offers => {
-      this.offers = offers;
+    try {
+      this.offers = await firstValueFrom(this.offersService.findMine());
+    } catch {
+      this.offers = [];
+      this.snackbar.open("Eroare la încărcarea ofertelor.");
+    } finally {
       this.isLoadingOffers = false;
-    });
-  }
-
-  ngOnDestroy() {
-    this.offerSubscription.unsubscribe();
+    }
   }
 
   editOffer(offer: Offer) {
@@ -91,11 +94,11 @@ export class TeacherOffersComponent implements OnInit, OnDestroy {
     })
   }
 
-  deleteOffer(offer: Offer) {
-    if(offer.takenPlaces) {
+  async deleteOffer(offer: Offer) {
+    if(offer.takenSeats) {
       let content = '';
       let actions = [];
-      if(offer.takenPlaces >= offer.limit) {
+      if(offer.takenSeats >= offer.limit) {
         content = "Oferta este deja inactivă - studenții nu mai pot trimite cereri noi, deoarece numărul de locuri limită setat a fost atins.";
         actions.push({ name: "OK", value: false });
       } else {
@@ -112,12 +115,12 @@ export class TeacherOffersComponent implements OnInit, OnDestroy {
       });
       dialogRef.afterClosed().subscribe(result => {
         if(result) {
-          this.editOffer({...offer, limit: offer.takenPlaces});
+          this.editOffer({ ...offer, limit: offer.takenSeats });
         }
       })
       return;
     }
-    let dialogRef = this.dialog.open(CommonDialogComponent, {
+    const dialogRef = this.dialog.open(CommonDialogComponent, {
       data: {
         title: "Doriți să ștergeți această ofertă?",
         content: "Toate cererile în curs de la studenți vor fi revocate.",
@@ -127,17 +130,11 @@ export class TeacherOffersComponent implements OnInit, OnDestroy {
         ]
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
-      if(result) {
-        this.teacher.deleteOffer(offer.id).subscribe(result => {
-          if(result) {
-            this.getOffers();
-            this.snackbar.open("Ofertă ștearsă.");
-          }
-        });
-      }
-    })
+    const result = await firstValueFrom(dialogRef.afterClosed());
+    if(!result) return;
+    await firstValueFrom(this.offersService.delete(offer.id));
+    this.getOffers();
+    this.snackbar.open("Ofertă ștearsă.");
   }
-
 
 }
