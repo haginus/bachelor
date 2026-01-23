@@ -32,6 +32,7 @@ export interface User {
   title?: string;
   fullName: string;
   CNP: string;
+  isImpersonated?: boolean;
 }
 
 export interface Admin extends User {

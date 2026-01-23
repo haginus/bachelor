@@ -1,22 +1,26 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of, ReplaySubject } from 'rxjs';
+import { combineLatest, firstValueFrom, Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, first, map, switchMap, take, tap } from 'rxjs/operators';
-import { SudoDialogComponent } from '../admin/dialogs/sudo-dialog/sudo-dialog.component';
 import { inclusiveDate, parseDate } from '../lib/utils';
 import { PaperRequiredDocument, StudentExtraData } from './student.service';
 import { Topic } from './topics.service';
 import { environment } from '../../environments/environment';
+import { SudoService } from './sudo.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http: HttpClient, private router: Router, private snackbar: MatSnackBar, private dialog: MatDialog) {
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private snackbar: MatSnackBar,
+    private sudoService: SudoService,
+  ) {
     if(this.isSignedIn()) {
       combineLatest([this.getUserData(), this.getAlternativeIdentities()]).subscribe(([user, alternativeIdentities]) => {
         this.userDataSource.next(user);
@@ -92,12 +96,12 @@ export class AuthService {
   }
 
   impersonateUser(userId: number): Observable<AuthResponse> {
-    const url = `${environment.apiUrl}/auth/impersonate`;
+    const url = `${environment.apiUrl}/auth/impersonate/${userId}`;
     // @ts-ignore
     return this.enterSudoMode().pipe(
       switchMap(password => {
         if(!password) return of(null);
-        return this.http.post<AuthResponse>(url, { userId }, this.getPrivateHeaders());
+        return this.http.post<AuthResponse>(url, {});
       }),
       map(res => {
         if(!res) {
@@ -141,21 +145,7 @@ export class AuthService {
   }
 
   enterSudoMode(): Observable<string> {
-    const password = this.sudoPasswordSource.value;
-    if(password) return of(password);
-    const dialogRef = this.dialog.open<SudoDialogComponent, never, string>(SudoDialogComponent);
-    return dialogRef.afterClosed().pipe(
-      take(1),
-      map(password => {
-        if(password) {
-          this.sudoPasswordSource.next(password);
-          return password;
-        } else {
-          throw { error: { message: "Ați renunțat la intrarea în modul sudo." } };
-        }
-      }),
-      catchError(this.handleError("enterSudoMode", null))
-    );
+    return this.sudoService.enterSudoMode();
   }
 
   signOut() : Observable<boolean> {
@@ -183,8 +173,8 @@ export class AuthService {
     if(token) {
       headers = headers.append('Authorization', 'Bearer ' + token);
     }
-    if(this.sudoPasswordSource.value) {
-      headers = headers.append('X-Sudo-Password', this.sudoPasswordSource.value);
+    if(this.sudoService.sudoPasswordSource.value) {
+      headers = headers.append('X-Sudo-Password', this.sudoService.sudoPasswordSource.value);
     }
     return {
       headers,
@@ -194,7 +184,6 @@ export class AuthService {
 
   userDataSource: ReplaySubject<UserData | undefined> = new ReplaySubject<UserData | undefined>(1);
   userData = this.userDataSource.asObservable();
-  sudoPasswordSource: BehaviorSubject<string> = new BehaviorSubject<string>(null);
   alternativeIdentitiesSource: ReplaySubject<UserData[]> = new ReplaySubject<UserData[]>(1);
   alternativeIdentities = this.alternativeIdentitiesSource.asObservable();
 
