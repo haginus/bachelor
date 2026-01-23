@@ -40,4 +40,4 @@ export class TeachersService {
 
 }
 
-type TeacherDto = Omit<Teacher, 'id' | 'type' | 'validated' | 'fullName'>;
+type TeacherDto = Pick<Teacher, 'title' | 'firstName' | 'lastName' | 'CNP' | 'email'>;

@@ -15,7 +15,7 @@ export class StudentService {
   constructor(private http: HttpClient, private auth: AuthService, private snackbar: MatSnackBar) { }
 
   getTeacherOffers(filters: GetTeacherOffersFilters): Observable<TeacherOffers[]> {
-    let url = `${environment.apiUrl}/student/teacher-offers?onlyFree=${filters.onlyFree}`
+    let url = `${environment.apiUrl}/teacher-offers?onlyFree=${filters.onlyFree}`
     if(filters.teacherName) {
       url += '&teacherName=' + filters.teacherName;
     }

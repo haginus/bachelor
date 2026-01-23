@@ -2,11 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { debounceTime, map, switchMap } from 'rxjs/operators';
+import { of, Subscription } from 'rxjs';
+import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { OfferApplicationSenderComponent } from '../../dialogs/offer-application-sender/offer-application-sender.component';
 import { Topic, TopicsService } from '../../../services/topics.service';
-import { GetTeacherOffersFilters, Offer, StudentService, TeacherOffers } from '../../../services/student.service';
 import { AuthService } from '../../../services/auth.service';
 import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -19,6 +18,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { UserSnippetComponent } from '../../../shared/components/user-snippet/user-snippet.component';
+import { TeacherOffersService } from '../../../services/teacher-offers.service';
+import { Offer, TeacherOfferDto } from '../../../lib/types';
 
 @Component({
   selector: 'student-teachers-grid',
@@ -43,8 +44,8 @@ import { UserSnippetComponent } from '../../../shared/components/user-snippet/us
 export class StudentTeachersGridComponent implements OnInit, OnDestroy {
 
   constructor(
-    private topicService: TopicsService,
-    private studentService: StudentService,
+    private topicsService: TopicsService,
+    private readonly teacherOffersService: TeacherOffersService,
     private auth: AuthService,
     private dialog: MatDialog,
     private route: ActivatedRoute
@@ -54,7 +55,7 @@ export class StudentTeachersGridComponent implements OnInit, OnDestroy {
   topics: Topic[] = []
   topicSubscription: Subscription;
 
-  teachers: TeacherOffers[] = []
+  teachers: TeacherOfferDto[] = [];
   teacherSubscription: Subscription;
 
   canApply: boolean = true; // If application session is in progress
@@ -62,9 +63,9 @@ export class StudentTeachersGridComponent implements OnInit, OnDestroy {
   isLoadingTeachers: boolean = true;
 
   filterForm = new FormGroup({
-    "topicIds": new FormControl([]),
-    "teacherName": new FormControl(null),
-    "onlyFree": new FormControl(true)
+    "onlyActive": new FormControl<boolean>(true),
+    "topicIds": new FormControl<number[]>([]),
+    "search": new FormControl<string | null>(null),
   });
 
   get topicSelect() { return this.filterForm.get("topicIds") }
@@ -89,7 +90,7 @@ export class StudentTeachersGridComponent implements OnInit, OnDestroy {
       })
     ).subscribe(result => this.canApply = result);
 
-    this.topicSubscription = this.topicService.findAll().subscribe(topics => {
+    this.topicSubscription = this.topicsService.findAll().subscribe(topics => {
       this.topics = topics;
       this.setAllTopics();
     });
@@ -98,23 +99,23 @@ export class StudentTeachersGridComponent implements OnInit, OnDestroy {
       switchMap(data => {
         this.mode = data['mode'] ? data['mode'] : 'all';
         if(this.mode == 'suggested') {
-          return this.studentService.getSuggestedTeacherOffers();
+          return this.teacherOffersService.findAll({ isSuggested: true });
         } else {
           return this.filterForm.valueChanges.pipe(
-            debounceTime(500), // wait until user stops typing
-            switchMap(result => {
+            debounceTime(500),
+            switchMap(filterDto => {
+              if(this.topics.length == filterDto.topicIds.length || filterDto.topicIds.length == 0) {
+                filterDto.topicIds = null;
+              }
               this.isLoadingTeachers = true;
-              let filters = result as GetTeacherOffersFilters;
-              if(this.topics.length == filters.topicIds.length || filters.topicIds.length == 0) {
-                filters.topicIds = null;
-              }
-              if(filters.teacherName == '') {
-                filters.teacherName = null;
-              }
-              return this.studentService.getTeacherOffers(filters);
+              return this.teacherOffersService.findAll(filterDto);
             })
           )
         }
+      }),
+      catchError(() => {
+        this.isLoadingTeachers = false;
+        return of([]);
       })
     ).subscribe(teachers => {
       this.teachers = teachers;
@@ -149,7 +150,7 @@ export class StudentTeachersGridComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
-        offer.hasApplied = true;
+        // offer.hasApplied = true;
       }
     });
   }

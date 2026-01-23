@@ -75,6 +75,10 @@ export interface Offer {
   applications: Application[];
 }
 
+export interface TeacherOfferDto extends Teacher {
+  offers: (Offer & { hasApplied: boolean })[];
+}
+
 export interface Application {
   id: number;
   title: string;

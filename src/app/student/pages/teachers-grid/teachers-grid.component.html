@@ -36,11 +36,11 @@
           <div class="flex-grow">
             <mat-form-field appearance="outline">
               <mat-label>Nume profesor</mat-label>
-              <input matInput type="text" formControlName="teacherName" />
+              <input matInput type="text" formControlName="search" />
             </mat-form-field>
           </div>
           <div>
-            <mat-button-toggle-group class="toggle-group" formControlName="onlyFree">
+            <mat-button-toggle-group class="toggle-group" formControlName="onlyActive">
               <mat-button-toggle [value]="false">Toți profesorii</mat-button-toggle>
               <mat-button-toggle [value]="true">Profesorii liberi</mat-button-toggle>
             </mat-button-toggle-group>
@@ -81,23 +81,23 @@
                   <span class="badge">{{ topic.name }} </span>
                 }
               </div>
-              @if(offer.limit != offer.takenPlaces) {
+              @if(offer.limit != offer.takenSeats) {
                 <div
                   class="offer-places"
-                  [class.low]="offer.takenPlaces / offer.limit < 0.35"
-                  [class.mid]="offer.takenPlaces / offer.limit >= 0.35"
-                  [class.high]="offer.takenPlaces / offer.limit > 0.75"
+                  [class.low]="offer.takenSeats / offer.limit < 0.35"
+                  [class.mid]="offer.takenSeats / offer.limit >= 0.35"
+                  [class.high]="offer.takenSeats / offer.limit > 0.75"
                 >
-                  {{ offer.limit - offer.takenPlaces }} locuri
+                  {{ offer.limit - offer.takenSeats }} locuri
                 </div>
               }
               <div class="offer-actions">
                 <button mat-stroked-button
-                  [disabled]="!!offer.hasApplied || offer.takenPlaces == offer.limit || !canApply"
+                  [disabled]="!!offer.hasApplied || offer.takenSeats == offer.limit || !canApply"
                   (click)="applyOffer(offer)">
                   @if(offer.hasApplied) {
                     <span>Aplicat</span>
-                  } @else if(offer.takenPlaces < offer.limit) {
+                  } @else if(offer.takenSeats < offer.limit) {
                     @if(offer.description) {
                       <span>Detalii</span>
                     } @else {
