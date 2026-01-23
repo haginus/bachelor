@@ -35,7 +35,7 @@ export class AdminService {
 
   getStudentUsers(sort: string = 'id', order: string = 'ASC', page: number = 0, pageSize: number = 20, filters?: StudentQueryFilters):
     Observable<StudentQueryResult> {
-    let url = `${environment.apiUrl}/admin/students?sort=${sort}&order=${order}&page=${page}&pageSize=${pageSize}`;
+    let url = `${environment.apiUrl}/students?sort=${sort}&order=${order}&limit=${pageSize}&offset=${pageSize * page}`;
     if(filters) {
       Object.keys(filters).forEach(filterKey => {
         if(filters[filterKey]) {
@@ -180,12 +180,10 @@ export class AdminService {
   }
 
   getDomains(extraDetails?: boolean): Observable<Domain[]> {
-    let url = `${environment.apiUrl}/admin/domains`;
-    if(extraDetails) url += `/extra`;
+    let url = `${environment.apiUrl}/domains`;
     return this.http
       .get<Domain[]>(url, this.auth.getPrivateHeaders(),)
       .pipe(
-        retry(3),
         catchError(this.handleError<Domain[]>('getDomains', []))
       );
   }
@@ -218,11 +216,10 @@ export class AdminService {
 
   getTopics(sort: string = 'id', order: string = 'ASC', page: number = 0, pageSize: number = 10):
     Observable<TopicQueryResult> {
-    const url = `${environment.apiUrl}/admin/topics?sort=${sort}&order=${order}&page=${page}&pageSize=${pageSize}`;
+    const url = `${environment.apiUrl}/topics?sort=${sort}&order=${order}&page=${page}&pageSize=${pageSize}`;
     return this.http
       .get<TopicQueryResult>(url, this.auth.getPrivateHeaders(),)
       .pipe(
-        retry(3),
         catchError(this.handleError<TopicQueryResult>('getTopics', { rows: [], count: 0 }))
       );
   }
@@ -424,8 +421,8 @@ export class AdminService {
   // Session Settings
 
   changeSessionSettings(settings: SessionSettings): Observable<SessionSettings> {
-    const url = `${environment.apiUrl}/admin/session`;
-    return this.http.post<any>(url, settings, this.auth.getPrivateHeaders()).pipe(
+    const url = `${environment.apiUrl}/session`;
+    return this.http.put<any>(url, settings, this.auth.getPrivateHeaders()).pipe(
       map(_ => {
         // Update the session settings in the state of the app
         this.auth.sessionSettingsSource.next(settings);

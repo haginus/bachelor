@@ -8,11 +8,13 @@ import { BehaviorSubject, merge, of } from 'rxjs';
 import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { AdminTeacherBulkAddDialogComponent } from '../../dialogs/teacher-bulk-add-dialog/teacher-bulk-add-dialog.component';
 import { AdminTeacherDeleteDialogComponent } from '../../dialogs/teacher-delete-dialog/teacher-delete-dialog.component';
-import { AdminTeacherDialogConmonent } from '../../dialogs/teacher-dialog/teacher-dialog.component';
+import { AdminTeacherDialogComponent } from '../../dialogs/teacher-dialog/teacher-dialog.component';
 import { AdminService } from '../../../services/admin.service';
 import { AuthService, UserData } from '../../../services/auth.service';
 import { rowAnimation } from '../../../row-animations';
 import { FormControl, FormGroup } from '@angular/forms';
+import { TeachersService } from '../../../services/teachers.service';
+import { Teacher } from '../../../lib/types';
 
 @Component({
   selector: 'app-admin-teachers',
@@ -25,6 +27,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class AdminTeachersComponent implements OnInit, AfterViewInit {
 
   constructor(
+    private teachersService: TeachersService,
     private admin: AdminService,
     private auth: AuthService,
     private router: Router,
@@ -44,7 +47,7 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
     onlyMissingReports: new FormControl<boolean>(false),
   });
 
-  data: UserDataExtented[] = [];
+  data: Teacher[] = [];
   resultsLength = 0;
   isLoadingResults = true;
 
@@ -63,20 +66,20 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
         switchMap(() => {
           this.isLoadingResults = true;
           const filterValues = this.teacherFilter.value;
-          return this.admin.getTeacherUsers(
-            this.sort.active,
-            this.sort.direction.toUpperCase(),
-            this.paginator.pageIndex,
-            this.paginator.pageSize,
-            filterValues,
-          );
+          return this.teachersService.findAll({
+            limit: this.paginator.pageSize,
+            offset: this.paginator.pageIndex * this.paginator.pageSize,
+            sortBy: this.sort.active,
+            sortDirection: this.sort.direction || 'asc',
+            ...filterValues,
+          });
         }),
         map(data => {
           // Flip flag to show that loading has finished.
           this.isLoadingResults = false;
           this.resultsLength = data.count;
 
-          return data.rows as UserDataExtented[];
+          return data.rows;
         }),
         catchError(() => {
           this.isLoadingResults = false;
@@ -94,66 +97,43 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
     this.showFilters = !this.showFilters;
   }
 
+  openTeacherDialog(mode: 'view' | 'edit' | 'create', teacher?: Teacher) {
+    const dialogRef = this.dialog.open(AdminTeacherDialogComponent, {
+      data: {
+        mode,
+        data: teacher
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.performedActions.next("refresh");
+      }
+    });
+  }
+
   addTeacher() {
-    let dialogRef = this.dialog.open(AdminTeacherDialogConmonent, {
-      data: {
-        mode: "create"
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        result.subscribe(res => {
-          if (res) {
-            this.snackbar.open("Profesor adăugat.");
-            this.performedActions.next("teacherAdded");
-          }
-        })
-      }
-    });
+    this.openTeacherDialog('create');
   }
 
-  viewTeacher(studentId: number) {
-    let dialogRef = this.dialog.open(AdminTeacherDialogConmonent, {
-      data: {
-        mode: "view",
-        data: this.data.find(student => student.id == studentId)
-      }
-    });
+  viewTeacher(teacherId: number) {
+    this.openTeacherDialog('view', this.data.find(teacher => teacher.id == teacherId));
   }
 
-  editTeacher(studentId: number) {
-    let dialogRef = this.dialog.open(AdminTeacherDialogConmonent, {
-      data: {
-        mode: "edit",
-        data: this.data.find(student => student.id == studentId)
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        result.subscribe(res => {
-          if (res) {
-            this.snackbar.open("Profesor editat.");
-            this.performedActions.next("teacherEdited");
-          }
-        })
-      }
-    })
+  editTeacher(teacherId: number) {
+    this.openTeacherDialog('edit', this.data.find(teacher => teacher.id == teacherId));
   }
 
-  deleteTeacher(studentId: number) {
+  deleteTeacher(teacherId: number) {
     let dialogRef = this.dialog.open(AdminTeacherDeleteDialogComponent, {
-      data: this.data.find(student => student.id == studentId)
+      data: this.data.find(teacher => teacher.id == teacherId)
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        result.subscribe(res => {
-          if (res != null) {
-            this.snackbar.open("Profesor șters.");
-            this.performedActions.next("teacherDeleted");
-          }
+        result.subscribe(() => {
+          this.snackbar.open("Profesor șters.");
+          this.performedActions.next("teacherDeleted");
         })
       }
     })
@@ -186,13 +166,5 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
         this.performedActions.next("bulkAdd");
       }
     })
-  }
-}
-
-interface UserDataExtented extends UserData {
-  teacher: {
-    id: number;
-    offerCount: number;
-    paperCount: number;
   }
 }

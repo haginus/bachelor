@@ -102,17 +102,17 @@
 
         <ng-container matColumnDef="offerCount">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Număr oferte </th>
-          <td mat-cell *matCellDef="let row"> {{row.teacher.offerCount}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.offerCount}} </td>
         </ng-container>
 
         <ng-container matColumnDef="paperCount">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Număr lucrări </th>
-          <td mat-cell *matCellDef="let row"> {{row.teacher.paperCount}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.paperCount}} </td>
         </ng-container>
 
         <ng-container matColumnDef="plagiarismReportCount">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Referate încărcate / Lucrări înscrise </th>
-          <td mat-cell *matCellDef="let row"> {{row.teacher.plagiarismReportCount}} / {{row.teacher.submittedPaperCount}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.plagiarismReportCount}} / {{row.submittedPaperCount}} </td>
         </ng-container>
 
         <ng-container matColumnDef="actions">

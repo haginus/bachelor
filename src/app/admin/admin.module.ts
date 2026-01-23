@@ -9,7 +9,7 @@ import { StudentsBulkAddDialogComponent } from './dialogs/students-bulk-add-dial
 import { StudentDeleteDialogComponent } from './dialogs/student-delete-dialog/student-delete-dialog.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AdminTeacherDialogConmonent } from './dialogs/teacher-dialog/teacher-dialog.component';
+import { AdminTeacherDialogComponent } from './dialogs/teacher-dialog/teacher-dialog.component';
 import { AdminTeachersComponent } from './pages/teachers/teachers.component';
 import { AdminTeacherDeleteDialogComponent } from './dialogs/teacher-delete-dialog/teacher-delete-dialog.component';
 import { AdminTeacherBulkAddDialogComponent } from './dialogs/teacher-bulk-add-dialog/teacher-bulk-add-dialog.component';
@@ -64,7 +64,7 @@ const materialDeps = [
     StudentsBulkAddDialogComponent,
     StudentDeleteDialogComponent,
     AdminTeachersComponent,
-    AdminTeacherDialogConmonent,
+    AdminTeacherDialogComponent,
     AdminTeacherDeleteDialogComponent,
     AdminTeacherBulkAddDialogComponent,
     AdminDomainsComponent,

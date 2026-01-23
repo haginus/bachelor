@@ -73,8 +73,8 @@
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close *ngIf="data.mode != 'view'">Anulați</button>
   <button mat-button mat-dialog-close *ngIf="data.mode == 'view'">Închideți</button>
-  <button mat-button [mat-dialog-close]="addTeacher()" [disabled]="teacherForm.invalid"
+  <button mat-button (click)="saveTeacher()" [disabled]="teacherForm.invalid"
     *ngIf="data.mode == 'create'">Adăugați</button>
-  <button mat-button [mat-dialog-close]="editTeacher()" [disabled]="teacherForm.invalid"
+  <button mat-button (click)="saveTeacher()" [disabled]="teacherForm.invalid"
     *ngIf="data.mode == 'edit'">Salvați</button>
 </mat-dialog-actions>

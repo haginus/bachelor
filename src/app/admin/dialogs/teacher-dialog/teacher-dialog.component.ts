@@ -1,25 +1,27 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AdminService } from '../../../services/admin.service';
-import { Domain, UserData } from '../../../services/auth.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { UserData } from '../../../services/auth.service';
 import { CNPValidator } from '../../../validators/CNP-validator';
+import { TeachersService } from '../../../services/teachers.service';
+import { firstValueFrom } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-admin-teacher-dialog',
   templateUrl: './teacher-dialog.component.html',
   styleUrls: ['./teacher-dialog.component.scss']
 })
-export class AdminTeacherDialogConmonent implements OnInit {
+export class AdminTeacherDialogComponent {
 
-  constructor(private admin: AdminService, @Inject(MAT_DIALOG_DATA) public data: AdminTeacherDialogData) { }
+  constructor(
+    private readonly teachersService: TeachersService,
+    @Inject(MAT_DIALOG_DATA) public readonly data: AdminTeacherDialogData,
+    private readonly dialogRef: MatDialogRef<AdminTeacherDialogComponent>,
+    private readonly sb: MatSnackBar,
+  ) {}
 
-  loadingDomains: boolean = true;;
-  domains: Domain[];
-
-  ngOnInit(): void {
-
-  }
+  isSubmitting = false;
 
   teacherForm = new FormGroup({
     'firstName': new FormControl(this.data.data?.firstName, [Validators.required]),
@@ -33,25 +35,18 @@ export class AdminTeacherDialogConmonent implements OnInit {
     return this.data.mode == 'edit' && this.teacherForm.get("email").value != this.data.data?.email;
   }
 
-  private getControlValues() {
-    const title = this.teacherForm.get("title").value;
-    const firstName = this.teacherForm.get("firstName").value;
-    const lastName = this.teacherForm.get("lastName").value;
-    const CNP = this.teacherForm.get("CNP").value;
-    const email = this.teacherForm.get("email").value;
-
-    return { title, firstName, lastName, CNP, email };
-  }
-
-  addTeacher() {
-    const { title, firstName, lastName, CNP, email } = this.getControlValues();
-    return this.admin.addTeacher(title, firstName, lastName, CNP, email);
-  }
-
-  editTeacher() {
-    const { title, firstName, lastName, CNP, email } = this.getControlValues();
-    const id = this.data.data.id;
-    return this.admin.editTeacher(id, title, firstName, lastName, CNP, email);
+  async saveTeacher() {
+    const dto = this.teacherForm.getRawValue();
+    this.isSubmitting = true;
+    try {
+      const result = this.data.mode == 'create'
+        ? await firstValueFrom(this.teachersService.create(dto))
+        : await firstValueFrom(this.teachersService.update(this.data.data!.id, dto));
+      this.dialogRef.close(result);
+      this.sb.open("Profesor salvat.");
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
 }

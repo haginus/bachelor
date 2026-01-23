@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserData } from '../../../services/auth.service';
-import { AdminService } from '../../../services/admin.service';
+import { TeachersService } from '../../../services/teachers.service';
 
 @Component({
   selector: 'app-admin-teacher-delete-dialog',
@@ -10,13 +10,13 @@ import { AdminService } from '../../../services/admin.service';
 })
 export class AdminTeacherDeleteDialogComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: UserData, private admin: AdminService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: UserData, private teachersService: TeachersService) { }
 
   ngOnInit(): void {
   }
 
   deleteTeacher() {
-    return this.admin.deleteUser(this.data.id);
+    return this.teachersService.delete(this.data.id);
   }
 
 }
