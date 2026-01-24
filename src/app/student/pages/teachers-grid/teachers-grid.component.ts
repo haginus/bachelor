@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { of, Subscription } from 'rxjs';
+import { firstValueFrom, of, Subscription } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { OfferApplicationSenderComponent } from '../../dialogs/offer-application-sender/offer-application-sender.component';
 import { Topic, TopicsService } from '../../../services/topics.service';
@@ -123,8 +123,9 @@ export class StudentTeachersGridComponent implements OnInit, OnDestroy {
     });
   }
 
-  applyOffer(offer: Offer, skipDescription = false) {
-    if(offer.description && !skipDescription) {
+  async applyOffer(offer: TeacherOfferDto['offers'][number]) {
+    let descriptionResult: boolean = false;
+    if(offer.description) {
       const detailsRef = this.dialog.open(CommonDialogComponent, {
         data: {
           title: "Detalii ofertă",
@@ -137,22 +138,17 @@ export class StudentTeachersGridComponent implements OnInit, OnDestroy {
           ]
         }
       });
-      detailsRef.afterClosed().subscribe(result => {
-        if(result) {
-          this.applyOffer(offer, true);
-        }
-      });
-      return;
+      descriptionResult = await firstValueFrom(detailsRef.afterClosed());
+    } else {
+      descriptionResult = true;
     }
+    if(!descriptionResult) return;
     const dialogRef = this.dialog.open(OfferApplicationSenderComponent, {
       data: offer.id
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if(result) {
-        // offer.hasApplied = true;
-      }
-    });
+    if(await firstValueFrom(dialogRef.afterClosed())) {
+      offer.hasApplied = true;
+    }
   }
 
   ngOnDestroy() {

@@ -14,7 +14,7 @@
       </div>
       <div>
         <span class="badge">
-          {{application.offer.takenPlaces }} / {{application.offer.limit}}
+          {{application.offer.takenSeats }} / {{application.offer.limit}}
           Locuri ocupate
         </span>
       </div>
@@ -51,14 +51,14 @@
     <mat-card-actions align="end">
       @if(application.accepted == null) {
         @if(mode === 'teacher') {
-          <button mat-button (click)="sendEvent('decline', application.id)">
+          <button mat-button (click)="sendEvent('decline', application)">
             Respingeți
           </button>
-          <button mat-flat-button color="primary" (click)="sendEvent('accept', application.id)">
+          <button mat-flat-button color="primary" (click)="sendEvent('accept', application)">
             Acceptați
           </button>
         } @else if(mode === 'student') {
-          <button mat-button (click)="sendEvent('cancel', application.id)">
+          <button mat-button (click)="sendEvent('cancel', application)">
             Retrageți cererea
           </button>
         }

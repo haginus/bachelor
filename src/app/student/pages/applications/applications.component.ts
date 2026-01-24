@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { OfferApplication, StudentService } from '../../../services/student.service';
 import { ApplicationListActions, ApplicationListComponent } from '../../../shared/components/application-list/application-list.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { Application } from '../../../lib/types';
+import { ApplicationsService } from '../../../services/applications.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-student-applications',
@@ -16,71 +18,63 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
     ApplicationListComponent,
   ]
 })
-export class StudentApplicationsComponent implements OnInit {
+export class StudentApplicationsComponent {
 
   constructor(
-    private student: StudentService,
+    private applicationsService: ApplicationsService,
     private snackbar: MatSnackBar,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) {
+    this.route.params.pipe(takeUntilDestroyed()).subscribe(res => {
+      try {
+        if(res['state'] !== undefined) {
+          if(['accepted', 'declined', 'pending'].includes(res['state'])) {
+            this.state = res['state'];
+          } else {
+            throw '';
+          }
+        }
+        this.getApplications();
+      } catch {
+        this.router.navigate(['teacher', 'applications']);
+      }
+    });
+  }
 
-  applications: OfferApplication[] = []
+  applications: Application[] = []
   isLoadingApplications: boolean = true;
 
-  applicationSubscription: Subscription;
-  routeSubscription: Subscription;
+  state?: 'accepted' | 'declined' | 'pending';
 
-  state: 'accepted' | 'declined' | 'pending' = null;
-
-  ngOnInit(): void {
-    this.routeSubscription =  this.route.params.subscribe(res => {
-      if(res['state'] !== undefined) {
-        if(!['accepted', 'declined', 'pending'].includes(res['state'])) { // check state
-          this.router.navigate(['student', 'applications']);
-        } else {
-          this.state = res['state'];
-        }
-      }
-      this.getApplications();
-    });
-  }
-
-  ngOnDestroy() {
-    this.applicationSubscription.unsubscribe();
-  }
-
-  getApplications() {
-    if(this.applicationSubscription) {
-      this.applicationSubscription.unsubscribe();
-    }
+  async getApplications() {
     this.isLoadingApplications = true;
-    this.applicationSubscription = this.student.getApplications(this.state).subscribe(applications => {
-      this.applications = applications;
+    try {
+      this.applications = await firstValueFrom(this.applicationsService.findMine({ state: this.state }));
       this.isLoadingApplications = false;
-    });
+    } catch {
+      this.applications = [];
+    } finally {
+      this.isLoadingApplications = false;
+    }
   }
 
-  cancelApplication(id: number) {
-    let idx = this.applications.findIndex(application => application.id == id);
-    let application = null;
+  async cancelApplication(application: Application) {
+    let idx = this.applications.findIndex(a => a.id == application.id);
     if(idx >= 0) {
-      [application] = this.applications.splice(idx, 1);
+      this.applications.splice(idx, 1);
     }
-    this.student.cancelApplication(id).subscribe(res => {
-      if(res) {
-        this.snackbar.open("Cerere retrasă.");
-      } else {
-        if(application) {
-          this.applications.splice(idx, 0, application);
-        }
-      }
-    })
+    try {
+      await firstValueFrom(this.applicationsService.withdraw(application.id));
+      this.snackbar.open("Cerere retrasă.");
+    } catch {
+      idx >= 0 && this.applications.splice(idx, 0, application);
+    }
   }
 
   handleActions(event: ApplicationListActions) {
     if(event.action == 'cancel') {
-      this.cancelApplication(event.applicationId);
+      this.cancelApplication(event.application);
     }
   }
 

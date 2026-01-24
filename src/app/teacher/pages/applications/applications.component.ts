@@ -1,11 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { TeacherService } from '../../../services/teacher.service';
-import { OfferApplication } from '../../../services/student.service';
 import { ApplicationListActions, ApplicationListComponent } from '../../../shared/components/application-list/application-list.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { Application } from '../../../lib/types';
+import { ApplicationsService } from '../../../services/applications.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-applications',
@@ -17,96 +18,89 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
     ApplicationListComponent,
   ],
 })
-export class TeacherApplicationsComponent implements OnInit, OnDestroy {
+export class TeacherApplicationsComponent {
 
   constructor(
-    private teacher: TeacherService,
+    private applicationsService: ApplicationsService,
     private snackbar: MatSnackBar,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) {
+    this.route.params.pipe(takeUntilDestroyed()).subscribe(res => {
+      try {
+        if(res['state'] !== undefined) {
+          if(['accepted', 'declined', 'pending'].includes(res['state'])) {
+            this.state = res['state'];
+          } else {
+            throw '';
+          }
+        }
+        if(res['offerId'] !== undefined) {
+          let number = parseInt(res['offerId']);
+          if(isFinite(number)) {
+            this.offerId = number;
+          } else {
+            throw '';
+          }
+        }
+        this.getApplications();
+      } catch {
+        this.router.navigate(['teacher', 'applications']);
+      }
+    });
+  }
 
-  offerId: number = null;
-  state: 'accepted' | 'declined' | 'pending' = null;
+  offerId?: number;
+  state?: 'accepted' | 'declined' | 'pending';
 
-  applications: OfferApplication[] = []
+  applications: Application[] = [];
   isLoadingApplications: boolean = true;
 
-  applicationSubscription: Subscription;
-  routeSubscription: Subscription;
-
-  ngOnInit(): void {
-    this.routeSubscription =  this.route.params.subscribe(res => {
-      if(res['state'] !== undefined) {
-        if(!['accepted', 'declined', 'pending'].includes(res['state'])) { // check state
-          this.router.navigate(['teacher', 'applications']);
-        } else {
-          this.state = res['state'];
-        }
-      }
-      if(res['offerId'] !== undefined) {
-        let number = parseInt(res['offerId']);
-        if(isFinite(number)) {
-          this.offerId = number;
-        }
-      }
-    this.getApplications();
-    });
-  }
-
-  ngOnDestroy() {
-    this.routeSubscription.unsubscribe();
-    this.applicationSubscription.unsubscribe();
-  }
-
-  getApplications() {
-    if(this.applicationSubscription) {
-      this.applicationSubscription.unsubscribe();
-    }
+  async getApplications() {
     this.isLoadingApplications = true;
-    this.applicationSubscription = this.teacher.getApplications(this.offerId, this.state).subscribe(applications => {
-      this.applications = applications;
+    try {
+      this.applications = await firstValueFrom(this.applicationsService.findMine({ offerId: this.offerId, state: this.state }));
       this.isLoadingApplications = false;
-    });
+    } catch {
+      this.applications = [];
+    } finally {
+      this.isLoadingApplications = false;
+    }
   }
 
-  declineApplication(id: number) {
-    let application = this._getApplication(id);
+  async declineApplication(application: Application) {
     application.accepted = false;
-    this.teacher.declineApplication(id).subscribe(res => {
-      if(res) {
-        this.snackbar.open("Cerere respinsă.");
-      } else {
-        application.accepted = null;
-      }
-    })
+    try {
+      await firstValueFrom(this.applicationsService.decline(application.id));
+      this.snackbar.open("Cerere respinsă.");
+    } catch {
+      application.accepted = null;
+    }
   }
 
-  acceptApplication(id: number) {
-    let application = this._getApplication(id);
+  async acceptApplication(application: Application) {
     application.accepted = true;
-    this.teacher.acceptApplication(id).subscribe(res => {
-      if(res) {
-        this.snackbar.open("Cerere acceptată.");
-      } else {
-        application.accepted = null;
-      }
-    })
+    try {
+      await firstValueFrom(this.applicationsService.accept(application.id));
+      const offerId = application.offer.id;
+      this.applications.forEach((application) => {
+        const offer = application.offer;
+        if(offer.id === offerId) {
+          offer.takenSeats += 1;
+        }
+      });
+      this.snackbar.open("Cerere acceptată.");
+    } catch {
+      application.accepted = null;
+    }
   }
-
-  private _getApplication(id: number) {
-    let idx = this.applications.findIndex(application => application.id == id);
-    return idx >= 0 ? this.applications[idx] : null;
-
-  }
-
 
   handleActions(event: ApplicationListActions) {
     if(event.action == 'accept') {
-      this.acceptApplication(event.applicationId);
+      this.acceptApplication(event.application);
     }
     if(event.action == 'decline') {
-      this.declineApplication(event.applicationId);
+      this.declineApplication(event.application);
     }
   }
 

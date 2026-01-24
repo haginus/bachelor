@@ -84,6 +84,7 @@ export interface Application {
   title: string;
   description: string;
   usedTechnologies: string;
+  accepted: boolean | null;
   offer: Offer;
   student: Student;
 }

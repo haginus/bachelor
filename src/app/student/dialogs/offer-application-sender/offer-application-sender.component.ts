@@ -1,12 +1,13 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { OfferApplication, StudentService } from '../../../services/student.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ApplicationsService } from '../../../services/applications.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-offer-application-sender',
@@ -23,49 +24,33 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatProgressBarModule,
   ],
 })
-export class OfferApplicationSenderComponent implements OnInit {
+export class OfferApplicationSenderComponent{
 
-  constructor(private dialog: MatDialogRef<OfferApplicationSenderComponent>, @Inject(MAT_DIALOG_DATA) private offerId: number,
-    private student: StudentService, private snackbar: MatSnackBar) { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private offerId: number,
+    private dialogRef: MatDialogRef<OfferApplicationSenderComponent>,
+    private readonly applicationsService: ApplicationsService,
+    private snackbar: MatSnackBar
+  ) {}
 
   applicationForm = new FormGroup({
-    "title": new FormControl(null, [Validators.required, Validators.minLength(3), Validators.maxLength(256)]),
-    "description": new FormControl(null, [Validators.required, Validators.minLength(64), Validators.maxLength(1024)]),
-    "usedTechnologies": new FormControl(null, [Validators.maxLength(256)])
-  })
+    "title": new FormControl<string>(null, [Validators.required, Validators.minLength(3), Validators.maxLength(256)]),
+    "description": new FormControl<string>(null, [Validators.required, Validators.minLength(64), Validators.maxLength(1024)]),
+    "usedTechnologies": new FormControl<string>(null, [Validators.maxLength(256)])
+  });
 
   isLoadingQuery = false;
 
-  ngOnInit(): void {
-  }
-
-  private _getFormAplication() {
-    const title = this.applicationForm.get("title").value;
-    const description = this.applicationForm.get("description").value;
-    const usedTechnologies = this.applicationForm.get("usedTechnologies").value;
-
-    let application: OfferApplication = { title, description, usedTechnologies };
-    return application;
-  }
-
-  applyOffer() {
-    let application: OfferApplication = this._getFormAplication();
+  async applyToOffer() {
+    const dto = { ...this.applicationForm.getRawValue(), offerId: this.offerId };
     this.isLoadingQuery = true;
-    this.student.applyToOffer(this.offerId, application).subscribe(result => {
-      if(result.success) {
-        this.snackbar.open("Cerere trimisă.");
-        this.closeSuccess();
-      }
+    try {
+      const application = await firstValueFrom(this.applicationsService.create(dto));
+      this.snackbar.open("Cererea a fost trimisă.");
+      this.dialogRef.close(application);
+    } finally {
       this.isLoadingQuery = false;
-    });
-  }
-
-  closeSuccess() {
-    this.dialog.close(true);
-  }
-
-  closeFailure() {
-    this.dialog.close(false);
+    }
   }
 
 }

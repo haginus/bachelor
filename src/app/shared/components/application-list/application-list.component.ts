@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DOMAIN_TYPES } from '../../../lib/constants';
-import { OfferApplication } from '../../../services/student.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { UserSnippetComponent } from '../user-snippet/user-snippet.component';
+import { Application } from '../../../lib/types';
 
 @Component({
   selector: 'app-application-list',
@@ -28,15 +28,15 @@ export class ApplicationListComponent implements OnInit {
   DOMAIN_TYPES = DOMAIN_TYPES;
 
   @Input('mode') mode: 'student' | 'teacher';
-  @Input('items') applications: OfferApplication[];
+  @Input('items') applications: Application[];
   @Output('actions') actions = new EventEmitter<ApplicationListActions>();
 
-  sendEvent(action: 'accept' | 'decline' | 'cancel', applicationId: number) {
-    this.actions.emit({ action, applicationId })
+  sendEvent(action: 'accept' | 'decline' | 'cancel', application: Application) {
+    this.actions.emit({ action, application })
   }
 }
 
 export interface ApplicationListActions {
-  action: 'accept' | 'decline' | 'cancel',
-  applicationId: number
+  action: 'accept' | 'decline' | 'cancel';
+  application: Application;
 }

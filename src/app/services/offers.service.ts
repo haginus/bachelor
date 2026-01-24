@@ -29,10 +29,6 @@ export class OffersService {
     return this.http.post<Offer>(this.baseUrl, dto);
   }
 
-  bulkCreate(): Observable<Offer[]> {
-    return null;
-  }
-
   update(id: number, dto: OfferDto): Observable<Offer> {
     return this.http.put<Offer>(`${this.baseUrl}/${id}`, dto);
   }
