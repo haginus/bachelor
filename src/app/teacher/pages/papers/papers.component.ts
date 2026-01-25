@@ -15,7 +15,7 @@ import { BehaviorSubject, firstValueFrom, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AddPaperComponent } from '../../dialogs/add-paper/add-paper.component';
 import { TeacherService } from '../../../services/teacher.service';
-import { AuthService, Paper, SessionSettings } from '../../../services/auth.service';
+import { AuthService, SessionSettings } from '../../../services/auth.service';
 import { DocumentService } from '../../../services/document.service';
 import { PAPER_TYPES } from '../../../lib/constants';
 import { inclusiveDate, parseDate } from '../../../lib/utils';
@@ -37,6 +37,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { PapersService } from '../../../services/papers.service';
 import { PaperTitlePipe } from '../../../shared/pipes/paper-title.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Paper } from '../../../lib/types';
 
 @Component({
   selector: 'app-papers',
@@ -127,7 +128,7 @@ export class TeacherPapersComponent
       .pipe(
         switchMap((action) => {
           this.isLoadingResults = true;
-          return this.teacher.getStudentPapers();
+          return this.papersService.findMineTeacher();
         })
       )
       .subscribe((papers) => {
@@ -156,7 +157,7 @@ export class TeacherPapersComponent
         case 'student':
           return paper.student.fullName;
         case 'promotion':
-          return paper.student?.student?.promotion;
+          return paper.student?.promotion;
         case 'committee':
           return paper.committee?.name;
         default:
@@ -317,7 +318,7 @@ export class TeacherPapersComponent
       if (filterForm.promotion != null) {
         result =
           result &&
-          paper.student.student.promotion.startsWith(filterForm.promotion);
+          paper.student.promotion.startsWith(filterForm.promotion);
       }
       return result;
     };

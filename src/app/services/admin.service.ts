@@ -338,9 +338,9 @@ export class AdminService {
   getPapers(sort: string = 'id', order: string = 'ASC', page?: number, pageSize?: number,
     filter?: GetPapersFilter, minified?: boolean): Observable<PaperQueryResult> {
 
-    let url = `${environment.apiUrl}/admin/papers?sort=${sort}&order=${order}`;
+    let url = `${environment.apiUrl}/papers?sortBy=${sort}&sortDirection=${order}`;
     if(page != undefined && pageSize) {
-      url += `&page=${page}&pageSize=${pageSize}`;
+      url += `&offset=${page * pageSize}&limit=${pageSize}`;
     }
     if(filter?.assigned != undefined) {
       url += `&assigned=${filter.assigned}`;

@@ -9,6 +9,7 @@ import { PaperRequiredDocument, StudentExtraData } from './student.service';
 import { Topic } from './topics.service';
 import { environment } from '../../environments/environment';
 import { SudoService } from './sudo.service';
+import { UserExtraData } from '../lib/types';
 
 @Injectable({
   providedIn: 'root'
@@ -198,6 +199,13 @@ export class AuthService {
     const url = `${environment.apiUrl}/auth/alternative-identities`;
     return this.http.get<UserData[]>(url, this.getPrivateHeaders()).pipe(
       catchError(this.handleError('getAlternativeIdentities', []))
+    );
+  }
+
+  getUserExtraData(): Observable<UserExtraData | null> {
+    const url = `${environment.apiUrl}/users/me/extra-data`;
+    return this.http.get<UserExtraData>(url, this.getPrivateHeaders()).pipe(
+      catchError(this.handleError('getUserExtraData', null))
     );
   }
 

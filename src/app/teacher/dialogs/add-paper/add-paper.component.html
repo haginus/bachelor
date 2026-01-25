@@ -128,7 +128,7 @@
           }
         </p>
         @if(resultedPaper?.user) {
-          <app-user-snippet [user]="resultedPaper.user">Student</app-user-snippet>
+          <app-user-snippet [user]="$any(resultedPaper).user">Student</app-user-snippet>
         }
       </div>
 

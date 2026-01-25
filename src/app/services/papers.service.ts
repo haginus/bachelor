@@ -4,7 +4,7 @@ import { AuthService } from "./auth.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Observable, catchError, map, of } from "rxjs";
 import { environment } from "../../environments/environment";
-import { DocumentReuploadRequest } from "../lib/types";
+import { DocumentReuploadRequest, Paper } from "../lib/types";
 
 @Injectable({
   providedIn: 'any'
@@ -14,6 +14,14 @@ export class PapersService {
   constructor(private http: HttpClient, private auth: AuthService, private snackbar: MatSnackBar) { }
 
   private readonly apiUrl = `${environment.apiUrl}/papers`;
+
+  findMineStudent() {
+    return this.http.get<Paper>(`${this.apiUrl}/me`);
+  }
+
+  findMineTeacher() {
+    return this.http.get<Paper[]>(`${this.apiUrl}/me`);
+  }
 
   editPaper(paperId: number, paper: UpdatePaperPayload) {
     const url = `${this.apiUrl}/${paperId}`;

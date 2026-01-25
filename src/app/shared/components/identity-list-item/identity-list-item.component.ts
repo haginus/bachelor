@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { UserData } from '../../../services/auth.service';
 import { MatRipple } from "@angular/material/core";
 import { MatIcon } from '@angular/material/icon';
 import { ApiUrlPipe } from '../../pipes/api-url';
 import { getUserDescription } from '../../../lib/utils';
+import { User } from '../../../lib/types';
 
 @Component({
   selector: 'app-identity-list-item',
@@ -18,7 +18,7 @@ import { getUserDescription } from '../../../lib/utils';
 })
 export class IdentityListItemComponent {
 
-  @Input() user: UserData;
+  @Input() user: User;
 
   getUserDescription = getUserDescription;
 }

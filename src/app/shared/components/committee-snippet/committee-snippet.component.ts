@@ -1,8 +1,9 @@
 import { Component, computed, input, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { Committee, Paper } from '../../../services/auth.service';
+import { Committee } from '../../../services/auth.service';
 import { DatetimePipe } from '../../pipes/datetime.pipe';
+import { Paper } from '../../../lib/types';
 
 @Component({
   selector: 'app-committee-snippet',

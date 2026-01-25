@@ -9,7 +9,7 @@ import { PdfViewerComponent } from '../pdf-viewer/pdf-viewer.component';
 import { PaperRequiredDocument } from '../paper-document-list/paper-document-list.component';
 import { SignDialogComponent } from '../sign-dialog/sign-dialog.component';
 import { firstValueFrom } from 'rxjs';
-import { PaperDocument } from '../../../services/auth.service';
+import { Document } from '../../../lib/types';
 
 @Component({
   selector: 'app-document-viewer-dialog',
@@ -46,7 +46,7 @@ export class DocumentViewerDialogComponent {
   previewSupported: boolean;
   errorLoading = false;
   isLoading = true;
-  @Output() documentSigned = new EventEmitter<PaperDocument>();
+  @Output() documentSigned = new EventEmitter<Document>();
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
@@ -76,7 +76,7 @@ export class DocumentViewerDialogComponent {
       data: this.data.signOptions,
       autoFocus: '.sign-button',
     });
-    const result = await firstValueFrom<{ document: PaperDocument, content: ArrayBuffer }>(dialogRef.afterClosed());
+    const result = await firstValueFrom<{ document: Document, content: ArrayBuffer }>(dialogRef.afterClosed());
     if(result) {
       const blob = new Blob([result.content], { type: result.document.mimeType });
       this.data.url = window.URL.createObjectURL(blob);

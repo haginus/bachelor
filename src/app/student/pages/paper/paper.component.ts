@@ -6,7 +6,7 @@ import { AreDocumentsUploaded, PaperDocumentEvent, PaperDocumentListComponent } 
 import { EditPaperComponent } from '../../../shared/components/edit-paper/edit-paper.component';
 import { StudentExtraDataEditorComponent, StudentExtraDataEditorData } from '../../../shared/components/student-extra-data-editor/student-extra-data-editor.component';
 import { PaperRequiredDocument, StudentExtraData, StudentService } from '../../../services/student.service';
-import { AuthService, Paper, SessionSettings } from '../../../services/auth.service';
+import { AuthService, SessionSettings } from '../../../services/auth.service';
 import { PAPER_TYPES } from '../../../lib/constants';
 import { formatDate, inclusiveDate, parseDate } from '../../../lib/utils';
 import { MatCardModule } from '@angular/material/card';
@@ -17,7 +17,7 @@ import { UserSnippetComponent } from '../../../shared/components/user-snippet/us
 import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PapersService } from '../../../services/papers.service';
-import { DocumentReuploadRequest } from '../../../lib/types';
+import { DocumentReuploadRequest, Paper } from '../../../lib/types';
 import { SubmitPaperDialogComponent } from '../../dialogs/submit-paper-dialog/submit-paper-dialog.component';
 import { CommitteeSnippetComponent } from '../../../shared/components/committee-snippet/committee-snippet.component';
 import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';
@@ -72,10 +72,8 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   canEditPaper: boolean;
   paperSchedulingLocation: string | null = null;
 
-  requiredDocuments: PaperRequiredDocument[] = []
-
   async handleDocumentEvents(_: PaperDocumentEvent) {
-    this.paper = await firstValueFrom(this.student.getPaper());
+    this.paper = await firstValueFrom(this.papersService.findMineStudent());
   }
 
   handleAreDocumentsUploaded(event: AreDocumentsUploaded) {
@@ -120,20 +118,17 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
 
   async getData() {
     this.isLoadingData = true;
-    const user = await firstValueFrom(this.auth.userData);
-    const paperId = user.student.paper.id;
     try {
-      const [paper, extraData, requiredDocuments, documentReuploadRequests] = await firstValueFrom(
+      const [paper, extraData, documentReuploadRequests] = await firstValueFrom(
         combineLatest([
-          this.student.getPaper(),
-          this.student.getExtraData(),
-          this.student.getPaperRequiredDocuments(),
-          this.papersService.getDocumentReuploadRequests(paperId)
+          this.papersService.findMineStudent(),
+          this.auth.getUserExtraData(),
+          // TODO
+          this.papersService.getDocumentReuploadRequests(1),
         ])
       );
       this.paper = paper;
       this.studentExtraData = extraData;
-      this.requiredDocuments = requiredDocuments;
       this.documentReuploadRequests = documentReuploadRequests;
       this.paperSchedulingLocation = paper.scheduledGrading ? paper.committee.activityDays.find(day => formatDate(day.startTime) === formatDate(paper.scheduledGrading))?.location : null;
       this._checkSubmissionPeriod();
@@ -160,13 +155,9 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
         return;
       }
       this.studentExtraData = data;
-      const [paper, requiredDocuments] = await firstValueFrom(combineLatest([
-        this.student.getPaper(),
-        this.student.getPaperRequiredDocuments()
-      ]));
+      const paper = await firstValueFrom(this.papersService.findMineStudent());
       if(paper) {
         this.paper = paper;
-        this.requiredDocuments = requiredDocuments;
       }
       this.isWaitingForDocumentGeneration = false;
     }
@@ -177,15 +168,14 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
         let subscription = this.student.setExtraData(data).pipe(
           switchMap(result => {
             if(result) {
-              return combineLatest([this.student.getPaper(), this.student.getPaperRequiredDocuments()]);
+              return this.papersService.findMineStudent();
             }
-            return combineLatest([of(null), of([])]);
+            return of(null);
           })
-        ).subscribe(([paper, requiredDocuments]) => {
+        ).subscribe(paper => {
           if(paper) {
             this.studentExtraData = data;
             this.paper = paper;
-            this.requiredDocuments = requiredDocuments;
             subscription.unsubscribe();
           }
           this.isWaitingForDocumentGeneration = false;

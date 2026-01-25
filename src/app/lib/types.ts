@@ -39,7 +39,7 @@ export interface User {
   fullName: string;
   CNP: string;
   isImpersonated?: boolean;
-  profile: Profile;
+  profile?: Profile;
 }
 
 export interface Admin extends User {
@@ -67,6 +67,36 @@ export interface Student extends User {
 
 export function isStudent(user: User): user is Student {
   return user.type === 'student';
+}
+export interface Address {
+  county: string;
+  locality: string;
+  street: string;
+  streetNumber: string;
+  building?: string;
+  stair?: string;
+  floor?: string;
+  apartment?: string;
+}
+
+export type CivilState = 'not_married' | 'married' | 'divorced' | 'widow' | 're_married';
+
+export interface UserExtraData {
+  birthLastName: string;
+  parentInitial: string;
+  fatherName: string;
+  motherName: string;
+  civilState: CivilState;
+  dateOfBirth: Date | any;
+  citizenship: string;
+  ethnicity: string;
+  placeOfBirthCountry: string;
+  placeOfBirthCounty: string;
+  placeOfBirthLocality: string;
+  landline: string;
+  mobilePhone: string;
+  personalEmail: string;
+  address: Address;
 }
 
 export interface Topic {
@@ -98,6 +128,64 @@ export interface Application {
   accepted: boolean | null;
   offer: Offer;
   student: Student;
+}
+
+export interface Paper {
+  id: number;
+  title: string;
+  description: string;
+  type: PaperType;
+  isValid: boolean;
+  /** @deprecated */
+  submitted: boolean;
+  scheduledGrading: string;
+  studentId: number;
+  teacherId: number;
+  student: Student;
+  teacher: Teacher;
+  documents: Document[];
+  requiredDocuments: RequiredDocument[];
+  gradeAverage: number | null;
+  committee: any;
+  topics: Topic[];
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+}
+
+export type DocumentType = 'generated' | 'signed' | 'copy';
+export type DocumentUploadPerspective = 'student' | 'teacher' | 'committee';
+export type DocumentCategory = 'secretary_files' | 'paper_files';
+
+export interface RequiredDocumentTypes {
+  generated?: boolean;
+  signed?: boolean;
+  copy?: boolean;
+}
+
+export interface RequiredDocument {
+  name: string;
+  title: string;
+  category: DocumentCategory;
+  types: RequiredDocumentTypes;
+  acceptedMimeTypes: string;
+  acceptedExtensions: string[];
+  uploadBy: DocumentUploadPerspective;
+  uploadInstructions?: string;
+}
+
+export interface Document {
+  id: number;
+  name: string;
+  category: string;
+  type: DocumentType;
+  mimeType: string;
+  meta: Record<string, any>;
+  uploadedById: number | null;
+  uploadedBy: User | null;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
 }
 
 export interface DocumentReuploadRequest {

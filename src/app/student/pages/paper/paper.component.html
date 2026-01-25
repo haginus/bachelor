@@ -16,7 +16,7 @@
         </div>
         <p class="paper-description">{{ paper.description }}</p>
         <div class="paper-snippets">
-          <app-user-snippet [user]="paper.teacher">
+          <app-user-snippet [user]="($any(paper)).teacher">
             <span class="paper-teacher">Profesor coordonator</span>
           </app-user-snippet>
           @if(paper.committee) {
@@ -188,7 +188,7 @@
       @if(!isLoadingInitialData) {
         <app-paper-document-list
           [paperId]="paper.id"
-          [requiredDocuments]="requiredDocuments"
+          [requiredDocuments]="paper.requiredDocuments"
           [documents]="paper.documents"
           [documentReuploadRequests]="documentReuploadRequests"
           [sessionSettings]="sessionSettings"

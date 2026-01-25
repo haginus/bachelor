@@ -97,7 +97,7 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
         const filter = this.parseFilter();
         return this.admin.getPapers(
           this.sort.active,
-          this.sort.direction.toUpperCase(),
+          this.sort.direction,
           this.paginator.pageIndex,
           this.paginator.pageSize,
           filter

@@ -3,14 +3,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DocumentUploadDialogComponent, DocumentUploadDialogData } from '../document-upload-dialog/document-upload-dialog.component';
 import { DocumentService } from '../../../services/document.service';
-import { PaperDocument, SessionSettings } from '../../../services/auth.service';
+import { SessionSettings } from '../../../services/auth.service';
 import { USER_TYPES } from '../../../lib/constants';
 import { PaperDocumentCategory, PaperDocumentTypes, PaperDocumentUploadBy } from '../../../services/student.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
-import { DocumentReuploadRequest } from '../../../lib/types';
+import { Document, DocumentReuploadRequest } from '../../../lib/types';
 import { inclusiveDate } from '../../../lib/utils';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DatePipe } from '@angular/common';
@@ -40,7 +40,7 @@ export class PaperDocumentListComponent implements OnChanges {
   ) { }
 
   @Input() requiredDocuments: PaperRequiredDocument[] = [];
-  @Input() documents: PaperDocument[] = [];
+  @Input() documents: Document[] = [];
   @Input() documentReuploadRequests: DocumentReuploadRequest[] = [];
   /** In what quality is the viewer of this list */
   @Input() perspective: 'student' | 'teacher' | 'committee' | 'admin' = 'student';
