@@ -3,6 +3,7 @@ import { UserDataMin } from '../../../services/auth.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { ApiUrlPipe } from '../../pipes/api-url';
+import { User } from '../../../lib/types';
 
 @Component({
   selector: 'app-user-snippet',
@@ -19,7 +20,7 @@ export class UserSnippetComponent {
 
   constructor() { }
 
-  @Input() user: UserDataMin;
+  @Input() user: User;
 
   makeLink(url: string) {
     if(url.startsWith('http')) {

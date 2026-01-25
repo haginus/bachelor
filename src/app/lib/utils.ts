@@ -1,5 +1,5 @@
-import { SessionSettings, UserData } from "../services/auth.service";
 import { DOMAIN_TYPES, USER_TYPES } from "./constants";
+import { isStudent, User } from "./types";
 
 // export interface UrlParam {
 //   name: string;
@@ -79,12 +79,14 @@ export function dateToDatetimeLocal(dateStr: string | Date | null) {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
-export function getUserDescription(user: UserData) {
+export function getUserDescription(user: User) {
   let str = capitalize(USER_TYPES[user.type]);
-  if(user.student) {
-    str += ` · ${capitalize(DOMAIN_TYPES[user.student.domain.type])}, ${user.student.specialization.name} (${user.student.studyForm.toLocaleUpperCase()})`;
-    str += ` · Gr. ${user.student.group}`;
-    str += ` · ${user.student.promotion}`;
+  if(isStudent(user)) {
+    const specialization = user.specialization;
+    const domain = specialization.domain;
+    str += ` · ${capitalize(DOMAIN_TYPES[domain.type])}, ${specialization.name} (${specialization.studyForm.toLocaleUpperCase()})`;
+    str += ` · Gr. ${user.group}`;
+    str += ` · ${user.promotion}`;
   }
   return str;
 }

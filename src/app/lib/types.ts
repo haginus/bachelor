@@ -20,6 +20,12 @@ export interface Domain {
   specializations: Specialization[];
 }
 
+export interface Profile {
+  bio?: string;
+  website?: string;
+  picture?: string;
+}
+
 export type UserType = 'admin' | 'secretary' | 'teacher' | 'student';
 
 export interface User {
@@ -33,6 +39,7 @@ export interface User {
   fullName: string;
   CNP: string;
   isImpersonated?: boolean;
+  profile: Profile;
 }
 
 export interface Admin extends User {
@@ -56,6 +63,10 @@ export interface Student extends User {
   fundingForm: FundingForm;
   generalAverage: number;
   specialization: Specialization;
+}
+
+export function isStudent(user: User): user is Student {
+  return user.type === 'student';
 }
 
 export interface Topic {

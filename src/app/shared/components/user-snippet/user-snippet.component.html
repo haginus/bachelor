@@ -25,20 +25,20 @@
             </div>
           </div>
         </div>
-        @if(user.student) {
+        @if(user.type === 'student') {
           <div class="list-item">
             <mat-icon>groups</mat-icon>
             <div class="content">
               <div>Grupă</div>
-              <div>{{ user.student.group }}</div>
+              <div>{{ $any(user).group }}</div>
             </div>
           </div>
-          @if(user.student.specialization) {
+          @if(($any(user)).specialization) {
             <div class="list-item">
               <mat-icon>work_outline</mat-icon>
               <div class="content">
                 <div>Program de studiu</div>
-                <div>{{ user.student.specialization.name }}</div>
+                <div>{{ ($any(user)).specialization.name }}</div>
               </div>
             </div>
           }

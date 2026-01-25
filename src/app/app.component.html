@@ -99,7 +99,7 @@
               <span>Informații și întrebări</span>
             </a>
           </div>
-          @if(!user.student?.paper) {
+          @if(!$any(user).paper) {
             <div class="nav-list">
               <a class="nav-list-item" routerLink="student/suggested-teachers" routerLinkActive="active">
                 <mat-icon>stars</mat-icon>

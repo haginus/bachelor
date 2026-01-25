@@ -40,6 +40,6 @@ export class StudentsService {
 
 }
 
-type StudentDto = Omit<Student, 'id' | 'type' | 'validated' | 'fullName' | 'specialization' | 'generalAverage'> & {
+type StudentDto = Pick<Student, 'firstName' | 'lastName' | 'CNP' | 'identificationCode' | 'email' | 'promotion' | 'group' | 'matriculationYear' | 'fundingForm'> & {
   specializationId: number;
 };
