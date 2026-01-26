@@ -169,7 +169,7 @@
         <td mat-cell *matCellDef="let row">
           <ng-container *ngIf="user.type == 'admin'">
             <button mat-mini-fab color="primary" matTooltip="Atribuire lucrări"
-              [routerLink]="[row.id, 'assign-papers']">
+              [routerLink]="[row.committee.id, 'assign-papers']">
               <mat-icon>description</mat-icon>
             </button>
           </ng-container>

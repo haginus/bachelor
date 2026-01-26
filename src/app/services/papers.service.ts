@@ -81,12 +81,13 @@ export interface PaperQueryDto {
   assignedTo?: number;
   /** ID of committee that can take the papers for grading. */
   forCommittee?: number;
-  validity?: 'valid' | 'invalid' | 'not_validated';
+  validity?: 'valid' | 'invalid' | 'not_validated' | 'not_invalid';
   title?: string;
   type?: PaperType;
   domainId?: number;
   specializationId?: number;
   studentName?: string;
+  minified?: boolean;
 }
 
 type UpdatePaperDto = {

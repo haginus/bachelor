@@ -1,15 +1,17 @@
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
-import { AdminService } from '../../../services/admin.service';
-import { Committee, DomainSpecialization, Paper } from '../../../services/auth.service';
 import { PAPER_TYPES } from '../../../lib/constants';
 import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
+import { CommitteesService } from '../../../services/committees.service';
+import { Committee, Paper, Specialization } from '../../../lib/types';
+import { PapersService } from '../../../services/papers.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-paper-assign',
@@ -18,14 +20,21 @@ import { CommonDialogComponent } from '../../../shared/components/common-dialog/
 })
 export class PaperAssignComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private router: Router, private admin: AdminService,
-    private snackbar: MatSnackBar, private dialog: MatDialog) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private readonly committeesService: CommitteesService,
+    private readonly papersService: PapersService,
+    private snackbar: MatSnackBar,
+    private dialog: MatDialog,
+    private readonly destroyRef: DestroyRef,
+  ) {}
 
   committeeId: number;
   committee: Committee;
   memberIds: number[]; // Array to keep member IDs, used to not allow papers from a teacher that is in this committee
   isMasterCommittee: boolean = false;
-  specializations: DomainSpecialization[];
+  specializations: Specialization[];
 
   isLoadingCommittee: boolean = true;
   isLoadingAssignedPapers: boolean;
@@ -53,7 +62,7 @@ export class PaperAssignComponent implements OnInit {
         } else {
           throw "INVALID_ID";
         }
-        return this.admin.getCommittee(this.committeeId);
+        return this.committeesService.findOne(this.committeeId);
       }),
       map(committee => {
         if(!committee) {
@@ -61,7 +70,8 @@ export class PaperAssignComponent implements OnInit {
         }
         return committee;
       }),
-      catchError(() => {
+      catchError((err) => {
+        console.error("Error loading committee for paper assignment:", err);
         this.router.navigate(['admin', 'committees']);
         return of(null);
       })
@@ -76,12 +86,18 @@ export class PaperAssignComponent implements OnInit {
     });
   }
 
-  private getLeftPapers() {
+  private async getLeftPapers() {
     this.isLoadingAssignedPapers = true;
-    this.admin.getPapers(undefined, undefined, null, null, { assignedTo: this.committeeId }, true).subscribe(papers => {
-      this.assignedPappers = papers.rows;
+    try {
+      const result = await firstValueFrom(
+        this.papersService.findAll({ assignedTo: this.committeeId, minified: true, limit: 100 })
+      );
+      this.assignedPappers = result.rows;
+    } catch {
+      this.assignedPappers = [];
+    } finally {
       this.isLoadingAssignedPapers = false;
-    })
+    }
   }
 
   private getRightPapers() {
@@ -90,10 +106,17 @@ export class PaperAssignComponent implements OnInit {
       startWith({}),
       switchMap(() => {
         this.isLoadingOtherPapers = true;
-        const { title, type, specializationId, studentName } = this.paperFilter.value;
-        return this.admin.getPapers(undefined, undefined, null, null,
-        { assigned: false, forCommittee: this.committeeId, submitted: true, isNotValid: false, title, type, specializationId, studentName }, true)
-      })
+        return this.papersService.findAll({
+          assigned: false,
+          forCommittee: this.committeeId,
+          submitted: true,
+          minified: true,
+          limit: 100,
+          validity: 'not_invalid',
+          ...this.paperFilter.value,
+        }).pipe(catchError(() => of({ rows: [] })));
+      }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(papers => {
       this.otherPapers = papers.rows;
       this.isLoadingOtherPapers = false;
@@ -104,20 +127,11 @@ export class PaperAssignComponent implements OnInit {
     return this.memberIds.includes(teacherId);
   }
 
-  saveChanges(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const paperIds = this.assignedPappers.map(paper => paper.id);
-      this.admin.setCommitteePapers(this.committeeId, paperIds).subscribe(result => {
-        if(result) {
-          this.snackbar.open("Modificări salvate.");
-          this.changesMade = false;
-          resolve();
-        }
-        else {
-          reject();
-        }
-      })
-    });
+  async saveChanges(): Promise<void> {
+    const paperIds = this.assignedPappers.map(paper => paper.id);
+    await firstValueFrom(this.committeesService.setPapers(this.committeeId, paperIds));
+    this.snackbar.open("Modificări salvate.");
+    this.changesMade = false;
   }
 
   async goBack() {

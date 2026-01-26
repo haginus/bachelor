@@ -30,6 +30,10 @@ export class CommitteesService {
     return this.http.put<Committee>(`${this.baseUrl}/${id}`, dto);
   }
 
+  setPapers(id: number, paperIds: number[]) {
+    return this.http.put<Committee>(`${this.baseUrl}/${id}/papers`, { paperIds });
+  }
+
   markGradesFinal(id: number, finalGrades = true) {
     return this.http.put<Committee>(`${this.baseUrl}/${id}/final-grades`, { finalGrades });
   }
