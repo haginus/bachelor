@@ -111,7 +111,7 @@
     <button mat-button (click)="switchToEdit()">Editați studentul</button>
   }
   @if(data.mode != 'create') {
-    <button mat-button (click)="editStudentExtraData()">Editați datele suplimentare</button>
+    <button mat-button (click)="editUserExtraData()">Editați datele suplimentare</button>
   }
   @if(data.mode === 'create') {
     <button mat-button (click)="saveStudent()" [disabled]="studentForm.invalid">Adăugați</button>

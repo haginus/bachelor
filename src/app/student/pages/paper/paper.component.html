@@ -110,14 +110,14 @@
             Nu ați încărcat documentele la timp.
           </div>
         </div>
-      } @else if(!studentExtraData) {
+      } @else if(!userExtraData) {
         <div class="tip-card warning">
           <mat-icon class="tip-icon">warning_amber</mat-icon>
           <div class="tip-card-content">
             Pentru a genera documentele de la dosar, este necesar să completați date suplimentare.
           </div>
           <div class="tip-card-action">
-            <button mat-button (click)="editStudentExtraData()">
+            <button mat-button (click)="editUserExtraData()">
               Completați
             </button>
           </div>
@@ -139,7 +139,7 @@
           </div>
           <div class="tip-card-action">
             @if(canUploadSecretaryFiles) {
-              <button mat-button (click)="editStudentExtraData()">
+              <button mat-button (click)="editUserExtraData()">
                 Modificați datele
               </button>
             }

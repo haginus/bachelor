@@ -3,11 +3,12 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators }
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Observable, delay, firstValueFrom, map, of, switchMap, tap } from 'rxjs';
 import { CNPValidator } from '../../../validators/CNP-validator';
-import { StudentExtraDataEditorComponent, StudentExtraDataEditorData } from '../../../shared/components/student-extra-data-editor/student-extra-data-editor.component';
+import { UserExtraDataEditorComponent, UserExtraDataEditorData } from '../../../shared/components/user-extra-data-editor/user-extra-data-editor.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Domain, Student } from '../../../lib/types';
+import { Domain, Student, UserExtraData } from '../../../lib/types';
 import { DomainsService } from '../../../services/domains.service';
 import { StudentsService } from '../../../services/students.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-student-dialog',
@@ -23,7 +24,8 @@ export class StudentDialogComponent implements OnInit {
     private snackBar: MatSnackBar,
     private readonly domainsService: DomainsService,
     private readonly studentsService: StudentsService,
-  ) { }
+    private readonly auth: AuthService,
+  ) {}
 
   loadingDomains: boolean = true;;
   domains: Domain[];
@@ -158,29 +160,22 @@ export class StudentDialogComponent implements OnInit {
     this.data.mode = 'edit';
   }
 
-  async editStudentExtraData() {
-    // TODO: enable when backend is ready
-    // try {
-    //   this.isLoadingData = true;
-    //   const user = await firstValueFrom(this.admin.getStudentUser(this.data.user!.id));
-    //   const dialogRef = this.dialog.open(StudentExtraDataEditorComponent, {
-    //     data: {
-    //       studentExtraData: user.student!.studentExtraDatum,
-    //       student: user
-    //     } satisfies StudentExtraDataEditorData
-    //   });
-    //   const studentExtraData = await firstValueFrom(dialogRef.afterClosed());
-    //   if(!studentExtraData) return;
-    //   const result = await firstValueFrom(this.admin.editStudentExtraData(user.id, studentExtraData));
-    //   if(result) {
-    //     this.snackBar.open("Datele suplimentare au fost salvate.");
-    //     this.dialogRef.close(true);
-    //   }
-    // } catch(err) {
-    //   console.error(err);
-    // } finally {
-    //   this.isLoadingData = false;
-    // }
+  async editUserExtraData() {
+    try {
+      this.isLoadingData = true;
+      const extraData = await firstValueFrom(this.auth.getUserExtraData(this.data.user!.id));
+      const dialogRef = this.dialog.open(UserExtraDataEditorComponent, {
+        data: {
+          extraData: extraData,
+          user: this.data.user!,
+        } satisfies UserExtraDataEditorData
+      });
+      await firstValueFrom(dialogRef.afterClosed()) as { result: UserExtraData; } | undefined;
+    } catch(err) {
+      console.error(err);
+    } finally {
+      this.isLoadingData = false;
+    }
   }
 
 }

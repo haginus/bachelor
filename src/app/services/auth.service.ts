@@ -202,11 +202,16 @@ export class AuthService {
     );
   }
 
-  getUserExtraData(): Observable<UserExtraData | null> {
-    const url = `${environment.apiUrl}/users/me/extra-data`;
-    return this.http.get<UserExtraData>(url, this.getPrivateHeaders()).pipe(
+  getUserExtraData(userId: number | 'me' = 'me'): Observable<UserExtraData | null> {
+    const url = `${environment.apiUrl}/users/${userId}/extra-data`;
+    return this.http.get<UserExtraData>(url).pipe(
       catchError(this.handleError('getUserExtraData', null))
     );
+  }
+
+  updateUserExtraData(userId: number, data: UserExtraData) {
+    const url = `${environment.apiUrl}/users/${userId}/extra-data`;
+    return this.http.put<{ result: UserExtraData; documentsGenerated: boolean; }>(url, data);
   }
 
   sessionSettingsSource: ReplaySubject<SessionSettings> = new ReplaySubject<SessionSettings>(1);

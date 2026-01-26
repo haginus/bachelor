@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { UserData } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { StudentExtraData } from '../../../services/student.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -13,11 +13,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { countries } from '../../../lib/countries';
 import { counties_ro } from '../../../lib/counties_ro';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { firstValueFrom } from 'rxjs';
+import { User, UserExtraData } from '../../../lib/types';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-student-extra-data-editor',
-  templateUrl: './student-extra-data-editor.component.html',
-  styleUrls: ['./student-extra-data-editor.component.scss'],
+  selector: 'app-user-extra-data-editor',
+  templateUrl: './user-extra-data-editor.component.html',
+  styleUrls: ['./user-extra-data-editor.component.scss'],
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -31,14 +34,16 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     MatProgressSpinnerModule,
   ],
 })
-export class StudentExtraDataEditorComponent implements OnInit {
+export class UserExtraDataEditorComponent implements OnInit {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) dialogData: StudentExtraDataEditorData,
-    private dialog: MatDialogRef<StudentExtraDataEditorComponent>
+    @Inject(MAT_DIALOG_DATA) dialogData: UserExtraDataEditorData,
+    private dialog: MatDialogRef<UserExtraDataEditorComponent>,
+    private snackBar: MatSnackBar,
+    private readonly auth: AuthService,
   ) {
-    this.studentExtraData = dialogData.studentExtraData;
-    this.userData = dialogData.student;
+    this.studentExtraData = dialogData.extraData;
+    this.userData = dialogData.user;
 
     this.placeOfBirthCountry.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
       this.placeOfBirthCounty.setValue('');
@@ -69,7 +74,7 @@ export class StudentExtraDataEditorComponent implements OnInit {
   }
 
   studentExtraData: StudentExtraData;
-  userData: UserData;
+  userData: User;
   isSavingData: boolean = false;
 
   countries = Object.values(countries);
@@ -138,16 +143,26 @@ export class StudentExtraDataEditorComponent implements OnInit {
     }
   }
 
-  saveData() {
+  async saveData() {
     this.isSavingData = true;
-    const formValue = this.studentDataForm.getRawValue() as StudentExtraData;
-    this.studentExtraData = formValue;
-    this.dialog.close(this.studentExtraData);
+    try {
+      const formValue = this.studentDataForm.getRawValue() as StudentExtraData;
+      this.studentExtraData = formValue;
+      const result = await firstValueFrom(this.auth.updateUserExtraData(this.userData.id, formValue));
+      this.dialog.close(result);
+      let message = "Datele suplimentare au fost salvate.";
+      if('documentsGenerated' in result && result.documentsGenerated) {
+        message += " Documentele vor fi regenerate.";
+      }
+      this.snackBar.open(message);
+    } finally {
+      this.isSavingData = false;
+    }
   }
 
 }
 
-export interface StudentExtraDataEditorData {
-  studentExtraData: StudentExtraData | null;
-  student: UserData;
+export interface UserExtraDataEditorData {
+  extraData: UserExtraData | null;
+  user: User;
 }

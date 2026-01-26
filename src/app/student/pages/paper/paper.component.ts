@@ -1,11 +1,9 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { combineLatest, firstValueFrom, Observable, of, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 import { AreDocumentsUploaded, PaperDocumentEvent, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { EditPaperComponent } from '../../../shared/components/edit-paper/edit-paper.component';
-import { StudentExtraDataEditorComponent, StudentExtraDataEditorData } from '../../../shared/components/student-extra-data-editor/student-extra-data-editor.component';
-import { PaperRequiredDocument, StudentExtraData, StudentService } from '../../../services/student.service';
+import { UserExtraDataEditorComponent, UserExtraDataEditorData } from '../../../shared/components/user-extra-data-editor/user-extra-data-editor.component';
 import { AuthService, SessionSettings } from '../../../services/auth.service';
 import { PAPER_TYPES } from '../../../lib/constants';
 import { formatDate, inclusiveDate, parseDate } from '../../../lib/utils';
@@ -17,7 +15,7 @@ import { UserSnippetComponent } from '../../../shared/components/user-snippet/us
 import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PapersService } from '../../../services/papers.service';
-import { DocumentReuploadRequest, Paper } from '../../../lib/types';
+import { DocumentReuploadRequest, Paper, UserExtraData } from '../../../lib/types';
 import { SubmitPaperDialogComponent } from '../../dialogs/submit-paper-dialog/submit-paper-dialog.component';
 import { CommitteeSnippetComponent } from '../../../shared/components/committee-snippet/committee-snippet.component';
 import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';
@@ -47,7 +45,6 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
 
   constructor(
     private dialog: MatDialog,
-    private student: StudentService,
     private readonly papersService: PapersService,
     private auth: AuthService,
     private cd: ChangeDetectorRef
@@ -56,7 +53,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   PAPER_TYPES = PAPER_TYPES;
 
   paper: Paper = null;
-  studentExtraData: StudentExtraData = null;
+  userExtraData: UserExtraData = null;
   documentReuploadRequests: DocumentReuploadRequest[] = [];
   isLoadingInitialData: boolean = true;
   isLoadingData: boolean;
@@ -128,7 +125,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
         ])
       );
       this.paper = paper;
-      this.studentExtraData = extraData;
+      this.userExtraData = extraData;
       this.documentReuploadRequests = documentReuploadRequests;
       this.paperSchedulingLocation = paper.scheduledGrading ? paper.committee.activityDays.find(day => formatDate(day.startTime) === formatDate(paper.scheduledGrading))?.location : null;
       this._checkSubmissionPeriod();
@@ -138,50 +135,24 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
     }
   }
 
-  async editStudentExtraData() {
-    const dialogRef = this.dialog.open(StudentExtraDataEditorComponent, {
+  async editUserExtraData() {
+    const dialogRef = this.dialog.open(UserExtraDataEditorComponent, {
       data: {
-        studentExtraData: this.studentExtraData,
-        student: await firstValueFrom(this.auth.userData),
-      } satisfies StudentExtraDataEditorData
+        extraData: this.userExtraData,
+        user: await firstValueFrom(this.auth.userData),
+      } satisfies UserExtraDataEditorData
     });
 
-    const data = await firstValueFrom(dialogRef.afterClosed()) as StudentExtraData | undefined;
-    if(data) {
+    const result = await firstValueFrom(dialogRef.afterClosed()) as { result: UserExtraData; documentsGenerated: boolean; } | undefined;
+    if(!result) return;
+    this.userExtraData = result.result;
+    if(!result.documentsGenerated) return;
+    try {
       this.isWaitingForDocumentGeneration = true;
-      const result = await firstValueFrom(this.student.setExtraData(data));
-      if(!result) {
-        this.isWaitingForDocumentGeneration = false;
-        return;
-      }
-      this.studentExtraData = data;
-      const paper = await firstValueFrom(this.papersService.findMineStudent());
-      if(paper) {
-        this.paper = paper;
-      }
+      this.paper = await firstValueFrom(this.papersService.findMineStudent());
+    } finally {
       this.isWaitingForDocumentGeneration = false;
     }
-
-    dialogRef.afterClosed().subscribe(data => {
-      if(data) {
-        this.isWaitingForDocumentGeneration = true;
-        let subscription = this.student.setExtraData(data).pipe(
-          switchMap(result => {
-            if(result) {
-              return this.papersService.findMineStudent();
-            }
-            return of(null);
-          })
-        ).subscribe(paper => {
-          if(paper) {
-            this.studentExtraData = data;
-            this.paper = paper;
-            subscription.unsubscribe();
-          }
-          this.isWaitingForDocumentGeneration = false;
-        })
-      }
-    })
   }
 
   openEditDialog() {
