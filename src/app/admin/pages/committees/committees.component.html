@@ -1,24 +1,24 @@
 <mat-menu #committeeMenu="matMenu">
   <ng-template matMenuContent let-row="row">
     <ng-container *ngIf="user.type == 'admin'">
-      <button mat-menu-item (click)="editCommittee(row.id)">
+      <button mat-menu-item (click)="editCommittee(row.committee)">
         <mat-icon>mode</mat-icon>
         <span>Editați comisia</span>
       </button>
-      <button mat-menu-item (click)="deleteCommittee(row.id)">
+      <button mat-menu-item (click)="deleteCommittee(row.committee)">
         <mat-icon>delete</mat-icon>
         <span>Ștergeți comisia</span>
       </button>
-      <button mat-menu-item *ngIf="!row.committee.finalGrades" (click)="markFinalGrades(row.id, true)">
+      <button mat-menu-item *ngIf="!row.committee.finalGrades" (click)="markFinalGrades(row.committee.id, true)">
         <mat-icon>lock</mat-icon>
         <span>Marcați notele drept finale</span>
       </button>
-      <button mat-menu-item *ngIf="row.committee.finalGrades" (click)="markFinalGrades(row.id, false)">
+      <button mat-menu-item *ngIf="row.committee.finalGrades" (click)="markFinalGrades(row.committee.id, false)">
         <mat-icon>lock_open</mat-icon>
         <span>Demarcați notele drept finale</span>
       </button>
     </ng-container>
-    <button mat-menu-item [matMenuTriggerFor]="committeeCatalogGenerationMenu" [matMenuTriggerData]="{committee: row}">
+    <button mat-menu-item [matMenuTriggerFor]="committeeCatalogGenerationMenu" [matMenuTriggerData]="{ committee: row.committee }">
       <mat-icon>description</mat-icon>
       <span>Generați documente</span>
     </button>
@@ -112,18 +112,18 @@
       </ng-container>
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef> ID </th>
-        <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.committee.id}} </td>
       </ng-container>
 
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Nume </th>
-        <td mat-cell *matCellDef="let row" class="wrap"> {{row.name}} </td>
+        <td mat-cell *matCellDef="let row" class="wrap"> {{row.committee.name}} </td>
       </ng-container>
 
       <ng-container matColumnDef="locationAndTime">
         <th mat-header-cell *matHeaderCellDef> Locația și data </th>
         <td mat-cell *matCellDef="let row">
-          @for(day of row.activityDays; track day.id) {
+          @for(day of row.committee.activityDays; track day.id) {
             <div>{{ day.location }} | {{ day.startTime | datetime }} </div>
           }
         </td>
@@ -134,7 +134,7 @@
         <td mat-cell *matCellDef="let row" class="wrap" style="min-width: 100px;">
           <div class="iterating">
             <wbr/>
-            <span *ngFor="let domain of row.domains">{{domain.name}}</span>
+            <span *ngFor="let domain of row.committee.domains">{{domain.name}}</span>
           </div>
         </td>
       </ng-container>

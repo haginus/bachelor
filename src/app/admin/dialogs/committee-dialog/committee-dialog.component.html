@@ -56,7 +56,7 @@
         <li *ngIf="formMembers.errors?.['atMostOneSecretary']">Comisia nu poate avea mai mulți secretari.</li>
         <li *ngIf="formMembers.errors?.['atLeastTwoMembers']">Comisia trebuie să aibă cel puțin doi membri.</li>
       </ul>
-      <mat-autocomplete #auto="matAutocomplete">
+      <mat-autocomplete #autoComplete="matAutocomplete">
         <mat-option *ngFor="let teacher of filteredTeachers" [value]="teacher">
           <span>{{teacher.lastName + ' ' + teacher.firstName}}</span>
         </mat-option>
@@ -70,7 +70,7 @@
               type="text"
               formControlName="name"
               name="teacherName"
-              [matAutocomplete]="auto"
+              [matAutocomplete]="autoComplete"
               [errorStateMatcher]="teacherNameMatcher"
             />
             <mat-error>Alegeți un profesor din listă!</mat-error>
@@ -100,9 +100,11 @@
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Anulați</button>
-  <button mat-button (click)="addCommittee()" *ngIf="data.mode == 'create'"
-    [disabled]="editCommitteeForm.invalid">Adăugați</button>
-  <button mat-button (click)="editCommittee()" *ngIf="data.mode == 'edit'"
-    [disabled]="editCommitteeForm.invalid">Salvați</button>
-  <button mat-button (click)="deleteCommittee()" *ngIf="data.mode == 'delete'">Ștergeți</button>
+  @if(data.mode === 'delete') {
+    <button mat-button (click)="deleteCommittee()">Ștergeți</button>
+  } @else {
+    <button mat-button (click)="saveCommittee()">
+      {{ data.mode == 'create' ? 'Adăugați' : 'Salvați' }}
+    </button>
+  }
 </mat-dialog-actions>

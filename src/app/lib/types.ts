@@ -204,6 +204,27 @@ export interface Signature {
   createdAt: string;
 }
 
+export type CommitteeMemberRole = 'president' | 'secretary' | 'member';
+
+export interface CommitteeMember {
+  teacherId: number;
+  teacher: Teacher;
+  role: CommitteeMemberRole;
+}
+
+export interface CommitteeActivityDay {
+  location: string;
+  startTime: string;
+}
+export interface Committee {
+  id: number;
+  name: string;
+  members: CommitteeMember[];
+  domains: Domain[];
+  activityDays: CommitteeActivityDay[];
+  papers: Paper[];
+}
+
 export interface Paginated<T> {
   count: number;
   rows: T[];

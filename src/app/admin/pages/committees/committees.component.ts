@@ -1,14 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { CommitteeDialogComponent } from '../../dialogs/committee-dialog/committee-dialog.component';
 import { AdminService } from '../../../services/admin.service';
 import { CommitteeDocument, CommitteeDocumentsFormat, DocumentService } from '../../../services/document.service';
-import { AuthService, Committee, Domain, UserData, UserDataMin } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
 import { rowAnimation } from '../../../row-animations';
+import { CommitteesService } from '../../../services/committees.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { User, Teacher, Committee } from '../../../lib/types';
 
 @Component({
   selector: 'app-committees',
@@ -18,10 +21,33 @@ import { rowAnimation } from '../../../row-animations';
     rowAnimation,
   ]
 })
-export class CommitteesComponent implements OnInit, OnDestroy {
+export class CommitteesComponent {
 
-  constructor(private admin: AdminService, private dialog: MatDialog, private document: DocumentService,
-    private auth: AuthService, private snackbar: MatSnackBar) { }
+  constructor(
+    private committeesService: CommitteesService,
+    private admin: AdminService,
+    private dialog: MatDialog,
+    private document: DocumentService,
+    private auth: AuthService,
+    private snackbar: MatSnackBar
+  ) {
+    this.performedActions.pipe(
+      takeUntilDestroyed(),
+      switchMap(() => {
+        this.isLoadingResults = true;
+        return this.committeesService.findAll();
+      }),
+    ).subscribe((committees) => {
+      this.committees = committees;
+      this.isLoadingResults = false;
+      this.mapResult();
+    });
+    this.auth.userData.pipe(
+      takeUntilDestroyed()
+    ).subscribe(user => {
+      this.user = user;
+    });
+  }
 
   displayedColumns: string[] = ['status', 'id', 'name', 'domains', 'locationAndTime', 'president', 'secretary', 'members', 'paperNumber', 'actions'];
   resultsLength: number;
@@ -31,36 +57,15 @@ export class CommitteesComponent implements OnInit, OnDestroy {
   committees: Committee[] = [];
 
   performedActions: BehaviorSubject<string> = new BehaviorSubject('');
-  user: UserData;
-  userSubscription: Subscription;
-
-  ngOnInit(): void {
-    this.performedActions.pipe(
-      switchMap(action => {
-        this.isLoadingResults = true;
-        return this.admin.getCommittees();
-      })
-    ).subscribe(data => {
-      this.committees = data;
-      this.isLoadingResults = false;
-      this.mapResult();
-    });
-    this.userSubscription = this.auth.userData.subscribe(user => {
-      this.user = user;
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.userSubscription.unsubscribe();
-  }
+  user: User;
 
   private mapResult() {
     this.data = this.committees.map(committee => {
-      const president = committee.members.find(member => member.role == 'president')?.user;
-      const secretary = committee.members.find(member => member.role == 'secretary')?.user;
-      const members = committee.members.filter(member => member.role == 'member').map(member => member.user);
+      const president = committee.members.find(member => member.role == 'president')?.teacher;
+      const secretary = committee.members.find(member => member.role == 'secretary')?.teacher;
+      const members = committee.members.filter(member => member.role == 'member').map(member => member.teacher);
       const paperNumber = committee.papers.length;
-      return {...committee, president, secretary, members, committee: committee, paperNumber };
+      return { president, secretary, members, paperNumber, committee };
     });
   }
 
@@ -77,42 +82,37 @@ export class CommitteesComponent implements OnInit, OnDestroy {
     })
   }
 
-  editCommittee(id: number) {
+  async editCommittee(committee: Committee) {
     const dialogDef = this.dialog.open(CommitteeDialogComponent, {
       data: {
         mode: 'edit',
-        data: this.committees.find(committee => committee.id == id)
+        data: committee,
       }
     });
-    dialogDef.afterClosed().subscribe(result => {
-      if(result) {
-        this.performedActions.next('editCommittee');
-      }
-    })
+    const result = await firstValueFrom(dialogDef.afterClosed());
+    if(result) {
+      this.performedActions.next('editCommittee');
+    }
   }
 
-  deleteCommittee(id: number) {
+  async deleteCommittee(committee: Committee) {
     const dialogDef = this.dialog.open(CommitteeDialogComponent, {
       data: {
         mode: 'delete',
-        data: this.committees.find(committee => committee.id == id)
+        data: committee
       }
     });
-    dialogDef.afterClosed().subscribe(result => {
-      if(result) {
-        this.performedActions.next('deleteCommittee');
-      }
-    })
+    const result = await firstValueFrom(dialogDef.afterClosed());
+    if(result) {
+      this.performedActions.next('deleteCommittee');
+    }
   }
 
-  markFinalGrades(id: number, finalGrades = true) {
-    this.admin.markCommitteeFinalGrades(id, finalGrades).subscribe(result => {
-      if(result) {
-        const marked = finalGrades ? 'marcate' : 'demarcate';
-        this.snackbar.open(`Note ${marked} drept finale.`);
-        this.performedActions.next('markFinalGrades');
-      }
-    });
+  async markFinalGrades(id: number, finalGrades = true) {
+    await firstValueFrom(this.committeesService.markGradesFinal(id, finalGrades));
+    const marked = finalGrades ? 'marcate' : 'demarcate';
+    this.snackbar.open(`Note ${marked} drept finale.`);
+    this.performedActions.next('markFinalGrades');
   }
 
   getCommitteeDocument(committee: Committee, documentName: CommitteeDocument) {
@@ -180,12 +180,9 @@ export class CommitteesComponent implements OnInit, OnDestroy {
 }
 
 interface CommitteeRow {
-  id: number,
-  name: string,
-  domains: Domain[],
-  paperNumber: number,
-  president: UserDataMin,
-  secretary: UserDataMin,
-  members: UserDataMin[],
-  committee: Committee // original committee
+  president?: Teacher;
+  secretary?: Teacher;
+  members: Teacher[];
+  paperNumber: number;
+  committee: Committee;
 }
