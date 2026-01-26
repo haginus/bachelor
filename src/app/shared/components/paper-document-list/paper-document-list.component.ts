@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
-import { Document, DocumentReuploadRequest } from '../../../lib/types';
+import { Document, DocumentReuploadRequest, RequiredDocument } from '../../../lib/types';
 import { inclusiveDate } from '../../../lib/utils';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DatePipe } from '@angular/common';
@@ -39,9 +39,9 @@ export class PaperDocumentListComponent implements OnChanges {
     private document: DocumentService
   ) { }
 
-  @Input() requiredDocuments: PaperRequiredDocument[] = [];
-  @Input() documents: Document[] = [];
-  @Input() documentReuploadRequests: DocumentReuploadRequest[] = [];
+  @Input({ required: true }) requiredDocuments: RequiredDocument[] = [];
+  @Input({ required: true }) documents: Document[] = [];
+  @Input({ required: true }) documentReuploadRequests: DocumentReuploadRequest[] = [];
   /** In what quality is the viewer of this list */
   @Input() perspective: 'student' | 'teacher' | 'committee' | 'admin' = 'student';
   /** Paper ID (needed for teacher / committee to know where to upload the document) */
@@ -333,7 +333,7 @@ interface DocumentMap {
 }
 
 export interface DocumentMapElement {
-  requiredDocument: PaperRequiredDocument;
+  requiredDocument: RequiredDocument;
   title: string;
   category: PaperDocumentCategory;
   requiredTypes: PaperDocumentTypes;
@@ -349,16 +349,6 @@ export interface DocumentMapElement {
 
 type DocumentAction = 'sign' | 'upload'  | 'view' | null;
 
-export interface PaperRequiredDocument {
-  title: string,
-  name: string,
-  category: PaperDocumentCategory,
-  types: PaperDocumentTypes,
-  acceptedMimeTypes: string,
-  acceptedExtensions: string[],
-  uploadBy: PaperDocumentUploadBy;
-  uploadInstructions?: string;
-}
 export interface PaperDocumentEvent {
   documentName: string;
   action: 'sign' | 'uploadCopy';

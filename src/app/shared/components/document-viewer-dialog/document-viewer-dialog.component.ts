@@ -6,10 +6,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LoadingComponent } from '../loading/loading.component';
 import { PdfViewerComponent } from '../pdf-viewer/pdf-viewer.component';
-import { PaperRequiredDocument } from '../paper-document-list/paper-document-list.component';
 import { SignDialogComponent } from '../sign-dialog/sign-dialog.component';
 import { firstValueFrom } from 'rxjs';
-import { Document } from '../../../lib/types';
+import { Document, RequiredDocument } from '../../../lib/types';
 
 @Component({
   selector: 'app-document-viewer-dialog',
@@ -93,7 +92,7 @@ export interface DocumentViewerDialogData {
   type: string;
   title: string;
   signOptions?: {
-    requiredDocument: PaperRequiredDocument;
+    requiredDocument: RequiredDocument;
     paperId: number;
     signUserId?: number;
   }

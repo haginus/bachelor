@@ -155,6 +155,7 @@
                 [paperId]="paper.id"
                 [requiredDocuments]="paper.requiredDocuments"
                 [documents]="paper.documents"
+                [documentReuploadRequests]="paper.documentReuploadRequests || []"
                 [canEdit]="canUploadDocuments"
                 perspective="teacher"
                 [documentNameSuffix]="paper | paperTitle"

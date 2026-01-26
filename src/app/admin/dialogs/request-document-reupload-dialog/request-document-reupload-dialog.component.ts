@@ -5,13 +5,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { PaperRequiredDocument } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { formatDate } from '../../../lib/utils';
 import { AdminService } from '../../../services/admin.service';
 import { firstValueFrom } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { RequiredDocument } from '../../../lib/types';
 
 @Component({
   selector: 'app-request-document-reupload-dialog',
@@ -54,7 +54,7 @@ export class RequestDocumentReuploadDialogComponent {
     }, atLeastOneDocumentValidator);
   }
 
-  requiredDocuments!: PaperRequiredDocument[];
+  requiredDocuments!: RequiredDocument[];
   isSubmitting = false;
 
   requestReuploadForm: FormGroup<{
@@ -118,7 +118,7 @@ const atLeastOneDocumentValidator: ValidatorFn = (control: AbstractControl): Val
 
 export interface RequestDocumentReuploadDialogData {
   paperId: number;
-  requiredDocuments: PaperRequiredDocument[];
+  requiredDocuments: RequiredDocument[];
   checkedDocuments?: Record<string, boolean>;
 }
 

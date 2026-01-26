@@ -117,16 +117,14 @@ export class EditPaperComponent implements OnInit {
     this.isLoadingQuery = true;
     try {
       const result = await firstValueFrom(
-        this.papersService.editPaper(this.paper.id, { title, description, topicIds })
+        this.papersService.update(this.paper.id, { title, description, topicIds })
       );
-      if(result.success) {
-        let snackMessage = "Lucrarea a fost salvată.";
-        if(result.documentsGenerated) {
-          snackMessage += " Documentele au fost regenerate.";
-        }
-        this.snackBar.open(snackMessage, null, { duration: 8000 });
-        this.dialog.close(result);
+      let snackMessage = "Lucrarea a fost salvată.";
+      if(result.documentsGenerated) {
+        snackMessage += " Documentele au fost regenerate.";
       }
+      this.snackBar.open(snackMessage, null, { duration: 8000 });
+      this.dialog.close(result);
     } finally {
       this.isLoadingQuery = false;
     }

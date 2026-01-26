@@ -205,7 +205,7 @@ export class TeacherPapersComponent
       data: paper,
     });
     dialogRef.afterClosed().subscribe((result) => {
-      if (result?.success) {
+      if (result?.result) {
         this.refreshResults();
         if (result.documentsGenerated) {
           this.snackbar.open(

@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { DocumentService } from '../../../services/document.service';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { PaperRequiredDocument } from '../paper-document-list/paper-document-list.component';
 import { first, firstValueFrom } from 'rxjs';
 import { PaperDocument } from '../../../services/auth.service';
 import { MatIcon } from '@angular/material/icon';
@@ -9,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { DatePipe } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { RequiredDocument } from '../../../lib/types';
 
 @Component({
   selector: 'app-document-upload-history-dialog',
@@ -63,5 +63,5 @@ export class DocumentUploadHistoryDialogComponent {
 
 export interface DocumentUploadHistoryDialogData {
   paperId: number;
-  document: PaperRequiredDocument;
+  document: RequiredDocument;
 }

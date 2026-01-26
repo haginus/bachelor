@@ -4,7 +4,8 @@ import { AuthService } from "./auth.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Observable, catchError, map, of } from "rxjs";
 import { environment } from "../../environments/environment";
-import { DocumentReuploadRequest, Paper } from "../lib/types";
+import { DocumentReuploadRequest, Paginated, Paper, PaperType } from "../lib/types";
+import { removeEmptyProperties } from "../lib/utils";
 
 @Injectable({
   providedIn: 'any'
@@ -15,6 +16,10 @@ export class PapersService {
 
   private readonly apiUrl = `${environment.apiUrl}/papers`;
 
+  findAll(params: PaperQueryDto): Observable<Paginated<Paper>> {
+    return this.http.get<Paginated<Paper>>(this.apiUrl, { params: removeEmptyProperties(params) });
+  }
+
   findMineStudent() {
     return this.http.get<Paper>(`${this.apiUrl}/me`);
   }
@@ -23,13 +28,9 @@ export class PapersService {
     return this.http.get<Paper[]>(`${this.apiUrl}/me`);
   }
 
-  editPaper(paperId: number, paper: UpdatePaperPayload) {
+  update(paperId: number, paper: UpdatePaperDto) {
     const url = `${this.apiUrl}/${paperId}`;
-    return this.http
-      .put<{ success: boolean; documentsGenerated: boolean; }>(url, paper, this.auth.getPrivateHeaders())
-      .pipe(
-        catchError(this.handleError('editPaper', { success: false, documentsGenerated: false }))
-      );
+    return this.http.put<{ result: Paper; documentsGenerated: boolean; }>(url, paper);
   }
 
   submitPaper(paperId: number) {
@@ -69,7 +70,26 @@ export class PapersService {
   }
 }
 
-type UpdatePaperPayload = {
+export interface PaperQueryDto {
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+  limit?: number;
+  offset?: number;
+  submitted?: boolean;
+  assigned?: boolean;
+  /** ID of committee where the paper has been assigned */
+  assignedTo?: number;
+  /** ID of committee that can take the papers for grading. */
+  forCommittee?: number;
+  validity?: 'valid' | 'invalid' | 'not_validated';
+  title?: string;
+  type?: PaperType;
+  domainId?: number;
+  specializationId?: number;
+  studentName?: string;
+}
+
+type UpdatePaperDto = {
   title: string;
   description: string;
   topicIds: number[];

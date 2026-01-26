@@ -56,8 +56,8 @@
           <div fxFlex="100" fxFlex.lt-md="100">
             <mat-button-toggle-group formControlName="validity">
               <mat-button-toggle value="valid">Valide</mat-button-toggle>
-              <mat-button-toggle value="notValid">Invalide</mat-button-toggle>
-              <mat-button-toggle value="nullValid">Nevalidate</mat-button-toggle>
+              <mat-button-toggle value="invalid">Invalide</mat-button-toggle>
+              <mat-button-toggle value="not_validated">Nevalidate</mat-button-toggle>
               <mat-button-toggle [value]="null">Toate</mat-button-toggle>
             </mat-button-toggle-group>
           </div>
@@ -92,16 +92,7 @@
             <mat-select formControlName="specializationId">
               <mat-option [value]="null">--</mat-option>
               <mat-option *ngFor="let specialization of paperFilterForm.get('domain').value?.specializations" [value]="specialization.id">
-                {{ specialization.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-            <mat-label>Forma de învățământ</mat-label>
-            <mat-select formControlName="studyForm">
-              <mat-option [value]="null">--</mat-option>
-              <mat-option *ngFor="let type of STUDY_FORMS | keyvalue" [value]="type.key">
-                {{ type.value }}
+                {{ specialization.name }} ({{ STUDY_FORMS[specialization.studyForm] | titlecase }})
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -230,7 +221,7 @@
                 [paperId]="paper.id"
                 [signUserId]="paper.studentId"
                 [requiredDocuments]="paper.requiredDocuments"
-                [documentReuploadRequests]="paper.documentReuploadRequests"
+                [documentReuploadRequests]="paper.documentReuploadRequests || []"
                 [documents]="paper.documents"
                 perspective="admin"
                 [canEdit]="paper.isValid == null"
