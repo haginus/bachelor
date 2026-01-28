@@ -97,6 +97,11 @@
         <mat-label>Anul înmatriculării</mat-label>
         <input matInput type="text" formControlName="matriculationYear" name="studentMatriculationYear">
       </mat-form-field>
+
+      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+        <mat-label>Media generală</mat-label>
+        <input matInput type="text" formControlName="generalAverage" name="studentGeneralAverage">
+      </mat-form-field>
       @if(studentForm.hasError('emailUnique')) {
         <p>E-mailul este deja folosit.</p>
       }

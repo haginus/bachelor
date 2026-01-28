@@ -43,6 +43,15 @@ export class PapersService {
     return this.http.post<Paper>(url, {});
   }
 
+  validate(paperId: number, validationDto: ValidatePaperDto) {
+    return this.http.post<Paper>(`${this.apiUrl}/${paperId}/validate`, validationDto);
+  }
+
+  undoValidation(paperId: number) {
+    const url = `${this.apiUrl}/${paperId}/undo-validation`;
+    return this.http.post<Paper>(url, {});
+  }
+
   getDocumentReuploadRequests(paperId: number) {
     const url = `${this.apiUrl}/${paperId}/reupload-requests`;
     return this.http
@@ -84,4 +93,10 @@ type UpdatePaperDto = {
   title: string;
   description: string;
   topicIds: number[];
+}
+
+type ValidatePaperDto = {
+  isValid: boolean;
+  generalAverage?: number;
+  ignoreRequiredDocuments?: boolean;
 }

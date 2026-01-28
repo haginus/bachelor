@@ -194,8 +194,7 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
     }
   }
 
-  validatePaper(paper: ExtendedPaper, validate: boolean) {
-    let observable: Observable<boolean>;
+  async validatePaper(paper: ExtendedPaper, validate: boolean) {
     let generalAverage: number;
     if(validate) {
       const dialog = this.dialog.open<PaperValidationDialogComponent, PaperValidationDialogData>(PaperValidationDialogComponent, {
@@ -204,40 +203,35 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
           generalAverage: paper.student.generalAverage
         }
       });
-
-      observable = dialog.afterClosed().pipe(
-        switchMap(average => {
-          if(average) {
-            generalAverage = average;
-            paper.isLoading = true;
-            return this.admin.validatePaper(paper.id, true, generalAverage);
-          }
-          return of(false);
-        })
-      );
-    } else {
-      paper.isLoading = true;
-      observable = this.admin.validatePaper(paper.id, false);
+      generalAverage = await firstValueFrom(dialog.afterClosed());
+      if(!generalAverage) return;
     }
-    observable.subscribe(result => {
-      if(result) {
+    paper.isLoading = true;
+    try {
+      await firstValueFrom(
+        this.papersService.validate(paper.id, { isValid: validate, generalAverage, ignoreRequiredDocuments: true })
+      );
+      paper.isValid = validate;
+      if(!validate) {
+        paper.committee = null;
+      } else {
         paper.student.generalAverage = generalAverage;
-        paper.isValid = validate;
-        this.snackbar.open(validate ? "Lucrare validată" : "Lucrare invalidată" );
       }
+      this.snackbar.open(validate ? "Lucrare validată" : "Lucrare invalidată" );
+    } finally {
       paper.isLoading = false;
-    });
+    }
   }
 
-  undoValidatePaper(paper: ExtendedPaper) {
-
-    this.admin.undoValidatePaper(paper.id).subscribe(result => {
-      if(result) {
-        paper.isValid = null;
-        this.snackbar.open("Validare anulată.");
-      }
+  async undoValidatePaper(paper: ExtendedPaper) {
+    paper.isLoading = true;
+    try {
+      await firstValueFrom(this.papersService.undoValidation(paper.id));
+      paper.isValid = null;
+      this.snackbar.open("Validare anulată.");
+    } finally {
       paper.isLoading = false;
-    })
+    }
   }
 
   async openStudentDialog(id: number, event: any) {

@@ -10,16 +10,14 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class PaperValidationDialogComponent implements OnInit {
 
   validatePaperForm = new FormGroup({
-    "generalAverage": new FormControl(null, [Validators.required, Validators.min(1), Validators.max(10)]),
+    "generalAverage": new FormControl(null, [Validators.required, Validators.min(5), Validators.max(10), Validators.pattern(/^\d+(\.\d+)?$/)]),
     "warning": new FormControl(null)
   });
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: PaperValidationDialogData, private dialogRef: MatDialogRef<PaperValidationDialogComponent>) {
     if(!this.data?.areDocumentsUploaded) {
-      this.validatePaperForm = new FormGroup({
-        "generalAverage": new FormControl(null, [Validators.required, Validators.min(1), Validators.max(10)]),
-        "warning": new FormControl(null, [Validators.requiredTrue])
-      });
+      this.validatePaperForm.get("warning").setValidators([Validators.requiredTrue]);
+      this.validatePaperForm.get("warning").updateValueAndValidity();
     }
     if(this.data?.generalAverage) {
       this.validatePaperForm.get("generalAverage").setValue('' + this.data?.generalAverage);
@@ -29,10 +27,9 @@ export class PaperValidationDialogComponent implements OnInit {
   ngOnInit(): void { }
 
   validate() {
-    let generalAverage = (this.validatePaperForm.value["generalAverage"] as string).replace(",", ".");
+    let generalAverage = Number(this.validatePaperForm.value["generalAverage"] as string);
     this.dialogRef.close(generalAverage);
   }
-
 }
 
 export interface PaperValidationDialogData {

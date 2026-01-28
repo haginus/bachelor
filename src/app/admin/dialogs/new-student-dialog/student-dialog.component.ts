@@ -102,6 +102,7 @@ export class StudentDialogComponent implements OnInit {
     'group': new FormControl(this.data.user?.group, [Validators.required]),
     'matriculationYear': new FormControl(this.data.user?.matriculationYear, [Validators.required]),
     'fundingForm': new FormControl(this.data.user?.fundingForm, [Validators.required]),
+    'generalAverage': new FormControl(this.data.user?.generalAverage, [Validators.min(1), Validators.max(10), Validators.pattern(/^\d+(\.\d+)?$/)]),
     'merge': new FormControl(false),
   });
 
@@ -129,6 +130,7 @@ export class StudentDialogComponent implements OnInit {
     this.studentForm.get("promotion").setValue(this.data.user.promotion);
     this.studentForm.get("matriculationYear").setValue(this.data.user.matriculationYear);
     this.studentForm.get("fundingForm").setValue(this.data.user.fundingForm);
+    this.studentForm.get("generalAverage").setValue(this.data.user.generalAverage);
     this.studentForm.get("merge").setValue(false);
   }
 
@@ -138,7 +140,10 @@ export class StudentDialogComponent implements OnInit {
   }
 
   async saveStudent() {
-    const formData = this.studentForm.getRawValue();
+    const formData = {
+      ...this.studentForm.getRawValue(),
+      generalAverage: this.studentForm.value.generalAverage ? Number(this.studentForm.value.generalAverage) : null,
+    };
     this.isLoadingData = true;
     try {
       const result = this.data.mode === 'create'

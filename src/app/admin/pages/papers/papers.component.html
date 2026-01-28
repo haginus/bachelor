@@ -193,7 +193,7 @@
                   }
                   <b>Lucrare {{ paper.isValid ? 'validată' : 'invalidată' }}</b>
                   @if(paper.isValid && paper.student?.generalAverage) {
-                    <b>&nbsp;(M.G. {{ paper.student.generalAverage }})</b>
+                    <b>&nbsp;(M.G. {{ paper.student.generalAverage.toFixed(2) }})</b>
                   }
                 </div>
                 <button mat-icon-button matTooltip="Reluați validarea" (click)="undoValidatePaper(paper)">
