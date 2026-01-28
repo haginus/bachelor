@@ -14,7 +14,7 @@ export class TeachersService {
 
   private readonly baseUrl = `${environment.apiUrl}/teachers`;
 
-  findAll(params?: { limit?: number; offset?: number; sortBy?: string; sortDirection?: 'asc' | 'desc'; lastName?: string; firstName?: string; email?: string }): Observable<Paginated<Teacher>> {
+  findAll(params?: { limit?: number; offset?: number; sortBy?: string; sortDirection?: 'asc' | 'desc'; lastName?: string; firstName?: string; email?: string; onlyMissingPlagiarismReports?: boolean; detailed?: boolean; }): Observable<Paginated<Teacher>> {
     return this.http.get<Paginated<Teacher>>(this.baseUrl, { params: removeEmptyProperties(params || {}) });
   }
 

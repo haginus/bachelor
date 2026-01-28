@@ -35,22 +35,12 @@ export class PapersService {
 
   submitPaper(paperId: number) {
     const url = `${this.apiUrl}/${paperId}/submit`;
-    return this.http
-      .post<{ success: boolean; }>(url, {}, this.auth.getPrivateHeaders())
-      .pipe(
-        map(_ => true),
-        catchError(this.handleError('submitPaper', { success: false }))
-      );
+    return this.http.post<Paper>(url, {});
   }
 
   unsubmitPaper(paperId: number) {
     const url = `${this.apiUrl}/${paperId}/unsubmit`;
-    return this.http
-      .post<{ success: boolean; }>(url, {}, this.auth.getPrivateHeaders())
-      .pipe(
-        map(_ => true),
-        catchError(this.handleError('unsubmitPaper', { success: false }))
-      );
+    return this.http.post<Paper>(url, {});
   }
 
   getDocumentReuploadRequests(paperId: number) {

@@ -19,6 +19,7 @@ import { DocumentReuploadRequest, Paper, UserExtraData } from '../../../lib/type
 import { SubmitPaperDialogComponent } from '../../dialogs/submit-paper-dialog/submit-paper-dialog.component';
 import { CommitteeSnippetComponent } from '../../../shared/components/committee-snippet/committee-snippet.component';
 import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-student-paper',
@@ -45,6 +46,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
 
   constructor(
     private dialog: MatDialog,
+    private readonly snackBar: MatSnackBar,
     private readonly papersService: PapersService,
     private auth: AuthService,
     private cd: ChangeDetectorRef
@@ -183,10 +185,13 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
       action = this.papersService.unsubmitPaper(this.paper.id);
     }
     this.isLoadingData = true;
-    const result = await firstValueFrom(action);
-    this.isLoadingData = false;
-    if(result) {
-      this.getData();
+    try {
+      const { submission, submissionId } = await firstValueFrom(action);
+      this.paper.submission = submission;
+      this.paper.submissionId = submissionId;
+      this.snackBar.open(submit ? 'V-ați înscris în această sesiune.' : 'V-ați retras din această sesiune.');
+    } finally {
+      this.isLoadingData = false;
     }
   }
 }

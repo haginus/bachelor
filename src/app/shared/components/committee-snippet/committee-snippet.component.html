@@ -37,15 +37,15 @@
         }
       }
       <div class="list-header">Membri</div>
-      @for(member of committee().members; track member.user.id) {
+      @for(member of committee().members; track member.teacher.id) {
         <div class="list-item">
           <mat-icon>school</mat-icon>
           <div class="content">
-            <div>{{ roles[member.committeeMember.role] }}</div>
-            <div>{{ member.user.fullName }}</div>
+            <div>{{ roles[member.role] }}</div>
+            <div>{{ member.teacher.fullName }}</div>
             <div>
-              <a class="link" href="mailto:{{ member.user.email }}" target="_blank">
-                {{ member.user.email }}
+              <a class="link" href="mailto:{{ member.teacher.email }}" target="_blank">
+                {{ member.teacher.email }}
               </a>
             </div>
           </div>

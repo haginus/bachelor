@@ -130,14 +130,19 @@ export interface Application {
   student: Student;
 }
 
+export interface Submission {
+  id: number;
+  submittedAt: string;
+}
+
 export interface Paper {
   id: number;
   title: string;
   description: string;
   type: PaperType;
   isValid: boolean;
-  /** @deprecated */
-  submitted: boolean;
+  submission: Submission | null;
+  submissionId: number | null;
   scheduledGrading: string;
   studentId: number;
   teacherId: number;
@@ -213,12 +218,16 @@ export interface CommitteeMember {
 }
 
 export interface CommitteeActivityDay {
+  id: number;
   location: string;
   startTime: string;
 }
 export interface Committee {
   id: number;
   name: string;
+  publicScheduling: boolean;
+  finalGrades: boolean;
+  paperPresentationTime: number;
   members: CommitteeMember[];
   domains: Domain[];
   activityDays: CommitteeActivityDay[];

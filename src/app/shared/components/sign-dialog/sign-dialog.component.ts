@@ -89,7 +89,7 @@ export class SignDialogComponent {
     const file = new File([blob], 'sample.png');
     this.loadingSignature = true;
     try {
-      this.signature = await this.signaturesService.createOrUpdateUserSignature(file);
+      this.signature = await this.signaturesService.createOrUpdateUserSignature(this.userId, file);
       this.signature.sample = await fileToBase64(file)
     } catch(err) {
       this.signatureError = true;

@@ -44,13 +44,13 @@
     </div>
 
     @if(!deadlinePassed) {
-      <div class="tip-card translucent session-card" [ngClass]="{ warning: !paper.submitted, success: paper.submitted }">
+      <div class="tip-card translucent session-card" [ngClass]="{ warning: !paper.submissionId, success: paper.submissionId }">
         <mat-icon class="tip-icon">
-          {{ paper.submitted ? 'check_circle' : 'announcement' }}
+          {{ paper.submissionId ? 'check_circle' : 'announcement' }}
         </mat-icon>
         <div class="tip-card-content">
           <h3>Sesiunea {{ sessionSettings.sessionName }}</h3>
-          @if(!paper.submitted) {
+          @if(!paper.submissionId) {
             @if(canUploadPaperFiles) {
               <div>
                 Momentan nu participați în această sesiune de finalizare a studiilor. <br>
@@ -69,10 +69,10 @@
           }
         </div>
         <div class="tip-card-action">
-          @if(!paper.submitted && canUploadPaperFiles) {
+          @if(!paper.submissionId && canUploadPaperFiles) {
             <button mat-button (click)="submitPaper(true)">Înscriere</button>
           }
-          @if(paper.submitted && canUploadPaperFiles && paper.isValid == null) {
+          @if(paper.submissionId && canUploadPaperFiles && paper.isValid == null) {
             <button mat-button (click)="submitPaper(false)">Retragere</button>
           }
         </div>

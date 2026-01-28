@@ -8,7 +8,7 @@
       <mat-icon>file_present</mat-icon>
       <span>Solicitați reîncărcarea documentelor</span>
     </button>
-    @if(paper.submitted) {
+    @if(paper.submissionId) {
       <button mat-menu-item [disabled]="paper.isValid != null" (click)="submitPaper(paper, false)">
         <mat-icon>close</mat-icon>
         <span>Anulați înscrierea</span>
@@ -201,7 +201,7 @@
                 </button>
               </div>
             }
-            @else if(paper.submitted) {
+            @else if(paper.submissionId) {
               <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px" class="paper-actions">
                 <div [matTooltip]="!paper.documentsUploaded ? 'Studentul nu a încărcat toate documentele.' : ''">
                   <button mat-raised-button color="primary" (click)="validatePaper(paper, true)"

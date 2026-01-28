@@ -136,11 +136,13 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
     const action = submit
       ? this.papersService.submitPaper(paper.id)
       : this.papersService.unsubmitPaper(paper.id);
-    const result = await firstValueFrom(action);
-    paper.isLoading = false;
-    if(result) {
-      paper.submitted = submit;
-      this.snackbar.open(submit ? 'Lucrare înscrisă.' : 'Înscriere anulată.');
+    try {
+      const { submission, submissionId } = await firstValueFrom(action);
+      paper.submission = submission;
+      paper.submissionId = submissionId;
+      this.snackbar.open(submit ? 'Studentul a fost înscris în această sesiune.' : 'Studentul a fost retras din această sesiune.');
+    } finally {
+      paper.isLoading = false;
     }
   }
 

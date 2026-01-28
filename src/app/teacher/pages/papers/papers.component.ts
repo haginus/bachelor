@@ -235,12 +235,12 @@ export class TeacherPapersComponent
     });
     const result = await firstValueFrom(dialogRef.afterClosed());
     if (!result) return;
-    const isSuccessful = await firstValueFrom(
-      this.papersService.unsubmitPaper(paper.id)
-    );
-    if (isSuccessful) {
+    try {
+      await firstValueFrom(this.papersService.unsubmitPaper(paper.id));
       this.refreshResults();
       this.snackbar.open('Înscrierea a fost anulată.');
+    } catch {
+
     }
   }
 
@@ -310,7 +310,7 @@ export class TeacherPapersComponent
       const filterForm = JSON.parse(filter);
       let result = true;
       if (filterForm.submitted != null) {
-        result = result && filterForm.submitted == paper.submitted;
+        result = result && filterForm.submitted === !!paper.submissionId;
       }
       if (filterForm.type != null) {
         result = result && filterForm.type == paper.type;

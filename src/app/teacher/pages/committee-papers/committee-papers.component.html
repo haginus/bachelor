@@ -33,7 +33,7 @@
   <mat-toolbar color="white">
     <div class="toolbar-spacer">
       @if(committee) {
-        <app-committee-snippet [committee]="committee" />
+        <app-committee-snippet [committee]="$any(committee)" />
       }
     </div>
     <button mat-icon-button (click)="refreshResults()">
@@ -182,6 +182,7 @@
               <app-paper-document-list
                 [paperId]="paper.id"
                 [requiredDocuments]="paper.requiredDocuments"
+                [documentReuploadRequests]="[]"
                 [documents]="paper.documents"
                 perspective="committee"
                 [documentNameSuffix]="paper | paperTitle"

@@ -67,7 +67,7 @@ export class DocumentService {
   }
 
   getDocument(id: number): Observable<ArrayBuffer> {
-    const url = `${environment.apiUrl}/documents/view?id=${id}`;
+    const url = `${environment.apiUrl}/documents/${id}/content`;
     const options = this.auth.getPrivateHeaders();
     options.headers.append('Cache-Control', 'no-store');
     return this.http

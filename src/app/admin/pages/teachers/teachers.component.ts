@@ -10,7 +10,7 @@ import { AdminTeacherBulkAddDialogComponent } from '../../dialogs/teacher-bulk-a
 import { AdminTeacherDeleteDialogComponent } from '../../dialogs/teacher-delete-dialog/teacher-delete-dialog.component';
 import { AdminTeacherDialogComponent } from '../../dialogs/teacher-dialog/teacher-dialog.component';
 import { AdminService } from '../../../services/admin.service';
-import { AuthService, UserData } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { rowAnimation } from '../../../row-animations';
 import { FormControl, FormGroup } from '@angular/forms';
 import { TeachersService } from '../../../services/teachers.service';
@@ -44,7 +44,7 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
     lastName: new FormControl<string | null>(null),
     firstName: new FormControl<string | null>(null),
     email: new FormControl<string | null>(null),
-    onlyMissingReports: new FormControl<boolean>(false),
+    onlyMissingPlagiarismReports: new FormControl<boolean>(false),
   });
 
   data: Teacher[] = [];
@@ -71,6 +71,7 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
             offset: this.paginator.pageIndex * this.paginator.pageSize,
             sortBy: this.sort.active,
             sortDirection: this.sort.direction || 'asc',
+            detailed: true,
             ...filterValues,
           });
         }),
