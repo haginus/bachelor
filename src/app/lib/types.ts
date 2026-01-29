@@ -254,3 +254,10 @@ export interface ImportResult<RowType = any, EntityType = any> {
     error?: string;
   }[];
 }
+
+export interface Statistic {
+  title: string;
+  content: string | number;
+  extra?: string;
+  sectionPath?: string;
+}

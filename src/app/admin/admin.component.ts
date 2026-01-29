@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminService } from '../services/admin.service';
+import { StatisticsService } from '../services/statistics.service';
 
 @Component({
   selector: 'app-admin',
@@ -8,10 +8,10 @@ import { AdminService } from '../services/admin.service';
 })
 export class AdminComponent implements OnInit {
 
-  constructor(private admin: AdminService) { }
+  constructor(private statisticsService: StatisticsService) { }
 
   ngOnInit(): void {
   }
 
-  statistics$ = this.admin.getStats();
+  statistics$ = this.statisticsService.findAll();
 }
