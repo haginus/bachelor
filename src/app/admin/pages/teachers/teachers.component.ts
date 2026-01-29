@@ -4,17 +4,17 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
-import { BehaviorSubject, merge, of } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, merge, of } from 'rxjs';
 import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { TeacherImportDialogComponent } from '../../dialogs/teacher-import-dialog/teacher-import-dialog.component';
 import { AdminTeacherDeleteDialogComponent } from '../../dialogs/teacher-delete-dialog/teacher-delete-dialog.component';
 import { AdminTeacherDialogComponent } from '../../dialogs/teacher-dialog/teacher-dialog.component';
-import { AdminService } from '../../../services/admin.service';
 import { AuthService } from '../../../services/auth.service';
 import { rowAnimation } from '../../../row-animations';
 import { FormControl, FormGroup } from '@angular/forms';
 import { TeachersService } from '../../../services/teachers.service';
 import { Teacher } from '../../../lib/types';
+import { UsersService } from '../../../services/users.service';
 
 @Component({
   selector: 'app-admin-teachers',
@@ -28,7 +28,7 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
 
   constructor(
     private teachersService: TeachersService,
-    private admin: AdminService,
+    private usersService: UsersService,
     private auth: AuthService,
     private router: Router,
     private dialog: MatDialog,
@@ -140,12 +140,9 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
     })
   }
 
-  resendActivationCode(teacherId: number) {
-    this.admin.resendUserActivationCode(teacherId).subscribe(result => {
-      if(result) {
-        this.snackbar.open("Link de activare trimis.");
-      }
-    });
+  async resendActivationCode(teacherId: number) {
+    await firstValueFrom(this.usersService.sendActivationEmail(teacherId));
+    this.snackbar.open("Link de activare trimis.");
   }
 
   impersonateTeacher(teacherId: number) {

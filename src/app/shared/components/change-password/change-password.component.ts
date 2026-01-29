@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { LoadingComponent } from '../loading/loading.component';
 import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-change-password',
@@ -33,28 +34,25 @@ export class ChangePasswordComponent implements OnInit {
   ) {}
 
   mode = "token";
-  userEmail: string = null;
+  tokenResult: { isSignUp: boolean; email: string; firstName: string; } = null;
   loading: boolean = false;
   token: string;
 
   changePasswordForm = new FormGroup({
-    "currentPassword": new FormControl(null, [Validators.minLength(6)]),
-    "password": new FormControl(null, [Validators.required, Validators.minLength(6)]),
-    "confirmPassword": new FormControl(null, [Validators.required, Validators.minLength(6)]),
+    "currentPassword": new FormControl(null),
+    "password": new FormControl(null, [Validators.required, Validators.minLength(8), Validators.maxLength(128)]),
+    "confirmPassword": new FormControl(null, [Validators.required, Validators.minLength(8), Validators.maxLength(128)]),
   }, { validators: ChangePasswordComponent.foreignKeyValidator })
 
   matcher = new MyErrorStateMatcher();
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.token = this.route.snapshot.paramMap.get('token');
-    if(this.token) {
-      this.auth.checkPasswordResetToken(this.token).subscribe(res => {
-        if(res.email == null) {
-          this.router.navigate(['login']);
-        } else {
-          this.userEmail = res.email;
-        }
-      });
+    try {
+      if(!this.token) throw '';
+      this.tokenResult = await firstValueFrom(this.auth.checkActivationToken(this.token));
+    } catch {
+      this.router.navigate(['login']);
     }
   }
 

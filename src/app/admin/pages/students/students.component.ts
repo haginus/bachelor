@@ -5,18 +5,18 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
-import { BehaviorSubject, firstValueFrom, merge, Observable, of as observableOf, Subscription } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, merge, of as observableOf, Subscription } from 'rxjs';
 import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
 import { StudentDeleteDialogComponent } from '../../dialogs/student-delete-dialog/student-delete-dialog.component';
 import { StudentImportDialogComponent } from '../../dialogs/student-import-dialog/student-import-dialog.component';
-import { AdminService } from '../../../services/admin.service';
 import { AuthService, UserData } from '../../../services/auth.service';
 import { DOMAIN_TYPES } from '../../../lib/constants';
 import { rowAnimation } from '../../../row-animations';
 import { Domain, Student } from '../../../lib/types';
 import { StudentsService } from '../../../services/students.service';
 import { DomainsService } from '../../../services/domains.service';
+import { UsersService } from '../../../services/users.service';
 
 @Component({
   selector: 'app-students',
@@ -29,8 +29,8 @@ import { DomainsService } from '../../../services/domains.service';
 export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
-    private admin: AdminService,
     private studentsService: StudentsService,
+    private readonly usersService: UsersService,
     private domainsService: DomainsService,
     private auth: AuthService,
     private router: Router,
@@ -165,10 +165,8 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   async resendActivationCode(student: UserData) {
-    const result = await firstValueFrom(this.admin.resendUserActivationCode(student.id));
-    if(result) {
-      this.snackbar.open("Link de activare trimis.");
-    }
+    await firstValueFrom(this.usersService.sendActivationEmail(student.id));
+    this.snackbar.open("Link de activare trimis.");
   }
 
   async impersonateStudent(student: UserData) {
