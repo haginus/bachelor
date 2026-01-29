@@ -14,7 +14,6 @@
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
         <mat-label>CNP</mat-label>
         <input matInput type="text" formControlName="CNP" name="studentCNP">
-        <mat-hint>În cazul în care nu aveți un CNP, lăsați necompletat.</mat-hint>
         <mat-error>{{ signUpForm.get("CNP").errors?.['CNPValidator'].message }}</mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
@@ -54,23 +53,15 @@
         <mat-label>Programul de studii</mat-label>
         <mat-select formControlName="specializationId">
           <mat-option *ngFor="let specialization of chosenDomain?.specializations" [value]="specialization.id">
-            <span>{{specialization.name}}</span>
+            <span>{{specialization.name}} ({{specialization.studyForm.toLocaleUpperCase()}})</span>
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="33">
+      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
         <mat-label>Anul înmatriculării</mat-label>
         <input matInput type="text" formControlName="matriculationYear" name="studentMatriculationYear">
       </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="33">
-        <mat-label>Forma de învățământ</mat-label>
-        <mat-select formControlName="studyForm">
-          <mat-option value="if">Învățământ cu frecvență</mat-option>
-          <mat-option value="ifr">Învățământ cu frecvență redusă</mat-option>
-          <mat-option value="id">Învățământ la distanță</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="33">
+      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
         <mat-label>Media generală</mat-label>
         <input matInput type="number" formControlName="generalAverage">
       </mat-form-field>

@@ -9,7 +9,8 @@ import { PaperRequiredDocument, StudentExtraData } from './student.service';
 import { Topic } from './topics.service';
 import { environment } from '../../environments/environment';
 import { SudoService } from './sudo.service';
-import { UserExtraData } from '../lib/types';
+import { SignUpRequest, UserExtraData } from '../lib/types';
+export { SignUpRequest };
 
 @Injectable({
   providedIn: 'root'
@@ -58,9 +59,9 @@ export class AuthService {
     return this.getToken() != null;
   }
 
-  signInWithEmailAndPassword(email: string, password: string, captcha: string) : Observable<AuthResponse> {
+  signInWithEmailAndPassword(email: string, password: string, recaptcha: string) : Observable<AuthResponse> {
     const url = `${environment.apiUrl}/auth/sign-in`;
-    return this.http.post<AuthResponse>(url, { email, password, captcha }).pipe(
+    return this.http.post<AuthResponse>(url, { email, password }, { headers: { recaptcha } }).pipe(
       map(res => {
         this.setToken((res as any).accessToken);
         this.userDataSource.next((res as any).user);
@@ -152,16 +153,16 @@ export class AuthService {
     return of(true);
   }
 
-  sendResetPasswordEmail(email: string, captcha: string) {
+  sendResetPasswordEmail(email: string, recaptcha: string) {
     const url = `${environment.apiUrl}/auth/reset-password`;
-    return this.http.post<boolean>(url, { email, captcha }).pipe(
+    return this.http.post<boolean>(url, { email }, { headers: { recaptcha } }).pipe(
       catchError(this.handleError('sendResetPasswordEmail', false))
     );
   }
 
-  signUp(requestData: SignUpRequest, captcha: string) {
-    const url = `${environment.apiUrl}/auth/sign-up`;
-    return this.http.post<SignUpRequest>(url, { ...requestData, captcha }).pipe(
+  signUp(requestData: SignUpRequest, recaptcha: string) {
+    const url = `${environment.apiUrl}/sign-up-requests`;
+    return this.http.post<SignUpRequest>(url, requestData, { headers: { recaptcha } }).pipe(
       catchError(this.handleError('signUp', null))
     );
   }
@@ -500,20 +501,4 @@ export interface CommitteeMember {
   teacherId: number;
   role: 'president' | 'secretary' | 'member';
   user?: UserDataMin;
-}
-
-export interface SignUpRequest {
-  id: number;
-  firstName: string;
-  lastName: string;
-  CNP: string;
-  email: string;
-  identificationCode: string;
-  matriculationYear: string;
-  specializationId: number;
-  promotion: string;
-  group: string;
-  studyForm: 'if' | 'id' | 'ifr';
-  fundingForm: 'bugdet' | 'tax';
-  specialization: DomainSpecialization;
 }

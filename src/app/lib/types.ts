@@ -99,6 +99,20 @@ export interface UserExtraData {
   address: Address;
 }
 
+export interface SignUpRequest {
+  id: number;
+  firstName: string;
+  lastName: string;
+  CNP: string;
+  email: string;
+  identificationCode: string;
+  matriculationYear: string;
+  promotion: string;
+  group: string;
+  fundingForm: FundingForm
+  specialization: Specialization;
+}
+
 export interface Topic {
   id: number;
   name: string;

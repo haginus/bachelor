@@ -4,8 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterLink } from '@angular/router';
 import { RecaptchaComponent, RecaptchaModule } from 'ng-recaptcha';
 import { Subscription } from 'rxjs';
-import { AuthService, Domain } from '../../../services/auth.service';
-import { MiscService } from '../../../services/misc.service';
+import { AuthService } from '../../../services/auth.service';
 import { CNPValidator } from '../../../validators/CNP-validator';
 import { CommonDialogComponent, CommonDialogData } from '../common-dialog/common-dialog.component';
 import { DOMAIN_TYPES } from '../../../lib/constants';
@@ -17,6 +16,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { LoadingComponent } from '../loading/loading.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { DomainsService } from '../../../services/domains.service';
+import { Domain } from '../../../lib/types';
 
 @Component({
   selector: 'app-sign-up',
@@ -40,9 +41,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 export class SignUpComponent implements OnInit, OnDestroy {
 
   constructor(
+    private readonly domainsService: DomainsService,
     private dialog: MatDialog,
     private auth: AuthService,
-    private misc: MiscService,
     private router: Router
   ) { }
 
@@ -69,7 +70,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
     'promotion': new FormControl(null, [Validators.required, Validators.minLength(4), Validators.maxLength(4)]),
     'group': new FormControl(null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]),
     'matriculationYear': new FormControl(null, [Validators.required, Validators.minLength(4), Validators.maxLength(4)]),
-    'studyForm': new FormControl(null, [Validators.required]),
     'fundingForm': new FormControl(null, [Validators.required]),
     'termsCheck': new FormControl(null, [Validators.requiredTrue]),
     'segmentCheck': new FormControl(null, [Validators.requiredTrue])
@@ -81,7 +81,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
   chosenDomain: Domain = null;
 
   ngOnInit(): void {
-    this.domainSubscription = this.misc.getDomains().subscribe(domains => {
+    this.domainSubscription = this.domainsService.findAll().subscribe(domains => {
       this.domains = domains;
     });
 

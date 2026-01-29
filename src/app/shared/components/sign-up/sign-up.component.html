@@ -89,7 +89,7 @@
             <mat-select formControlName="specializationId">
               @for(specialization of chosenDomain?.specializations; track specialization.id) {
                 <mat-option [value]="specialization.id">
-                  <span>{{ specialization.name }}</span>
+                  <span>{{ specialization.name }} ({{ specialization.studyForm.toLocaleUpperCase() }})</span>
                 </mat-option>
               }
             </mat-select>
@@ -99,16 +99,6 @@
           <mat-form-field appearance="outline">
             <mat-label>Anul înmatriculării</mat-label>
             <input matInput type="text" formControlName="matriculationYear" name="studentMatriculationYear">
-          </mat-form-field>
-        </div>
-        <div fxFlex="100" fxFlex.gt-xs="50">
-          <mat-form-field appearance="outline">
-            <mat-label>Forma de învățământ</mat-label>
-            <mat-select formControlName="studyForm">
-              <mat-option value="if">Învățământ cu frecvență</mat-option>
-              <mat-option value="ifr">Învățământ cu frecvență redusă</mat-option>
-              <mat-option value="id">Învățământ la distanță</mat-option>
-            </mat-select>
           </mat-form-field>
         </div>
       </div>

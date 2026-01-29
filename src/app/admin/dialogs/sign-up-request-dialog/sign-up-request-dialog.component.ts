@@ -1,10 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Domain, SignUpRequest } from '../../../services/auth.service';
 import { AdminService } from '../../../services/admin.service';
 import { CNPValidator } from '../../../validators/CNP-validator';
+import { Domain, SignUpRequest } from '../../../lib/types';
+import { DomainsService } from '../../../services/domains.service';
+import { SignUpRequestsService } from '../../../services/sign-up-requests.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-sign-up-request-dialog',
@@ -17,8 +20,13 @@ export class SignUpRequestDialogComponent implements OnInit {
   chosenDomain?: Domain;
   isLoading = false;
 
-  constructor(private admin: AdminService, @Inject(MAT_DIALOG_DATA) public request: SignUpRequest,
-    private dialog: MatDialogRef<SignUpRequestDialogComponent>, private snackbar: MatSnackBar) { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public request: SignUpRequest,
+    private readonly domainsService: DomainsService,
+    private readonly signUpRequestsService: SignUpRequestsService,
+    private dialog: MatDialogRef<SignUpRequestDialogComponent>,
+    private snackbar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.signUpForm.get('domainId').valueChanges.subscribe(domainId => {
@@ -32,19 +40,18 @@ export class SignUpRequestDialogComponent implements OnInit {
       CNP: this.request.CNP,
       identificationCode: this.request.identificationCode,
       email: this.request.email,
-      domainId: this.request.specialization.domainId,
-      specializationId: this.request.specializationId,
+      domainId: this.request.specialization.domain.id,
+      specializationId: this.request.specialization?.id || null,
       promotion: this.request.promotion,
       group: this.request.group,
       matriculationYear: this.request.matriculationYear,
-      studyForm: this.request.studyForm,
       fundingForm: this.request.fundingForm,
       generalAverage: '',
     });
 
-    this.admin.getDomains().subscribe((domains) => {
+    this.domainsService.findAll().subscribe((domains) => {
       this.domains = domains;
-      this.chosenDomain = domains.find(domain => domain.id == this.request.specialization.domainId);
+      this.chosenDomain = domains.find(domain => domain.id == this.request.specialization.domain.id);
     });
 
   }
@@ -60,30 +67,30 @@ export class SignUpRequestDialogComponent implements OnInit {
     'promotion': new FormControl(null, [Validators.required]),
     'group': new FormControl(null, [Validators.required]),
     'matriculationYear': new FormControl(null, [Validators.required]),
-    'studyForm': new FormControl(null, [Validators.required]),
     'fundingForm': new FormControl(null, [Validators.required]),
     'generalAverage': new FormControl(null, [Validators.min(5), Validators.max(10)]),
   });
 
-  declineRequest() {
+  async declineRequest() {
     this.isLoading = true;
-    this.admin.declineSignUpRequest(this.request.id).subscribe((r) => {
-      if(r) {
-        this.snackbar.open("Cererea a fost respinsă.");
-        return this.dialog.close(true);
-      }
+    try {
+      await firstValueFrom(this.signUpRequestsService.decline(this.request.id));
+      this.snackbar.open("Cererea a fost respinsă.");
+      this.dialog.close(true);
+    } finally {
       this.isLoading = false;
-    });
+    }
   }
 
-  acceptRequest() {
+  async acceptRequest() {
     this.isLoading = true;
-    this.admin.acceptSignUpRequest(this.request.id, this.signUpForm.value as any).subscribe((r) => {
-      if(r) {
-        this.snackbar.open("Cererea a fost acceptată.");
-        return this.dialog.close(true);
-      }
+    try {
+      await firstValueFrom(this.signUpRequestsService.accept(this.request.id, this.signUpForm.value as any));
+      this.snackbar.open("Cererea a fost acceptată.");
+      this.dialog.close(true);
+    } finally {
       this.isLoading = false;
-    });
+    }
   }
+
 }
