@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Paginated, Student } from '../lib/types';
+import { ImportResult, Paginated, Student } from '../lib/types';
 import { removeEmptyProperties } from '../lib/utils';
 
 @Injectable({
@@ -26,8 +26,11 @@ export class StudentsService {
     return this.http.post<Student>(this.baseUrl, dto);
   }
 
-  bulkCreate(): Observable<Student[]> {
-    return null;
+  import(file: File, specializationId: number): Observable<ImportResult<StudentDto, Student>> {
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+    formData.append('specializationId', specializationId.toString());
+    return this.http.post<ImportResult<StudentDto, Student>>(`${this.baseUrl}/import`, formData);
   }
 
   update(id: number, dto: StudentDto): Observable<{ student: Student; documentsGenerated?: boolean; }> {

@@ -9,7 +9,7 @@ import { BehaviorSubject, firstValueFrom, merge, Observable, of as observableOf,
 import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
 import { StudentDeleteDialogComponent } from '../../dialogs/student-delete-dialog/student-delete-dialog.component';
-import { StudentsBulkAddDialogComponent } from '../../dialogs/students-bulk-add-dialog/students-bulk-add-dialog.component';
+import { StudentImportDialogComponent } from '../../dialogs/student-import-dialog/student-import-dialog.component';
 import { AdminService } from '../../../services/admin.service';
 import { AuthService, UserData } from '../../../services/auth.service';
 import { DOMAIN_TYPES } from '../../../lib/constants';
@@ -183,7 +183,7 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   bulkAddStudents() {
-    const dialogRef = this.dialog.open(StudentsBulkAddDialogComponent);
+    const dialogRef = this.dialog.open(StudentImportDialogComponent);
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
         this.performedActions.next("bulkAdd");

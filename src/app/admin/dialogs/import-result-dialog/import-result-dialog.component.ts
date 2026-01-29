@@ -1,32 +1,14 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ImportResult } from '../../../lib/types';
 
 @Component({
   selector: 'app-import-result-dialog',
   templateUrl: './import-result-dialog.component.html',
   styleUrls: ['./import-result-dialog.component.scss']
 })
-export class ImportResultDialogComponent implements OnInit {
+export class ImportResultDialogComponent {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: ImportResultDialogData) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: ImportResult) { }
 
-  ngOnInit(): void {
-  }
-
-}
-
-interface ImportResultDialogData {
-  stats: {
-    totalRows: number;
-    addedRows: number;
-    editedRows: number;
-    invalidRows: number;
-  }
-  rows: {
-    rowIndex: number;
-    row: any;
-  } & (
-    | { status: 'error'; error: string; }
-    | { status: 'added' | 'edited'; result: any; }
-  )
 }

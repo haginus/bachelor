@@ -4,19 +4,21 @@
   <div class="result-list">
     <div class="result-item">
       <mat-icon>format_list_numbered</mat-icon>
-      <span class="label">{{ data.stats.totalRows }} rânduri totale</span>
+      <span class="label">{{ data.summary.proccessed }} procesate</span>
     </div>
     <div class="result-item">
       <mat-icon>add_circle_outline</mat-icon>
-      <span class="label">{{ data.stats.addedRows }} rânduri adăugate</span>
+      <span class="label">{{ data.summary.created }} adăugate</span>
     </div>
-    <div class="result-item">
-      <mat-icon>edit</mat-icon>
-      <span class="label">{{ data.stats.editedRows }} rânduri editate</span>
-    </div>
+    @if(data.summary.updated !== undefined) {
+      <div class="result-item">
+        <mat-icon>edit</mat-icon>
+        <span class="label">{{ data.summary.updated }} editate</span>
+      </div>
+    }
     <div class="result-item">
       <mat-icon>error_outline</mat-icon>
-      <span class="label">{{ data.stats.invalidRows }} rânduri ignorate</span>
+      <span class="label">{{ data.summary.failed }} ignorate</span>
     </div>
   </div>
   <ngx-json-viewer [json]="data.rows" [expanded]="false"></ngx-json-viewer>

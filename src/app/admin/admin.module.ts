@@ -5,14 +5,14 @@ import { AdminRoutingModule } from './admin-routing.module';
 import { AdminComponent } from './admin.component';
 import { AdminStudentsComponent } from './pages/students/students.component';
 import { StudentDialogComponent } from './dialogs/new-student-dialog/student-dialog.component';
-import { StudentsBulkAddDialogComponent } from './dialogs/students-bulk-add-dialog/students-bulk-add-dialog.component';
+import { StudentImportDialogComponent } from './dialogs/student-import-dialog/student-import-dialog.component';
 import { StudentDeleteDialogComponent } from './dialogs/student-delete-dialog/student-delete-dialog.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminTeacherDialogComponent } from './dialogs/teacher-dialog/teacher-dialog.component';
 import { AdminTeachersComponent } from './pages/teachers/teachers.component';
 import { AdminTeacherDeleteDialogComponent } from './dialogs/teacher-delete-dialog/teacher-delete-dialog.component';
-import { AdminTeacherBulkAddDialogComponent } from './dialogs/teacher-bulk-add-dialog/teacher-bulk-add-dialog.component';
+import { TeacherImportDialogComponent } from './dialogs/teacher-import-dialog/teacher-import-dialog.component';
 import { AdminDomainsComponent } from './pages/domains/domains.component';
 import { AdminDomainDialogComponent } from './dialogs/domain-dialog/domain-dialog.component';
 import { SharedModule } from '../shared/shared.module';
@@ -61,12 +61,12 @@ const materialDeps = [
     AdminComponent,
     AdminStudentsComponent,
     StudentDialogComponent,
-    StudentsBulkAddDialogComponent,
+    StudentImportDialogComponent,
     StudentDeleteDialogComponent,
     AdminTeachersComponent,
     AdminTeacherDialogComponent,
     AdminTeacherDeleteDialogComponent,
-    AdminTeacherBulkAddDialogComponent,
+    TeacherImportDialogComponent,
     AdminDomainsComponent,
     AdminDomainDialogComponent,
     AdminTopicsComponent,

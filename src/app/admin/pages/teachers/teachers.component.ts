@@ -6,7 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { BehaviorSubject, merge, of } from 'rxjs';
 import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
-import { AdminTeacherBulkAddDialogComponent } from '../../dialogs/teacher-bulk-add-dialog/teacher-bulk-add-dialog.component';
+import { TeacherImportDialogComponent } from '../../dialogs/teacher-import-dialog/teacher-import-dialog.component';
 import { AdminTeacherDeleteDialogComponent } from '../../dialogs/teacher-delete-dialog/teacher-delete-dialog.component';
 import { AdminTeacherDialogComponent } from '../../dialogs/teacher-dialog/teacher-dialog.component';
 import { AdminService } from '../../../services/admin.service';
@@ -161,7 +161,7 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
   }
 
   bulkAddTeachers() {
-    const dialogRef = this.dialog.open(AdminTeacherBulkAddDialogComponent);
+    const dialogRef = this.dialog.open(TeacherImportDialogComponent);
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
         this.performedActions.next("bulkAdd");
