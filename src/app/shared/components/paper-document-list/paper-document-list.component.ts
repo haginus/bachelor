@@ -284,18 +284,18 @@ export class PaperDocumentListComponent implements OnChanges {
     this.document.viewDocument(buffer, type, title);
   }
 
-  deleteDocument(mapElement: DocumentMapElement) {
+  async deleteDocument(mapElement: DocumentMapElement) {
     let documentId = mapElement.lastId;
     mapElement.actionPending = true;
-    this.document.deleteDocument(documentId).subscribe(result => {
-      if(result) {
-        let idx = this.documents.findIndex(doc => doc.id == documentId);
-        this.documents.splice(idx, 1);
-        this._generateDocumentMap();
-        this.snackbar.open('Document șters.');
-      }
+    try {
+      await firstValueFrom(this.document.delete(documentId));
+      let idx = this.documents.findIndex(doc => doc.id == documentId);
+      this.documents.splice(idx, 1);
+      this._generateDocumentMap();
+      this.snackbar.open('Document șters.');
+    } finally {
       mapElement.actionPending = false;
-    });
+    }
   }
 
   openDocumentHistory(mapElement: DocumentMapElement) {

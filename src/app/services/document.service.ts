@@ -77,18 +77,12 @@ export class DocumentService {
       );
   }
 
-  deleteDocument(id: number): Observable<boolean> {
-    const url = `${environment.apiUrl}/documents/delete`;
-    return this.http
-      .post<any>(url, { id }, this.auth.getPrivateHeaders())
-      .pipe(
-        map(_ => true),
-        catchError(this.handleError<any>('deleteDocument', false))
-      );
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/documents/${id}`);
   }
 
   getCommitteeDocument(committeeId: number, documentName: CommitteeDocument) {
-    const url = `${environment.apiUrl}/documents/committee/${documentName}?committeeId=${committeeId}`;
+    const url = `${environment.apiUrl}/committees/${committeeId}/files/${documentName}`;
     const options = this.auth.getPrivateHeaders();
     options.headers.append('Cache-Control', 'no-store');
     return this.http

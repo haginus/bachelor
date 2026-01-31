@@ -5,11 +5,11 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { CommitteeDialogComponent } from '../../dialogs/committee-dialog/committee-dialog.component';
 import { AdminService } from '../../../services/admin.service';
-import { CommitteeDocument, CommitteeDocumentsFormat, DocumentService } from '../../../services/document.service';
+import { DocumentService } from '../../../services/document.service';
 import { AuthService } from '../../../services/auth.service';
 import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
 import { rowAnimation } from '../../../row-animations';
-import { CommitteesService } from '../../../services/committees.service';
+import { CommitteeFile, CommitteeFilesFormat, CommitteesService } from '../../../services/committees.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { User, Teacher, Committee } from '../../../lib/types';
 
@@ -115,18 +115,20 @@ export class CommitteesComponent {
     this.performedActions.next('markFinalGrades');
   }
 
-  getCommitteeDocument(committee: Committee, documentName: CommitteeDocument) {
+  async getCommitteeDocument(committee: Committee, fileName: CommitteeFile) {
     let sbRef = this.snackbar.open('Se generează documentul...');
-    this.document.getCommitteeDocument(committee.id, documentName).subscribe(document => {
-      const [mimeType, title] = CommitteeDocumentsFormat[documentName];
+    try {
+      const document = await firstValueFrom(this.committeesService.getFile(committee.id, fileName));
+      const [mimeType, title] = CommitteeFilesFormat[fileName];
       const documentTitle = [committee.name, title].join(' - ');
       if(mimeType === 'application/pdf') {
         this.document.viewDocument(document, mimeType, documentTitle);
       } else {
         this.document.downloadDocument(document, documentTitle, mimeType);
       }
+    } finally {
       sbRef.dismiss();
-    });
+    }
   }
 
   autoAssign() {

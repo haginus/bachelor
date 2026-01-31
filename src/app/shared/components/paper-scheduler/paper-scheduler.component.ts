@@ -11,11 +11,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { firstValueFrom } from 'rxjs';
 import { DatetimePipe } from '../../pipes/datetime.pipe';
-import { TeacherService } from '../../../services/teacher.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { arrayMap } from '../../../lib/utils';
 import { LoadingComponent } from '../loading/loading.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { CommitteesService } from '../../../services/committees.service';
 
 const MINUTE = 60 * 1000;
 
@@ -126,7 +126,7 @@ export class PaperSchedulerComponent {
     private readonly dialog: MatDialog,
     private readonly dialogRef: MatDialogRef<PaperSchedulerComponent>,
     private readonly snackBar: MatSnackBar,
-    private readonly teacherService: TeacherService,
+    private readonly committeesService: CommitteesService,
   ) {
     const papers = (JSON.parse(JSON.stringify(this.committee.papers)) as ExtendedPaper[]).sort((a, b) => (
       new Date(a.scheduledGrading || 0).getTime() - new Date(b.scheduledGrading || 0).getTime()
@@ -290,12 +290,13 @@ export class PaperSchedulerComponent {
     const paperMap = arrayMap(papers, paper => paper.paperId);
     this.isSubmitting = true;
     const dto = {
+      committeeId: this.committee.id,
       paperPresentationTime: this.minutesPerPaper.value,
       publicScheduling: this.publicScheduling.value,
       papers,
     }
-    const result = await firstValueFrom(this.teacherService.schedulePapers(this.committee.id, dto));
-    if(result) {
+    try {
+      const result = await firstValueFrom(this.committeesService.schedulePapers(dto));
       this.snackBar.open('Lucrările au fost programate.');
       this.committee.papers.forEach(paper => {
         paper.scheduledGrading = paperMap[paper.id].scheduledGrading;
@@ -303,8 +304,9 @@ export class PaperSchedulerComponent {
       this.committee.paperPresentationTime = this.minutesPerPaper.value;
       this.committee.publicScheduling = this.publicScheduling.value;
       this.dialogRef.close(result);
+    } finally {
+      this.isSubmitting = false;
     }
-    this.isSubmitting = false;
   }
 
 }

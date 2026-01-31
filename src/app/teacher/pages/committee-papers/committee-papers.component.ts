@@ -13,8 +13,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { GradePaperComponent } from '../../dialogs/grade-paper/grade-paper.component';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { TeacherService } from '../../../services/teacher.service';
-import { AuthService, Committee, CommitteeMember, Paper, UserData } from '../../../services/auth.service';
+import { AuthService, UserData } from '../../../services/auth.service';
 import { CommitteeDocument, CommitteeDocumentsFormat, DocumentService } from '../../../services/document.service';
 import { PAPER_TYPES } from '../../../lib/constants';
 import { AreDocumentsUploaded, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
@@ -35,6 +34,9 @@ import { PaperSchedulerNoticeComponent } from '../../../shared/components/paper-
 import { CommitteeSnippetComponent } from '../../../shared/components/committee-snippet/committee-snippet.component';
 import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';
 import { LoaderService } from '../../../services/loader.service';
+import { CommitteesService } from '../../../services/committees.service';
+import { Committee, CommitteeMember, Paper } from '../../../lib/types';
+import { TeacherService } from '../../../services/teacher.service';
 
 @Component({
   selector: 'app-committee-papers',
@@ -69,7 +71,8 @@ import { LoaderService } from '../../../services/loader.service';
 })
 export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
   constructor(
-    private teacher: TeacherService,
+    private readonly teacher: TeacherService,
+    private readonly committeesService: CommitteesService,
     private route: ActivatedRoute,
     private router: Router,
     private cd: ChangeDetectorRef,
@@ -124,7 +127,7 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
           this.gradingAllowed = settings.allowGrading;
           this.user = userData;
           this.isLoadingResults = true;
-          return this.teacher.getCommittee(+params['id']);
+          return this.committeesService.findOne(+params['id']);
         })
       )
       .subscribe((committee) => {
@@ -136,7 +139,7 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
           this.isLoadingResults = false;
           // Check if user has rights to generate committee documents
           this.member = this.committee.members.find(
-            (member) => member.teacherId == this.user.teacher.id
+            (member) => member.teacherId == this.user.id
           );
           this.hasGenerationRights = ['president', 'secretary'].includes(
             this.member.role
@@ -235,46 +238,49 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
     // Return true if teacher has a grade given to this paper
     return (
       paper.grades.findIndex(
-        (grade) => grade.teacherId == this.user.teacher.id
+        (grade) => grade.committeeMemberTeacherId == this.user.id
       ) >= 0
     );
   }
 
-  gradePaper(paper: Paper) {
+  async gradePaper(paper: Paper) {
     const dialogRef = this.dialog.open(GradePaperComponent, {
       data: paper,
+      maxWidth: '500px',
+      width: '90vw',
     });
-
-    let sub = dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        const { forPaper, forPresentation } = result;
-        this.paperNeedsAttentionMap[paper.id] = 'loading';
-        let gradeSub = this.teacher
-          .gradePaper(paper.id, forPaper, forPresentation)
-          .subscribe((result) => {
-            if (result) {
-              let oldGrade = paper.grades.find(
-                (grade) => grade.teacherId == this.user.teacher.id
-              );
-              if (oldGrade) {
-                oldGrade.forPaper = forPaper;
-                oldGrade.forPresentation = forPresentation;
-              } else {
-                paper.grades.push({
-                  forPaper,
-                  forPresentation,
-                  teacherId: this.user.teacher.id,
-                  teacher: { user: <any>this.user },
-                });
-              }
-            }
-            this.paperNeedsAttentionMap[paper.id] = null;
-            this.cd.detectChanges();
-            gradeSub.unsubscribe();
-          });
+    const result = await firstValueFrom(dialogRef.afterClosed());
+    if(!result) return;
+    const { forPaper, forPresentation } = result;
+    this.paperNeedsAttentionMap[paper.id] = 'loading';
+    try {
+      await firstValueFrom(
+        this.committeesService.gradePaper({
+          paperId: paper.id,
+          committeeId: this.committee.id,
+          forPaper,
+          forPresentation,
+        })
+      );
+      this.snackbar.open('Lucrarea a fost notată.');
+      const oldGrade = paper.grades.find((grade) => grade.committeeMemberTeacherId == this.user.id);
+      if (oldGrade) {
+        oldGrade.forPaper = forPaper;
+        oldGrade.forPresentation = forPresentation;
+      } else {
+        paper.grades.push({
+          paperId: paper.id,
+          forPaper,
+          forPresentation,
+          committeeMemberTeacherId: this.user.id,
+          committeeMemberCommitteeId: this.committee.id,
+          committeeMember: this.member,
+        });
       }
-      sub.unsubscribe();
-    });
+    } finally {
+      this.paperNeedsAttentionMap[paper.id] = null;
+      this.cd.detectChanges();
+    }
   }
 
   private viewDocument(buffer: ArrayBuffer, documentName: CommitteeDocument) {
@@ -299,8 +305,8 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
       });
   }
 
-  markGradesAsFinal() {
-    let dialogRef = this.dialog.open(CommonDialogComponent, {
+  async markGradesAsFinal() {
+    const dialogRef = this.dialog.open(CommonDialogComponent, {
       data: {
         title: 'Atenție!',
         content:
@@ -311,20 +317,16 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
         ],
       },
     });
-    let sub = dialogRef.afterClosed().subscribe((consent) => {
-      if (consent) {
-        this.isLoadingResults = true;
-        this.teacher.markGradesAsFinal(this.committee.id).subscribe((res) => {
-          if (res) {
-            this.committee.finalGrades = true;
-            this.snackbar.open('Note marcate drept finale.');
-            this.updateScheduleNotice();
-          }
-          this.isLoadingResults = false;
-        });
-      }
-      sub.unsubscribe();
-    });
+    if(!await firstValueFrom(dialogRef.afterClosed())) return;
+    this.isLoadingResults = true;
+    try {
+      await firstValueFrom(this.committeesService.markGradesFinal(this.committee.id, true));
+      this.committee.finalGrades = true;
+      this.snackbar.open('Note marcate drept finale.');
+      this.updateScheduleNotice();
+    } finally {
+      this.isLoadingResults = false;
+    }
   }
 }
 

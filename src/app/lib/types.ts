@@ -164,6 +164,7 @@ export interface Paper {
   teacher: Teacher;
   documents: Document[];
   requiredDocuments: RequiredDocument[];
+  grades?: PaperGrade[];
   gradeAverage: number | null;
   committee: any;
   topics: Topic[];
@@ -205,6 +206,15 @@ export interface Document {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+}
+
+export interface PaperGrade {
+  committeeMemberCommitteeId: number;
+  committeeMemberTeacherId: number;
+  paperId: number;
+  forPaper: number;
+  forPresentation: number;
+  committeeMember: CommitteeMember;
 }
 
 export interface DocumentReuploadRequest {

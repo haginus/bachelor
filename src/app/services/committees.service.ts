@@ -18,6 +18,10 @@ export class CommitteesService {
     return this.http.get<Committee[]>(this.baseUrl);
   }
 
+  findMine() {
+    return this.http.get<Committee[]>(`${this.baseUrl}/me`);
+  }
+
   findOne(id: number) {
     return this.http.get<Committee>(`${this.baseUrl}/${id}`);
   }
@@ -38,6 +42,23 @@ export class CommitteesService {
     return this.http.put<Committee>(`${this.baseUrl}/${id}/final-grades`, { finalGrades });
   }
 
+  schedulePapers(dto: SchedulePapersDto) {
+    return this.http.patch<Committee>(`${this.baseUrl}/${dto.committeeId}/schedule-papers`, dto);
+  }
+
+  gradePaper(dto: GradePaperDto) {
+    return this.http.post<void>(`${this.baseUrl}/${dto.committeeId}/grade-paper`, dto);
+  }
+
+  getFile(committeeId: number, fileName: CommitteeFile) {
+    return this.http.get<ArrayBuffer>(`${this.baseUrl}/${committeeId}/files/${fileName}`, {
+      headers: {
+        'Cache-Control': 'no-store',
+      },
+      responseType: 'blob' as 'json',
+    });
+  }
+
   delete(id: number) {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
@@ -50,3 +71,24 @@ type CommitteeDto = Pick<Committee, 'name' | 'activityDays'> & {
     role: CommitteeMemberRole;
   }[];
 };
+
+type SchedulePapersDto = {
+  committeeId: number;
+  paperPresentationTime: number;
+  publicScheduling: boolean;
+  papers: { paperId: number; scheduledGrading: string | null }[];
+};
+
+type GradePaperDto = {
+  paperId: number;
+  committeeId: number;
+  forPaper: number;
+  forPresentation: number;
+};
+
+export type CommitteeFile = 'catalog_pdf' | 'catalog_docx' | 'final_catalog_pdf';
+export const CommitteeFilesFormat: Record<CommitteeFile, [string, string]> = {
+  'catalog_pdf': ['application/pdf', 'Catalog'],
+  'catalog_docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Catalog'],
+  'final_catalog_pdf': ['application/pdf', 'Catalog final'],
+}

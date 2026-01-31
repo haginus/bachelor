@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { TeacherService } from '../../../services/teacher.service';
-import { Committee } from '../../../services/auth.service';
 import { COMMITTEE_MEMBER_ROLE } from '../../../lib/constants';
 import { MatCardModule } from '@angular/material/card';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
@@ -12,6 +10,8 @@ import { PluckPipe } from '../../../shared/pipes/pluck.pipe';
 import { JoinPipe } from '../../../shared/pipes/join.pipe';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';
+import { CommitteesService } from '../../../services/committees.service';
+import { Committee } from '../../../lib/types';
 
 @Component({
   selector: 'teacher-committees',
@@ -32,7 +32,7 @@ import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';
 })
 export class TeacherCommitteesComponent implements OnInit, OnDestroy {
 
-  constructor(private teacher: TeacherService) { }
+  constructor(private committeesService: CommitteesService) { }
 
   committees: Committee[];
   isLoadingCommittees: boolean;
@@ -42,7 +42,7 @@ export class TeacherCommitteesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isLoadingCommittees = true;
-    this.subscription = this.teacher.getCommittees().subscribe(committees => {
+    this.subscription = this.committeesService.findMine().subscribe(committees => {
       this.committees = committees;
       this.isLoadingCommittees = false;
     })

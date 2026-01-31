@@ -5,13 +5,13 @@
     Student: <b>{{ paper.student.fullName }} </b> <br>
     Profesor coordonator: <b>{{ paper.teacher.fullName }} </b>
   </p>
-  <form [formGroup]="gradeForm" fxLayout="row grid" fxLayoutGap="10px grid">
-    <mat-form-field appearance="outline" fxFlex="100">
+  <form [formGroup]="gradeForm" fxLayout="row grid" fxLayoutGap="6px grid">
+    <mat-form-field appearance="outline" fxFlex="100" subscriptSizing="fixed">
       <input matInput type="number" formControlName="forPaper">
       <mat-label>Notă pentru lucrare</mat-label>
       <mat-error>Nota trebuie să fie un număr întreg de la 1 la 10.</mat-error>
     </mat-form-field>
-    <mat-form-field appearance="outline" fxFlex="100">
+    <mat-form-field appearance="outline" fxFlex="100" subscriptSizing="fixed">
       <input matInput type="number" formControlName="forPresentation">
       <mat-label>Notă pentru prezentare</mat-label>
       <mat-error>Nota trebuie să fie un număr întreg de la 1 la 10.</mat-error>

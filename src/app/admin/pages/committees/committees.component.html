@@ -27,7 +27,7 @@
 
 <mat-menu #committeeCatalogGenerationMenu="matMenu">
   <ng-template matMenuContent let-committee="committee">
-    <button mat-menu-item (click)="getCommitteeDocument(committee, 'catalog')">
+    <button mat-menu-item (click)="getCommitteeDocument(committee, 'catalog_pdf')">
       <mat-icon>description</mat-icon>
       <span>Generați catalogul în format PDF</span>
     </button>
@@ -35,7 +35,7 @@
       <mat-icon>description</mat-icon>
       <span>Generați catalogul în format DOCX</span>
     </button>
-    <button mat-menu-item (click)="getCommitteeDocument(committee, 'final_catalog')">
+    <button mat-menu-item (click)="getCommitteeDocument(committee, 'final_catalog_pdf')">
       <mat-icon>description</mat-icon>
       <span>Generați catalogul final</span>
     </button>

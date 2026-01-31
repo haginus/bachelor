@@ -38,7 +38,7 @@
               <div>
                 @for(member of committee.members; track member.teacherId) {
                   <div>
-                    {{ member.user.lastName }} {{ member.user.firstName }} - {{ COMMITTEE_MEMBER_ROLE[member.role] }}
+                    {{ member.teacher.lastName }} {{ member.teacher.firstName }} - {{ COMMITTEE_MEMBER_ROLE[member.role] }}
                   </div>
                 }
               </div>
