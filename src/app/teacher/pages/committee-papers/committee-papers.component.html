@@ -1,10 +1,10 @@
 <mat-menu #catalogGeneration="matMenu">
   <ng-template matMenuContent>
-    <button mat-menu-item (click)="generateCommitteeDocument('catalog')">
+    <button mat-menu-item (click)="getCommitteeFile('catalog_pdf')">
       <mat-icon>description</mat-icon>
       <span>Format PDF</span>
     </button>
-    <button mat-menu-item (click)="generateCommitteeDocument('catalog_docx')">
+    <button mat-menu-item (click)="getCommitteeFile('catalog_docx')">
       <mat-icon>description</mat-icon>
       <span>Format DOCX</span>
     </button>
@@ -13,11 +13,11 @@
 
 <mat-menu #documentGeneration="matMenu">
   <ng-template matMenuContent>
-    <button mat-menu-item (click)="getCommitteeDocument('committee_students', 'pdf')">
+    <button mat-menu-item (click)="getCommitteeFile('student_assignation_pdf')">
       <mat-icon>description</mat-icon>
       <span>[PDF] Programarea lucrărilor</span>
     </button>
-    <button mat-menu-item (click)="getCommitteeDocument('committee_students', 'excel')">
+    <button mat-menu-item (click)="getCommitteeFile('student_assignation_xlsx')">
       <mat-icon>description</mat-icon>
       <span>[Excel] Programarea lucrărilor</span>
     </button>
@@ -70,7 +70,7 @@
     <button mat-icon-button matTooltip="Generați documente" [matMenuTriggerFor]="documentGeneration">
       <mat-icon>description</mat-icon>
     </button>
-    <button mat-icon-button matTooltip="Descărcați toate lucrările" (click)="getPapersArchive()">
+    <button mat-icon-button matTooltip="Descărcați toate lucrările" (click)="getCommitteeFile('paper_documents_zip')">
       <mat-icon>archive</mat-icon>
     </button>
   </mat-toolbar>

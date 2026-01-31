@@ -34,9 +34,8 @@ import { PaperSchedulerNoticeComponent } from '../../../shared/components/paper-
 import { CommitteeSnippetComponent } from '../../../shared/components/committee-snippet/committee-snippet.component';
 import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';
 import { LoaderService } from '../../../services/loader.service';
-import { CommitteesService } from '../../../services/committees.service';
+import { CommitteeFile, CommitteeFilesFormat, CommitteesService } from '../../../services/committees.service';
 import { Committee, CommitteeMember, Paper } from '../../../lib/types';
-import { TeacherService } from '../../../services/teacher.service';
 
 @Component({
   selector: 'app-committee-papers',
@@ -71,7 +70,6 @@ import { TeacherService } from '../../../services/teacher.service';
 })
 export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
   constructor(
-    private readonly teacher: TeacherService,
     private readonly committeesService: CommitteesService,
     private route: ActivatedRoute,
     private router: Router,
@@ -191,29 +189,6 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
     } catch {}
   }
 
-  async getCommitteeDocument(documentName: 'committee_students', format: 'pdf' | 'excel' = 'pdf') {
-    const sbRef = this.snackbar.open('Se generează documentul...', null, { duration: -1 });
-    const result = await firstValueFrom(this.teacher.getCommitteeDocument(this.committee.id, documentName, format));
-    sbRef.dismiss();
-    if(!result) return;
-    const documentTitle = `Programarea lucrărilor - ${this.committee.name}`;
-    if(format === 'pdf') {
-      this.documentService.viewDocument(result, 'application/pdf', documentTitle);
-    } else if(format === 'excel') {
-      this.documentService.downloadDocument(result, documentTitle, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    }
-  }
-
-  async getPapersArchive() {
-    const sbRef = this.snackbar.open('Se descarcă arhiva...', null, { duration: null });
-    const archieveBuffer = await firstValueFrom(this.teacher.getCommitteePapersArchieve(this.committee.id));
-    sbRef.dismiss();
-    if (archieveBuffer) {
-      const title = `${this.committee.name} - Arhiva Lucrărilor`;
-      this.documentService.downloadDocument(archieveBuffer, title, 'application/zip');
-    }
-  }
-
   refreshResults() {
     this.performedActions.next('refresh');
   }
@@ -283,26 +258,20 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private viewDocument(buffer: ArrayBuffer, documentName: CommitteeDocument) {
-    const [mimeType, title] = CommitteeDocumentsFormat[documentName];
-    const documentTitle = [this.committee.name, title].join(' - ');
-    if(mimeType === 'application/pdf') {
-      this.documentService.viewDocument(buffer, mimeType, documentTitle);
-    } else {
-      this.documentService.downloadDocument(buffer, documentTitle, mimeType);
+  async getCommitteeFile(fileName: CommitteeFile) {
+    let sbRef = this.snackbar.open('Se generează documentul...');
+    try {
+      const document = await firstValueFrom(this.committeesService.getFile(this.committee.id, fileName));
+      const [mimeType, title] = CommitteeFilesFormat[fileName];
+      const documentTitle = [this.committee.name, title].join(' - ');
+      if(mimeType === 'application/pdf') {
+        this.documentService.viewDocument(document, mimeType, documentTitle);
+      } else {
+        this.documentService.downloadDocument(document, documentTitle, mimeType);
+      }
+    } finally {
+      sbRef.dismiss();
     }
-  }
-
-  generateCommitteeDocument(documentName: CommitteeDocument) {
-    this.isLoadingResults = true;
-    this.documentService
-      .getCommitteeDocument(this.committee.id, documentName)
-      .subscribe((buffer) => {
-        if (buffer) {
-          this.viewDocument(buffer, documentName);
-        }
-        this.isLoadingResults = false;
-      });
   }
 
   async markGradesAsFinal() {

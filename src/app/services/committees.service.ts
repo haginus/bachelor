@@ -86,9 +86,13 @@ type GradePaperDto = {
   forPresentation: number;
 };
 
-export type CommitteeFile = 'catalog_pdf' | 'catalog_docx' | 'final_catalog_pdf';
-export const CommitteeFilesFormat: Record<CommitteeFile, [string, string]> = {
+export const CommitteeFilesFormat = {
   'catalog_pdf': ['application/pdf', 'Catalog'],
   'catalog_docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Catalog'],
   'final_catalog_pdf': ['application/pdf', 'Catalog final'],
-}
+  'student_assignation_pdf': ['application/pdf', 'Programare studenți'],
+  'student_assignation_xlsx': ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Programare studenți'],
+  'paper_documents_zip': ['application/zip', 'Arhivă lucrări'],
+} as const satisfies Record<string, [string, string]>;
+
+export type CommitteeFile = keyof typeof CommitteeFilesFormat;

@@ -39,6 +39,14 @@
       <mat-icon>description</mat-icon>
       <span>Generați catalogul final</span>
     </button>
+    <button mat-menu-item (click)="getCommitteeDocument(committee, 'student_assignation_pdf')">
+      <mat-icon>description</mat-icon>
+      <span>Generați programarea studenților în format PDF</span>
+    </button>
+    <button mat-menu-item (click)="getCommitteeDocument(committee, 'student_assignation_xlsx')">
+      <mat-icon>description</mat-icon>
+      <span>Generați programarea studenților în format XLSX</span>
+    </button>
   </ng-template>
 </mat-menu>
 
