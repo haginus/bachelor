@@ -1,9 +1,11 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
-import { DocumentService } from "./document.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { firstValueFrom } from "rxjs";
+import { firstValueFrom, map, Observable } from "rxjs";
+import { SseClient } from "./sse-client";
+import { FileGenerationStatus } from "../lib/types";
+import { FilesService } from "./files.service";
 
 @Injectable({
   providedIn: 'any'
@@ -12,8 +14,9 @@ export class ReportsService {
 
   constructor(
     private readonly http: HttpClient,
-    private readonly documentsService: DocumentService,
+    private readonly sseClient: SseClient,
     private readonly snackbar: MatSnackBar,
+    private readonly filesService: FilesService,
   ) {}
 
   private readonly baseUrl = `${environment.apiUrl}/reports`;
@@ -33,13 +36,27 @@ export class ReportsService {
       const document = await firstValueFrom(this.getFile(fileName));
       const [mimeType, title] = ReportFilesFormat[fileName];
       if(mimeType === 'application/pdf') {
-        this.documentsService.viewDocument(document, mimeType, title);
+        this.filesService.viewFile(document, mimeType, title);
       } else {
-        this.documentsService.downloadDocument(document, title, mimeType);
+        this.filesService.saveFile(document, mimeType, title);
       }
     } finally {
       sbRef.dismiss();
     }
+  }
+
+  getFinalReportStatus(): Observable<FileGenerationStatus> {
+    return this.sseClient.get<FileGenerationStatus>(`${this.baseUrl}/final-report`).pipe(
+      map(event => event.data)
+    );
+  }
+
+  generateFinalReport(): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/final-report/generate`, {});
+  }
+
+  getFinalReport() {
+    return this.filesService.getFileWithProgress(`${this.baseUrl}/final-report/download`);
   }
 
 }

@@ -44,6 +44,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { UploadFileDirective } from '../shared/directives/upload-file.directive';
 import { CodeEditorModule } from '@ngstack/code-editor';
 import { DatetimePipe } from '../shared/pipes/datetime.pipe';
+import { TextProgressSpinnerComponent } from '../shared/components/text-progress-spinner/text-progress-spinner.component';
 
 const materialDeps = [
   MatPaginatorModule,
@@ -93,6 +94,7 @@ const materialDeps = [
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    TextProgressSpinnerComponent,
     NgxJsonViewerModule,
     UploadFileDirective,
     DatetimePipe,

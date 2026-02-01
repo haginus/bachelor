@@ -1,56 +1,44 @@
-import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { DocumentService } from '../../../services/document.service';
-import { AdminService, FinalReportStatus } from '../../../services/admin.service';
+import { Component } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { AuthService } from '../../../services/auth.service';
-import { ReportFile, ReportFilesFormat, ReportsService } from '../../../services/reports.service';
+import { ReportFile, ReportsService } from '../../../services/reports.service';
+import { FileGenerationStatus } from '../../../lib/types';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FilesService } from '../../../services/files.service';
 
 @Component({
   selector: 'app-reports',
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss']
 })
-export class ReportsComponent implements OnInit {
+export class ReportsComponent {
 
   constructor(
     private reportsService: ReportsService,
-    private admin: AdminService,
-  ) {}
+    private readonly filesService: FilesService,
+  ) {
+    this.reportsService.getFinalReportStatus().pipe(takeUntilDestroyed()).subscribe(status => {
+      this.finalReportStatus = status;
+    });
 
-  finalReportStatus: FinalReportStatus;
-
-  ngOnInit(): void {
-    this.getFinalReportStatus();
   }
+
+  finalReportStatus: FileGenerationStatus;
 
   async openReportFile(fileName: ReportFile) {
     return this.reportsService.openFile(fileName);
   }
 
-  getFinalReportStatus() {
-    this.admin.getFinalReportStatus().subscribe(status => {
-      this.finalReportStatus = status;
-    });
+  async generateFinalReport() {
+    await firstValueFrom(this.reportsService.generateFinalReport());
   }
 
-  generateFinalReport() {
-    this.finalReportStatus.isGenerating = true;
-    this.admin.generateFinalReport().subscribe(status => {
-      this.finalReportStatus = status;
-    });
-  }
-
-  getFinalReport() {
-    this.admin.getFinalReportLink().subscribe(link => {
-      if(link) {
-        window.open(link, "_blank");
-      }
-    });
+  async getFinalReport() {
+    const document = await firstValueFrom(this.reportsService.getFinalReport());
+    this.filesService.saveFile(document, 'application/zip', 'Raport final');
   }
 
   get lastGeneratedOn() {
-    return new Date(this.finalReportStatus?.lastGeneratedOn).toLocaleDateString("ro", {
+    return new Date(this.finalReportStatus?.lastGeneratedAt).toLocaleDateString("ro", {
       year: "numeric",
       month: "long",
       day: "numeric",

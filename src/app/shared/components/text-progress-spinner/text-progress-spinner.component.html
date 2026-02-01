@@ -1,0 +1,11 @@
+<div class="progress-container">
+  @if(mode === 'indeterminate') {
+    <mat-progress-spinner class="spinner main" [diameter]="diameter" mode="indeterminate" [color]="color" />
+  } @else {
+    <mat-progress-spinner class="spinner main" [diameter]="diameter" mode="determinate" [value]="value" [color]="color" />
+    <mat-progress-spinner class="spinner placeholder" [diameter]="diameter"  mode="determinate" [value]="100" [color]="color" />
+    <div class="text">
+      {{ value | number: '1.0-0' }}%
+    </div>
+  }
+</div>

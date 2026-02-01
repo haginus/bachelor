@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.title {
+  flex: 1;
+}
+
+.suffix {
+  position: absolute;
+  bottom: 0;
+  right: 5px;
+  font-size: 11px;
+  opacity: 0.7;
+}

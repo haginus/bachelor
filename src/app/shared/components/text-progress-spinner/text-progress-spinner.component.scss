@@ -1,0 +1,30 @@
+.progress-container {
+  position: relative;
+  width: 32px;
+  height: 32px;
+
+  .spinner {
+    position: absolute;
+    inset: 0 0 0 0;
+
+    &.main {
+      z-index: 2;
+    }
+
+    &.placeholder {
+      z-index: 1;
+      opacity: 0.2;
+    }
+  }
+
+  .text {
+    position: absolute;
+    inset: 0 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    font-weight: 600;
+    font-size: 9px;
+  }
+}

@@ -68,33 +68,19 @@
     <mat-card-title>Raport sesiune</mat-card-title>
   </mat-card-header>
   <div class="list">
-    @if(finalReportStatus?.isGenerating) {
+    @if(finalReportStatus?.status === 'in_progress') {
       <div class="list-item">
         <div class="content">
           <div>Generați raport sesiune</div>
           <div>Raportul este în curs de generare...</div>
         </div>
-        <div class="progress-container">
-          <mat-progress-spinner
-            class="spinner main"
-            diameter="32"
-            [mode]="finalReportStatus.progress ? 'determinate' : 'indeterminate'"
-            [value]="finalReportStatus.progress * 100"
-          />
-          @if(finalReportStatus.progress) {
-            <mat-progress-spinner
-              class="spinner placeholder"
-              diameter="32"
-              [value]="100"
-              mode="determinate"
-            />
-          }
-          <div class="text">
-            {{ finalReportStatus.progress * 100 | number: '1.0-0' }}%
-          </div>
-        </div>
+        <app-text-progress-spinner
+          [mode]="finalReportStatus.progress ? 'determinate' : 'indeterminate'"
+          [value]="finalReportStatus.progress * 100"
+          [diameter]="32"
+        />
       </div>
-    } @else if(!finalReportStatus || !finalReportStatus.lastGeneratedOn) {
+    } @else if(!finalReportStatus || !finalReportStatus.lastGeneratedAt) {
       <div class="list-item">
         <div class="content">
           <div>Generați raport sesiune</div>
