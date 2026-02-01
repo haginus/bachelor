@@ -81,17 +81,6 @@ export class DocumentService {
     return this.http.delete<void>(`${environment.apiUrl}/documents/${id}`);
   }
 
-  getCommitteeDocument(committeeId: number, documentName: CommitteeDocument) {
-    const url = `${environment.apiUrl}/committees/${committeeId}/files/${documentName}`;
-    const options = this.auth.getPrivateHeaders();
-    options.headers.append('Cache-Control', 'no-store');
-    return this.http
-      .get<ArrayBuffer>(url, {...options, responseType: 'arraybuffer' as 'json'})
-      .pipe(
-        catchError(this.handleError<ArrayBuffer>('getCommitteeDocument', null))
-      );
-  }
-
   getDocumentUploadHistory(paperId: number, name: string): Observable<PaperDocument[]> {
     const url = `${environment.apiUrl}/documents/history?paperId=${paperId}&name=${name}`;
     return this.http.get<PaperDocument[]>(url, this.auth.getPrivateHeaders()).pipe(
@@ -116,11 +105,4 @@ export class DocumentService {
       return of(result as T);
     };
   }
-}
-
-export type CommitteeDocument = 'catalog' | 'catalog_docx' | 'final_catalog';
-export const CommitteeDocumentsFormat: Record<CommitteeDocument, [string, string]> = {
-  'catalog': ['application/pdf', 'Catalog'],
-  'catalog_docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Catalog'],
-  'final_catalog': ['application/pdf', 'Catalog final'],
 }

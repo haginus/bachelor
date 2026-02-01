@@ -14,7 +14,7 @@ import { GradePaperComponent } from '../../dialogs/grade-paper/grade-paper.compo
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { AuthService, UserData } from '../../../services/auth.service';
-import { CommitteeDocument, CommitteeDocumentsFormat, DocumentService } from '../../../services/document.service';
+import { DocumentService } from '../../../services/document.service';
 import { PAPER_TYPES } from '../../../lib/constants';
 import { AreDocumentsUploaded, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';

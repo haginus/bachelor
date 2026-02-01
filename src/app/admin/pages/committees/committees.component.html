@@ -53,17 +53,17 @@
 
 <mat-menu #documentGeneration="matMenu">
   <ng-template matMenuContent>
-    <button mat-menu-item title="Componența comisiilor și planificarea pe săli și zile" (click)="generateCommitteeDocument('committee_compositions')">
+    <button mat-menu-item title="Componența comisiilor și planificarea pe săli și zile" (click)="openReportFile('committee_compositions_pdf')">
       <mat-icon>description</mat-icon>
       <span>Componența comisiilor și planificarea pe săli și zile</span>
     </button>
     <button mat-menu-item title="Repartizarea studenților pe comisii"
-      (click)="generateCommitteeDocument('committee_students')">
+      (click)="openReportFile('student_assignation_pdf')">
       <mat-icon>description</mat-icon>
       <span>[PDF] Repartizarea studenților pe comisii</span>
     </button>
     <button mat-menu-item title="Repartizarea studenților pe comisii"
-      (click)="generateCommitteeDocument('committee_students_excel')">
+      (click)="openReportFile('student_assignation_xlsx')">
       <mat-icon>description</mat-icon>
       <span>[Excel] Repartizarea studenților pe comisii</span>
     </button>

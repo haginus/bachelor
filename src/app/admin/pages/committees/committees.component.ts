@@ -12,6 +12,7 @@ import { rowAnimation } from '../../../row-animations';
 import { CommitteeFile, CommitteeFilesFormat, CommitteesService } from '../../../services/committees.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { User, Teacher, Committee } from '../../../lib/types';
+import { ReportFile, ReportsService } from '../../../services/reports.service';
 
 @Component({
   selector: 'app-committees',
@@ -25,6 +26,7 @@ export class CommitteesComponent {
 
   constructor(
     private committeesService: CommitteesService,
+    private readonly reportsService: ReportsService,
     private admin: AdminService,
     private dialog: MatDialog,
     private document: DocumentService,
@@ -159,24 +161,8 @@ export class CommitteesComponent {
     this.performedActions.next("refresh");
   }
 
-  async generateCommitteeDocument(documentName: 'committee_compositions' | 'committee_students' | 'committee_students_excel') {
-    const documentFormats: Record<typeof documentName, [string, string]> = {
-      committee_compositions: ['application/pdf', 'Componența comisiilor și planificarea pe săli și zile'],
-      committee_students: ['application/pdf', 'Repartizare comisii'],
-      committee_students_excel: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Repartizare comisii']
-    }
-    let sbRef = this.snackbar.open('Se generează documentul...', null, {
-      duration: null
-    });
-    const document = await firstValueFrom(this.admin.generateCommitteeDocument(documentName));
-    if(!document) return;
-    sbRef.dismiss();
-    const [mimeType, title] = documentFormats[documentName];
-    if(mimeType === 'application/pdf') {
-      this.document.viewDocument(document, mimeType, title);
-    } else {
-      this.document.downloadDocument(document, title, mimeType);
-    }
+  async openReportFile(fileName: ReportFile) {
+    return this.reportsService.openFile(fileName);
   }
 
 }
