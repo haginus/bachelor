@@ -59,7 +59,7 @@ export class PaperDocumentListComponent implements OnChanges {
   /**  Output variable that tells whether all the documents are uploaded (by uploader and category) */
   @Output() areDocumentsUploaded = new EventEmitter<AreDocumentsUploaded>();
   /** Emits whether all document reupload requests are resolved. */
-  @Output() reuploadRequestsResolved = new EventEmitter<boolean>();
+  @Output() reuploadRequestsResolved = new EventEmitter<DocumentMapElement[]>();
   /** Emit when admin user asks for a document to be reuploaded. */
   @Output() reuploadRequest = new EventEmitter<{ document: DocumentMapElement; reuploadRequested: boolean; }>();
 
@@ -228,8 +228,8 @@ export class PaperDocumentListComponent implements OnChanges {
   }
 
   private _emitReuploadRequestsResolved() {
-    let unresolvedRequests = Object.values(this.documentMap).filter(doc => doc.reuploadRequest);
-    this.reuploadRequestsResolved.emit(unresolvedRequests.length == 0);
+    const documents = Object.values(this.documentMap).filter(doc => doc.reuploadRequest);
+    this.reuploadRequestsResolved.emit(documents);
   }
 
   openUploadDialog(mapElement: DocumentMapElement) {

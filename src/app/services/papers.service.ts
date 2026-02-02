@@ -71,25 +71,10 @@ export class PapersService {
     return this.http.post<Paper>(url, {});
   }
 
-  getDocumentReuploadRequests(paperId: number) {
-    const url = `${this.apiUrl}/${paperId}/reupload-requests`;
-    return this.http
-      .get<DocumentReuploadRequest[]>(url, this.auth.getPrivateHeaders())
-      .pipe(
-        catchError(this.handleError('getDocumentReuploadRequests', []))
-      );
-  }
-
   delete(paperId: number) {
     return this.http.delete<void>(`${this.apiUrl}/${paperId}`);
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      this.snackbar.open(error?.error.message || 'A apărut o eroare.');
-      return of(result as T);
-    };
-  }
 }
 
 export interface PaperQueryDto {

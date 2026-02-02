@@ -9,7 +9,6 @@ import { BehaviorSubject, firstValueFrom, merge, Observable, of, Subscription } 
 import { debounceTime, startWith, switchMap } from 'rxjs/operators';
 import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
 import { PaperValidationDialogComponent, PaperValidationDialogData } from '../../dialogs/paper-validation-dialog/paper-validation-dialog.component';
-import { AdminService } from '../../../services/admin.service';
 import { DOMAIN_TYPES, PAPER_TYPES, STUDY_FORMS } from '../../../lib/constants';
 import { AreDocumentsUploaded, DocumentMapElement } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { detailExpand, rowAnimation } from '../../../row-animations';
@@ -19,6 +18,7 @@ import { RequestDocumentReuploadDialogComponent, RequestDocumentReuploadDialogDa
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Domain, Paper, PaperType } from '../../../lib/types';
 import { DomainsService } from '../../../services/domains.service';
+import { DocumentReuploadRequestsService } from '../../../services/document-reupload-requests.service';
 
 @Component({
   selector: 'app-papers',
@@ -32,9 +32,9 @@ import { DomainsService } from '../../../services/domains.service';
 export class AdminPapersComponent implements OnInit, AfterViewInit {
 
   constructor(
-    private admin: AdminService,
     private readonly domainsService: DomainsService,
     private readonly papersService: PapersService,
+    private readonly documentReuploadRequestsService: DocumentReuploadRequestsService,
     private cd: ChangeDetectorRef,
     private dialog: MatDialog,
     private snackbar: MatSnackBar
@@ -172,11 +172,9 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
       this.requestDocumentReupload(paper, event.document.requiredDocument.name);
     } else {
       const requestId = event.document.reuploadRequest!.id;
-      const result = await firstValueFrom(this.admin.cancelDocumentReuploadRequest(paper.id, requestId));
-      if(result) {
-        this.snackbar.open('Solicitarea de reîncărcare a fost anulată.');
-        this.refreshResults();
-      }
+      await firstValueFrom(this.documentReuploadRequestsService.cancel(requestId));
+      this.snackbar.open('Solicitarea de reîncărcare a fost anulată.');
+      this.refreshResults();
     }
   }
 

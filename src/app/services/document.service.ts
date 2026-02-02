@@ -61,9 +61,7 @@ export class DocumentService {
 
   signDocument(paperId: number, name: string) {
     const url = `${environment.apiUrl}/documents/sign`;
-    return this.http.post<PaperDocument>(url, { name, paperId }, this.auth.getPrivateHeaders()).pipe(
-      catchError(this.handleError("signDocument", null))
-    );
+    return this.http.post<PaperDocument>(url, { name, paperId });
   }
 
   getDocument(id: number): Observable<ArrayBuffer> {

@@ -6,12 +6,12 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { formatDate } from '../../../lib/utils';
-import { AdminService } from '../../../services/admin.service';
 import { firstValueFrom } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { RequiredDocument } from '../../../lib/types';
+import { DocumentReuploadRequestsService } from '../../../services/document-reupload-requests.service';
 
 @Component({
   selector: 'app-request-document-reupload-dialog',
@@ -35,7 +35,7 @@ export class RequestDocumentReuploadDialogComponent {
     @Inject(MAT_DIALOG_DATA) private readonly data: RequestDocumentReuploadDialogData,
     private readonly dialogRef: MatDialogRef<RequestDocumentReuploadDialogComponent>,
     private readonly snackBar: MatSnackBar,
-    private readonly adminService: AdminService,
+    private readonly documentReuploadRequestsService: DocumentReuploadRequestsService,
   ) {
     this.requiredDocuments = data.requiredDocuments;
     const documentsFormGroup = new FormGroup(
@@ -97,11 +97,14 @@ export class RequestDocumentReuploadDialogComponent {
         comment: document.comment,
         paperId,
       }));
-    const results = await firstValueFrom(this.adminService.requestDocumentsReupload(paperId, requests));
-    if(results.length > 0) {
+    try {
+      const results = await firstValueFrom(this.documentReuploadRequestsService.bulkCreate({
+        paperId,
+        requests,
+      }));
       this.snackBar.open('Solicitarea de reîncărcare a documentelor a fost transmisă.');
       this.dialogRef.close(results);
-    } else {
+    } finally {
       this.isSubmitting = false;
     }
   }

@@ -65,17 +65,18 @@ export class SignDialogComponent {
 
   protected async sign() {
     this.loadingSubmit = true;
-    const document = await firstValueFrom(
-      this.documentsService.signDocument(this.signOptions.paperId, this.signOptions.requiredDocument.name)
-    );
-    if(document) {
+    try {
+      const document = await firstValueFrom(
+        this.documentsService.signDocument(this.signOptions.paperId, this.signOptions.requiredDocument.name)
+      );
       const content = await firstValueFrom(this.documentsService.getDocument(document.id));
       if(content) {
         this.dialogRef.close({ document, content });
         this.snackBar.open('Documentul a fost semnat.');
       }
+    } finally {
+      this.loadingSubmit = false;
     }
-    this.loadingSubmit = false;
   }
 
   openSampleEditor() {

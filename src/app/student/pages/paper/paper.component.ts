@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { combineLatest, firstValueFrom, Observable, of, Subscription } from 'rxjs';
-import { AreDocumentsUploaded, PaperDocumentEvent, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
+import { AreDocumentsUploaded, DocumentMapElement, PaperDocumentEvent, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { EditPaperComponent } from '../../../shared/components/edit-paper/edit-paper.component';
 import { UserExtraDataEditorComponent, UserExtraDataEditorData } from '../../../shared/components/user-extra-data-editor/user-extra-data-editor.component';
 import { AuthService, SessionSettings } from '../../../services/auth.service';
@@ -15,7 +15,7 @@ import { UserSnippetComponent } from '../../../shared/components/user-snippet/us
 import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PapersService } from '../../../services/papers.service';
-import { DocumentReuploadRequest, Paper, UserExtraData } from '../../../lib/types';
+import { Paper, UserExtraData } from '../../../lib/types';
 import { SubmitPaperDialogComponent } from '../../dialogs/submit-paper-dialog/submit-paper-dialog.component';
 import { CommitteeSnippetComponent } from '../../../shared/components/committee-snippet/committee-snippet.component';
 import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';
@@ -56,7 +56,6 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
 
   paper: Paper = null;
   userExtraData: UserExtraData = null;
-  documentReuploadRequests: DocumentReuploadRequest[] = [];
   isLoadingInitialData: boolean = true;
   isLoadingData: boolean;
   isWaitingForDocumentGeneration = false;
@@ -68,6 +67,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   areDocumentsUploaded: boolean;
   deadlinePassed: boolean = false;
   hasReuploadRequests: boolean = false;
+  canEditExtraDataWithReuploadRequests: boolean = false;
   canEditPaper: boolean;
   paperSchedulingLocation: string | null = null;
 
@@ -83,8 +83,12 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
     this.cd.detectChanges();
   }
 
-  handleReuploadRequestsResolved(resolved: boolean) {
-    this.hasReuploadRequests = !resolved;
+  handleReuploadRequestsResolved(event: DocumentMapElement[]) {
+    this.hasReuploadRequests = event.length > 0;
+    const documentNames = new Set(event.map(e => e.requiredDocument.name));
+    if(this.hasReuploadRequests && documentNames.has('sign_up_form') && documentNames.has('liquidation_form')) {
+      this.canEditExtraDataWithReuploadRequests = true;
+    }
     this.cd.detectChanges();
   }
 
@@ -118,17 +122,14 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
   async getData() {
     this.isLoadingData = true;
     try {
-      const [paper, extraData, documentReuploadRequests] = await firstValueFrom(
+      const [paper, extraData] = await firstValueFrom(
         combineLatest([
           this.papersService.findMineStudent(),
           this.auth.getUserExtraData(),
-          // TODO
-          this.papersService.getDocumentReuploadRequests(1),
         ])
       );
       this.paper = paper;
       this.userExtraData = extraData;
-      this.documentReuploadRequests = documentReuploadRequests;
       this.paperSchedulingLocation = paper.scheduledGrading ? paper.committee.activityDays.find(day => formatDate(day.startTime) === formatDate(paper.scheduledGrading))?.location : null;
       this._checkSubmissionPeriod();
     } finally {
