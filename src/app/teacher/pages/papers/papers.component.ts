@@ -14,9 +14,7 @@ import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/
 import { BehaviorSubject, firstValueFrom, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AddPaperComponent } from '../../dialogs/add-paper/add-paper.component';
-import { TeacherService } from '../../../services/teacher.service';
 import { AuthService, SessionSettings } from '../../../services/auth.service';
-import { DocumentService } from '../../../services/document.service';
 import { PAPER_TYPES } from '../../../lib/constants';
 import { inclusiveDate, parseDate } from '../../../lib/utils';
 import { AreDocumentsUploaded, PaperDocumentEvent, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
@@ -76,13 +74,11 @@ export class TeacherPapersComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
   constructor(
-    private teacher: TeacherService,
     private readonly papersService: PapersService,
     private cd: ChangeDetectorRef,
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
     private auth: AuthService,
-    private document: DocumentService
   ) {}
 
   displayedColumns: string[] = [
@@ -179,14 +175,11 @@ export class TeacherPapersComponent
     this.cd.detectChanges();
   }
 
-  addPaper() {
+  async addPaper() {
     const dialogRef = this.dialog.open(AddPaperComponent);
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.refreshResults();
-      }
-    });
+    if(await firstValueFrom(dialogRef.afterClosed()) ) {
+      this.refreshResults();
+    }
   }
 
   get canEditPapers(): boolean {
@@ -197,33 +190,25 @@ export class TeacherPapersComponent
     return today <= endDateSecretary;
   }
 
-  editPaper(paper: Paper) {
-    const dialogRef = this.dialog.open<
-      EditPaperComponent,
-      Paper
-    >(EditPaperComponent, {
+  async editPaper(paper: Paper) {
+    const dialogRef = this.dialog.open<EditPaperComponent, Paper>(EditPaperComponent, {
       data: paper,
     });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result?.result) {
-        this.refreshResults();
-        if (result.documentsGenerated) {
-          this.snackbar.open(
-            'Documente noi au fost generate în urma modificărilor. Cereți studentului să le semneze.',
-            null,
-            { duration: 10000 }
-          );
-        }
+    const result = await firstValueFrom(dialogRef.afterClosed());
+    if(result.result) {
+      this.refreshResults();
+      if (result.documentsGenerated) {
+        this.snackbar.open(
+          'Documente noi au fost generate în urma modificărilor. Cereți studentului să le semneze.',
+          null,
+          { duration: 10000 }
+        );
       }
-    });
+    }
   }
 
   async unsubmitPaper(paper: Paper) {
-    let dialogRef = this.dialog.open<
-      CommonDialogComponent,
-      CommonDialogData,
-      boolean
-    >(CommonDialogComponent, {
+    let dialogRef = this.dialog.open<CommonDialogComponent, CommonDialogData, boolean>(CommonDialogComponent, {
       data: {
         title: 'Anulați înscrierea?',
         content: 'Sunteți sigur că doriți să anulați înscrierea?',
@@ -244,54 +229,28 @@ export class TeacherPapersComponent
     }
   }
 
-  removePaper(paper: Paper) {
-    let dialogRef = this.dialog.open<
-      CommonDialogComponent,
-      CommonDialogData,
-      boolean
-    >(CommonDialogComponent, {
+  async removePaper(paper: Paper) {
+    const dialogRef = this.dialog.open<CommonDialogComponent, CommonDialogData, boolean>(CommonDialogComponent, {
       data: {
         title: 'Rupeți asocierea?',
-        content:
-          'Sunteți sigur că doriți să rupeți asocierea?\nStudentul va trebui să își găsească alt profesor.',
+        content: `Sunteți sigur că doriți să rupeți asocierea cu ${paper.student.fullName}?\nStudentul va trebui să își găsească alt profesor.`,
         actions: [
-          {
-            name: 'Anulați',
-            value: false,
-          },
-          {
-            name: 'Rupeți asocierea',
-            value: true,
-          },
+          { name: 'Anulați', value: false },
+          { name: 'Rupeți asocierea', value: true },
         ],
       },
     });
-
-    let sub = dialogRef
-      .afterClosed()
-      .pipe(
-        switchMap((result) => {
-          // If dialog result is true, return removePaper observable, else return Observable<null>
-          return result == true ? this.teacher.removePaper(paper.id) : of(null);
-        })
-      )
-      .subscribe((result) => {
-        // If dialog result was false, exit
-        if (result == null) {
-          return;
-        }
-        let msg = result ? 'Asociere ruptă' : 'A apărut o eroare.';
-        this.snackbar.open(msg);
-        // If delete was successful, remove paper from table
-        if (result) {
-          const data = this.dataSource.data;
-          let idx = data.findIndex((p) => paper.id == p.id);
-          data.splice(idx, 1);
-          this.table.renderRows();
-        }
-
-        sub.unsubscribe();
-      });
+    if(!await firstValueFrom(dialogRef.afterClosed())) return;
+    try {
+      this.isLoadingResults = true;
+      await firstValueFrom(this.papersService.delete(paper.id));
+    } catch {
+      return;
+    } finally {
+      this.isLoadingResults = false;
+    }
+    this.snackbar.open('Asociere ruptă.');
+    this.refreshResults();
   }
 
   toggleFilters() {
@@ -324,17 +283,9 @@ export class TeacherPapersComponent
     };
   }
 
-  downloadExcel() {
-    const sbRef = this.snackbar.open('Se generează lista...');
-    this.teacher.getStudentPapersExcel().subscribe((buffer) => {
-      sbRef.dismiss();
-      if (!buffer) return;
-      this.document.downloadDocument(
-        buffer,
-        'Lucrări.xlsx',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      );
-    });
+  async downloadExcel() {
+    const teacherId = (await firstValueFrom(this.auth.userData)).id;
+    this.papersService.saveXlsxExport({ teacherId });
   }
 
   ngOnDestroy(): void {

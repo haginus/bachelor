@@ -1,16 +1,14 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { combineLatest, Observable, Subscription } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { debounceTime, map, startWith, switchMap } from 'rxjs/operators';
-import { TeacherService } from '../../../services/teacher.service';
 import { Topic, TopicsService } from '../../../services/topics.service';
-import { Domain, UserData } from '../../../services/auth.service';
-import { PAPER_TYPES } from '../../../lib/constants';
+import { DOMAIN_TYPES, PAPER_TYPES } from '../../../lib/constants';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +20,12 @@ import { UserSnippetComponent } from '../../../shared/components/user-snippet/us
 import { AsyncPipe } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSelectModule } from '@angular/material/select';
+import { StudentsService } from '../../../services/students.service';
+import { DomainsService } from '../../../services/domains.service';
+import { Student } from '../../../lib/types';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PapersService } from '../../../services/papers.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-add-paper',
@@ -47,18 +51,37 @@ import { MatSelectModule } from '@angular/material/select';
     AsyncPipe,
   ],
 })
-export class AddPaperComponent implements OnInit {
+export class AddPaperComponent {
 
   constructor(
-    private teacher: TeacherService,
-    private topicService: TopicsService,
+    private readonly authService: AuthService,
+    private readonly domainsService: DomainsService,
+    private readonly studentsService: StudentsService,
+    private readonly topicsService: TopicsService,
+    private readonly papersService: PapersService,
     private dialog: MatDialogRef<AddPaperComponent>,
     private snackbar: MatSnackBar
   ) {
     this.filteredTopics = this.paperForm.get("topics").valueChanges.pipe(
       startWith(null),
       map((topicName: string | null) => typeof topicName == 'string' ? this._filter(topicName) : this.remainingTopics.slice())
-    )
+    );
+    this.studentLookupForm.valueChanges.pipe(
+      takeUntilDestroyed(),
+      startWith(this.studentLookupForm.value),
+      debounceTime(500),
+      switchMap((query) => {
+        this.isLoadingUsers = true;
+        return this.studentsService.findAll({ ...query, limit: 15 });
+      })
+    ).subscribe(results => {
+      this.studentResults = results.rows;
+      this.isLoadingUsers = false;
+    });
+    this.topicsService.findAll().pipe(takeUntilDestroyed()).subscribe(topics => {
+      this.remainingTopics =
+        topics.filter(topic => !this.selectedTopics.find(t => t.id == topic.id));
+    });
   }
 
   paperForm = new FormGroup({
@@ -68,67 +91,48 @@ export class AddPaperComponent implements OnInit {
     topicIds: new FormControl([], [Validators.required]),
   });
 
-  findStudentForm = new FormGroup({
+  studentLookupForm = new FormGroup({
     firstName: new FormControl(""),
     lastName: new FormControl(""),
     email: new FormControl(""),
     domainId: new FormControl(null),
-    studentId: new FormControl(null, [Validators.required])
   });
 
-  userResultsSubscription: Subscription;
+  selectedStudentControl = new FormControl<Student[]>([], [Validators.minLength(1)]);
 
   isLoadingQuery = false;
   isLoadingUsers = false;
 
-  userResults: UserData[] = [];
-  domains: Observable<Domain[]> = this.teacher.getDomains();
+  studentResults: Student[] = [];
+  domains = this.domainsService.findAll();
 
   selectedTopics: Topic[] = [];
   remainingTopics: Topic[] = [];
   filteredTopics: Observable<Topic[]>;
 
   PAPER_TYPES = PAPER_TYPES;
+  DOMAIN_TYPES = DOMAIN_TYPES;
 
-  ngOnInit(): void {
-    const firstNameChange = this.findStudentForm.get('firstName').valueChanges.pipe(startWith(''), debounceTime(500));
-    const lastNameChange = this.findStudentForm.get('lastName').valueChanges.pipe(startWith(''), debounceTime(500));
-    const emailChange = this.findStudentForm.get('email').valueChanges.pipe(startWith(''), debounceTime(500));
-    const domainChange = this.findStudentForm.get('domainId').valueChanges.pipe(startWith(''));
-    this.userResultsSubscription = combineLatest([firstNameChange, lastNameChange, emailChange, domainChange]).pipe(
-      switchMap(([firstName, lastName, email, domainId]) => {
-        this.isLoadingUsers = true;
-        return this.teacher.getStudents(firstName, lastName, email, domainId);
-      })
-    ).subscribe(results => {
-      this.userResults = results;
-      this.isLoadingUsers = false;
-    });
-    this.topicService.findAll().subscribe(topics => {
-      this.remainingTopics =
-        topics.filter(topic => !this.selectedTopics.find(t => t.id == topic.id));
-    });
-  }
-
-  savePaper() {
+  async savePaper() {
     this.isLoadingQuery = true;
-    const topicNames = this.selectedTopics.filter(topic => topic.id == 0).map(topic => topic.name);
-    this.topicService.bulkCreate(topicNames).pipe(
-      switchMap(topics => {
-        let topicIds = this.selectedTopics.filter(topic => topic.id != 0).map(topic => topic.id);
-        topicIds = topicIds.concat(topics.map(topic => topic.id));
-        const { title, description } = this.paperForm.value;
-        const { studentId } = this.findStudentForm.value;
-        return this.teacher.addPaper(studentId, title, description, topicIds);
-      })
-    ).subscribe(paper => {
-      if(paper) {
-        this.dialog.close(paper);
-        this.snackbar.open("Lucrarea a fost salvată.");
-      } else {
-        this.isLoadingQuery = false;
+    try {
+      let topicIds = this.selectedTopics.filter(topic => topic.id != 0).map(topic => topic.id);
+      const newTopicNames = this.selectedTopics.filter(topic => topic.id == 0).map(topic => topic.name);
+      if(newTopicNames.length > 0) {
+        const topics = await firstValueFrom(this.topicsService.bulkCreate(newTopicNames));
+        topicIds = [...topicIds, ...topics.map(topic => topic.id)];
       }
-    });
+      const { title, description } = this.paperForm.value;
+      const studentId = this.selectedStudentControl.value?.[0]?.id;
+      const teacherId = (await firstValueFrom(this.authService.userData)).id;
+      const paper = await firstValueFrom(
+        this.papersService.create({ title, description, topicIds, studentId, teacherId })
+      );
+      this.dialog.close(paper);
+      this.snackbar.open("Lucrarea a fost salvată.");
+    } finally {
+      this.isLoadingQuery = false;
+    }
   }
 
   @ViewChild('topicInput') topicInput: ElementRef<HTMLInputElement>;
@@ -205,12 +209,10 @@ export class AddPaperComponent implements OnInit {
   }
 
   get resultedPaper() {
-    const studentForm = this.findStudentForm.value;
-    const paperForm = this.paperForm.value;
-    const user = this.userResults.find(user => user.id == studentForm.studentId);
+    const student = this.selectedStudentControl.value?.[0];
     return {
-      ...paperForm,
-      user
+      ...this.paperForm.value,
+      student
     }
   }
 

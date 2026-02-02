@@ -2,17 +2,23 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AuthService } from "./auth.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { Observable, catchError, map, of } from "rxjs";
+import { Observable, catchError, firstValueFrom, map, of } from "rxjs";
 import { environment } from "../../environments/environment";
 import { DocumentReuploadRequest, Paginated, Paper, PaperType } from "../lib/types";
 import { removeEmptyProperties } from "../lib/utils";
+import { FilesService } from "./files.service";
 
 @Injectable({
   providedIn: 'any'
 })
 export class PapersService {
 
-  constructor(private http: HttpClient, private auth: AuthService, private snackbar: MatSnackBar) { }
+  constructor(
+    private http: HttpClient,
+    private auth: AuthService,
+    private filesService: FilesService,
+    private snackbar: MatSnackBar
+  ) {}
 
   private readonly apiUrl = `${environment.apiUrl}/papers`;
 
@@ -26,6 +32,19 @@ export class PapersService {
 
   findMineTeacher() {
     return this.http.get<Paper[]>(`${this.apiUrl}/me`);
+  }
+
+  getXlsxExport(params?: { onlySubmitted?: boolean; teacherId?: number; }) {
+    return this.filesService.getFile(`${this.apiUrl}/export/xlsx`, removeEmptyProperties(params));
+  }
+
+  async saveXlsxExport(params?: { onlySubmitted?: boolean; teacherId?: number; }) {
+    const buffer = await firstValueFrom(this.getXlsxExport(params));
+    this.filesService.saveFile(buffer, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Lucrări.xlsx');
+  }
+
+  create(paper: CreatePaperDto) {
+    return this.http.post<Paper>(this.apiUrl, paper);
   }
 
   update(paperId: number, paper: UpdatePaperDto) {
@@ -61,6 +80,10 @@ export class PapersService {
       );
   }
 
+  delete(paperId: number) {
+    return this.http.delete<void>(`${this.apiUrl}/${paperId}`);
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       this.snackbar.open(error?.error.message || 'A apărut o eroare.');
@@ -93,6 +116,11 @@ type UpdatePaperDto = {
   title: string;
   description: string;
   topicIds: number[];
+}
+
+type CreatePaperDto = UpdatePaperDto & {
+  studentId: number;
+  teacherId: number;
 }
 
 type ValidatePaperDto = {

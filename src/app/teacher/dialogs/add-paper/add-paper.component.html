@@ -54,9 +54,9 @@
         </div>
       </form>
     </mat-step>
-    <mat-step [stepControl]="findStudentForm">
+    <mat-step [stepControl]="selectedStudentControl">
       <div class="filter-by">Filtrați după</div>
-      <form [formGroup]="findStudentForm" fxLayout="row grid" fxLayoutGap="10px grid">
+      <form [formGroup]="studentLookupForm" fxLayout="row grid" fxLayoutGap="10px grid">
         <ng-template matStepLabel>Alegeți studentul</ng-template>
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-sm="50">
           <mat-label>Nume de familie</mat-label>
@@ -76,7 +76,7 @@
             <mat-option [value]="null">--</mat-option>
             @for(domain of domains | async; track domain.id) {
               <mat-option [value]="domain.id">
-                {{domain.name}}
+                {{domain.name}}, {{ DOMAIN_TYPES[domain.type] }}
               </mat-option>
             }
           </mat-select>
@@ -86,15 +86,15 @@
           @if(isLoadingUsers) {
             <app-loading color="primary"></app-loading>
           }
-          <mat-selection-list [multiple]="false" formControlName="studentId">
-            @for(user of userResults; track user.id) {
-              <mat-list-option [disabled]="!!user.student.paper" [value]="user.id">
-                <h3 matListItemTitle>{{ user.firstName }} {{ user.lastName }}</h3>
-                <b matListItemLine>{{ user.email }}</b>
-                @if(!user.student.paper) {
+          <mat-selection-list [multiple]="false" [formControl]="selectedStudentControl">
+            @for(student of studentResults; track student.id) {
+              <mat-list-option [disabled]="!!student.hasPaper" [value]="student">
+                <h3 matListItemTitle>{{ student.firstName }} {{ student.lastName }}</h3>
+                <b matListItemLine>{{ student.email }}</b>
+                @if(!student.hasPaper) {
                   <div matListItemLine>
-                    <span>Grupa {{ user.student.group }}, </span>
-                    <span>Specializarea {{ user.student.specialization?.name }}</span>
+                    <span>Grupa {{ student.group }}, </span>
+                    <span>Specializarea {{ student.specialization?.name }}</span>
                   </div>
                 } @else {
                   <div matListItemLine>
@@ -106,7 +106,7 @@
           </mat-selection-list>
         </div>
         <div class="actions">
-          <button mat-button matStepperNext [disabled]="findStudentForm.invalid">Pasul următor</button>
+          <button mat-button matStepperNext [disabled]="selectedStudentControl.invalid">Pasul următor</button>
         </div>
       </form>
     </mat-step>
@@ -114,9 +114,9 @@
       <ng-template matStepLabel>Vedeți rezultatul</ng-template>
       <div class="paper-snippet mat-elevation-z1">
         <h2>{{ resultedPaper.title }}</h2>
-        @if(resultedPaper?.user) {
+        @if(resultedPaper?.student) {
           <p class="paper-type">
-            Lucrare de {{ PAPER_TYPES[resultedPaper.user.student.domain.paperType] }}
+            Lucrare de {{ PAPER_TYPES[resultedPaper.student.specialization.domain.paperType] }}
           </p>
         }
         <p class="paper-description">
@@ -127,8 +127,8 @@
             <span class="badge">{{ topic.name }}</span>
           }
         </p>
-        @if(resultedPaper?.user) {
-          <app-user-snippet [user]="$any(resultedPaper).user">Student</app-user-snippet>
+        @if(resultedPaper?.student) {
+          <app-user-snippet [user]="$any(resultedPaper).student">Student</app-user-snippet>
         }
       </div>
 

@@ -63,6 +63,8 @@ export interface Student extends User {
   fundingForm: FundingForm;
   generalAverage: number;
   specialization: Specialization;
+  paper?: Paper;
+  hasPaper?: boolean;
 }
 
 export function isStudent(user: User): user is Student {

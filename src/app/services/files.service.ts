@@ -44,17 +44,17 @@ export class FilesService {
     anchor.click();
   }
 
-  getFile(url: string): Observable<ArrayBuffer> {
+  getFile(url: string, params?: any): Observable<ArrayBuffer> {
     const sbRef = this.openProgressSnackBar('indeterminate');
     const headers = new HttpHeaders({
       'Cache-Control': 'no-store',
     });
-    return this.http.get<ArrayBuffer>(url, { headers, responseType: 'arraybuffer' as 'json' }).pipe(
+    return this.http.get<ArrayBuffer>(url, { headers, responseType: 'arraybuffer' as 'json', params }).pipe(
       finalize(() => sbRef.dismiss())
     );
   }
 
-  getFileWithProgress(url: string): Observable<ArrayBuffer> {
+  getFileWithProgress(url: string, params?: any): Observable<ArrayBuffer> {
     const sbRef = this.openProgressSnackBar('indeterminate');
     const headers = new HttpHeaders({
       'Cache-Control': 'no-store',
@@ -65,6 +65,7 @@ export class FilesService {
         responseType: 'arraybuffer' as 'json',
         reportProgress: true,
         observe: 'events',
+        params,
       }).subscribe((event) => {
         switch(event.type) {
           case HttpEventType.DownloadProgress:
