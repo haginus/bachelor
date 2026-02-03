@@ -20,6 +20,7 @@ import { LoaderService } from './services/loader.service';
 import { IdentityListItemComponent } from "./shared/components/identity-list-item/identity-list-item.component";
 import { ApiUrlPipe } from './shared/pipes/api-url';
 import { getUserDescription } from './lib/utils';
+import { isStudent, User } from './lib/types';
 
 
 const SideWidth = 800;
@@ -62,7 +63,7 @@ export class AppComponent implements OnInit {
     private loader: LoaderService,
   ) {}
 
-  user: UserData | undefined = undefined;
+  user: User | undefined = undefined;
   alternativeIdentities: UserData[] = [];
   sessionSettings: SessionSettings;
   loading = true;
@@ -178,5 +179,6 @@ export class AppComponent implements OnInit {
     window.location.reload();
   }
 
+  isStudent = isStudent;
   getUserDescription = getUserDescription;
 }

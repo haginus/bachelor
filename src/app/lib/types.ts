@@ -38,7 +38,7 @@ export interface User {
   title?: string;
   fullName: string;
   CNP: string;
-  isImpersonated?: boolean;
+  _impersonatedBy?: boolean;
   profile?: Profile;
 }
 

@@ -1,4 +1,4 @@
-import { DatePipe, NgClass } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output, Pipe } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,7 +30,6 @@ export class ResourceTooltipPipe {
     MatMenuModule,
     DatePipe,
     ResourceTooltipPipe,
-    NgClass,
   ],
   host: {
     '[class.expanded]': 'expanded',
@@ -85,14 +84,14 @@ export class LogEntryComponent {
           'user'
         ];
         break;
-      case LogName.StudentExtraDataCreated:
-      case LogName.StudentExtraDataUpdated:
-      case LogName.StudentExtraDataDeleted:
+      case LogName.UserExtraDataCreated:
+      case LogName.UserExtraDataUpdated:
+      case LogName.UserExtraDataDeleted:
         byLogAttributes = [
           'userId',
           'user',
-          'studentExtraDataId',
-          'studentExtraData',
+          'userExtraDataId',
+          'userExtraData',
         ];
         break;
       case LogName.PaperCreated:

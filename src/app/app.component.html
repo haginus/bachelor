@@ -40,7 +40,7 @@
       @for(identity of alternativeIdentities; track identity.id) {
         <app-identity-list-item [user]="identity" (click)="switchUser(identity); userMenuTrigger.closeMenu()" />
       }
-      @if(user?.isImpersonated) {
+      @if(user?._impersonatedBy) {
         <button mat-button (click)="release(); userMenuTrigger.closeMenu()">
           <mat-icon>undo</mat-icon>
           <span>Opriți impersonarea</span>
@@ -72,8 +72,8 @@
           @if(user) {
             <div class="user-name" fxHide.lt-sm>
               <div>{{ user.firstName }} {{ user.lastName }}</div>
-              @if(user.student) {
-                <div>Gr. {{ user.student.group }}</div>
+              @if(isStudent(user)) {
+                <div>Gr. {{ user.group }}</div>
               }
             </div>
           }
