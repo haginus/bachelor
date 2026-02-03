@@ -4,10 +4,9 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NewSessionDialogComponent } from '../../dialogs/new-session-dialog/new-session-dialog.component';
-import { AuthService, SessionSettings } from '../../../services/auth.service';
-import { AdminService } from '../../../services/admin.service';
-import { DocumentService } from '../../../services/document.service';
+import { AuthService } from '../../../services/auth.service';
 import { formatDate } from '@angular/common';
+import { SessionSettings } from '../../../lib/types';
 
 @Component({
   selector: 'app-session-settings',
@@ -16,8 +15,11 @@ import { formatDate } from '@angular/common';
 })
 export class SessionSettingsComponent implements OnInit {
 
-  constructor(private auth: AuthService, private admin: AdminService, private document: DocumentService,
-    private snackbar: MatSnackBar, private dialog: MatDialog) { }
+  constructor(
+    private auth: AuthService,
+    private snackbar: MatSnackBar,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.auth.getSessionSettings().subscribe(settings => {
@@ -64,6 +66,8 @@ export class SessionSettingsComponent implements OnInit {
   saveSettings() {
     const settings = new SessionSettings(this.settingsForm.value as any);
     this.isLoadingSettings = true;
+    // TODO: Fix this
+    // @ts-ignore
     this.admin.changeSessionSettings(settings).subscribe(settings => {
       // If the update was successful
       if(settings) {

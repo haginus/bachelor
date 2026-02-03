@@ -14,7 +14,7 @@ import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/
 import { BehaviorSubject, firstValueFrom, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AddPaperComponent } from '../../dialogs/add-paper/add-paper.component';
-import { AuthService, SessionSettings } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { PAPER_TYPES } from '../../../lib/constants';
 import { inclusiveDate, parseDate } from '../../../lib/utils';
 import { AreDocumentsUploaded, PaperDocumentEvent, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
@@ -35,7 +35,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { PapersService } from '../../../services/papers.service';
 import { PaperTitlePipe } from '../../../shared/pipes/paper-title.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Paper } from '../../../lib/types';
+import { Paper, SessionSettings } from '../../../lib/types';
 
 @Component({
   selector: 'app-papers',

@@ -4,13 +4,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { combineLatest, firstValueFrom, Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, first, map, switchMap, take, tap } from 'rxjs/operators';
-import { inclusiveDate, parseDate } from '../lib/utils';
-import { PaperRequiredDocument, StudentExtraData } from './student.service';
-import { Topic } from './topics.service';
 import { environment } from '../../environments/environment';
 import { SudoService } from './sudo.service';
-import { SignUpRequest, UserExtraData } from '../lib/types';
-export { SignUpRequest };
+import { Profile, SessionSettings, SignUpRequest, User, UserExtraData } from '../lib/types';
 
 @Injectable({
   providedIn: 'root'
@@ -182,21 +178,21 @@ export class AuthService {
     };
   }
 
-  userDataSource: ReplaySubject<UserData | undefined> = new ReplaySubject<UserData | undefined>(1);
+  userDataSource: ReplaySubject<User | undefined> = new ReplaySubject<User | undefined>(1);
   userData = this.userDataSource.asObservable();
-  alternativeIdentitiesSource: ReplaySubject<UserData[]> = new ReplaySubject<UserData[]>(1);
+  alternativeIdentitiesSource: ReplaySubject<User[]> = new ReplaySubject<User[]>(1);
   alternativeIdentities = this.alternativeIdentitiesSource.asObservable();
 
-  getUserData(): Observable<UserData | undefined> {
+  getUserData(): Observable<User | undefined> {
     const url = `${environment.apiUrl}/auth/user`;
-    return this.http.get<UserData>(url, this.getPrivateHeaders()).pipe(
+    return this.http.get<User>(url, this.getPrivateHeaders()).pipe(
       catchError(this.handleUserError('getUserData'))
     );
   }
 
-  getAlternativeIdentities(): Observable<UserData[]> {
+  getAlternativeIdentities(): Observable<User[]> {
     const url = `${environment.apiUrl}/auth/alternative-identities`;
-    return this.http.get<UserData[]>(url, this.getPrivateHeaders()).pipe(
+    return this.http.get<User[]>(url, this.getPrivateHeaders()).pipe(
       catchError(this.handleError('getAlternativeIdentities', []))
     );
   }
@@ -218,11 +214,9 @@ export class AuthService {
 
   getSessionSettings(): Observable<SessionSettings> {
     const url = `${environment.apiUrl}/session`;
-    return this.http.get<SessionSettingsI>(url).pipe(
+    return this.http.get<any>(url).pipe(
       map(settings => new SessionSettings(settings)),
-      catchError((err, caught) => {
-        return of(null);
-      })
+      catchError(() => of(null))
     );
   }
 
@@ -245,7 +239,7 @@ export class AuthService {
     return this.http.post<void>(url, { topicIds }).pipe(
       tap(() => {
         firstValueFrom(this.userData).then(user => {
-          (user as UserData).validated = true;
+          (user as User).validated = true;
           this.userDataSource.next(user);
         });
       }),
@@ -263,7 +257,7 @@ export class AuthService {
     return this.http.patch<Profile>(url, formData, this.getPrivateHeaders()).pipe(
       tap(profile => {
         this.userData.pipe(take(1)).subscribe(user => { // change
-          (user as UserData).profile = profile;
+          (user as User).profile = profile;
           this.userDataSource.next(user);
         });
       }),
@@ -272,7 +266,7 @@ export class AuthService {
   }
 
   private handleUserError(result?: any) {
-    return (error: HttpErrorResponse): Observable<UserData | undefined> => {
+    return (error: HttpErrorResponse): Observable<User | undefined> => {
       if(result == "getUserData") {
         console.log("INVALID TOKEN");
         this.signOut().subscribe(r => {
@@ -301,204 +295,7 @@ export class AuthService {
 
 interface AuthResponse {
   token?: string;
-  user?: UserData;
-  alternativeIdentities?: UserData[];
+  user?: User;
+  alternativeIdentities?: User[];
   error?: string;
-}
-
-export interface Profile {
-  bio: string,
-  website: string,
-  picture: string,
-}
-
-export interface UserData {
-  id: number,
-  firstName: string,
-  lastName: string,
-  title?: string,
-  fullName: string,
-  CNP: string,
-  email: string,
-  validated: boolean,
-  type: "student" | "teacher" | "admin" | "secretary",
-  isImpersonated: boolean,
-  student?: Student;
-  teacher?: Teacher;
-  profile?: Profile,
-}
-
-export interface Student {
-  id?: number,
-  userId?: number,
-  domainId?: number,
-  specializationId?: number,
-  group: string,
-  domain: Domain,
-  specialization: DomainSpecialization,
-  promotion: string,
-  identificationCode: string, // cod matricol
-  studyForm: 'if' | 'id' | 'ifr',
-  matriculationYear: string,
-  fundingForm: 'budget' | 'tax',
-  paper: Paper;
-  user?: UserData;
-  studentExtraDatum?: StudentExtraData;
-}
-
-export interface Teacher {
-  id: number;
-  user?: UserData;
-}
-
-export interface UserDataMin {
-  id: number,
-  firstName: string,
-  lastName: string,
-  title?: string,
-  fullName?: string,
-  email?: string,
-  profile?: Profile;
-  student?: Student;
-  teacher?: Teacher;
-}
-
-export type DomainType = 'bachelor' | 'master';
-export type PaperType = 'bachelor' | 'diploma' | 'master';
-
-export interface Domain {
-  id: number,
-  name: string,
-  type: DomainType,
-  paperType: PaperType,
-  studentNumber?: number,
-  offerNumber?: number,
-  specializations: DomainSpecialization[]
-}
-
-export interface DomainSpecialization {
-  id: number,
-  name: string,
-  studyYears: number,
-  studentNumber?: number;
-  domainId?: number;
-}
-
-export interface Paper {
-  id: number,
-  title: string,
-  description: string,
-  type: PaperType,
-  isValid: boolean | null,
-  teacher?: UserDataMin,
-  teacherId: number,
-  student?: UserData & { generalAverage?: number },
-  documents: PaperDocument[],
-  committee?: Committee,
-  topics?: Topic[],
-  requiredDocuments?: PaperRequiredDocument[],
-  grades: PaperGrade[],
-  gradeAverage: number;
-  createdAt: string;
-  submitted: boolean;
-  scheduledGrading: string;
-}
-
-export interface PaperDocument {
-  id: number;
-  name: string;
-  mimeType: string;
-  type: 'generated' | 'signed' | 'copy';
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-  uploadedBy: number | null;
-  uploadedByUser?: UserDataMin;
-}
-
-export interface PaperGrade {
-  forPaper: number,
-  forPresentation: number,
-  teacherId: number;
-  teacher: {
-    user: UserDataMin
-  }
-}
-
-export interface SessionSettingsI {
-  sessionName: string, // name of the session
-  currentPromotion: string,
-  applyStartDate: string, // YYYY-MM-DD
-  applyEndDate: string,
-  fileSubmissionStartDate: string,
-  fileSubmissionEndDate: string,
-  paperSubmissionEndDate: string,
-  allowGrading: boolean,
-}
-
-export class SessionSettings implements SessionSettingsI {
-  public sessionName: string;
-  public currentPromotion: string;
-  public applyStartDate: string;
-  public applyEndDate: string;
-  public fileSubmissionStartDate: string;
-  public fileSubmissionEndDate: string;
-  public paperSubmissionEndDate: string;
-  public allowGrading: boolean;
-
-  constructor(sessionSettings: SessionSettingsI) {
-    this.sessionName = sessionSettings.sessionName;
-    this.currentPromotion = sessionSettings.currentPromotion;
-    this.applyStartDate = sessionSettings.applyStartDate;
-    this.applyEndDate = sessionSettings.applyEndDate;
-    this.fileSubmissionStartDate = sessionSettings.fileSubmissionStartDate;
-    this.fileSubmissionEndDate = sessionSettings.fileSubmissionEndDate;
-    this.paperSubmissionEndDate = sessionSettings.paperSubmissionEndDate;
-    this.allowGrading = sessionSettings.allowGrading;
-  }
-
-  public canApply(): boolean {
-    const startDate = parseDate(this.applyStartDate);
-    const endDate = inclusiveDate(this.applyEndDate);
-    return startDate.getTime() <= Date.now() && Date.now() <= endDate.getTime();
-  }
-
-  public canUploadSecretaryFiles() {
-    const startDate = parseDate(this.fileSubmissionStartDate);
-    const endDate = inclusiveDate(this.fileSubmissionEndDate);
-    return startDate.getTime() <= Date.now() && Date.now() <= endDate.getTime();
-  }
-
-  public canUploadPaperFiles() {
-    const startDate = parseDate(this.fileSubmissionStartDate);
-    const endDate = inclusiveDate(this.paperSubmissionEndDate);
-    return startDate.getTime() <= Date.now() && Date.now() <= endDate.getTime();
-  }
-}
-
-export interface CommitteeActivityDay {
-  id: number;
-  location: string;
-  startTime: string;
-}
-
-export interface Committee {
-  id: number;
-  name: string;
-  paperPresentationTime: number;
-  publicScheduling: boolean;
-  finalGrades: boolean;
-  domains: Domain[];
-  members: CommitteeMember[];
-  activityDays: CommitteeActivityDay[];
-  papers: Paper[];
-}
-
-export interface CommitteeMember {
-  committeeMember?: {
-    role: 'president' | 'secretary' | 'member';
-  };
-  teacherId: number;
-  role: 'president' | 'secretary' | 'member';
-  user?: UserDataMin;
 }

@@ -1,7 +1,7 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { FAQ, MiscService } from '../../../services/misc.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { catchError, of } from 'rxjs';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-faq',
@@ -12,24 +12,23 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatExpansionModule,
   ]
 })
-export class FaqComponent implements OnInit, OnDestroy {
-
-  constructor(private misc: MiscService) { }
+export class FaqComponent implements OnInit {
 
   @Input() resource: string = null;
-
   faqs: FAQ[];
 
-  subscription: Subscription;
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.subscription = this.misc.getFAQ(this.resource).subscribe(faqs => {
+    const url = `/assets/faq/${this.resource}.json`;
+    this.http.get<FAQ[]>(url).pipe(catchError(() => of([]))).subscribe(faqs => {
       this.faqs = faqs;
     });
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
+}
 
+interface FAQ {
+  question: string;
+  answer: string;
 }

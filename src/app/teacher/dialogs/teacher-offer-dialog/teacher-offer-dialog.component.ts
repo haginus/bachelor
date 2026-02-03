@@ -8,8 +8,6 @@ import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { map, startWith } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Topic, TopicsService } from '../../../services/topics.service';
-import { Domain } from '../../../services/auth.service';
-import { Offer } from '../../../services/student.service';
 import { DOMAIN_TYPES } from '../../../lib/constants';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -21,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { DomainsService } from '../../../services/domains.service';
 import { OffersService } from '../../../services/offers.service';
+import { Domain, Offer } from '../../../lib/types';
 
 @Component({
   selector: 'app-teacher-offer-dialog',
@@ -141,7 +140,7 @@ export class TeacherOfferDialogComponent implements OnInit {
   async ngOnInit() {
     if(this.data.offer) {
       this.selectedTopics = [...this.data.offer.topics];
-      this.offerForm.get("limit").setValidators([Validators.required, Validators.min(this.data.offer.takenPlaces)]);
+      this.offerForm.get("limit").setValidators([Validators.required, Validators.min(this.data.offer.takenSeats)]);
       this.offerForm.get("limit").updateValueAndValidity(); // ensure user can't change limit below taken places
     }
     this.topicsService.findAll().subscribe(topics => {

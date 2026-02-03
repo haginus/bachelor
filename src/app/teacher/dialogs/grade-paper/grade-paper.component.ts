@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Paper } from '../../../services/auth.service';
+import { Paper } from '../../../lib/types';
 
 @Component({
   selector: 'app-grade-paper',

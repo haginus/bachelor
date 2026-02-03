@@ -3,7 +3,7 @@ import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validatio
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { take } from 'rxjs/operators';
-import { AuthService, Profile } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { NgClass } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,6 +13,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { UploadFileDirective } from '../../directives/upload-file.directive';
 import { fileToBase64 } from '../../../lib/utils';
+import { Profile } from '../../../lib/types';
 
 @Component({
   selector: 'app-user-profile-editor',

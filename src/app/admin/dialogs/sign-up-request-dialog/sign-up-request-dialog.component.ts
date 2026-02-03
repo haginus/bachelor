@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AdminService } from '../../../services/admin.service';
 import { CNPValidator } from '../../../validators/CNP-validator';
 import { Domain, SignUpRequest } from '../../../lib/types';
 import { DomainsService } from '../../../services/domains.service';

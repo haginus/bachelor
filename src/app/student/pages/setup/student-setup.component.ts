@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { firstValueFrom, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { Topic, TopicsService } from '../../../services/topics.service';
-import { AuthService, UserData } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { FUNDING_FORMS, STUDY_FORMS } from '../../../lib/constants';
 import { ProblemReportComponent, ProblemReportDialogData } from '../../../components/problem-report/problem-report.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -52,7 +52,7 @@ export class StudentSetupComponent implements OnInit {
   FUNDING_FORMS = FUNDING_FORMS;
 
   async ngOnInit() {
-    this.user = await firstValueFrom(this.authService.userData) as any;
+    this.user = await firstValueFrom(this.authService.userData) as Student;
     if(!this.user.validated) {
       this.loadingUser = false;
     } else {

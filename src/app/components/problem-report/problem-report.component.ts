@@ -3,8 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
-import { AuthService, UserData } from '../../services/auth.service';
-import { MiscService } from '../../services/misc.service';
+import { AuthService } from '../../services/auth.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -14,6 +13,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { DialogModule } from '@angular/cdk/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { User } from '../../lib/types';
 
 @Component({
   selector: 'app-problem-report',
@@ -37,7 +37,6 @@ export class ProblemReportComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) private data: ProblemReportDialogData,
     private dialog: MatDialogRef<ProblemReportComponent>,
     private auth: AuthService,
-    private misc: MiscService,
     private snackbar: MatSnackBar
   ) {}
 
@@ -53,7 +52,7 @@ export class ProblemReportComponent implements OnInit, OnDestroy {
   }
 
   userDataSubscription: Subscription;
-  user: UserData;
+  user: User;
   isSendingMessage: boolean = false;
 
   ngOnInit(): void {
@@ -83,14 +82,15 @@ export class ProblemReportComponent implements OnInit, OnDestroy {
     if(this.data?.type) {
       this.problemType.disable();
     }
-    this.misc.sendProblemReport(formValue as any).subscribe(result => {
-      if(result) {
-        this.dialog.close();
-        this.snackbar.open("Mesajul a fost trimis. Ați primit o copie pe e-mail.");
-      } else {
-        this.isSendingMessage = false;
-      }
-    });
+    // TODO: Implement sending problem report
+    // this.misc.sendProblemReport(formValue as any).subscribe(result => {
+    //   if(result) {
+    //     this.dialog.close();
+    //     this.snackbar.open("Mesajul a fost trimis. Ați primit o copie pe e-mail.");
+    //   } else {
+    //     this.isSendingMessage = false;
+    //   }
+    // });
   }
 
 }

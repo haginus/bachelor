@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { SessionInfoComponent } from '../../../shared/components/session-info/session-info.component';
 import { FaqComponent } from '../../../shared/components/faq/faq.component';
-import { AuthService, SessionSettings, UserData } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SessionSettings, User } from '../../../lib/types';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,6 +31,6 @@ export class DashboardComponent {
   }
 
   sessionSettings: SessionSettings;
-  user: UserData;
+  user: User;
 
 }

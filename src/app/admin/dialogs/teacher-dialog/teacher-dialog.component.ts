@@ -1,11 +1,11 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { UserData } from '../../../services/auth.service';
 import { CNPValidator } from '../../../validators/CNP-validator';
 import { TeachersService } from '../../../services/teachers.service';
 import { firstValueFrom } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { User } from '../../../lib/types';
 
 @Component({
   selector: 'app-admin-teacher-dialog',
@@ -53,5 +53,5 @@ export class AdminTeacherDialogComponent {
 
 export interface AdminTeacherDialogData {
   mode: "view" | "create" | "edit";
-  data?: UserData;
+  data?: User;
 }

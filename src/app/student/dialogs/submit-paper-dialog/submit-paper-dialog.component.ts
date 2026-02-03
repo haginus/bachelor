@@ -1,11 +1,11 @@
 import { Component, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { Paper } from '../../../services/auth.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ProblemReportComponent, ProblemReportDialogData } from '../../../components/problem-report/problem-report.component';
 import { MatIconModule } from '@angular/material/icon';
+import { Paper } from '../../../lib/types';
 
 @Component({
   selector: 'app-submit-paper-dialog',

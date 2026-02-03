@@ -2,11 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { AuthService, PaperDocument } from './auth.service';
+import { AuthService } from './auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DocumentViewerDialogComponent, DocumentViewerDialogData } from '../shared/components/document-viewer-dialog/document-viewer-dialog.component';
+import { Document } from '../lib/types';
 
 @Injectable({
   providedIn: 'any'
@@ -47,21 +48,21 @@ export class DocumentService {
     anchor.click();
   }
 
-  uploadDocument(paperId: number, name: string, type: string, file: File): Observable<PaperDocument> {
+  uploadDocument(paperId: number, name: string, type: string, file: File): Observable<Document> {
     const url = `${environment.apiUrl}/documents/upload`;
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
     formData.append('name', name);
     formData.append('type', type);
     formData.append('paperId', String(paperId));
-    return this.http.post<PaperDocument>(url, formData, this.auth.getPrivateHeaders()).pipe(
+    return this.http.post<Document>(url, formData, this.auth.getPrivateHeaders()).pipe(
       catchError(this.handleError("uploadDocument", null))
     );
   }
 
   signDocument(paperId: number, name: string) {
     const url = `${environment.apiUrl}/documents/sign`;
-    return this.http.post<PaperDocument>(url, { name, paperId });
+    return this.http.post<Document>(url, { name, paperId });
   }
 
   getDocument(id: number): Observable<ArrayBuffer> {
@@ -79,10 +80,10 @@ export class DocumentService {
     return this.http.delete<void>(`${environment.apiUrl}/documents/${id}`);
   }
 
-  getDocumentUploadHistory(paperId: number, name: string): Observable<PaperDocument[]> {
+  getDocumentUploadHistory(paperId: number, name: string): Observable<Document[]> {
     const url = `${environment.apiUrl}/documents/history?paperId=${paperId}&name=${name}`;
-    return this.http.get<PaperDocument[]>(url, this.auth.getPrivateHeaders()).pipe(
-      catchError(this.handleError<PaperDocument[]>('getDocumentUploadHistory', []))
+    return this.http.get<Document[]>(url, this.auth.getPrivateHeaders()).pipe(
+      catchError(this.handleError<Document[]>('getDocumentUploadHistory', []))
     );
   }
 

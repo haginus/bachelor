@@ -5,13 +5,14 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { RecaptchaComponent, RecaptchaModule } from 'ng-recaptcha';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { AuthService, UserData } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { LoadingComponent } from '../loading/loading.component';
 import { ProblemReportButtonComponent } from '../../../components/problem-report/problem-report.component';
 import { IdentityListItemComponent } from '../identity-list-item/identity-list-item.component';
+import { User } from '../../../lib/types';
 
 @Component({
   selector: 'app-login',
@@ -65,7 +66,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     'email': new FormControl(null, [Validators.email, Validators.required]),
   });
 
-  identities: UserData[] = [];
+  identities: User[] = [];
 
   view: 'login' | 'forgotPassword' | 'pickIdentity' = 'login';
 
@@ -84,7 +85,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.captchaToken = null;
   }
 
-  handleSuccessfulLogin(user: UserData) {
+  handleSuccessfulLogin(user: User) {
     if(this.nextRoute) {
       this.router.navigateByUrl(this.nextRoute);
     } else {

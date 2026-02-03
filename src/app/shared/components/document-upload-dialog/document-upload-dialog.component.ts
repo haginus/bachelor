@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { PaperRequiredDocument } from '../../../services/student.service';
 import { DocumentService } from '../../../services/document.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { UploadFileDirective } from '../../directives/upload-file.directive';
+import { RequiredDocument } from '../../../lib/types';
 
 @Component({
   selector: 'app-document-upload-dialog',
@@ -70,7 +70,7 @@ export class DocumentUploadDialogComponent implements OnInit {
 }
 
 export interface DocumentUploadDialogData {
-  document: PaperRequiredDocument;
+  document: RequiredDocument;
   generatedDocumentId?: number;
   paperId: number;
 }

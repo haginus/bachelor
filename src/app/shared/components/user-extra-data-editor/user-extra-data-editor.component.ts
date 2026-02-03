@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from '../../../services/auth.service';
-import { StudentExtraData } from '../../../services/student.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -73,7 +72,7 @@ export class UserExtraDataEditorComponent implements OnInit {
 
   }
 
-  studentExtraData: StudentExtraData;
+  studentExtraData: UserExtraData;
   userData: User;
   isSavingData: boolean = false;
 
@@ -146,7 +145,7 @@ export class UserExtraDataEditorComponent implements OnInit {
   async saveData() {
     this.isSavingData = true;
     try {
-      const formValue = this.studentDataForm.getRawValue() as StudentExtraData;
+      const formValue = this.studentDataForm.getRawValue() as UserExtraData;
       this.studentExtraData = formValue;
       const result = await firstValueFrom(this.auth.updateUserExtraData(this.userData.id, formValue));
       this.dialog.close(result);

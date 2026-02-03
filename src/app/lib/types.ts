@@ -1,3 +1,49 @@
+import { inclusiveDate, parseDate } from "./utils";
+
+interface ISessionSettings {
+  sessionName: string;
+  currentPromotion: string;
+  applyStartDate: string;
+  applyEndDate: string;
+  fileSubmissionStartDate: string;
+  fileSubmissionEndDate: string;
+  paperSubmissionEndDate: string;
+  allowGrading: boolean;
+}
+
+export class SessionSettings implements ISessionSettings {
+  public sessionName: string;
+  public currentPromotion: string;
+  public applyStartDate: string;
+  public applyEndDate: string;
+  public fileSubmissionStartDate: string;
+  public fileSubmissionEndDate: string;
+  public paperSubmissionEndDate: string;
+  public allowGrading: boolean;
+
+  constructor(sessionSettings: ISessionSettings) {
+    Object.assign(this, sessionSettings);
+  }
+
+  public canApply(): boolean {
+    const startDate = parseDate(this.applyStartDate);
+    const endDate = inclusiveDate(this.applyEndDate);
+    return startDate.getTime() <= Date.now() && Date.now() <= endDate.getTime();
+  }
+
+  public canUploadSecretaryFiles() {
+    const startDate = parseDate(this.fileSubmissionStartDate);
+    const endDate = inclusiveDate(this.fileSubmissionEndDate);
+    return startDate.getTime() <= Date.now() && Date.now() <= endDate.getTime();
+  }
+
+  public canUploadPaperFiles() {
+    const startDate = parseDate(this.fileSubmissionStartDate);
+    const endDate = inclusiveDate(this.paperSubmissionEndDate);
+    return startDate.getTime() <= Date.now() && Date.now() <= endDate.getTime();
+  }
+}
+
 export type StudyForm = 'if' | 'ifr' | 'id';
 export type DomainType = 'bachelor' | 'master';
 export type PaperType = 'bachelor' | 'diploma' | 'master';

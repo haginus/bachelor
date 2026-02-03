@@ -1,6 +1,5 @@
 import { Component, Inject, Pipe, PipeTransform } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { Committee, Paper } from '../../../services/auth.service';
 import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -16,6 +15,7 @@ import { arrayMap } from '../../../lib/utils';
 import { LoadingComponent } from '../loading/loading.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { CommitteesService } from '../../../services/committees.service';
+import { Committee, Paper } from '../../../lib/types';
 
 const MINUTE = 60 * 1000;
 
@@ -88,11 +88,11 @@ const autoScheduleSortOptions = {
     return teacherSort === 0 ? autoScheduleSortOptions.byStudentName(a, b) : teacherSort;
   },
   bySpecializationStudent: (a: ExtendedPaper, b: ExtendedPaper) => {
-    const specializationSort = a.student.student.specializationId - b.student.student.specializationId;
+    const specializationSort = a.student.specialization.id - b.student.specialization.id;
     return specializationSort === 0 ? autoScheduleSortOptions.byStudentName(a, b) : specializationSort;
   },
   bySpecializationTeacher: (a: ExtendedPaper, b: ExtendedPaper) => {
-    const specializationSort = a.student.student.specializationId - b.student.student.specializationId;
+    const specializationSort = a.student.specialization.id - b.student.specialization.id;
     return specializationSort === 0 ? autoScheduleSortOptions.byTeacherName(a, b) : specializationSort;
   },
 };

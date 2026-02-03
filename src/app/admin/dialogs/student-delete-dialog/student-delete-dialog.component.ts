@@ -1,8 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UserData } from '../../../services/auth.service';
-import { AdminService } from '../../../services/admin.service';
 import { StudentsService } from '../../../services/students.service';
+import { User } from '../../../lib/types';
 
 @Component({
   selector: 'app-student-delete-dialog',
@@ -11,7 +10,7 @@ import { StudentsService } from '../../../services/students.service';
 })
 export class StudentDeleteDialogComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: UserData, private studentsService: StudentsService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: User, private studentsService: StudentsService) { }
 
   ngOnInit(): void {
   }

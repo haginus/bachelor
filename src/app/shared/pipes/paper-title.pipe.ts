@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from "@angular/core";
-import { Paper } from "../../services/auth.service";
+import { Paper } from "../../lib/types";
 
 @Pipe({ name: 'paperTitle', standalone: true })
 export class PaperTitlePipe implements PipeTransform {

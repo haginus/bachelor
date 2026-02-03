@@ -3,14 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DocumentUploadDialogComponent, DocumentUploadDialogData } from '../document-upload-dialog/document-upload-dialog.component';
 import { DocumentService } from '../../../services/document.service';
-import { SessionSettings } from '../../../services/auth.service';
 import { USER_TYPES } from '../../../lib/constants';
-import { PaperDocumentCategory, PaperDocumentTypes, PaperDocumentUploadBy } from '../../../services/student.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
-import { Document, DocumentReuploadRequest, RequiredDocument } from '../../../lib/types';
+import { Document, DocumentCategory, DocumentReuploadRequest, DocumentUploadPerspective, RequiredDocument, RequiredDocumentTypes, SessionSettings } from '../../../lib/types';
 import { inclusiveDate } from '../../../lib/utils';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DatePipe } from '@angular/common';
@@ -72,7 +70,7 @@ export class PaperDocumentListComponent implements OnChanges {
   documentMap: DocumentMap = {}
 
   /** Function to check if a we are in the submission period for a certain category. */
-  private _checkSubmissionDates(category: PaperDocumentCategory): boolean {
+  private _checkSubmissionDates(category: DocumentCategory): boolean {
     if(!this.sessionSettings) {
       return true;
     }
@@ -140,13 +138,13 @@ export class PaperDocumentListComponent implements OnChanges {
     return 'view';
   }
 
-  private _isDocumentUploaded(requiredTypes: PaperDocumentTypes, actualTypes: PaperDocumentTypes): boolean {
+  private _isDocumentUploaded(requiredTypes: RequiredDocumentTypes, actualTypes: RequiredDocumentTypes): boolean {
     return Object.keys(requiredTypes).every(type => actualTypes[type]);
   }
 
   private _generateDocumentMap() {
     const documents = this.documents;
-    let documentMap = {};
+    let documentMap = {} as DocumentMap;
     const today = Date.now();
     this.requiredDocuments.forEach(requiredDoc => {
       const docName = requiredDoc.name;
@@ -157,7 +155,7 @@ export class PaperDocumentListComponent implements OnChanges {
       let actualTypes = currentDocuments.reduce((acc, doc) => {
         acc[doc.type] = true;
         return acc;
-      }, {} as PaperDocumentTypes);
+      }, {} as RequiredDocumentTypes);
       let lastId = currentDocuments.length == 0
         ? null
         : Math.max(...currentDocuments.map(doc => doc.id));
@@ -335,14 +333,14 @@ interface DocumentMap {
 export interface DocumentMapElement {
   requiredDocument: RequiredDocument;
   title: string;
-  category: PaperDocumentCategory;
-  requiredTypes: PaperDocumentTypes;
-  actualTypes: PaperDocumentTypes;
+  category: DocumentCategory;
+  requiredTypes: RequiredDocumentTypes;
+  actualTypes: RequiredDocumentTypes;
   lastId: number;
   actionPending?: boolean;
   nextAction?: DocumentAction;
   isUploaded: boolean;
-  uploadBy: PaperDocumentUploadBy;
+  uploadBy: DocumentUploadPerspective;
   reuploadRequest?: DocumentReuploadRequest;
   canChange: boolean;
 }
@@ -356,14 +354,14 @@ export interface PaperDocumentEvent {
 
 export interface AreDocumentsUploaded {
   byCategory: {
-    [name in PaperDocumentCategory]: boolean
+    [name in DocumentCategory]: boolean
   };
   byUploader: {
-    [name in PaperDocumentUploadBy]: boolean
+    [name in DocumentUploadPerspective]: boolean
   },
   byUploaderCategory: {
-    [name in PaperDocumentUploadBy]: {
-      [name in PaperDocumentCategory]: boolean
+    [name in DocumentUploadPerspective]: {
+      [name in DocumentCategory]: boolean
     }
   }
 }

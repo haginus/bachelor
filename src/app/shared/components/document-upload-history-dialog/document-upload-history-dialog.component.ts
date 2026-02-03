@@ -2,13 +2,12 @@ import { Component, Inject } from '@angular/core';
 import { DocumentService } from '../../../services/document.service';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { first, firstValueFrom } from 'rxjs';
-import { PaperDocument } from '../../../services/auth.service';
 import { MatIcon } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { DatePipe } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RequiredDocument } from '../../../lib/types';
+import { Document, RequiredDocument } from '../../../lib/types';
 
 @Component({
   selector: 'app-document-upload-history-dialog',
@@ -25,7 +24,7 @@ import { RequiredDocument } from '../../../lib/types';
 })
 export class DocumentUploadHistoryDialogComponent {
 
-  history: PaperDocument[] = [];
+  history: Document[] = [];
   isLoading = true;
 
   constructor(
@@ -41,7 +40,7 @@ export class DocumentUploadHistoryDialogComponent {
       });
   }
 
-  async viewDocument(document: PaperDocument, version: number) {
+  async viewDocument(document: Document, version: number) {
     const title = `[Versiunea ${version} - #${document.id}] ${this.data.document.title}`;
     const sbRef = this.sb.open("Se descarcă documentul...", null, {
       duration: null,
@@ -53,7 +52,7 @@ export class DocumentUploadHistoryDialogComponent {
     }
   }
 
-  readonly documentTypes: Record<PaperDocument['type'], string> = {
+  readonly documentTypes: Record<Document['type'], string> = {
     'generated': 'Generat',
     'signed': 'Semnat',
     'copy': 'Copie',

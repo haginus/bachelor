@@ -4,7 +4,7 @@ import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } 
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { Observable, firstValueFrom } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { AuthService, Paper, UserData } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { Topic, TopicsService } from '../../../services/topics.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -16,6 +16,7 @@ import { LoadingComponent } from '../loading/loading.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { PapersService } from '../../../services/papers.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Paper, User } from '../../../lib/types';
 
 @Component({
   selector: 'app-edit-paper',
@@ -52,7 +53,7 @@ export class EditPaperComponent implements OnInit {
     );
   }
 
-  user!: UserData;
+  user!: User;
 
   paperForm = new FormGroup({
     "title": new FormControl(this.paper.title, [Validators.required, Validators.minLength(3), Validators.maxLength(256)]),

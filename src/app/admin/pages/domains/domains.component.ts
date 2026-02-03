@@ -3,9 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTable } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { AdminDomainDialogComponent } from '../../dialogs/domain-dialog/domain-dialog.component';
-import { Domain } from '../../../services/auth.service';
 import { rowAnimation } from '../../../row-animations';
 import { DomainsService } from '../../../services/domains.service';
+import { Domain } from '../../../lib/types';
 
 @Component({
   selector: 'app-domains',

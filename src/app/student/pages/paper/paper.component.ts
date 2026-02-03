@@ -4,7 +4,7 @@ import { combineLatest, firstValueFrom, Observable, of, Subscription } from 'rxj
 import { AreDocumentsUploaded, DocumentMapElement, PaperDocumentEvent, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { EditPaperComponent } from '../../../shared/components/edit-paper/edit-paper.component';
 import { UserExtraDataEditorComponent, UserExtraDataEditorData } from '../../../shared/components/user-extra-data-editor/user-extra-data-editor.component';
-import { AuthService, SessionSettings } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { PAPER_TYPES } from '../../../lib/constants';
 import { formatDate, inclusiveDate, parseDate } from '../../../lib/utils';
 import { MatCardModule } from '@angular/material/card';
@@ -15,7 +15,7 @@ import { UserSnippetComponent } from '../../../shared/components/user-snippet/us
 import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PapersService } from '../../../services/papers.service';
-import { Paper, UserExtraData } from '../../../lib/types';
+import { Paper, SessionSettings, UserExtraData } from '../../../lib/types';
 import { SubmitPaperDialogComponent } from '../../dialogs/submit-paper-dialog/submit-paper-dialog.component';
 import { CommitteeSnippetComponent } from '../../../shared/components/committee-snippet/committee-snippet.component';
 import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';

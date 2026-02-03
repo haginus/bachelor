@@ -10,10 +10,10 @@ import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operat
 import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
 import { StudentDeleteDialogComponent } from '../../dialogs/student-delete-dialog/student-delete-dialog.component';
 import { StudentImportDialogComponent } from '../../dialogs/student-import-dialog/student-import-dialog.component';
-import { AuthService, UserData } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { DOMAIN_TYPES } from '../../../lib/constants';
 import { rowAnimation } from '../../../row-animations';
-import { Domain, Student } from '../../../lib/types';
+import { Domain, Student, User } from '../../../lib/types';
 import { StudentsService } from '../../../services/students.service';
 import { DomainsService } from '../../../services/domains.service';
 import { UsersService } from '../../../services/users.service';
@@ -38,7 +38,7 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
     private snackbar: MatSnackBar
   ) {}
 
-  user: UserData;
+  user: User;
   userSubscription: Subscription;
 
   ngOnInit(): void {
@@ -127,7 +127,7 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
-  async viewStudent(user: UserData) {
+  async viewStudent(user: User) {
     const dialogRef = this.dialog.open(StudentDialogComponent, {
       data: {
         mode: "view",
@@ -139,7 +139,7 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
-  async editStudent(user: UserData) {
+  async editStudent(user: User) {
     let dialogRef = this.dialog.open(StudentDialogComponent, {
       data: {
         mode: "edit",
@@ -151,7 +151,7 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
-  async deleteStudent(user: UserData) {
+  async deleteStudent(user: User) {
     let dialogRef = this.dialog.open(StudentDeleteDialogComponent, {
       data: user,
     });
@@ -164,12 +164,12 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
     } catch(err) {}
   }
 
-  async resendActivationCode(student: UserData) {
+  async resendActivationCode(student: User) {
     await firstValueFrom(this.usersService.sendActivationEmail(student.id));
     this.snackbar.open("Link de activare trimis.");
   }
 
-  async impersonateStudent(student: UserData) {
+  async impersonateStudent(student: User) {
     const result = await firstValueFrom(this.auth.impersonateUser(student.id));
     if(!result.error) {
       this.router.navigate(['student']);

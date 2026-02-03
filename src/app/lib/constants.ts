@@ -1,4 +1,4 @@
-import { CommitteeMember } from "../services/auth.service";
+import { CommitteeMemberRole } from "./types";
 
 export const DOMAIN_TYPES = {
   bachelor: 'licență',
@@ -34,4 +34,4 @@ export const COMMITTEE_MEMBER_ROLE = {
   president: 'Președinte',
   secretary: 'Secretar',
   member: 'Membru',
-} as const satisfies Record<CommitteeMember['role'], string>;
+} as const satisfies Record<CommitteeMemberRole, string>;

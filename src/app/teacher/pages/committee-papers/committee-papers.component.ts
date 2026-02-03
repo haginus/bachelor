@@ -13,7 +13,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { GradePaperComponent } from '../../dialogs/grade-paper/grade-paper.component';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { AuthService, UserData } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { DocumentService } from '../../../services/document.service';
 import { PAPER_TYPES } from '../../../lib/constants';
 import { AreDocumentsUploaded, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
@@ -35,7 +35,7 @@ import { CommitteeSnippetComponent } from '../../../shared/components/committee-
 import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';
 import { LoaderService } from '../../../services/loader.service';
 import { CommitteeFile, CommitteeFilesFormat, CommitteesService } from '../../../services/committees.service';
-import { Committee, CommitteeMember, Paper } from '../../../lib/types';
+import { Committee, CommitteeMember, Paper, User } from '../../../lib/types';
 
 @Component({
   selector: 'app-committee-papers',
@@ -96,7 +96,7 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<Paper>;
   committee: Committee;
   gradingAllowed: boolean = false;
-  user: UserData;
+  user: User;
   hasGenerationRights: boolean = false;
   member!: CommitteeMember;
   showScheduleNotice = false;

@@ -4,7 +4,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { CommitteeDialogComponent } from '../../dialogs/committee-dialog/committee-dialog.component';
-import { AdminService } from '../../../services/admin.service';
 import { DocumentService } from '../../../services/document.service';
 import { AuthService } from '../../../services/auth.service';
 import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
@@ -27,7 +26,6 @@ export class CommitteesComponent {
   constructor(
     private committeesService: CommitteesService,
     private readonly reportsService: ReportsService,
-    private admin: AdminService,
     private dialog: MatDialog,
     private document: DocumentService,
     private auth: AuthService,
@@ -147,6 +145,8 @@ export class CommitteesComponent {
     dialogDef.afterClosed().subscribe(result => {
       if(result) {
         this.isLoadingResults = true;
+        // TODO: add auto-assign method
+        // @ts-ignore
         this.admin.autoAssignCommitteePapers().subscribe(result => {
           if(result.success) {
             this.snackbar.open(`Au fost atribuite ${result.assignedPapers} din ${result.totalPapers} lucrări.`);

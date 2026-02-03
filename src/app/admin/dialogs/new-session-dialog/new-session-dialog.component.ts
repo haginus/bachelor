@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { AdminService } from '../../../services/admin.service';
 
 @Component({
   selector: 'app-new-session-dialog',
@@ -10,7 +9,9 @@ import { AdminService } from '../../../services/admin.service';
 })
 export class NewSessionDialogComponent implements OnInit {
 
-  constructor(private admin: AdminService, private dialog: MatDialogRef<NewSessionDialogComponent>) { }
+  constructor(
+    private dialog: MatDialogRef<NewSessionDialogComponent>
+  ) {}
 
   actionConfirmForm = new FormGroup({
     "password": new FormControl(null, [Validators.required, Validators.minLength(6)])
@@ -21,6 +22,9 @@ export class NewSessionDialogComponent implements OnInit {
   confirmAction() {
     this.isLoading = true;
     const password = this.actionConfirmForm.get("password").value;
+
+    // TODO: move this logic to a service
+    // @ts-ignore
     this.admin.beginNewSession(password).subscribe(result => {
       if(result) {
         this.dialog.close(result);

@@ -6,7 +6,7 @@ import { combineLatest } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators'
 import { routerFadeAnimation } from './animations';
 import { ProblemReportButtonComponent } from './components/problem-report/problem-report.component';
-import { AuthService, SessionSettings, UserData } from './services/auth.service';
+import { AuthService } from './services/auth.service';
 import { UserProfileEditorComponent } from './shared/components/user-profile-editor/user-profile-editor.component';
 import { environment } from '../environments/environment';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -20,7 +20,7 @@ import { LoaderService } from './services/loader.service';
 import { IdentityListItemComponent } from "./shared/components/identity-list-item/identity-list-item.component";
 import { ApiUrlPipe } from './shared/pipes/api-url';
 import { getUserDescription } from './lib/utils';
-import { isStudent, User } from './lib/types';
+import { isStudent, SessionSettings, User } from './lib/types';
 
 
 const SideWidth = 800;
@@ -64,7 +64,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   user: User | undefined = undefined;
-  alternativeIdentities: UserData[] = [];
+  alternativeIdentities: User[] = [];
   sessionSettings: SessionSettings;
   loading = true;
   loadingRoute = false;
@@ -145,7 +145,7 @@ export class AppComponent implements OnInit {
     });
   }
 
-  switchUser(user: UserData) {
+  switchUser(user: User) {
     this.auth.switchUser(user.id).subscribe(res => {
       if(!res.error) {
         this.router.navigate([user.type], { onSameUrlNavigation: 'reload' });
