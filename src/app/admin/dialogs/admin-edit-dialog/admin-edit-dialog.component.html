@@ -28,6 +28,7 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Anulați</button>
-  <button mat-button [disabled]="adminForm.invalid" *ngIf="data.mode == 'create'" (click)="addUser()">Adăugați</button>
-  <button mat-button [disabled]="adminForm.invalid" *ngIf="data.mode == 'edit'" (click)="editUser()">Salvați</button>
+  <button mat-button [disabled]="adminForm.invalid" (click)="saveUser()">
+    {{ data.mode == 'create' ? 'Adăugați' : 'Salvați' }}
+  </button>
 </mat-dialog-actions>

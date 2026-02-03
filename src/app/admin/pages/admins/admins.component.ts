@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, merge, of, Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, firstValueFrom, of, Subscription } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import { AdminEditDialogComponent, AdminEditDialogData } from '../../dialogs/admin-edit-dialog/admin-edit-dialog.component';
-import { AdminService } from '../../../services/admin.service';
-import { AuthService, UserData } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { USER_TYPES } from '../../../lib/constants';
 import { CommonDialogComponent, CommonDialogData } from '../../../shared/components/common-dialog/common-dialog.component';
 import { rowAnimation } from '../../../row-animations';
+import { AdminsService } from '../../../services/admins.service';
+import { User } from '../../../lib/types';
+import { UsersService } from '../../../services/users.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-admins',
@@ -19,87 +22,68 @@ import { rowAnimation } from '../../../row-animations';
     rowAnimation,
   ]
 })
-export class AdminsComponent implements OnInit {
+export class AdminsComponent {
 
-  constructor(private admin: AdminService, private auth: AuthService, private router: Router,
-    private dialog: MatDialog, private snackbar: MatSnackBar) { }
+  constructor(
+    private adminsService: AdminsService,
+    private usersService: UsersService,
+    private auth: AuthService,
+    private router: Router,
+    private dialog: MatDialog,
+    private snackbar: MatSnackBar
+  ) {
+    combineLatest([this.auth.enterSudoMode(), this.performedActions]).pipe(
+      takeUntilDestroyed(),
+      switchMap(([password]) => {
+        if(!password) return of([]);
+        this.isLoadingResults = true;
+        return this.adminsService.findAll().pipe(catchError(() => of([])));
+      }),
+    ).subscribe(users => {
+      this.isLoadingResults = false;
+      this.users = users;
+    });
 
-  USER_TYPES = USER_TYPES;
-
-  displayedColumns: string[] = ['id', 'lastName', 'firstName', 'email', 'type', 'actions'];
-  data: UserData[] = [];
-  currentUser: UserData;
-
-  dataSubscription: Subscription;
-  userSubscription: Subscription;
-
-  isLoadingResults = true;
-
-  performedActions: BehaviorSubject<string> = new BehaviorSubject('');
-
-
-  ngOnInit(): void {
-    this.dataSubscription = combineLatest([this.auth.enterSudoMode(), this.performedActions])
-      .pipe(
-        switchMap(([password]) => {
-          if(!password) return of([]);
-          this.isLoadingResults = true;
-          return this.admin.getAdminUsers();
-        }),
-        map(data => {
-          this.isLoadingResults = false;
-          return data;
-        }),
-      )
-      .subscribe(data => this.data = data);
-
-    this.userSubscription = this.auth.userData.subscribe(user => {
+    this.auth.userData.pipe(takeUntilDestroyed()).subscribe(user => {
       this.currentUser = user;
     });
   }
 
-  ngOnDestroy(): void {
-    this.dataSubscription.unsubscribe();
-    this.userSubscription.unsubscribe();
-  }
+  USER_TYPES = USER_TYPES;
+
+  displayedColumns: string[] = ['id', 'lastName', 'firstName', 'email', 'type', 'actions'];
+  users: User[] = [];
+  currentUser: User;
+  isLoadingResults = true;
+
+  performedActions: BehaviorSubject<string> = new BehaviorSubject('');
 
   refreshResults() {
     this.performedActions.next('refresh');
   }
 
-  addUser() {
-    const dialogRef = this.dialog.open<AdminEditDialogComponent, AdminEditDialogData, UserData>(AdminEditDialogComponent, {
+  async addUser() {
+    const dialogRef = this.dialog.open<AdminEditDialogComponent, AdminEditDialogData, User>(AdminEditDialogComponent, {
       data: { mode: 'create' }
     });
-    dialogRef.afterClosed().subscribe(result => {
-      if(result) {
-        this.performedActions.next('addUser');
-        this.snackbar.open("Utilizator creat.");
-      }
-    });
+    if(!await firstValueFrom(dialogRef.afterClosed())) return;
+    this.performedActions.next('addUser');
   }
 
-  editUser(user: UserData) {
-    const dialogRef = this.dialog.open<AdminEditDialogComponent, AdminEditDialogData, UserData>(AdminEditDialogComponent, {
-      data: { mode: 'edit', data: user }
+  async editUser(user: User) {
+    const dialogRef = this.dialog.open<AdminEditDialogComponent, AdminEditDialogData, User>(AdminEditDialogComponent, {
+      data: { mode: 'edit', user }
     });
-    dialogRef.afterClosed().subscribe(result => {
-      if(result) {
-        this.performedActions.next('editUser');
-        this.snackbar.open("Utilizator modificat.");
-      }
-    });
+    if(!await firstValueFrom(dialogRef.afterClosed())) return;
+    this.performedActions.next('editUser');
   }
 
-  resendActivationCode(user: UserData) {
-    this.admin.resendUserActivationCode(user.id).subscribe(result => {
-      if(result) {
-        this.snackbar.open("Link de activare trimis.");
-      }
-    });
+  async resendActivationCode(user: User) {
+    await firstValueFrom(this.usersService.sendActivationEmail(user.id));
+    this.snackbar.open("Link de activare trimis.");
   }
 
-  impersonateUser(user: UserData) {
+  impersonateUser(user: User) {
     this.auth.impersonateUser(user.id).subscribe(result => {
       if(!result.error) {
         this.router.navigate(['admin']);
@@ -107,30 +91,21 @@ export class AdminsComponent implements OnInit {
     });
   }
 
-  deleteUser(user: UserData) {
-    let dialogRef = this.dialog.open<CommonDialogComponent, CommonDialogData, string>(CommonDialogComponent, {
+  async deleteUser(user: User) {
+    const dialogRef = this.dialog.open<CommonDialogComponent, CommonDialogData, boolean>(CommonDialogComponent, {
       data: {
         title: 'Ștergeți utilizatorul?',
         content: `Acesta va pierde imediat accesul în platformă. Doriți să continuați?`,
         actions: [
-          { name: 'Anulați', value: 'dismiss' },
-          { name: 'Ștergeți', value: 'delete' },
+          { name: 'Anulați', value: false },
+          { name: 'Ștergeți', value: true },
         ]
       }
     });
-    let sub = dialogRef.afterClosed().subscribe(result => {
-      if(result == 'delete') {
-        this.admin.deleteUser(user.id).subscribe(result => {
-          if(result) {
-            this.snackbar.open("Utilizator șters.");
-            this.performedActions.next('deleteUser');
-          }
-        });
-      }
-      sub.unsubscribe();
-    });
+    if(!await firstValueFrom(dialogRef.afterClosed())) return;
+    await firstValueFrom(this.adminsService.delete(user.id));
+    this.snackbar.open('Utilizator șters.');
+    this.performedActions.next('deleteUser');
   }
-
-
 
 }

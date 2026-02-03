@@ -1,8 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AuthService, UserData } from '../../../services/auth.service';
-import { AdminService } from '../../../services/admin.service';
+import { AuthService } from '../../../services/auth.service';
+import { AdminsService } from '../../../services/admins.service';
+import { User } from '../../../lib/types';
+import { firstValueFrom } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-admin-edit-dialog',
@@ -11,14 +14,19 @@ import { AdminService } from '../../../services/admin.service';
 })
 export class AdminEditDialogComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: AdminEditDialogData, private auth: AuthService,
-   private admin: AdminService, private dialog: MatDialogRef<AdminEditDialogComponent>) { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: AdminEditDialogData,
+    private auth: AuthService,
+    private adminsService: AdminsService,
+    private dialog: MatDialogRef<AdminEditDialogComponent>,
+    private readonly snackBar: MatSnackBar,
+  ) { }
 
   adminForm = new FormGroup({
-    'firstName': new FormControl(this.data.data?.firstName, [Validators.required]),
-    'lastName': new FormControl(this.data.data?.lastName, [Validators.required]),
-    'email': new FormControl({ value: this.data.data?.email, disabled: true }, [Validators.email, Validators.required]),
-    'type': new FormControl<'admin' | 'secretary'>("admin", [Validators.required]),
+    'firstName': new FormControl(this.data.user?.firstName, [Validators.required]),
+    'lastName': new FormControl(this.data.user?.lastName, [Validators.required]),
+    'email': new FormControl({ value: this.data.user?.email, disabled: true }, [Validators.email, Validators.required]),
+    'type': new FormControl<'admin' | 'secretary'>(this.data.user?.type as any || 'admin', [Validators.required]),
   });
   isLoading: boolean = false;
 
@@ -28,40 +36,24 @@ export class AdminEditDialogComponent implements OnInit {
     }
   }
 
-  addUser() {
-    const { firstName, lastName, email, type } = this.adminForm.value;
-    this.auth.enterSudoMode().subscribe(password => {
-      if(!password) return;
-      this.isLoading = true;
-      this.admin.addAdmin(firstName, lastName, email, type).subscribe(result => {
-        if(result) {
-          this.dialog.close(result);
-        } else {
-          this.isLoading = false;
-        }
-      });
-    });
+  async saveUser() {
+    if(!await firstValueFrom(this.auth.enterSudoMode())) return;
+    const dto = this.adminForm.getRawValue();
+    this.isLoading = true;
+    try {
+      const result = this.data.mode == 'create'
+        ? await firstValueFrom(this.adminsService.create(dto))
+        : await firstValueFrom(this.adminsService.update(this.data.user!.id, dto));
+      this.dialog.close(result);
+      this.snackBar.open('Utilizatorul a fost salvat.');
+    } finally {
+      this.isLoading = false;
+    }
   }
-
-  editUser() {
-    const { firstName, lastName, type } = this.adminForm.value;
-    this.auth.enterSudoMode().subscribe(password => {
-      if(!password) return;
-      this.isLoading = true;
-      this.admin.editAdmin(this.data.data!.id, firstName, lastName, type).subscribe(result => {
-        if(result) {
-          this.dialog.close(result);
-        } else {
-          this.isLoading = false;
-        }
-      });
-    });
-  }
-
 
 }
 
 export interface AdminEditDialogData {
   mode: "create" | "edit";
-  data?: UserData;
+  user?: User;
 }
