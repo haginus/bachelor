@@ -7,6 +7,8 @@ import { NewSessionDialogComponent } from '../../dialogs/new-session-dialog/new-
 import { AuthService } from '../../../services/auth.service';
 import { formatDate } from '@angular/common';
 import { SessionSettings } from '../../../lib/types';
+import { SessionSettingsService } from '../../../services/session-settings.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-session-settings',
@@ -17,6 +19,7 @@ export class SessionSettingsComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
+    private sessionSettingsService: SessionSettingsService,
     private snackbar: MatSnackBar,
     private dialog: MatDialog
   ) {}
@@ -63,19 +66,16 @@ export class SessionSettingsComponent implements OnInit {
   });
   settingsFormMatcher = new SettingsFormErrorStateMatcher();
 
-  saveSettings() {
+  async saveSettings() {
     const settings = new SessionSettings(this.settingsForm.value as any);
     this.isLoadingSettings = true;
-    // TODO: Fix this
-    // @ts-ignore
-    this.admin.changeSessionSettings(settings).subscribe(settings => {
-      // If the update was successful
-      if(settings) {
-        this.sessionSettings = settings;
-        this.snackbar.open("Setări salvate.");
-      }
+    try {
+      await firstValueFrom(this.sessionSettingsService.updateSessionSettings(settings));
+      this.sessionSettings = settings;
+      this.snackbar.open("Setări salvate.");
+    } finally {
       this.isLoadingSettings = false;
-    })
+    }
   }
 
   newSession() {

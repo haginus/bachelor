@@ -1,6 +1,6 @@
 import { inclusiveDate, parseDate } from "./utils";
 
-interface ISessionSettings {
+export interface ISessionSettings {
   sessionName: string;
   currentPromotion: string;
   applyStartDate: string;

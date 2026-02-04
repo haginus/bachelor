@@ -2,7 +2,7 @@ import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -14,6 +14,7 @@ import { DialogModule } from '@angular/cdk/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { User } from '../../lib/types';
+import { FeedbackService } from '../../services/feedback.service';
 
 @Component({
   selector: 'app-problem-report',
@@ -35,6 +36,7 @@ export class ProblemReportComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: ProblemReportDialogData,
+    private readonly feedbackService: FeedbackService,
     private dialog: MatDialogRef<ProblemReportComponent>,
     private auth: AuthService,
     private snackbar: MatSnackBar
@@ -42,8 +44,8 @@ export class ProblemReportComponent implements OnInit, OnDestroy {
 
   problemReportForm = new FormGroup({
     type: new FormControl(this.data?.type, [Validators.required]),
-    description: new FormControl(null, [Validators.required, Validators.minLength(16), Validators.maxLength(1024)]),
-    email: new FormControl(this.data?.email, [Validators.required, Validators.email]),
+    description: new FormControl('', [Validators.required, Validators.minLength(16), Validators.maxLength(1024)]),
+    replyToEmail: new FormControl(this.data?.email, [Validators.required, Validators.email]),
     fullName: new FormControl('', []),
   });
 
@@ -55,19 +57,17 @@ export class ProblemReportComponent implements OnInit, OnDestroy {
   user: User;
   isSendingMessage: boolean = false;
 
-  ngOnInit(): void {
+  async ngOnInit() {
     if(this.data?.type) {
       this.problemType.disable();
     }
-    if(!this.data?.email) {
-      this.userDataSubscription = this.auth.userData.subscribe(user => {
-        this.user = user;
-        if(!user) {
-          this.problemReportForm.get("fullName").setValidators([Validators.required]);
-        } else {
-          this.problemReportForm.get("email").setValue(user.email);
-        }
-      });
+    this.user = await firstValueFrom(this.auth.userData);
+    if(!this.user) {
+      const fullNameControl = this.problemReportForm.get("fullName");
+      fullNameControl.setValidators([Validators.required, Validators.minLength(4), fullNameValidator]);
+      fullNameControl.updateValueAndValidity();
+    } else {
+      this.problemReportForm.get("replyToEmail").setValue(this.user.email);
     }
   }
 
@@ -75,25 +75,33 @@ export class ProblemReportComponent implements OnInit, OnDestroy {
     this.userDataSubscription?.unsubscribe();
   }
 
-  sendForm() {
-    this.isSendingMessage = true;
-    this.problemType.enable();
-    const formValue = this.problemReportForm.value;
-    if(this.data?.type) {
-      this.problemType.disable();
+  async sendForm() {
+    const formValue = this.problemReportForm.getRawValue();
+    const [lastName, firstName] = formValue.fullName?.trim().split(' ');
+    const dto = {
+      ...formValue,
+      user: this.user ? undefined : { firstName, lastName },
     }
-    // TODO: Implement sending problem report
-    // this.misc.sendProblemReport(formValue as any).subscribe(result => {
-    //   if(result) {
-    //     this.dialog.close();
-    //     this.snackbar.open("Mesajul a fost trimis. Ați primit o copie pe e-mail.");
-    //   } else {
-    //     this.isSendingMessage = false;
-    //   }
-    // });
+    this.isSendingMessage = true;
+    try {
+      await firstValueFrom(this.feedbackService.sendFeedback(dto));
+      this.dialog.close();
+      this.snackbar.open("Mesajul a fost trimis. Ați primit o copie pe e-mail.");
+    } finally {
+      this.isSendingMessage = false;
+    }
   }
 
 }
+
+const fullNameValidator = (control: FormControl) => {
+  const value: string = control.value;
+  const [lastName, firstName] = value.trim().split(' ').map(s => s.trim());
+  if(!firstName || !lastName) {
+    return { fullName: true };
+  }
+  return null;
+};
 
 export interface ProblemReportDialogData {
   type?: string;

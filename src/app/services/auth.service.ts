@@ -144,8 +144,9 @@ export class AuthService {
     return this.sudoService.enterSudoMode();
   }
 
-  signOut() : Observable<boolean> {
+  signOut(): Observable<boolean> {
     this.removeToken();
+    this.userDataSource.next(undefined);
     return of(true);
   }
 
