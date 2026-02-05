@@ -53,9 +53,9 @@ export const logFilterSchema = {
           $ref: '#/$defs/matchOrNotMatchNumbersOrNull',
           description: 'ID-ul utilizatorului afectat de acțiune',
         },
-        studentExtraDataId: {
+        userExtraDataId: {
           $ref: '#/$defs/matchOrNotMatchNumbersOrNull',
-          description: 'ID-ul datelor suplimentare ale studentului',
+          description: 'ID-ul datelor suplimentare ale utilizatorului',
         },
         paperId: {
           $ref: '#/$defs/matchOrNotMatchNumbersOrNull',
@@ -94,10 +94,17 @@ export const logFilterSchema = {
       type: 'array',
       items: { $ref: '#/$defs/logSeverityEnum' },
     },
+    positiveNumber: {
+      type: 'number',
+      minimum: 1,
+    },
     arrayOfNumbersOrNull: {
       type: 'array',
       items: {
-        type: ['number', 'null'],
+        anyOf: [
+          { $ref: '#/$defs/positiveNumber' },
+          { type: 'null' },
+        ]
       },
     },
     arrayOfNumbers: {
