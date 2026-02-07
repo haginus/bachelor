@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { SessionSettingsService } from '../../../services/session-settings.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { firstValueFrom } from 'rxjs';
+import { SudoService } from '../../../services/sudo.service';
 
 @Component({
   selector: 'app-new-session-dialog',
@@ -10,28 +13,24 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class NewSessionDialogComponent implements OnInit {
 
   constructor(
-    private dialog: MatDialogRef<NewSessionDialogComponent>
+    private dialog: MatDialogRef<NewSessionDialogComponent>,
+    private readonly sessionSettingsService: SessionSettingsService,
+    private readonly snackbar: MatSnackBar,
+    private readonly sudoService: SudoService,
   ) {}
-
-  actionConfirmForm = new FormGroup({
-    "password": new FormControl(null, [Validators.required, Validators.minLength(6)])
-  });
 
   isLoading = false;
 
-  confirmAction() {
+  async confirmAction() {
+    if(!await firstValueFrom(this.sudoService.enterSudoMode())) return;
     this.isLoading = true;
-    const password = this.actionConfirmForm.get("password").value;
-
-    // TODO: move this logic to a service
-    // @ts-ignore
-    this.admin.beginNewSession(password).subscribe(result => {
-      if(result) {
-        this.dialog.close(result);
-      } else {
-        this.isLoading = false;
-      }
-    })
+    try {
+      const sessionSettings = await firstValueFrom(this.sessionSettingsService.beginNewSession());
+      this.dialog.close(sessionSettings);
+      this.snackbar.open('S-a trecut la o nouă sesiune.');
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   ngOnInit(): void {

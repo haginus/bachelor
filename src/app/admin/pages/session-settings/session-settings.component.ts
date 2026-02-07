@@ -78,16 +78,13 @@ export class SessionSettingsComponent implements OnInit {
     }
   }
 
-  newSession() {
+  async newSession() {
     let dialogRef = this.dialog.open(NewSessionDialogComponent);
-    let sub = dialogRef.afterClosed().subscribe(result => {
-      if(result) {
-        this.sessionSettings = result;
-        this.settingsForm.setValue(this.sessionSettings);
-        this.snackbar.open('S-a trecut la o nouă sesiune.');
-      }
-      sub.unsubscribe();
-    });
+    const result = await firstValueFrom(dialogRef.afterClosed());
+    if(result) {
+      this.sessionSettings = result;
+      this.setFormValue(result);
+    }
   }
 }
 

@@ -19,4 +19,10 @@ export class SessionSettingsService {
     );
   }
 
+  beginNewSession() {
+    return this.http.post<ISessionSettings>(`${this.baseUrl}/new`, {}).pipe(
+      map(response => new SessionSettings(response))
+    );
+  }
+
 }

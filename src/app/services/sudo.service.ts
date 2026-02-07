@@ -4,7 +4,7 @@ import { BehaviorSubject, catchError, map, Observable, of, take } from "rxjs";
 import { SudoDialogComponent } from "../admin/dialogs/sudo-dialog/sudo-dialog.component";
 
 @Injectable({
-  providedIn: 'any'
+  providedIn: 'root'
 })
 export class SudoService {
 

@@ -58,7 +58,7 @@ const routes: Routes = [
   {
     path: 'session',
     component: SessionSettingsComponent,
-    canActivate: [RoleGuard],
+    canActivate: [RoleGuard, sudoModeGuard],
     data: { title: 'Setări sesiune de examinare', role: 'admin' }
   },
   {
