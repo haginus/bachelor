@@ -2,9 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { map } from 'rxjs/operators';
-import { Topic, TopicsService } from '../../../services/topics.service';
+import { TopicsService } from '../../../services/topics.service';
 import { firstValueFrom } from 'rxjs';
+import { Topic } from '../../../lib/types';
 
 @Component({
   selector: 'app-topic-dialog',
@@ -21,18 +21,21 @@ export class AdminTopicDialogComponent implements OnInit {
   ) {}
 
   isLoading = false;
-  remainingTopics = []
+  remainingTopics: Topic[] = [];
+  needsMove: boolean = false;
 
   editTopicForm = new FormGroup({
     "name": new FormControl(this.data.topic?.name, [Validators.required]),
   });
 
   deleteTopicForm = new FormGroup({
-    "moveTo": new FormControl(null, [Validators.required])
-  })
+    "moveTo": new FormControl<number>(null, [Validators.required])
+  });
 
   async ngOnInit() {
     if(this.data.mode == 'delete') {
+      this.needsMove = this.data.topic!.offerCount! > 0 || this.data.topic!.studentCount! > 0 || this.data.topic!.paperCount! > 0;
+      if(!this.needsMove) return;
       const allTopics = await firstValueFrom(this.topics.findAll());
       this.remainingTopics = allTopics.filter(topic => topic.id != this.data.topic.id);
     }
@@ -67,7 +70,7 @@ export class AdminTopicDialogComponent implements OnInit {
 
   async deleteTopic() {
     const id = this.data.topic.id;
-    const moveId = this.deleteTopicForm.get('moveTo').value;
+    const moveId = this.deleteTopicForm.get('moveTo').value ?? undefined;
     this.isLoading = true;
     try {
       await firstValueFrom(this.topics.delete(id, moveId));

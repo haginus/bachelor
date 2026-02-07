@@ -2,9 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Topic, TopicsService } from '../../../services/topics.service';
+import { TopicsService } from '../../../services/topics.service';
 import { arrayMap } from '../../../lib/utils';
 import { firstValueFrom } from 'rxjs';
+import { Topic } from '../../../lib/types';
 
 @Component({
   selector: 'app-topic-bulk-delete-dialog',
@@ -22,13 +23,17 @@ export class TopicBulkDeleteDialogComponent implements OnInit {
 
   remainingTopics: Topic[] = [];
   isLoading: boolean = false;
+  needsMove: boolean = false;
+
 
   deleteTopicForm = new FormGroup({
-    "moveTo": new FormControl(null, [Validators.required])
+    "moveTo": new FormControl<number>(null, [Validators.required])
   });
 
   async ngOnInit() {
     try {
+      this.needsMove = this.topicsToDelete.some(topic => topic.offerCount! > 0 || topic.studentCount! > 0 || topic.paperCount! > 0);
+      if(!this.needsMove) return;
       const allTopics = await firstValueFrom(this.topicsService.findAll());
       const toDelete = arrayMap(this.topicsToDelete, (topic) => topic.id);
       this.remainingTopics = allTopics.filter(topic => !toDelete[topic.id]);
@@ -39,7 +44,7 @@ export class TopicBulkDeleteDialogComponent implements OnInit {
 
   async deleteTopics() {
     const ids = this.topicsToDelete.map(topic => topic.id);
-    const moveId = this.deleteTopicForm.get('moveTo').value;
+    const moveId = this.deleteTopicForm.get('moveTo').value ?? undefined;
     this.isLoading = true;
     try {
       await firstValueFrom(this.topicsService.bulkDelete(ids, moveId));

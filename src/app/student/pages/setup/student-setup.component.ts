@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { firstValueFrom, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { Topic, TopicsService } from '../../../services/topics.service';
+import { TopicsService } from '../../../services/topics.service';
 import { AuthService } from '../../../services/auth.service';
 import { FUNDING_FORMS, STUDY_FORMS } from '../../../lib/constants';
 import { ProblemReportComponent, ProblemReportDialogData } from '../../../components/problem-report/problem-report.component';
@@ -15,7 +15,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatListModule } from '@angular/material/list';
 import { UserProfileEditorComponent } from '../../../shared/components/user-profile-editor/user-profile-editor.component';
 import { AsyncPipe, TitleCasePipe } from '@angular/common';
-import { Student } from '../../../lib/types';
+import { Student, Topic } from '../../../lib/types';
 
 @Component({
   selector: 'student-setup',

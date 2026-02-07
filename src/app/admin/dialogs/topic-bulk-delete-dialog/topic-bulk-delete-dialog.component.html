@@ -2,26 +2,26 @@
 
 <h2 mat-dialog-title>Ștergeți temele?</h2>
 <mat-dialog-content class="mat-typography">
-  <p>
-    Este nevoie să transferați ofertele și lucrările ce conțin aceaste teme (dacă există) către altă temă.
-  </p>
+  <p>Ați selectat pentru ștergere următoarele teme:</p>
   <div class="topic-list">
     <div class="topic" *ngFor="let topic of topicsToDelete">
       {{ topic.name }}
     </div>
   </div>
-
-  <form [formGroup]="deleteTopicForm">
+  @if(needsMove) {
+    <p>Este nevoie să transferați ofertele și lucrările către altă temă.</p>
+    <form [formGroup]="deleteTopicForm">
       <mat-form-field appearance="outline">
-          <mat-label>Mutați în</mat-label>
-          <mat-select formControlName="moveTo">
-              <mat-option *ngFor="let topic of remainingTopics" [value]="topic.id">{{ topic.name }}</mat-option>
-          </mat-select>
+        <mat-label>Mutați în</mat-label>
+        <mat-select formControlName="moveTo">
+          <mat-option *ngFor="let topic of remainingTopics" [value]="topic.id">{{ topic.name }}</mat-option>
+        </mat-select>
       </mat-form-field>
-  </form>
+    </form>
+  }
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Anulați</button>
-  <button mat-button (click)="deleteTopics()" [disabled]="deleteTopicForm.invalid">Ștergeți</button>
+  <button mat-button color="warn" (click)="deleteTopics()" [disabled]="needsMove && deleteTopicForm.invalid">Ștergeți</button>
 </mat-dialog-actions>

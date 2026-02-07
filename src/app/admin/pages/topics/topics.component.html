@@ -51,6 +51,21 @@
           <td mat-cell *matCellDef="let row"> {{row.name}} </td>
         </ng-container>
 
+        <ng-container matColumnDef="offerCount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Număr oferte </th>
+          <td mat-cell *matCellDef="let row"> {{row.offerCount}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="studentCount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Număr studenți </th>
+          <td mat-cell *matCellDef="let row"> {{row.studentCount}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="paperCount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Număr lucrări </th>
+          <td mat-cell *matCellDef="let row"> {{row.paperCount}} </td>
+        </ng-container>
+
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Acțiuni</th>
           <td mat-cell *matCellDef="let element">

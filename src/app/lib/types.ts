@@ -164,6 +164,9 @@ export interface SignUpRequest {
 export interface Topic {
   id: number;
   name: string;
+  offerCount?: number;
+  studentCount?: number;
+  paperCount?: number;
 }
 
 export interface Offer {

@@ -5,7 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 import { Observable, firstValueFrom } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { AuthService } from '../../../services/auth.service';
-import { Topic, TopicsService } from '../../../services/topics.service';
+import { TopicsService } from '../../../services/topics.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
@@ -16,7 +16,7 @@ import { LoadingComponent } from '../loading/loading.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { PapersService } from '../../../services/papers.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Paper, User } from '../../../lib/types';
+import { Paper, Topic, User } from '../../../lib/types';
 
 @Component({
   selector: 'app-edit-paper',

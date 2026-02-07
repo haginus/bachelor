@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom, of, Subscription } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { OfferApplicationSenderComponent } from '../../dialogs/offer-application-sender/offer-application-sender.component';
-import { Topic, TopicsService } from '../../../services/topics.service';
+import { TopicsService } from '../../../services/topics.service';
 import { AuthService } from '../../../services/auth.service';
 import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -19,7 +19,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { UserSnippetComponent } from '../../../shared/components/user-snippet/user-snippet.component';
 import { TeacherOffersService } from '../../../services/teacher-offers.service';
-import { Offer, TeacherOfferDto } from '../../../lib/types';
+import { Topic, TeacherOfferDto } from '../../../lib/types';
 
 @Component({
   selector: 'student-teachers-grid',

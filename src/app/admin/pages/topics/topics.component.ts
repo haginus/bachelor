@@ -5,9 +5,10 @@ import { BehaviorSubject, merge, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { TopicBulkDeleteDialogComponent } from '../../dialogs/topic-bulk-delete-dialog/topic-bulk-delete-dialog.component';
 import { AdminTopicDialogComponent } from '../../dialogs/topic-dialog/topic-dialog.component';
-import { Topic, TopicsService } from '../../../services/topics.service';
+import { TopicsService } from '../../../services/topics.service';
 import { Selectable } from '../../../lib/models/Selectable';
 import { rowAnimation } from '../../../row-animations';
+import { Topic } from '../../../lib/types';
 
 @Component({
   selector: 'app-topics',
@@ -21,11 +22,12 @@ export class AdminTopicsComponent implements OnInit, AfterViewInit {
 
   constructor(private topics: TopicsService, private dialog: MatDialog) { }
 
-  displayedColumns: string[] = ['id', 'name', 'actions'];
+  private readonly defaultDisplayedColumns = ['id', 'name', 'offerCount', 'studentCount', 'paperCount', 'actions'];
+  displayedColumns: string[] = [...this.defaultDisplayedColumns];
   resultsLength: number;
   isLoadingResults: boolean = true;
   isError: boolean = false;
-  data: Topic[];
+  data: Topic[] = [];
   topicsSelectable = new Selectable<Topic>((topic) => topic.id);
   selectableOpen: boolean = false;
 
@@ -45,6 +47,7 @@ export class AdminTopicsComponent implements OnInit, AfterViewInit {
           return this.topics.findAll({
             sortBy: this.sort.active,
             sortDirection: this.sort.direction || undefined,
+            detailed: true
           });
         }),
         map(data => {
@@ -114,11 +117,10 @@ export class AdminTopicsComponent implements OnInit, AfterViewInit {
 
   toggleSelectable() {
     if(this.selectableOpen) {
-      this.displayedColumns = ['id', 'name', 'actions'];
+      this.displayedColumns = [...this.defaultDisplayedColumns];
       this.topicsSelectable.reset();
-
     } else {
-      this.displayedColumns = ['select', 'id', 'name', 'actions'];
+      this.displayedColumns = ['select', ...this.defaultDisplayedColumns];
     }
     this.selectableOpen = !this.selectableOpen;
   }
