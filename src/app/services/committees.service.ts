@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Committee, CommitteeMemberRole } from "../lib/types";
+import { Committee, CommitteeMemberRole, ImportResult, Paper } from "../lib/types";
 import { environment } from "../../environments/environment";
 
 @Injectable({
@@ -32,6 +32,10 @@ export class CommitteesService {
 
   update(id: number, dto: CommitteeDto) {
     return this.http.put<Committee>(`${this.baseUrl}/${id}`, dto);
+  }
+
+  autoAssignPapers() {
+    return this.http.post<ImportResult<Paper, Paper>>(`${this.baseUrl}/auto-assign-papers`, {});
   }
 
   setPapers(id: number, paperIds: number[]) {

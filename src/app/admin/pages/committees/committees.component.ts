@@ -12,6 +12,7 @@ import { CommitteeFile, CommitteeFilesFormat, CommitteesService } from '../../..
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { User, Teacher, Committee } from '../../../lib/types';
 import { ReportFile, ReportsService } from '../../../services/reports.service';
+import { ImportResultDialogComponent } from '../../dialogs/import-result-dialog/import-result-dialog.component';
 
 @Component({
   selector: 'app-committees',
@@ -131,7 +132,7 @@ export class CommitteesComponent {
     }
   }
 
-  autoAssign() {
+  async autoAssign() {
     const dialogDef = this.dialog.open(CommonDialogComponent, {
       data: {
         title: 'Atribuire automată lucrări',
@@ -142,19 +143,17 @@ export class CommitteesComponent {
         ]
       }
     });
-    dialogDef.afterClosed().subscribe(result => {
-      if(result) {
-        this.isLoadingResults = true;
-        // TODO: add auto-assign method
-        // @ts-ignore
-        this.admin.autoAssignCommitteePapers().subscribe(result => {
-          if(result.success) {
-            this.snackbar.open(`Au fost atribuite ${result.assignedPapers} din ${result.totalPapers} lucrări.`);
-          }
-          this.performedActions.next('autoAssign');
-        });
-      }
-    });
+    if(!await firstValueFrom(dialogDef.afterClosed())) return;
+    try {
+      this.isLoadingResults = true;
+      const result = await firstValueFrom(this.committeesService.autoAssignPapers());
+      this.dialog.open(ImportResultDialogComponent, { data: result, width: '90vw', maxWidth: '1000px' });
+      this.snackbar.open(`Au fost atribuite ${result.summary.updated} din ${result.summary.proccessed} lucrări.`, null, { duration: 10000 });
+      this.isLoadingResults = false;
+      this.refreshResults();
+    } finally {
+      this.isLoadingResults = false;
+    }
   }
 
   refreshResults() {
