@@ -81,8 +81,8 @@ export class AuthService {
   }
 
   switchUser(userId: number): Observable<AuthResponse> {
-    const url = `${environment.apiUrl}/auth/switch`;
-    return this.http.post<AuthResponse>(url, { userId }, this.getPrivateHeaders()).pipe(
+    const url = `${environment.apiUrl}/auth/switch/${userId}`;
+    return this.http.post<AuthResponse>(url, {}, this.getPrivateHeaders()).pipe(
       map(res => {
         this.setToken((res as any).accessToken);
         this.userDataSource.next((res as any).user);

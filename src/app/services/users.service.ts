@@ -16,5 +16,10 @@ export class UsersService {
     return this.http.post<void>(`${this.baseUrl}/${userId}/resend-activation-email`, {});
   }
 
+  checkEmail(email: string): Observable<{ existingId: number | null }> {
+    const url = `${this.baseUrl}/check-email`;
+    return this.http.get<{ existingId: number | null }>(url, { params: { email } });
+  }
+
 }
 

@@ -9,6 +9,7 @@ import { Domain, Student, UserExtraData } from '../../../lib/types';
 import { DomainsService } from '../../../services/domains.service';
 import { StudentsService } from '../../../services/students.service';
 import { AuthService } from '../../../services/auth.service';
+import { UsersService } from '../../../services/users.service';
 
 @Component({
   selector: 'app-student-dialog',
@@ -24,6 +25,7 @@ export class StudentDialogComponent implements OnInit {
     private snackBar: MatSnackBar,
     private readonly domainsService: DomainsService,
     private readonly studentsService: StudentsService,
+    private readonly usersService: UsersService,
     private readonly auth: AuthService,
   ) {}
 
@@ -76,8 +78,7 @@ export class StudentDialogComponent implements OnInit {
       }
       return of(email).pipe(
         delay(500),
-        // TODO: use backend
-        switchMap(() => of({ existingId: null })),
+        switchMap(() => this.usersService.checkEmail(email)),
         map((result) => (result.existingId == null || result.existingId === existingId) ? null : { emailUnique: 'Emailul este deja folosit.' }),
         tap(result => {
           prevEmail = email;
