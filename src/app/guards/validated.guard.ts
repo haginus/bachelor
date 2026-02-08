@@ -1,29 +1,17 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivateFn } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ValidatedGuard implements CanActivate {
-  constructor(private user: AuthService, private router: Router) {}
-
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.user.userData.pipe(
-      map(user => {
-        if(user === undefined) {
-          return false;
-        }
-        else if(!user.validated) {
-          this.router.navigate([user.type, 'setup']); // redirect to setup
-        }
-        return true;
-      })
-    );
+export const validatedGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  const user = await firstValueFrom(authService.userData);
+  if(!user) {
+    return false;
   }
-  
+  if(!user.validated) {
+    return router.createUrlTree([user.type, 'setup']);
+  }
+  return true;
 }

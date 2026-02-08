@@ -1,25 +1,16 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivateFn } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class SignedInGuard implements CanActivate {
-  constructor(private auth: AuthService, private router: Router) { }
-
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      if(!this.auth.isSignedIn()) {
-        if(state.url && state.url != "/") {
-          this.router.navigate(['login'], { queryParams: { next: state.url } });
-        } else {
-          this.router.navigate(['login']);
-        }
-      }
-      return true;
+export const signedInGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  if(!authService.isSignedIn()) {
+    if(state.url && state.url != "/") {
+      return router.createUrlTree(['login'], { queryParams: { next: state.url } });
+    } else {
+      return router.createUrlTree(['login']);
+    }
   }
-  
+  return true;
 }

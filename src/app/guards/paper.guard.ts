@@ -1,31 +1,19 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivateFn } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { Student } from '../lib/types';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class PaperGuard implements CanActivate {
-  constructor(private user: AuthService, private router: Router) {}
-
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const hasPaper = route.data['hasPaper'] == undefined ? true : route.data['hasPaper'];
-    return this.user.userData.pipe(
-      map(user => {
-        if(user === undefined) {
-          return false;
-        }
-        // @ts-ignore
-        else if(!!user.paper != hasPaper) {
-          this.router.navigate([user.type]);
-        }
-        return true;
-      })
-    );
+export const paperGuard: CanActivateFn = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  const hasPaper = route.data['hasPaper'] == undefined ? true : route.data['hasPaper'];
+  const user = await firstValueFrom(authService.userData);
+  if(!user) {
+    return false;
   }
+  if(!!(user as Student).paper != hasPaper) {
+    return router.createUrlTree([user.type]);
+  }
+  return true;
 }

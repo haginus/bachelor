@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RoleGuard } from '../guards/role.guard';
+import { roleGuard } from '../guards/role.guard';
 import { AdminComponent } from './admin.component';
 import { AdminsComponent } from './pages/admins/admins.component';
 import { CommitteesComponent } from './pages/committees/committees.component';
@@ -29,13 +29,13 @@ const routes: Routes = [
   {
     path: 'teachers',
     component: AdminTeachersComponent,
-    canActivate: [RoleGuard],
+    canActivate: [roleGuard],
     data: { title: 'Profesori', role: 'admin' }
   },
   {
     path: 'admins',
     component: AdminsComponent,
-    canActivate: [RoleGuard, sudoModeGuard],
+    canActivate: [roleGuard, sudoModeGuard],
     data: { title: 'Administratori și secretari', role: 'admin' }
   },
   {
@@ -46,19 +46,19 @@ const routes: Routes = [
   {
     path: 'domains',
     component: AdminDomainsComponent,
-    canActivate: [RoleGuard],
+    canActivate: [roleGuard],
     data: { title: 'Domenii', role: 'admin' }
   },
   {
     path: 'topics',
     component: AdminTopicsComponent,
-    canActivate: [RoleGuard],
+    canActivate: [roleGuard],
     data: { title: 'Teme', role: 'admin' }
   },
   {
     path: 'session',
     component: SessionSettingsComponent,
-    canActivate: [RoleGuard, sudoModeGuard],
+    canActivate: [roleGuard, sudoModeGuard],
     data: { title: 'Setări sesiune de examinare', role: 'admin' }
   },
   {
@@ -79,13 +79,13 @@ const routes: Routes = [
   {
     path: 'committees/:committeeId/assign-papers',
     component: PaperAssignComponent,
-    canActivate: [RoleGuard],
+    canActivate: [roleGuard],
     data: { title: 'Atribuire lucrări', role: 'admin' }
   },
   {
     path: 'logs',
     loadComponent: () => import('./pages/logs/logs.component').then(m => m.LogsComponent),
-    canActivate: [RoleGuard],
+    canActivate: [roleGuard],
     data: { title: 'Loguri', role: 'admin' }
   }
 ];
