@@ -218,7 +218,7 @@ export interface Paper {
   documentReuploadRequests: DocumentReuploadRequest[];
   grades?: PaperGrade[];
   gradeAverage: number | null;
-  committee: any;
+  committee: Committee | null;
   topics: Topic[];
   createdAt: string;
   updatedAt: string;

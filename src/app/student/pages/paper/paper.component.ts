@@ -130,7 +130,7 @@ export class StudentPaperComponent implements OnInit, OnDestroy {
       );
       this.paper = paper;
       this.userExtraData = extraData;
-      this.paperSchedulingLocation = paper.scheduledGrading ? paper.committee.activityDays.find(day => formatDate(day.startTime) === formatDate(paper.scheduledGrading))?.location : null;
+      this.paperSchedulingLocation = paper.scheduledGrading ? paper.committee?.activityDays.find(day => formatDate(day.startTime) === formatDate(paper.scheduledGrading))?.location : null;
       this._checkSubmissionPeriod();
     } finally {
       this.isLoadingInitialData = false;
