@@ -32,7 +32,7 @@
             <input matInput type="email" formControlName="email">
           </mat-form-field>
           <div class="flex-container align-center captcha-container">
-            <re-captcha (resolved)="solvedCaptcha($event)"></re-captcha>
+            <re-captcha (resolved)="solvedCaptcha($event)" #captcha></re-captcha>
           </div>
           <div class="flex-container align-center">
             <button mat-raised-button color="accent" [disabled]="forgotPasswordForm.invalid || !captchaToken || loading"

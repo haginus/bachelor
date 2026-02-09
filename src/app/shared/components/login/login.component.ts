@@ -128,15 +128,16 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
-  sendForgotPasswordEmail() {
+  async sendForgotPasswordEmail() {
     const email = this.forgotPasswordForm.get('email')?.value;
     this.loading = true;
-    this.auth.sendResetPasswordEmail(email, this.captchaToken).subscribe(result => {
+    try {
+      await firstValueFrom(this.auth.sendResetPasswordEmail(email, this.captchaToken));
+      this.snackBar.open("E-mailul de resetare a parolei a fost trimis.");
+    } finally {
       this.loading = false;
-      if(result) {
-        this.snackBar.open("E-mail de resetare a parolei a fost trimis.");
-      }
-    });
+      this.captchaComponent.reset();
+    }
   }
 
   private handleError(err: string) {

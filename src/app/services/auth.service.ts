@@ -151,10 +151,8 @@ export class AuthService {
   }
 
   sendResetPasswordEmail(email: string, recaptcha: string) {
-    const url = `${environment.apiUrl}/auth/reset-password`;
-    return this.http.post<boolean>(url, { email }, { headers: { recaptcha } }).pipe(
-      catchError(this.handleError('sendResetPasswordEmail', false))
-    );
+    const url = `${environment.apiUrl}/auth/request-password-reset`;
+    return this.http.post<boolean>(url, { email }, { headers: { recaptcha } });
   }
 
   signUp(requestData: SignUpRequest, recaptcha: string) {
