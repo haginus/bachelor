@@ -13,7 +13,8 @@ import { Domain } from '../../../lib/types';
   styleUrls: ['./domains.component.scss'],
   animations: [
     rowAnimation,
-  ]
+  ],
+  standalone: false
 })
 export class AdminDomainsComponent implements OnInit, OnDestroy {
 

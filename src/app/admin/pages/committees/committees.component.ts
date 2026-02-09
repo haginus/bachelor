@@ -20,7 +20,8 @@ import { ImportResultDialogComponent } from '../../dialogs/import-result-dialog/
   styleUrls: ['./committees.component.scss'],
   animations: [
     rowAnimation,
-  ]
+  ],
+  standalone: false
 })
 export class CommitteesComponent {
 

@@ -9,9 +9,11 @@
         <mat-icon>refresh</mat-icon>
       </button>
     </mat-toolbar>
-    <div class="loading-shade" *ngIf="isLoadingResults">
-      <mat-spinner></mat-spinner>
-    </div>
+    @if (isLoadingResults) {
+      <div class="loading-shade">
+        <mat-spinner></mat-spinner>
+      </div>
+    }
     <div class="discrete-scroll">
       <table mat-table [dataSource]="dataSource" matSort matSortActive="id" matSortDisableClear matSortDirection="asc" #table>
         <ng-container matColumnDef="id">

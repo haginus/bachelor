@@ -6,7 +6,8 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-teacher-import-dialog',
   templateUrl: './teacher-import-dialog.component.html',
-  styleUrls: ['./teacher-import-dialog.component.scss']
+  styleUrls: ['./teacher-import-dialog.component.scss'],
+  standalone: false
 })
 export class TeacherImportDialogComponent extends ImportDialogComponent {
 

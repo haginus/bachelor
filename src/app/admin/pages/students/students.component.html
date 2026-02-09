@@ -12,12 +12,12 @@
       <mat-icon>token</mat-icon>
       <span>Retrimiteți e-mail activare</span>
     </button>
-    <ng-container *ngIf="user.type == 'admin'">
+    @if (user.type == 'admin') {
       <button mat-menu-item (click)="impersonateStudent(student)">
         <mat-icon>people</mat-icon>
         <span>Impersonare</span>
       </button>
-    </ng-container>
+    }
   </ng-template>
 </mat-menu>
 
@@ -42,66 +42,78 @@
         <mat-icon>filter_list</mat-icon>
       </button>
     </mat-toolbar>
-    <div class="table-filters" *ngIf="showFilters">
-      <div class="filter-header">
-        <span class="text">Filtrați după</span>
-        <button mat-button (click)="studentFilter.reset()">Resetați</button>
+    @if (showFilters) {
+      <div class="table-filters">
+        <div class="filter-header">
+          <span class="text">Filtrați după</span>
+          <button mat-button (click)="studentFilter.reset()">Resetați</button>
+        </div>
+        <form [formGroup]="studentFilter" fxLayout="row grid" fxLayoutGap="10px grid">
+          <mat-form-field appearance="outline" fxFlex="50">
+            <mat-label>Domeniu</mat-label>
+            <mat-select formControlName="domainId" (valueChange)="handleFilterDomainChange($event)" name="domainId">
+              <mat-option [value]="null">-- Oricare --</mat-option>
+              @for (domain of domains; track domain) {
+                <mat-option [value]="domain.id">
+                  {{ domain.name }}, {{ DOMAIN_TYPES[domain.type] | titlecase }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" fxFlex="50">
+            <mat-label>Program de studiu</mat-label>
+            <mat-select formControlName="specializationId" name="specializationId">
+              <mat-option [value]="null">-- Oricare --</mat-option>
+              @for (specialization of domainSpecializations; track specialization) {
+                <mat-option [value]="specialization.id">
+                  {{ specialization.name }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" fxFlex="50">
+            <mat-label>Grupă</mat-label>
+            <input matInput type="number" formControlName="group" name="group" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" fxFlex="50">
+            <mat-label>Promoție</mat-label>
+            <input matInput type="number" formControlName="promotion" name="promotion" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" fxFlex="50">
+            <mat-label>Nume</mat-label>
+            <input matInput type="text" formControlName="lastName" name="student_last_name" autocomplete="off" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" fxFlex="50">
+            <mat-label>Prenume</mat-label>
+            <input matInput type="text" formControlName="firstName" name="student_first_name" autocomplete="off" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" fxFlex="50">
+            <mat-label>E-mail</mat-label>
+            <input matInput type="text" formControlName="email" name="student_email" />
+          </mat-form-field>
+        </form>
       </div>
-      <form [formGroup]="studentFilter" fxLayout="row grid" fxLayoutGap="10px grid">
-        <mat-form-field appearance="outline" fxFlex="50">
-          <mat-label>Domeniu</mat-label>
-          <mat-select formControlName="domainId" (valueChange)="handleFilterDomainChange($event)" name="domainId">
-            <mat-option [value]="null">-- Oricare --</mat-option>
-            <mat-option *ngFor="let domain of domains" [value]="domain.id">
-              {{ domain.name }}, {{ DOMAIN_TYPES[domain.type] | titlecase }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline" fxFlex="50">
-          <mat-label>Program de studiu</mat-label>
-          <mat-select formControlName="specializationId" name="specializationId">
-            <mat-option [value]="null">-- Oricare --</mat-option>
-            <mat-option *ngFor="let specialization of domainSpecializations" [value]="specialization.id">
-              {{ specialization.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline" fxFlex="50">
-          <mat-label>Grupă</mat-label>
-          <input matInput type="number" formControlName="group" name="group" />
-        </mat-form-field>
-        <mat-form-field appearance="outline" fxFlex="50">
-          <mat-label>Promoție</mat-label>
-          <input matInput type="number" formControlName="promotion" name="promotion" />
-        </mat-form-field>
-        <mat-form-field appearance="outline" fxFlex="50">
-          <mat-label>Nume</mat-label>
-          <input matInput type="text" formControlName="lastName" name="student_last_name" autocomplete="off" />
-        </mat-form-field>
-        <mat-form-field appearance="outline" fxFlex="50">
-          <mat-label>Prenume</mat-label>
-          <input matInput type="text" formControlName="firstName" name="student_first_name" autocomplete="off" />
-        </mat-form-field>
-        <mat-form-field appearance="outline" fxFlex="50">
-          <mat-label>E-mail</mat-label>
-          <input matInput type="text" formControlName="email" name="student_email" />
-        </mat-form-field>
-      </form>
-    </div>
-    <div class="loading-shade" *ngIf="isLoadingResults">
-      <mat-spinner></mat-spinner>
-    </div>
+    }
+    @if (isLoadingResults) {
+      <div class="loading-shade">
+        <mat-spinner></mat-spinner>
+      </div>
+    }
     <div class="discrete-scroll">
       <table mat-table [dataSource]="data" matSort matSortActive="id" matSortDisableClear matSortDirection="asc">
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let row">
-            <mat-icon *ngIf="!row.validated" class="status-icon warn" matTooltip="Cont neactivat">
-              pending
-            </mat-icon>
-            <mat-icon *ngIf="row.validated" class="status-icon done" matTooltip="Cont activat">
-              verified_user
-            </mat-icon>
+            @if (!row.validated) {
+              <mat-icon class="status-icon warn" matTooltip="Cont neactivat">
+                pending
+              </mat-icon>
+            }
+            @if (row.validated) {
+              <mat-icon class="status-icon done" matTooltip="Cont activat">
+                verified_user
+              </mat-icon>
+            }
           </td>
         </ng-container>
         <ng-container matColumnDef="id">
@@ -128,8 +140,12 @@
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Domeniu </th>
           <td mat-cell *matCellDef="let row">
             <span>{{row.specialization.domain.name}}</span>
-            <span *ngIf="row.specialization.domain.type == 'bachelor'">, Licență</span>
-            <span *ngIf="row.specialization.domain.type == 'master'">, Master</span>
+            @if (row.specialization.domain.type == 'bachelor') {
+              <span>, Licență</span>
+            }
+            @if (row.specialization.domain.type == 'master') {
+              <span>, Master</span>
+            }
           </td>
         </ng-container>
 

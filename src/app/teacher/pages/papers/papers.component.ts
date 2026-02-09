@@ -45,7 +45,6 @@ import { Paper, SessionSettings } from '../../../lib/types';
     rowAnimation,
     detailExpand,
   ],
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     FlexLayoutModule,
@@ -68,7 +67,7 @@ import { Paper, SessionSettings } from '../../../lib/types';
     DecimalPipe,
     KeyValuePipe,
     PaperTitlePipe,
-  ],
+  ]
 })
 export class TeacherPapersComponent
   implements OnInit, OnDestroy, AfterViewInit

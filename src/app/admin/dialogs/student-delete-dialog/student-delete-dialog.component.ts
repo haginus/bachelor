@@ -6,7 +6,8 @@ import { User } from '../../../lib/types';
 @Component({
   selector: 'app-student-delete-dialog',
   templateUrl: './student-delete-dialog.component.html',
-  styleUrls: ['./student-delete-dialog.component.scss']
+  styleUrls: ['./student-delete-dialog.component.scss'],
+  standalone: false
 })
 export class StudentDeleteDialogComponent implements OnInit {
 

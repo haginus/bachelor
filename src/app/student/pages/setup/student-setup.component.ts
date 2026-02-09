@@ -21,7 +21,6 @@ import { Student, Topic } from '../../../lib/types';
   selector: 'student-setup',
   templateUrl: './student-setup.component.html',
   styleUrls: ['./student-setup.component.scss'],
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatCheckboxModule,
@@ -32,7 +31,7 @@ import { Student, Topic } from '../../../lib/types';
     UserProfileEditorComponent,
     TitleCasePipe,
     AsyncPipe,
-  ],
+  ]
 })
 export class StudentSetupComponent implements OnInit {
 

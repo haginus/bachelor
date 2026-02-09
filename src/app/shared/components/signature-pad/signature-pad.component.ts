@@ -1,15 +1,12 @@
-import { NgStyle } from '@angular/common';
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-signature-pad',
-  standalone: true,
   imports: [
     MatButtonModule,
     MatIconModule,
-    NgStyle,
   ],
   templateUrl: './signature-pad.component.html',
   styleUrl: './signature-pad.component.scss'

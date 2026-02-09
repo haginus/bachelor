@@ -13,7 +13,8 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-session-settings',
   templateUrl: './session-settings.component.html',
-  styleUrls: ['./session-settings.component.scss']
+  styleUrls: ['./session-settings.component.scss'],
+  standalone: false
 })
 export class SessionSettingsComponent implements OnInit {
 

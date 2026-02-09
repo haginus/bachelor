@@ -8,7 +8,8 @@ import { FilesService } from '../../../services/files.service';
 @Component({
   selector: 'app-reports',
   templateUrl: './reports.component.html',
-  styleUrls: ['./reports.component.scss']
+  styleUrls: ['./reports.component.scss'],
+  standalone: false
 })
 export class ReportsComponent {
 

@@ -10,7 +10,6 @@ import { SessionSettings } from '../../../lib/types';
   selector: 'app-session-info',
   templateUrl: './session-info.component.html',
   styleUrls: ['./session-info.component.scss'],
-  standalone: true,
   imports: [
     MatCardModule,
     MatListModule,

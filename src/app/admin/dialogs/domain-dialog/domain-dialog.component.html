@@ -1,83 +1,108 @@
-<app-loading *ngIf="isLoading" class="loading-container"></app-loading>
+@if (isLoading) {
+  <app-loading class="loading-container"></app-loading>
+}
 
-<div mat-dialog-title *ngIf="data.mode == 'create'">Adăugați domeniu</div>
-<div mat-dialog-title *ngIf="data.mode == 'edit'">Editați domeniul</div>
-<div mat-dialog-title *ngIf="data.mode == 'delete'">Ștergeți domeniul?</div>
+@if (data.mode == 'create') {
+  <div mat-dialog-title>Adăugați domeniu</div>
+}
+@if (data.mode == 'edit') {
+  <div mat-dialog-title>Editați domeniul</div>
+}
+@if (data.mode == 'delete') {
+  <div mat-dialog-title>Ștergeți domeniul?</div>
+}
 
-<mat-dialog-content class="mat-typography" *ngIf="data.mode == 'edit' || data.mode == 'create'">
-  <form [formGroup]="editDomainForm" autocomplete="off">
-    <mat-form-field appearance="outline" subscriptSizing="fixed">
-      <mat-label>Nume domeniu</mat-label>
-      <input matInput type="text" formControlName="name" name="domainName">
-    </mat-form-field>
-    <div fxLayout="row" fxLayoutGap="5px">
-      <mat-form-field appearance="outline" subscriptSizing="fixed" fxFlex="50">
-        <mat-label>Tip</mat-label>
-        <mat-select formControlName="type" (valueChange)="paperType.setValue(null)">
-          <mat-option value="bachelor">Licență</mat-option>
-          <mat-option value="master">Master</mat-option>
-        </mat-select>
+@if (data.mode == 'edit' || data.mode == 'create') {
+  <mat-dialog-content class="mat-typography">
+    <form [formGroup]="editDomainForm" autocomplete="off">
+      <mat-form-field appearance="outline" subscriptSizing="fixed">
+        <mat-label>Nume domeniu</mat-label>
+        <input matInput type="text" formControlName="name" name="domainName">
       </mat-form-field>
-      <mat-form-field appearance="outline" subscriptSizing="fixed" fxFlex="50">
-        <mat-label>Tip lucrare</mat-label>
-        <mat-select formControlName="paperType">
-          <mat-option value="bachelor" *ngIf="domainType.value == 'bachelor'">
-            Lucrare de {{ PAPER_TYPES['bachelor'] }}
-          </mat-option>
-          <mat-option value="diploma" *ngIf="domainType.value == 'bachelor'">
-            Lucrare de {{ PAPER_TYPES['diploma'] }}
-          </mat-option>
-          <mat-option value="master" *ngIf="domainType.value == 'master'">
-            Lucrare de {{ PAPER_TYPES['master'] }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-
-    <div formArrayName="specializations">
-      <h3>Programe de studii</h3>
-      <div *ngFor="let specialization of formSpecializations.controls; let i = index" [formGroupName]="i" class="specialization-row">
-        <mat-form-field appearance="outline">
-          <mat-label>Nume program de studiu</mat-label>
-          <input matInput type="text" formControlName="name" name="specializationName">
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Ani de studiu</mat-label>
-          <input matInput type="number" formControlName="studyYears" min="1">
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Forma de învățământ</mat-label>
-          <mat-select formControlName="studyForm">
-            <mat-option value="if">Învățământ cu frecvență</mat-option>
-            <mat-option value="ifr">Învățământ cu frecvență redusă</mat-option>
-            <mat-option value="id">Învățământ la distanță</mat-option>
+      <div fxLayout="row" fxLayoutGap="5px">
+        <mat-form-field appearance="outline" subscriptSizing="fixed" fxFlex="50">
+          <mat-label>Tip</mat-label>
+          <mat-select formControlName="type" (valueChange)="paperType.setValue(null)">
+            <mat-option value="bachelor">Licență</mat-option>
+            <mat-option value="master">Master</mat-option>
           </mat-select>
         </mat-form-field>
-        <div
-          [matTooltip]="specialization.get('studentNumber')?.value > 0 ? 'Mutați întâi studenții la alt program de studiu' : 'Ștergeți programul de studiu'">
-          <button mat-icon-button (click)="$event.preventDefault(); removeSpecialization(i)"
-            [disabled]="specialization.get('studentNumber')?.value > 0">
-            <mat-icon>delete</mat-icon>
+        <mat-form-field appearance="outline" subscriptSizing="fixed" fxFlex="50">
+          <mat-label>Tip lucrare</mat-label>
+          <mat-select formControlName="paperType">
+            @if (domainType.value == 'bachelor') {
+              <mat-option value="bachelor">
+                Lucrare de {{ PAPER_TYPES['bachelor'] }}
+              </mat-option>
+            }
+            @if (domainType.value == 'bachelor') {
+              <mat-option value="diploma">
+                Lucrare de {{ PAPER_TYPES['diploma'] }}
+              </mat-option>
+            }
+            @if (domainType.value == 'master') {
+              <mat-option value="master">
+                Lucrare de {{ PAPER_TYPES['master'] }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div formArrayName="specializations">
+        <h3>Programe de studii</h3>
+        @for (specialization of formSpecializations.controls; track specialization; let i = $index) {
+          <div [formGroupName]="i" class="specialization-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Nume program de studiu</mat-label>
+              <input matInput type="text" formControlName="name" name="specializationName">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Ani de studiu</mat-label>
+              <input matInput type="number" formControlName="studyYears" min="1">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Forma de învățământ</mat-label>
+              <mat-select formControlName="studyForm">
+                <mat-option value="if">Învățământ cu frecvență</mat-option>
+                <mat-option value="ifr">Învățământ cu frecvență redusă</mat-option>
+                <mat-option value="id">Învățământ la distanță</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div
+              [matTooltip]="specialization.get('studentNumber')?.value > 0 ? 'Mutați întâi studenții la alt program de studiu' : 'Ștergeți programul de studiu'">
+              <button mat-icon-button (click)="$event.preventDefault(); removeSpecialization(i)"
+                [disabled]="specialization.get('studentNumber')?.value > 0">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        }
+        <div fxLayout="column" fxLayoutAlign="center center">
+          <button mat-stroked-button (click)="$event.preventDefault(); addSpecialization()">
+            Adăugați program de studiu
           </button>
         </div>
       </div>
-      <div fxLayout="column" fxLayoutAlign="center center">
-        <button mat-stroked-button (click)="$event.preventDefault(); addSpecialization()">
-          Adăugați program de studiu
-        </button>
-      </div>
-    </div>
-  </form>
-</mat-dialog-content>
-<mat-dialog-content class="mat-typography" *ngIf="data.mode == 'delete'">
-  <p>Sunteți sigur că doriți să ștergeți acest domeniu?</p>
-</mat-dialog-content>
+    </form>
+  </mat-dialog-content>
+}
+@if (data.mode == 'delete') {
+  <mat-dialog-content class="mat-typography">
+    <p>Sunteți sigur că doriți să ștergeți acest domeniu?</p>
+  </mat-dialog-content>
+}
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Anulați</button>
-  <button mat-button (click)="saveDomain()" *ngIf="data.mode == 'create'"
+  @if (data.mode == 'create') {
+    <button mat-button (click)="saveDomain()"
     [disabled]="editDomainForm.invalid">Adăugați</button>
-  <button mat-button (click)="saveDomain()" *ngIf="data.mode == 'edit'"
+  }
+  @if (data.mode == 'edit') {
+    <button mat-button (click)="saveDomain()"
     [disabled]="editDomainForm.invalid">Salvați</button>
-  <button mat-button (click)="deleteDomain()" *ngIf="data.mode == 'delete'">Ștergeți</button>
+  }
+  @if (data.mode == 'delete') {
+    <button mat-button (click)="deleteDomain()">Ștergeți</button>
+  }
 </mat-dialog-actions>

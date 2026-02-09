@@ -28,6 +28,7 @@ import { DocumentReuploadRequestsService } from '../../../services/document-reup
     rowAnimation,
     detailExpand,
   ],
+  standalone: false
 })
 export class AdminPapersComponent implements OnInit, AfterViewInit {
 

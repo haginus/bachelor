@@ -9,7 +9,6 @@ import { Paper } from '../../../lib/types';
 
 @Component({
   selector: 'app-submit-paper-dialog',
-  standalone: true,
   imports: [
     MatDialogModule,
     MatButtonModule,

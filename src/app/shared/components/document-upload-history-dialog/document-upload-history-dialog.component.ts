@@ -11,7 +11,6 @@ import { Document, RequiredDocument } from '../../../lib/types';
 
 @Component({
   selector: 'app-document-upload-history-dialog',
-  standalone: true,
   imports: [
     MatDialogModule,
     MatIcon,

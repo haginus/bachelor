@@ -16,7 +16,8 @@ import { Topic } from '../../../lib/types';
   styleUrls: ['./topics.component.scss'],
   animations: [
     rowAnimation,
-  ]
+  ],
+  standalone: false
 })
 export class AdminTopicsComponent implements OnInit, AfterViewInit {
 

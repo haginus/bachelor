@@ -20,7 +20,6 @@ export class ResourceTooltipPipe {
 
 @Component({
   selector: 'app-log-entry',
-  standalone: true,
   imports: [
     NgxJsonViewerModule,
     MatButtonModule,

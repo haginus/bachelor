@@ -20,7 +20,6 @@ import { Offer } from '../../../lib/types';
   selector: 'teacher-offers',
   templateUrl: './offers.component.html',
   styleUrls: ['./offers.component.scss'],
-  standalone: true,
   imports: [
     FlexLayoutModule,
     MatDialogModule,

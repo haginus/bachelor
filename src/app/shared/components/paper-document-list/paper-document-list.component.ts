@@ -19,7 +19,6 @@ import { DocumentUploadHistoryDialogComponent, DocumentUploadHistoryDialogData }
   selector: 'app-paper-document-list',
   templateUrl: './paper-document-list.component.html',
   styleUrls: ['./paper-document-list.component.scss'],
-  standalone: true,
   imports: [
     MatButtonModule,
     MatIconModule,

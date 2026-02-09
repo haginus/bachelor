@@ -31,7 +31,6 @@ import { AuthService } from '../../../services/auth.service';
   selector: 'app-add-paper',
   templateUrl: './add-paper.component.html',
   styleUrls: ['./add-paper.component.scss'],
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     FlexLayoutModule,
@@ -49,7 +48,7 @@ import { AuthService } from '../../../services/auth.service';
     LoadingComponent,
     UserSnippetComponent,
     AsyncPipe,
-  ],
+  ]
 })
 export class AddPaperComponent {
 

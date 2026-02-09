@@ -12,7 +12,6 @@ import { firstValueFrom } from 'rxjs';
   selector: 'app-student-applications',
   templateUrl: './applications.component.html',
   styleUrls: ['./applications.component.scss'],
-  standalone: true,
   imports: [
     LoadingComponent,
     ApplicationListComponent,

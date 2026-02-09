@@ -1,4 +1,6 @@
-<app-loading *ngIf="isLoading" type="bar" color="primary" class="in-dialog"></app-loading>
+@if (isLoading) {
+  <app-loading type="bar" color="primary" class="in-dialog"></app-loading>
+}
 <h2 mat-dialog-title>Revizuiți cererea</h2>
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="signUpForm">
@@ -42,19 +44,27 @@
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
         <mat-label>Domeniu</mat-label>
         <mat-select formControlName="domainId">
-          <mat-option *ngFor="let domain of domains" [value]="domain.id">
-            <span>{{domain.name}}</span>
-            <span *ngIf="domain.type == 'bachelor'"> (Licență)</span>
-            <span *ngIf="domain.type == 'master'"> (Master)</span>
-          </mat-option>
+          @for (domain of domains; track domain) {
+            <mat-option [value]="domain.id">
+              <span>{{domain.name}}</span>
+              @if (domain.type == 'bachelor') {
+                <span> (Licență)</span>
+              }
+              @if (domain.type == 'master') {
+                <span> (Master)</span>
+              }
+            </mat-option>
+          }
         </mat-select>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
         <mat-label>Programul de studii</mat-label>
         <mat-select formControlName="specializationId">
-          <mat-option *ngFor="let specialization of chosenDomain?.specializations" [value]="specialization.id">
-            <span>{{specialization.name}} ({{specialization.studyForm.toLocaleUpperCase()}})</span>
-          </mat-option>
+          @for (specialization of chosenDomain?.specializations; track specialization) {
+            <mat-option [value]="specialization.id">
+              <span>{{specialization.name}} ({{specialization.studyForm.toLocaleUpperCase()}})</span>
+            </mat-option>
+          }
         </mat-select>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">

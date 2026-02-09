@@ -14,7 +14,8 @@ import { UsersService } from '../../../services/users.service';
 @Component({
   selector: 'app-student-dialog',
   templateUrl: './student-dialog.component.html',
-  styleUrls: ['./student-dialog.component.scss']
+  styleUrls: ['./student-dialog.component.scss'],
+  standalone: false
 })
 export class StudentDialogComponent implements OnInit {
 

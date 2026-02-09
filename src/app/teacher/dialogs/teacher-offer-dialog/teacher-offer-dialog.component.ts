@@ -25,7 +25,6 @@ import { Domain, Offer, Topic } from '../../../lib/types';
   selector: 'app-teacher-offer-dialog',
   templateUrl: './teacher-offer-dialog.component.html',
   styleUrls: ['./teacher-offer-dialog.component.scss'],
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     FlexLayoutModule,
@@ -39,7 +38,7 @@ import { Domain, Offer, Topic } from '../../../lib/types';
     MatProgressSpinnerModule,
     MatButtonModule,
     AsyncPipe,
-  ],
+  ]
 })
 export class TeacherOfferDialogComponent implements OnInit {
 

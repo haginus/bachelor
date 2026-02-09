@@ -6,7 +6,8 @@ import { User } from '../../../lib/types';
 @Component({
   selector: 'app-admin-teacher-delete-dialog',
   templateUrl: './teacher-delete-dialog.component.html',
-  styleUrls: ['./teacher-delete-dialog.component.scss']
+  styleUrls: ['./teacher-delete-dialog.component.scss'],
+  standalone: false
 })
 export class AdminTeacherDeleteDialogComponent implements OnInit {
 

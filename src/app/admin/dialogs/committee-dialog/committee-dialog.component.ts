@@ -14,7 +14,8 @@ import { Committee, CommitteeMember, CommitteeMemberRole, Domain, Teacher } from
 @Component({
   selector: 'app-committee-dialog',
   templateUrl: './committee-dialog.component.html',
-  styleUrls: ['./committee-dialog.component.scss']
+  styleUrls: ['./committee-dialog.component.scss'],
+  standalone: false
 })
 export class CommitteeDialogComponent implements OnInit {
 

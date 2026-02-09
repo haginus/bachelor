@@ -10,7 +10,8 @@ import { Topic } from '../../../lib/types';
 @Component({
   selector: 'app-topic-bulk-delete-dialog',
   templateUrl: './topic-bulk-delete-dialog.component.html',
-  styleUrls: ['./topic-bulk-delete-dialog.component.scss']
+  styleUrls: ['./topic-bulk-delete-dialog.component.scss'],
+  standalone: false
 })
 export class TopicBulkDeleteDialogComponent implements OnInit {
 

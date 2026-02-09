@@ -10,9 +10,11 @@
         <mat-icon>more_vert</mat-icon>
       </button>
     </mat-toolbar>
-    <div class="loading-shade" *ngIf="isLoadingResults">
-      <mat-spinner></mat-spinner>
-    </div>
+    @if (isLoadingResults) {
+      <div class="loading-shade">
+        <mat-spinner></mat-spinner>
+      </div>
+    }
     <div class="discrete-scroll">
       <table mat-table [dataSource]="data" matSort matSortActive="id" matSortDisableClear matSortDirection="asc" #table>
         <ng-container matColumnDef="id">
@@ -28,8 +30,12 @@
         <ng-container matColumnDef="type">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Tip </th>
           <td mat-cell *matCellDef="let row">
-            <span *ngIf="row.type == 'bachelor'">Licență</span>
-            <span *ngIf="row.type == 'master'">Master</span>
+            @if (row.type == 'bachelor') {
+              <span>Licență</span>
+            }
+            @if (row.type == 'master') {
+              <span>Master</span>
+            }
           </td>
         </ng-container>
 

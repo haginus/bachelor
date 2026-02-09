@@ -1,102 +1,135 @@
-<app-loading *ngIf="isLoading" class="loading-container"></app-loading>
+@if (isLoading) {
+  <app-loading class="loading-container"></app-loading>
+}
 
-<div mat-dialog-title *ngIf="data.mode == 'create'">Adăugați comisie</div>
-<div mat-dialog-title *ngIf="data.mode == 'edit'">Editați comisia</div>
-<div mat-dialog-title *ngIf="data.mode == 'delete'">Ștergeți comisia?</div>
+@if (data.mode == 'create') {
+  <div mat-dialog-title>Adăugați comisie</div>
+}
+@if (data.mode == 'edit') {
+  <div mat-dialog-title>Editați comisia</div>
+}
+@if (data.mode == 'delete') {
+  <div mat-dialog-title>Ștergeți comisia?</div>
+}
 
-<mat-dialog-content class="mat-typography" *ngIf="data.mode == 'edit' || data.mode == 'create'">
-  <form [formGroup]="editCommitteeForm" autocomplete="off">
-    <div fxLayout="row grid" fxLayoutGap="10px grid">
-      <mat-form-field appearance="outline" fxFlex="100">
-        <mat-label>Nume comisie</mat-label>
-        <input matInput type="text" formControlName="name">
-        <mat-hint>Numele comisiei, așa cum va fi înscris în catalog</mat-hint>
-      </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="100">
-        <mat-label>Domenii</mat-label>
-        <mat-select formControlName="domains" multiple (selectionChange)="handleDomainChange($event)">
-          <mat-option *ngFor="let domain of domains" [value]="domain.id"
-            [disabled]="selectedDomainType != null && selectedDomainType != domain.type">
-            <ng-container>{{domain.name}}</ng-container>
-            <ng-container *ngIf="domain.type == 'bachelor'"> (Licență)</ng-container>
-            <ng-container *ngIf="domain.type == 'master'"> (Master)</ng-container>
-          </mat-option>
-        </mat-select>
-        <mat-hint>Puteți selecta numai domenii de același tip.</mat-hint>
-      </mat-form-field>
-
-    </div>
-    <div formArrayName="activityDays" class="activity-list">
-      <h3>Zile de activitate</h3>
-      <div class="day-rows">
-        <div *ngFor="let day of activityDays.controls; let i = index" [formGroupName]="i" class="day-row">
-          <mat-form-field appearance="outline">
-            <mat-label>Locație</mat-label>
-            <input matInput type="text" formControlName="location" placeholder="Ex.: Sala 6">
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Dată începere activitate</mat-label>
-            <input matInput type="datetime-local" formControlName="startTime">
-          </mat-form-field>
-          <button mat-icon-button (click)="$event.preventDefault(); removeActivityDay(i)">
-            <mat-icon>delete</mat-icon>
-          </button>
+@if (data.mode == 'edit' || data.mode == 'create') {
+  <mat-dialog-content class="mat-typography">
+    <form [formGroup]="editCommitteeForm" autocomplete="off">
+      <div fxLayout="row grid" fxLayoutGap="10px grid">
+        <mat-form-field appearance="outline" fxFlex="100">
+          <mat-label>Nume comisie</mat-label>
+          <input matInput type="text" formControlName="name">
+          <mat-hint>Numele comisiei, așa cum va fi înscris în catalog</mat-hint>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100">
+          <mat-label>Domenii</mat-label>
+          <mat-select formControlName="domains" multiple (selectionChange)="handleDomainChange($event)">
+            @for (domain of domains; track domain) {
+              <mat-option [value]="domain.id"
+                [disabled]="selectedDomainType != null && selectedDomainType != domain.type">
+                <ng-container>{{domain.name}}</ng-container>
+                @if (domain.type == 'bachelor') {
+                  (Licență)
+                }
+                @if (domain.type == 'master') {
+                  (Master)
+                }
+              </mat-option>
+            }
+          </mat-select>
+          <mat-hint>Puteți selecta numai domenii de același tip.</mat-hint>
+        </mat-form-field>
+      </div>
+      <div formArrayName="activityDays" class="activity-list">
+        <h3>Zile de activitate</h3>
+        <div class="day-rows">
+          @for (day of activityDays.controls; track day; let i = $index) {
+            <div [formGroupName]="i" class="day-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Locație</mat-label>
+                <input matInput type="text" formControlName="location" placeholder="Ex.: Sala 6">
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Dată începere activitate</mat-label>
+                <input matInput type="datetime-local" formControlName="startTime">
+              </mat-form-field>
+              <button mat-icon-button (click)="$event.preventDefault(); removeActivityDay(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+        <div fxLayout="column" fxLayoutAlign="center center">
+          <button mat-stroked-button (click)="$event.preventDefault(); addActivityDay()">Adăugați zi de activitate</button>
         </div>
       </div>
-      <div fxLayout="column" fxLayoutAlign="center center">
-        <button mat-stroked-button (click)="$event.preventDefault(); addActivityDay()">Adăugați zi de activitate</button>
-      </div>
-    </div>
-    <div formArrayName="members" class="member-list">
-      <h3>Membri</h3>
-      <ul class="error-list">
-        <li *ngIf="formMembers.errors?.['atLeastOnePresident']">Comisia trebuie să aibă un președinte.</li>
-        <li *ngIf="formMembers.errors?.['atMostOnePresident']">Comisia nu poate avea mai mulți președinți.</li>
-        <li *ngIf="formMembers.errors?.['atLeastOneSecretary']">Comisia trebuie să aibă un secretar.</li>
-        <li *ngIf="formMembers.errors?.['atMostOneSecretary']">Comisia nu poate avea mai mulți secretari.</li>
-        <li *ngIf="formMembers.errors?.['atLeastTwoMembers']">Comisia trebuie să aibă cel puțin doi membri.</li>
-      </ul>
-      <mat-autocomplete #autoComplete="matAutocomplete">
-        <mat-option *ngFor="let teacher of filteredTeachers" [value]="teacher">
-          <span>{{teacher.lastName + ' ' + teacher.firstName}}</span>
-        </mat-option>
-      </mat-autocomplete>
-      <div class="member-rows">
-        <div *ngFor="let member of formMembers.controls; let i = index" [formGroupName]="i" class="member-row">
-          <mat-form-field appearance="outline" subscriptSizing="fixed" class="teacher-name">
-            <mat-label>Membru</mat-label>
-            <input
-              matInput
-              type="text"
-              formControlName="name"
-              name="teacherName"
-              [matAutocomplete]="autoComplete"
-              [errorStateMatcher]="teacherNameMatcher"
-            />
-            <mat-error>Alegeți un profesor din listă!</mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline" subscriptSizing="fixed">
-            <mat-label>Rol</mat-label>
-            <mat-select formControlName="role">
-              <mat-option value="president">Președinte</mat-option>
-              <mat-option value="secretary">Secretar</mat-option>
-              <mat-option value="member">Membru</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <button mat-icon-button (click)="$event.preventDefault(); removeMember(i)">
-            <mat-icon>delete</mat-icon>
-          </button>
+      <div formArrayName="members" class="member-list">
+        <h3>Membri</h3>
+        <ul class="error-list">
+          @if (formMembers.errors?.['atLeastOnePresident']) {
+            <li>Comisia trebuie să aibă un președinte.</li>
+          }
+          @if (formMembers.errors?.['atMostOnePresident']) {
+            <li>Comisia nu poate avea mai mulți președinți.</li>
+          }
+          @if (formMembers.errors?.['atLeastOneSecretary']) {
+            <li>Comisia trebuie să aibă un secretar.</li>
+          }
+          @if (formMembers.errors?.['atMostOneSecretary']) {
+            <li>Comisia nu poate avea mai mulți secretari.</li>
+          }
+          @if (formMembers.errors?.['atLeastTwoMembers']) {
+            <li>Comisia trebuie să aibă cel puțin doi membri.</li>
+          }
+        </ul>
+        <mat-autocomplete #autoComplete="matAutocomplete">
+          @for (teacher of filteredTeachers; track teacher) {
+            <mat-option [value]="teacher">
+              <span>{{teacher.lastName + ' ' + teacher.firstName}}</span>
+            </mat-option>
+          }
+        </mat-autocomplete>
+        <div class="member-rows">
+          @for (member of formMembers.controls; track member; let i = $index) {
+            <div [formGroupName]="i" class="member-row">
+              <mat-form-field appearance="outline" subscriptSizing="fixed" class="teacher-name">
+                <mat-label>Membru</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="name"
+                  name="teacherName"
+                  [matAutocomplete]="autoComplete"
+                  [errorStateMatcher]="teacherNameMatcher"
+                  />
+                <mat-error>Alegeți un profesor din listă!</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline" subscriptSizing="fixed">
+                <mat-label>Rol</mat-label>
+                <mat-select formControlName="role">
+                  <mat-option value="president">Președinte</mat-option>
+                  <mat-option value="secretary">Secretar</mat-option>
+                  <mat-option value="member">Membru</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button mat-icon-button (click)="$event.preventDefault(); removeMember(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+        <div fxLayout="column" fxLayoutAlign="center center">
+          <button mat-stroked-button (click)="$event.preventDefault(); addMember()">Adăugați membru</button>
         </div>
       </div>
-      <div fxLayout="column" fxLayoutAlign="center center">
-        <button mat-stroked-button (click)="$event.preventDefault(); addMember()">Adăugați membru</button>
-      </div>
-    </div>
-  </form>
-</mat-dialog-content>
-<mat-dialog-content class="mat-typography" *ngIf="data.mode == 'delete'">
-  <p>Sunteți sigur că doriți să ștergeți această comisie?</p>
-</mat-dialog-content>
+    </form>
+  </mat-dialog-content>
+}
+@if (data.mode == 'delete') {
+  <mat-dialog-content class="mat-typography">
+    <p>Sunteți sigur că doriți să ștergeți această comisie?</p>
+  </mat-dialog-content>
+}
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Anulați</button>

@@ -4,16 +4,22 @@
     <mat-form-field appearance="outline" fxFlex="100">
       <mat-label>Programul de studii</mat-label>
       <mat-select formControlName="specializationId">
-        <ng-container *ngFor="let domain of domains | async">
-          <mat-option *ngFor="let specialization of domain.specializations" [value]="specialization.id">
-            <span>{{specialization.name}}</span>
-            <span> - Domeniul {{domain.name}} </span>
-            <span>
-              <ng-container *ngIf="domain.type == 'bachelor'">(licență)</ng-container>
-              <ng-container *ngIf="domain.type == 'master'">(master)</ng-container>
-            </span>
-          </mat-option>
-        </ng-container>
+        @for (domain of domains | async; track domain) {
+          @for (specialization of domain.specializations; track specialization) {
+            <mat-option [value]="specialization.id">
+              <span>{{specialization.name}}</span>
+              <span> - Domeniul {{domain.name}} </span>
+              <span>
+                @if (domain.type == 'bachelor') {
+                  (licență)
+                }
+                @if (domain.type == 'master') {
+                  (master)
+                }
+              </span>
+            </mat-option>
+          }
+        }
       </mat-select>
     </mat-form-field>
     <p fxFlex="100">
@@ -28,7 +34,7 @@
           accept="text/csv"
           (file)="handleFileInput($event)"
           [disabled]="studentForm.invalid"
-        >
+          >
           <mat-icon>cloud_upload</mat-icon>
           <span>Încărcați</span>
         </button>

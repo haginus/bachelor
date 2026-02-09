@@ -1,5 +1,7 @@
 <mat-card class="session-edit-card">
-  <app-loading color="primary" *ngIf="isLoadingSettings"></app-loading>
+  @if (isLoadingSettings) {
+    <app-loading color="primary"></app-loading>
+  }
   <mat-card-header>
     <mat-card-title>Detalii sesiune curentă</mat-card-title>
   </mat-card-header>
@@ -34,7 +36,7 @@
           <input matInput type="date" formControlName="fileSubmissionStartDate" [errorStateMatcher]="settingsFormMatcher">
           <mat-hint>Data de la care studenții pot începe depunerea documentelor la dosar</mat-hint>
           <mat-error>Data începerii depunerilor de documente nu poate fi mai devreme de cea a începerii sesiunii de
-            cereri!</mat-error>
+          cereri!</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
           <mat-label>Dată încheiere depuneri documente</mat-label>

@@ -4,7 +4,6 @@ import { FaqComponent } from '../../../shared/components/faq/faq.component';
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
   imports: [
     SessionInfoComponent,
     FaqComponent,

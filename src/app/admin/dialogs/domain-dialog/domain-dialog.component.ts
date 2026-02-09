@@ -10,7 +10,8 @@ import { Domain, DomainType, PaperType, Specialization, StudyForm } from '../../
 @Component({
   selector: 'app-domain-dialog',
   templateUrl: './domain-dialog.component.html',
-  styleUrls: ['./domain-dialog.component.scss']
+  styleUrls: ['./domain-dialog.component.scss'],
+  standalone: false
 })
 export class AdminDomainDialogComponent implements OnInit {
 

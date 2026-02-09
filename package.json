@@ -12,33 +12,33 @@
   "private": true,
   "overrides": {
     "ng-recaptcha": {
-      "@angular/core": "^18.0.0"
+      "@angular/core": "^21.0.0"
     }
   },
   "dependencies": {
-    "@angular/animations": "^18.0.0",
-    "@angular/cdk": "^18.0.0",
-    "@angular/common": "^18.0.0",
-    "@angular/compiler": "^18.0.0",
-    "@angular/core": "^18.0.0",
+    "@angular/animations": "^21.1.3",
+    "@angular/cdk": "^21.1.3",
+    "@angular/common": "^21.1.3",
+    "@angular/compiler": "^21.1.3",
+    "@angular/core": "^21.1.3",
     "@angular/flex-layout": "^15.0.0-beta.42",
-    "@angular/forms": "^18.0.0",
-    "@angular/material": "^18.0.0",
-    "@angular/platform-browser": "^18.0.0",
-    "@angular/platform-browser-dynamic": "^18.0.0",
-    "@angular/router": "^18.0.0",
+    "@angular/forms": "^21.1.3",
+    "@angular/material": "^21.1.3",
+    "@angular/platform-browser": "^21.1.3",
+    "@angular/platform-browser-dynamic": "^21.1.3",
+    "@angular/router": "^21.1.3",
     "@ngstack/code-editor": "^7.2.0",
     "ng-recaptcha": "^13.2.1",
-    "ngx-extended-pdf-viewer": "^20.5.0",
+    "ngx-extended-pdf-viewer": "^25.6.4",
     "ngx-json-viewer": "^3.2.1",
     "rxjs": "^7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "0.14.3"
+    "zone.js": "0.15.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^18.0.1",
-    "@angular/cli": "^18.0.1",
-    "@angular/compiler-cli": "^18.0.0",
+    "@angular/build": "^21.1.3",
+    "@angular/cli": "^21.1.3",
+    "@angular/compiler-cli": "^21.1.3",
     "@types/jasmine": "~5.1.0",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
@@ -47,6 +47,6 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "monaco-editor": "^0.50.0",
-    "typescript": "~5.4.5"
+    "typescript": "~5.9.3"
   }
 }

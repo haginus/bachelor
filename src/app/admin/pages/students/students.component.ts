@@ -24,7 +24,8 @@ import { UsersService } from '../../../services/users.service';
   styleUrls: ['./students.component.scss'],
   animations: [
     rowAnimation,
-  ]
+  ],
+  standalone: false
 })
 export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit {
 

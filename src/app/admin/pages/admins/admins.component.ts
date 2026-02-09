@@ -20,7 +20,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrls: ['./admins.component.scss'],
   animations: [
     rowAnimation,
-  ]
+  ],
+  standalone: false
 })
 export class AdminsComponent {
 

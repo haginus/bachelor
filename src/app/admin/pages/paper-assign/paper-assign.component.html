@@ -1,18 +1,23 @@
-<div class="splash-loading" *ngIf="isLoadingCommittee">
-  <mat-spinner diameter="48"></mat-spinner>
-</div>
+@if (isLoadingCommittee) {
+  <div class="splash-loading">
+    <mat-spinner diameter="48"></mat-spinner>
+  </div>
+}
 
-<mat-toolbar *ngIf="committee" class="committee-toolbar">
-  <button mat-icon-button (click)="goBack()">
-    <mat-icon>arrow_back</mat-icon>
-  </button>
-  <div class="committee-info">
-    <div class="committee-name">{{ committee.name }}</div>
-    <div class="committer-domains">
-      Domenii:
-      <ng-container *ngFor="let domain of committee.domains; let isLast = last">
-        {{ domain.name }}<ng-container *ngIf="!isLast">, </ng-container>
-      </ng-container>
+@if (committee) {
+  <mat-toolbar class="committee-toolbar">
+    <button mat-icon-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="committee-info">
+      <div class="committee-name">{{ committee.name }}</div>
+      <div class="committer-domains">
+        Domenii:
+        @for (domain of committee.domains; track domain; let isLast = $last) {
+          {{ domain.name }}@if (!isLast) {
+          ,
+        }
+      }
     </div>
   </div>
   <button mat-raised-button color="primary" fxHide.lt-sm (click)="saveChanges()">Salvați modificările</button>
@@ -20,19 +25,26 @@
     <mat-icon>save</mat-icon>
   </button>
 </mat-toolbar>
+}
 
 <div cdkDropListGroup class="paper-assign-container" fxLayout="grid" fxLayoutGap="16px">
   <div class="list-container" fxFlex="50">
     <h2>Lucrări atribuite acestei comisii</h2>
     <div cdkDropList [cdkDropListData]="assignedPappers" class="paper-list" cdkDropListSortingDisabled
       (cdkDropListDropped)="drop($event)">
-      <div class="spinner-container" *ngIf="isLoadingAssignedPapers">
-        <mat-spinner diameter="36"></mat-spinner>
-      </div>
-      <div class="paper-box" *ngFor="let paper of assignedPappers" cdkDrag>
-        <ng-template *ngTemplateOutlet="paperTemplate; context: { paper: paper }"></ng-template>
-      </div>
-      <div class="no-results" *ngIf="assignedPappers.length == 0">Nu există lucrări.</div>
+      @if (isLoadingAssignedPapers) {
+        <div class="spinner-container">
+          <mat-spinner diameter="36"></mat-spinner>
+        </div>
+      }
+      @for (paper of assignedPappers; track paper) {
+        <div class="paper-box" cdkDrag>
+          <ng-template *ngTemplateOutlet="paperTemplate; context: { paper: paper }"></ng-template>
+        </div>
+      }
+      @if (assignedPappers.length == 0) {
+        <div class="no-results">Nu există lucrări.</div>
+      }
     </div>
   </div>
 
@@ -48,18 +60,22 @@
           <mat-label>Tip</mat-label>
           <mat-select formControlName="type" name="paperType">
             <mat-option [value]="null">--</mat-option>
-            <mat-option *ngFor="let paperType of PAPER_TYPES | keyvalue" [value]="paperType.key">
-              {{ paperType.value | titlecase }}
-            </mat-option>
+            @for (paperType of PAPER_TYPES | keyvalue; track paperType) {
+              <mat-option [value]="paperType.key">
+                {{ paperType.value | titlecase }}
+              </mat-option>
+            }
           </mat-select>
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="100">
           <mat-label>Specializare student</mat-label>
           <mat-select formControlName="specializationId">
             <mat-option [value]="null">--</mat-option>
-            <mat-option *ngFor="let specialization of specializations" [value]="specialization.id">
-              {{ specialization.name }}
-            </mat-option>
+            @for (specialization of specializations; track specialization) {
+              <mat-option [value]="specialization.id">
+                {{ specialization.name }}
+              </mat-option>
+            }
           </mat-select>
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="100">
@@ -70,13 +86,19 @@
     </div>
     <div cdkDropList [cdkDropListData]="otherPapers" class="paper-list" cdkDropListSortingDisabled
       (cdkDropListDropped)="drop($event)">
-      <div class="spinner-container" *ngIf="isLoadingOtherPapers">
-        <mat-spinner diameter="36"></mat-spinner>
-      </div>
-      <div class="paper-box" *ngFor="let paper of otherPapers" cdkDrag>
-        <ng-template *ngTemplateOutlet="paperTemplate; context: { paper: paper }"></ng-template>
-      </div>
-      <div class="no-results" *ngIf="otherPapers.length == 0">Nu există lucrări.</div>
+      @if (isLoadingOtherPapers) {
+        <div class="spinner-container">
+          <mat-spinner diameter="36"></mat-spinner>
+        </div>
+      }
+      @for (paper of otherPapers; track paper) {
+        <div class="paper-box" cdkDrag>
+          <ng-template *ngTemplateOutlet="paperTemplate; context: { paper: paper }"></ng-template>
+        </div>
+      }
+      @if (otherPapers.length == 0) {
+        <div class="no-results">Nu există lucrări.</div>
+      }
     </div>
   </div>
 </div>
@@ -85,12 +107,16 @@
   <div class="paper-title">{{ paper.title }}</div>
   <div class="paper-description" [matTooltip]="paper.description">{{paper.description}}</div>
   <div class="paper-topics">
-    <span class="badge" *ngFor="let topic of paper.topics">{{ topic.name }}</span>
+    @for (topic of paper.topics; track topic) {
+      <span class="badge">{{ topic.name }}</span>
+    }
   </div>
   <div class="paper-authors">
     <div>Student: {{ paper.student?.lastName }} {{ paper.student?.firstName }}</div>
     <div>Profesor: {{ paper.teacher?.lastName }} {{ paper.teacher?.firstName }}</div>
-    <i class="warn-text" *ngIf="teacherIsInCommittee(paper.teacherId)">Profesorul coordonator face parte din
+    @if (teacherIsInCommittee(paper.teacherId)) {
+      <i class="warn-text">Profesorul coordonator face parte din
       comisie.</i>
+    }
   </div>
 </ng-template>

@@ -12,11 +12,10 @@ import { firstValueFrom } from 'rxjs';
   selector: 'app-applications',
   templateUrl: './applications.component.html',
   styleUrls: ['./applications.component.scss'],
-  standalone: true,
   imports: [
     LoadingComponent,
     ApplicationListComponent,
-  ],
+  ]
 })
 export class TeacherApplicationsComponent {
 

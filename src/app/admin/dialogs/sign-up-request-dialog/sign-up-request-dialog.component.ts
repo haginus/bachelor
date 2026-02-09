@@ -11,7 +11,8 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-sign-up-request-dialog',
   templateUrl: './sign-up-request-dialog.component.html',
-  styleUrls: ['./sign-up-request-dialog.component.scss']
+  styleUrls: ['./sign-up-request-dialog.component.scss'],
+  standalone: false
 })
 export class SignUpRequestDialogComponent implements OnInit {
 

@@ -1,31 +1,41 @@
-<app-loading *ngIf="isLoading" type="bar" color="primary" class="in-dialog"></app-loading>
+@if (isLoading) {
+  <app-loading type="bar" color="primary" class="in-dialog"></app-loading>
+}
 
-<h2 mat-dialog-title *ngIf="data.mode == 'create'">Adăugați utilizator</h2>
-<h2 mat-dialog-title *ngIf="data.mode == 'edit'">Editați utilizator</h2>
-<mat-dialog-content class="mat-typography" *ngIf="data.mode == 'edit' || data.mode == 'create'">
-  <form [formGroup]="adminForm" fxLayout="row grid" fxLayoutGap="10px grid" autocomplete="off">
-    <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-      <mat-label>Nume</mat-label>
-      <input matInput type="text" formControlName="lastName" name="userLastName">
-    </mat-form-field>
-    <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-      <mat-label>Prenume</mat-label>
-      <input matInput type="text" formControlName="firstName" name="userFirstName">
-    </mat-form-field>
-    <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-      <mat-label>E-mail</mat-label>
-      <input matInput type="email" formControlName="email" name="userEmail">
-      <mat-hint *ngIf="data.mode == 'edit'">E-mailul nu poate fi modificat.</mat-hint>
-    </mat-form-field>
-    <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-      <mat-label>Tip</mat-label>
-      <mat-select formControlName="type">
-        <mat-option value="admin">Administrator</mat-option>
-        <mat-option value="secretary">Secretar</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </form>
-</mat-dialog-content>
+@if (data.mode == 'create') {
+  <h2 mat-dialog-title>Adăugați utilizator</h2>
+}
+@if (data.mode == 'edit') {
+  <h2 mat-dialog-title>Editați utilizator</h2>
+}
+@if (data.mode == 'edit' || data.mode == 'create') {
+  <mat-dialog-content class="mat-typography">
+    <form [formGroup]="adminForm" fxLayout="row grid" fxLayoutGap="10px grid" autocomplete="off">
+      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+        <mat-label>Nume</mat-label>
+        <input matInput type="text" formControlName="lastName" name="userLastName">
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+        <mat-label>Prenume</mat-label>
+        <input matInput type="text" formControlName="firstName" name="userFirstName">
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+        <mat-label>E-mail</mat-label>
+        <input matInput type="email" formControlName="email" name="userEmail">
+        @if (data.mode == 'edit') {
+          <mat-hint>E-mailul nu poate fi modificat.</mat-hint>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
+        <mat-label>Tip</mat-label>
+        <mat-select formControlName="type">
+          <mat-option value="admin">Administrator</mat-option>
+          <mat-option value="secretary">Secretar</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+}
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Anulați</button>
   <button mat-button [disabled]="adminForm.invalid" (click)="saveUser()">

@@ -8,7 +8,6 @@ import { Paper, PaperGrade } from '../../../lib/types';
   selector: 'app-paper-grade-table',
   templateUrl: './paper-grade-table.component.html',
   styleUrls: ['./paper-grade-table.component.scss'],
-  standalone: true,
   imports: [
     MatTableModule,
     FixedPipe

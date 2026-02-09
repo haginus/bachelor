@@ -12,7 +12,6 @@ import { Document, RequiredDocument } from '../../../lib/types';
 
 @Component({
   selector: 'app-document-viewer-dialog',
-  standalone: true,
   imports: [
     MatDialogModule,
     MatButtonModule,

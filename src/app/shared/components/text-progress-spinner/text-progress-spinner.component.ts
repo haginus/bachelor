@@ -4,7 +4,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-text-progress-spinner',
-  standalone: true,
   imports: [
     MatProgressSpinner,
     DecimalPipe,

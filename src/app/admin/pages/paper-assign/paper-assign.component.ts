@@ -16,7 +16,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-paper-assign',
   templateUrl: './paper-assign.component.html',
-  styleUrls: ['./paper-assign.component.scss']
+  styleUrls: ['./paper-assign.component.scss'],
+  standalone: false
 })
 export class PaperAssignComponent implements OnInit {
 

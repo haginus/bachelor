@@ -17,7 +17,6 @@ import { Committee } from '../../../lib/types';
   selector: 'teacher-committees',
   templateUrl: './committees.component.html',
   styleUrls: ['./committees.component.scss'],
-  standalone: true,
   imports: [
     FlexLayoutModule,
     MatCardModule,

@@ -5,7 +5,8 @@ import { ImportResult } from '../../../lib/types';
 @Component({
   selector: 'app-import-result-dialog',
   templateUrl: './import-result-dialog.component.html',
-  styleUrls: ['./import-result-dialog.component.scss']
+  styleUrls: ['./import-result-dialog.component.scss'],
+  standalone: false
 })
 export class ImportResultDialogComponent {
 

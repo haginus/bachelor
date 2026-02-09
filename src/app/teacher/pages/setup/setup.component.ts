@@ -16,7 +16,6 @@ import { Teacher } from '../../../lib/types';
   selector: 'teacher-setup',
   templateUrl: './setup.component.html',
   styleUrls: ['./setup.component.scss'],
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatButtonModule,
@@ -25,7 +24,7 @@ import { Teacher } from '../../../lib/types';
     MatProgressSpinnerModule,
     MatListModule,
     UserProfileEditorComponent,
-  ],
+  ]
 })
 export class TeacherSetupComponent implements OnInit {
 

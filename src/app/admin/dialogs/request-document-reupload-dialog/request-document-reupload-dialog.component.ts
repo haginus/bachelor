@@ -15,7 +15,6 @@ import { DocumentReuploadRequestsService } from '../../../services/document-reup
 
 @Component({
   selector: 'app-request-document-reupload-dialog',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatDialogModule,

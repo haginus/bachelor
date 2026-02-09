@@ -10,7 +10,8 @@ import { User } from '../../../lib/types';
 @Component({
   selector: 'app-admin-teacher-dialog',
   templateUrl: './teacher-dialog.component.html',
-  styleUrls: ['./teacher-dialog.component.scss']
+  styleUrls: ['./teacher-dialog.component.scss'],
+  standalone: false
 })
 export class AdminTeacherDialogComponent {
 

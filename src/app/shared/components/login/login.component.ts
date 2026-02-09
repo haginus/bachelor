@@ -18,7 +18,6 @@ import { User } from '../../../lib/types';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     RecaptchaModule,
@@ -31,7 +30,7 @@ import { User } from '../../../lib/types';
     LoadingComponent,
     RouterLink,
     IdentityListItemComponent,
-  ],
+  ]
 })
 export class LoginComponent implements OnInit, OnDestroy {
 

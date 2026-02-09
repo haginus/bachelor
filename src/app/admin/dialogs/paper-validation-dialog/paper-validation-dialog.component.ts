@@ -5,7 +5,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 @Component({
   selector: 'app-paper-validation-dialog',
   templateUrl: './paper-validation-dialog.component.html',
-  styleUrls: ['./paper-validation-dialog.component.scss']
+  styleUrls: ['./paper-validation-dialog.component.scss'],
+  standalone: false
 })
 export class PaperValidationDialogComponent implements OnInit {
 

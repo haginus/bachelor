@@ -8,7 +8,8 @@ import { DomainsService } from '../../../services/domains.service';
 @Component({
   selector: 'app-student-import-dialog',
   templateUrl: './student-import-dialog.component.html',
-  styleUrls: ['./student-import-dialog.component.scss']
+  styleUrls: ['./student-import-dialog.component.scss'],
+  standalone: false
 })
 export class StudentImportDialogComponent extends ImportDialogComponent {
 

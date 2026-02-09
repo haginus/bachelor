@@ -13,7 +13,6 @@ import { firstValueFrom } from 'rxjs';
   selector: 'app-offer-application-sender',
   templateUrl: './offer-application-sender.component.html',
   styleUrls: ['./offer-application-sender.component.scss'],
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatDialogModule,
@@ -22,7 +21,7 @@ import { firstValueFrom } from 'rxjs';
     MatInputModule,
     MatButtonModule,
     MatProgressBarModule,
-  ],
+  ]
 })
 export class OfferApplicationSenderComponent{
 

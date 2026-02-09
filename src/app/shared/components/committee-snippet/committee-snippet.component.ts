@@ -6,7 +6,6 @@ import { Committee, Paper } from '../../../lib/types';
 
 @Component({
   selector: 'app-committee-snippet',
-  standalone: true,
   imports: [
     MatMenuModule,
     MatIconModule,

@@ -20,7 +20,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   selector: 'app-user-extra-data-editor',
   templateUrl: './user-extra-data-editor.component.html',
   styleUrls: ['./user-extra-data-editor.component.scss'],
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     FlexLayoutModule,
@@ -31,7 +30,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatInputModule,
     MatSelectModule,
     MatProgressSpinnerModule,
-  ],
+  ]
 })
 export class UserExtraDataEditorComponent implements OnInit {
 

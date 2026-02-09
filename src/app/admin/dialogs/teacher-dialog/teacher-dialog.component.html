@@ -9,72 +9,86 @@
     <h2 mat-dialog-title>Vizualizare profesor</h2>
   }
 }
-<mat-dialog-content class="mat-typography" *ngIf="data.mode == 'edit' || data.mode == 'create'">
-  <form [formGroup]="teacherForm" fxLayout="row grid" fxLayoutGap="10px grid">
-    <mat-form-field appearance="outline" fxFlex="100">
-      <mat-label>Titlu</mat-label>
-      <mat-select formControlName="title">
-        <mat-option [value]="null">-- Fără titlu --</mat-option>
-        <mat-option value="Prof.dr.">Prof.dr.</mat-option>
-        <mat-option value="Conf.dr.">Conf.dr.</mat-option>
-        <mat-option value="Lect.dr.">Lect.dr.</mat-option>
-        <mat-option value="Asist.dr.">Asist.dr.</mat-option>
-        <mat-option value="Asist. drd.">Asist. drd.</mat-option>
-        <mat-option value="Asist.(det.) drd.">Asist.(det.) drd.</mat-option>
-        <mat-option value="Drd.">Drd.</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="outline" fxFlex="100">
-      <mat-label>Nume</mat-label>
-      <input matInput type="text" formControlName="lastName" name="teacherLastName">
-    </mat-form-field>
-    <mat-form-field appearance="outline" fxFlex="100">
-      <mat-label>Prenume</mat-label>
-      <input matInput type="text" formControlName="firstName" name="teacherFirstName">
-    </mat-form-field>
-    <mat-form-field appearance="outline" fxFlex="100">
-      <mat-label>CNP</mat-label>
-      <input matInput type="text" formControlName="CNP" name="teacherCNP">
-      <mat-error>{{ teacherForm.get("CNP").errors?.['CNPValidator'].message }}</mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline" fxFlex="100">
-      <mat-label>E-mail</mat-label>
-      <input matInput type="email" formControlName="email" name="teacherEmail">
-      <mat-hint *ngIf="emailChanged" class="warning">
-        E-mail modificat. Utilizatorul va avea noi credențiale.
-      </mat-hint>
-    </mat-form-field>
-  </form>
-</mat-dialog-content>
-<mat-dialog-content *ngIf="data.mode =='view'">
-  <mat-list>
-    <mat-list-item>
-      <div matListItemTitle>Titlu</div>
-      <div matListItemLine>{{ data.data.title || '-' }}</div>
-    </mat-list-item>
-    <mat-list-item>
-      <div matListItemTitle>Nume</div>
-      <div matListItemLine>{{ data.data.lastName }}</div>
-    </mat-list-item>
-    <mat-list-item>
-      <div matListItemTitle>Prenume</div>
-      <div matListItemLine>{{ data.data.firstName }}</div>
-    </mat-list-item>
-    <mat-list-item>
-      <div matListItemTitle>CNP</div>
-      <div matListItemLine>{{ data.data.CNP || '-' }}</div>
-    </mat-list-item>
-    <mat-list-item>
-      <div matListItemTitle>E-mail</div>
-      <div matListItemLine>{{ data.data.email }}</div>
-    </mat-list-item>
-  </mat-list>
-</mat-dialog-content>
+@if (data.mode == 'edit' || data.mode == 'create') {
+  <mat-dialog-content class="mat-typography">
+    <form [formGroup]="teacherForm" fxLayout="row grid" fxLayoutGap="10px grid">
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Titlu</mat-label>
+        <mat-select formControlName="title">
+          <mat-option [value]="null">-- Fără titlu --</mat-option>
+          <mat-option value="Prof.dr.">Prof.dr.</mat-option>
+          <mat-option value="Conf.dr.">Conf.dr.</mat-option>
+          <mat-option value="Lect.dr.">Lect.dr.</mat-option>
+          <mat-option value="Asist.dr.">Asist.dr.</mat-option>
+          <mat-option value="Asist. drd.">Asist. drd.</mat-option>
+          <mat-option value="Asist.(det.) drd.">Asist.(det.) drd.</mat-option>
+          <mat-option value="Drd.">Drd.</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Nume</mat-label>
+        <input matInput type="text" formControlName="lastName" name="teacherLastName">
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Prenume</mat-label>
+        <input matInput type="text" formControlName="firstName" name="teacherFirstName">
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>CNP</mat-label>
+        <input matInput type="text" formControlName="CNP" name="teacherCNP">
+        <mat-error>{{ teacherForm.get("CNP").errors?.['CNPValidator'].message }}</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>E-mail</mat-label>
+        <input matInput type="email" formControlName="email" name="teacherEmail">
+        @if (emailChanged) {
+          <mat-hint class="warning">
+            E-mail modificat. Utilizatorul va avea noi credențiale.
+          </mat-hint>
+        }
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+}
+@if (data.mode =='view') {
+  <mat-dialog-content>
+    <mat-list>
+      <mat-list-item>
+        <div matListItemTitle>Titlu</div>
+        <div matListItemLine>{{ data.data.title || '-' }}</div>
+      </mat-list-item>
+      <mat-list-item>
+        <div matListItemTitle>Nume</div>
+        <div matListItemLine>{{ data.data.lastName }}</div>
+      </mat-list-item>
+      <mat-list-item>
+        <div matListItemTitle>Prenume</div>
+        <div matListItemLine>{{ data.data.firstName }}</div>
+      </mat-list-item>
+      <mat-list-item>
+        <div matListItemTitle>CNP</div>
+        <div matListItemLine>{{ data.data.CNP || '-' }}</div>
+      </mat-list-item>
+      <mat-list-item>
+        <div matListItemTitle>E-mail</div>
+        <div matListItemLine>{{ data.data.email }}</div>
+      </mat-list-item>
+    </mat-list>
+  </mat-dialog-content>
+}
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close *ngIf="data.mode != 'view'">Anulați</button>
-  <button mat-button mat-dialog-close *ngIf="data.mode == 'view'">Închideți</button>
-  <button mat-button (click)="saveTeacher()" [disabled]="teacherForm.invalid"
-    *ngIf="data.mode == 'create'">Adăugați</button>
-  <button mat-button (click)="saveTeacher()" [disabled]="teacherForm.invalid"
-    *ngIf="data.mode == 'edit'">Salvați</button>
+  @if (data.mode != 'view') {
+    <button mat-button mat-dialog-close>Anulați</button>
+  }
+  @if (data.mode == 'view') {
+    <button mat-button mat-dialog-close>Închideți</button>
+  }
+  @if (data.mode == 'create') {
+    <button mat-button (click)="saveTeacher()" [disabled]="teacherForm.invalid"
+    >Adăugați</button>
+  }
+  @if (data.mode == 'edit') {
+    <button mat-button (click)="saveTeacher()" [disabled]="teacherForm.invalid"
+    >Salvați</button>
+  }
 </mat-dialog-actions>

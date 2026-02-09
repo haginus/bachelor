@@ -11,7 +11,6 @@ import { Paper } from '../../../lib/types';
   selector: 'app-grade-paper',
   templateUrl: './grade-paper.component.html',
   styleUrls: ['./grade-paper.component.scss'],
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     FlexLayoutModule,

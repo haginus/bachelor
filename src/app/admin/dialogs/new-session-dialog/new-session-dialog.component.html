@@ -1,4 +1,6 @@
-<app-loading class="in-dialog" color="primary" *ngIf="isLoading"></app-loading>
+@if (isLoading) {
+  <app-loading class="in-dialog" color="primary"></app-loading>
+}
 <h2 mat-dialog-title>Treceți la o nouă sesiune</h2>
 <mat-dialog-content>
   <p>

@@ -6,7 +6,8 @@ import { AuthService } from '../../../services/auth.service';
 @Component({
   selector: 'app-sudo-dialog',
   templateUrl: './sudo-dialog.component.html',
-  styleUrls: ['./sudo-dialog.component.scss']
+  styleUrls: ['./sudo-dialog.component.scss'],
+  standalone: false
 })
 export class SudoDialogComponent implements OnInit {
 

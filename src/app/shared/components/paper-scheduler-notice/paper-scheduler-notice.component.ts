@@ -5,7 +5,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-paper-scheduler-notice',
-  standalone: true,
   imports: [
     MatButtonModule,
     MatIconModule,

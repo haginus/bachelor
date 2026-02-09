@@ -4,7 +4,6 @@ import { TextProgressSpinnerComponent } from '../text-progress-spinner/text-prog
 
 @Component({
   selector: 'app-progress-snack-bar',
-  standalone: true,
   imports: [
     TextProgressSpinnerComponent,
   ],

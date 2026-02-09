@@ -8,7 +8,6 @@ import { User } from '../../../lib/types';
   selector: 'app-user-snippet',
   templateUrl: './user-snippet.component.html',
   styleUrls: ['./user-snippet.component.scss'],
-  standalone: true,
   imports: [
     MatMenuModule,
     MatIconModule,

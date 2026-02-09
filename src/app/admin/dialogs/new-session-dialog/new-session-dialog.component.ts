@@ -8,7 +8,8 @@ import { SudoService } from '../../../services/sudo.service';
 @Component({
   selector: 'app-new-session-dialog',
   templateUrl: './new-session-dialog.component.html',
-  styleUrls: ['./new-session-dialog.component.scss']
+  styleUrls: ['./new-session-dialog.component.scss'],
+  standalone: false
 })
 export class NewSessionDialogComponent implements OnInit {
 

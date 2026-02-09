@@ -3,13 +3,12 @@ import { NgxExtendedPdfViewerComponent, NgxExtendedPdfViewerModule } from 'ngx-e
 
 @Component({
   selector: 'app-pdf-viewer',
-  standalone: true,
   imports: [
     NgxExtendedPdfViewerModule,
   ],
   templateUrl: './pdf-viewer.component.html',
   styleUrl: './pdf-viewer.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PdfViewerComponent {
 

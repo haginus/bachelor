@@ -7,7 +7,6 @@ import { HttpClient } from '@angular/common/http';
   selector: 'app-faq',
   templateUrl: './faq.component.html',
   styleUrls: ['./faq.component.scss'],
-  standalone: true,
   imports: [
     MatExpansionModule,
   ]

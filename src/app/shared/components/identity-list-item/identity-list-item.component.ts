@@ -7,7 +7,6 @@ import { User } from '../../../lib/types';
 
 @Component({
   selector: 'app-identity-list-item',
-  standalone: true,
   imports: [
     MatRipple,
     MatIcon,

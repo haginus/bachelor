@@ -25,7 +25,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   selector: 'app-student-paper',
   templateUrl: './paper.component.html',
   styleUrls: ['./paper.component.scss'],
-  standalone: true,
   imports: [
     MatDialogModule,
     MatCardModule,
@@ -40,7 +39,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     DecimalPipe,
     DatePipe,
     DatetimePipe,
-  ],
+  ]
 })
 export class StudentPaperComponent implements OnInit, OnDestroy {
 

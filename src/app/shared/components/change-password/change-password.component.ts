@@ -15,7 +15,6 @@ import { firstValueFrom } from 'rxjs';
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.scss'],
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     FlexLayoutModule,

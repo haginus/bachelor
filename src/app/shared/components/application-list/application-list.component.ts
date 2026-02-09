@@ -10,13 +10,12 @@ import { Application } from '../../../lib/types';
   selector: 'app-application-list',
   templateUrl: './application-list.component.html',
   styleUrls: ['./application-list.component.scss'],
-  standalone: true,
   imports: [
     MatCardModule,
     MatButtonModule,
     MatIconModule,
     UserSnippetComponent,
-  ],
+  ]
 })
 export class ApplicationListComponent implements OnInit {
 

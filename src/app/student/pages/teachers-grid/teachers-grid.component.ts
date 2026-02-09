@@ -25,7 +25,6 @@ import { Topic, TeacherOfferDto } from '../../../lib/types';
   selector: 'student-teachers-grid',
   templateUrl: './teachers-grid.component.html',
   styleUrls: ['./teachers-grid.component.scss'],
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatDialogModule,
@@ -39,7 +38,7 @@ import { Topic, TeacherOfferDto } from '../../../lib/types';
     MatCardModule,
     MatDividerModule,
     UserSnippetComponent,
-  ],
+  ]
 })
 export class StudentTeachersGridComponent implements OnInit, OnDestroy {
 

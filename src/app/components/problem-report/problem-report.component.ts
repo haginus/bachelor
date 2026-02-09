@@ -20,7 +20,6 @@ import { FeedbackService } from '../../services/feedback.service';
   selector: 'app-problem-report',
   templateUrl: './problem-report.component.html',
   styleUrls: ['./problem-report.component.scss'],
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     FlexLayoutModule,
@@ -30,7 +29,7 @@ import { FeedbackService } from '../../services/feedback.service';
     MatSelectModule,
     MatButtonModule,
     LoadingComponent,
-  ],
+  ]
 })
 export class ProblemReportComponent implements OnInit, OnDestroy {
 
@@ -109,8 +108,8 @@ export interface ProblemReportDialogData {
 }
 
 @Component({
-  selector: 'app-problem-report-button',
-  template: `
+    selector: 'app-problem-report-button',
+    template: `
     @if(showText) {
       <button mat-button (click)="openDialog()">
         <mat-icon>feedback</mat-icon>
@@ -122,13 +121,12 @@ export interface ProblemReportDialogData {
       </button>
     }
   `,
-  standalone: true,
-  imports: [
-    DialogModule,
-    MatButtonModule,
-    MatIconModule,
-    MatTooltipModule,
-  ],
+    imports: [
+        DialogModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
+    ]
 })
 export class ProblemReportButtonComponent {
   @Input() data?: ProblemReportDialogData;

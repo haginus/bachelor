@@ -31,7 +31,6 @@ const DEFAULT_TITLE = 'Finalizare studii';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   animations: [routerFadeAnimation],
-  standalone: true,
   imports: [
     FlexLayoutModule,
     MatProgressSpinnerModule,

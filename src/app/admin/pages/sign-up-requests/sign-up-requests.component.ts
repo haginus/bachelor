@@ -18,7 +18,8 @@ import { SignUpRequestsService } from '../../../services/sign-up-requests.servic
   styleUrls: ['./sign-up-requests.component.scss'],
   animations: [
     rowAnimation,
-  ]
+  ],
+  standalone: false
 })
 export class SignUpRequestsComponent implements OnInit {
 

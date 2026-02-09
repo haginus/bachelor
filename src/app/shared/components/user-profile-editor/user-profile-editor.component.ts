@@ -19,7 +19,6 @@ import { Profile } from '../../../lib/types';
   selector: 'app-user-profile-editor',
   templateUrl: './user-profile-editor.component.html',
   styleUrls: ['./user-profile-editor.component.scss'],
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     FlexLayoutModule,
@@ -30,7 +29,7 @@ import { Profile } from '../../../lib/types';
     NgClass,
     UploadFileDirective,
     ApiUrlPipe,
-  ],
+  ]
 })
 export class UserProfileEditorComponent implements OnInit {
 

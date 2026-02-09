@@ -22,7 +22,6 @@ import { Paper, Topic, User } from '../../../lib/types';
   selector: 'app-edit-paper',
   templateUrl: './edit-paper.component.html',
   styleUrls: ['./edit-paper.component.scss'],
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     FlexLayoutModule,

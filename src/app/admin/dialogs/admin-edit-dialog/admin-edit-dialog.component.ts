@@ -10,7 +10,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-admin-edit-dialog',
   templateUrl: './admin-edit-dialog.component.html',
-  styleUrls: ['./admin-edit-dialog.component.scss']
+  styleUrls: ['./admin-edit-dialog.component.scss'],
+  standalone: false
 })
 export class AdminEditDialogComponent implements OnInit {
 

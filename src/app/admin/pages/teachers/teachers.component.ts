@@ -22,7 +22,8 @@ import { UsersService } from '../../../services/users.service';
   styleUrls: ['./teachers.component.scss'],
   animations: [
     rowAnimation,
-  ]
+  ],
+  standalone: false
 })
 export class AdminTeachersComponent implements OnInit, AfterViewInit {
 

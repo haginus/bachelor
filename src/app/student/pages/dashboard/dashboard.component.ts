@@ -7,7 +7,6 @@ import { SessionSettings, User } from '../../../lib/types';
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
   imports: [
     SessionInfoComponent,
     FaqComponent,

@@ -16,7 +16,6 @@ import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-sign-dialog',
-  standalone: true,
   imports: [
     SignaturePadComponent,
     LoadingComponent,

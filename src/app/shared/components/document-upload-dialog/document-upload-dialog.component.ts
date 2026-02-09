@@ -12,7 +12,6 @@ import { RequiredDocument } from '../../../lib/types';
   selector: 'app-document-upload-dialog',
   templateUrl: './document-upload-dialog.component.html',
   styleUrls: ['./document-upload-dialog.component.scss'],
-  standalone: true,
   imports: [
     MatDialogModule,
     MatSnackBarModule,

@@ -33,7 +33,6 @@ export class TimePipe implements PipeTransform {
 
 @Component({
   selector: 'app-change-time-dialog',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatDialogModule,
@@ -99,7 +98,6 @@ const autoScheduleSortOptions = {
 
 @Component({
   selector: 'app-paper-scheduler',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatDialogModule,

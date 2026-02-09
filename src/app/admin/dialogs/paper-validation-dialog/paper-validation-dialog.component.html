@@ -6,9 +6,11 @@
       <mat-label>Media generală a studentului</mat-label>
       <input matInput type="text" formControlName="generalAverage">
     </mat-form-field>
-    <mat-checkbox *ngIf="!data?.areDocumentsUploaded" formControlName="warning" class="checkbox">
-      <span>Confirm ca lucrarea să fie validată cu unele documente lipsă.</span>
-    </mat-checkbox>
+    @if (!data?.areDocumentsUploaded) {
+      <mat-checkbox formControlName="warning" class="checkbox">
+        <span>Confirm ca lucrarea să fie validată cu unele documente lipsă.</span>
+      </mat-checkbox>
+    }
   </form>
 </mat-dialog-content>
 

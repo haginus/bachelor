@@ -45,7 +45,6 @@ import { Committee, CommitteeMember, Paper, User } from '../../../lib/types';
     rowAnimation,
     detailExpand,
   ],
-  standalone: true,
   imports: [
     FlexLayoutModule,
     MatDialogModule,
@@ -66,7 +65,7 @@ import { Committee, CommitteeMember, Paper, User } from '../../../lib/types';
     TitleCasePipe,
     PaperTitlePipe,
     DatetimePipe,
-  ],
+  ]
 })
 export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
   constructor(

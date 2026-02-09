@@ -9,7 +9,6 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-logs',
-  standalone: true,
   imports: [
     LogEntryComponent,
     CodeEditorModule,
@@ -18,7 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatProgressBarModule,
   ],
   templateUrl: './logs.component.html',
-  styleUrl: './logs.component.scss',
+  styleUrl: './logs.component.scss'
 })
 export class LogsComponent {
 
