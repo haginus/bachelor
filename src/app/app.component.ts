@@ -4,7 +4,6 @@ import { MatDrawer, MatDrawerMode, MatSidenavModule } from '@angular/material/si
 import { ActivatedRoute, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators'
-import { routerFadeAnimation } from './animations';
 import { ProblemReportButtonComponent } from './components/problem-report/problem-report.component';
 import { AuthService } from './services/auth.service';
 import { UserProfileEditorComponent } from './shared/components/user-profile-editor/user-profile-editor.component';
@@ -30,7 +29,6 @@ const DEFAULT_TITLE = 'Finalizare studii';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  animations: [routerFadeAnimation],
   imports: [
     FlexLayoutModule,
     MatProgressSpinnerModule,
@@ -162,16 +160,6 @@ export class AppComponent implements OnInit {
 
   editProfile() {
     this.dialog.open(UserProfileEditorComponent);
-  }
-
-  prepareRoute(outlet: RouterOutlet) {
-    if(outlet && outlet.isActivated) {
-      if(outlet.activatedRouteData['animate'] === false) {
-        return "DoNotAnimate";
-      }
-      return outlet.activatedRoute;
-    }
-    return null;
   }
 
   reloadApp() {

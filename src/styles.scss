@@ -1,8 +1,33 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+:root {
+  @include mat.table-overrides((
+    row-item-outline-color: var(--mat-sys-outline-variant),
+  ));
+
+  @include mat.icon-button-overrides((
+    icon-color: #424242,
+  ));
+}
+
+.active {
+  @include mat.icon-button-overrides((
+    icon-color: var(--mat-sys-primary),
+    state-layer-color: var(--mat-sys-primary)
+  ));
+}
 
 html,
 body {
   height: 100%;
+}
+
+mat-toolbar {
+  gap: 12px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  .toolbar-spacer {
+    flex: 1 1 auto;
+  }
 }
 
 mat-dialog-content {
@@ -178,6 +203,21 @@ mat-icon {
   position: relative;
   overflow: hidden;
   border-radius: 8px;
+  background-color: var(--mat-sys-surface);
+  border-color: var(--mat-sys-outline-variant);
+  box-shadow: var(--mat-sys-level1);
+
+  &.full-height {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: none;
+    border-radius: 0;
+
+    .discrete-scroll {
+      flex: 1;
+    }
+  }
 
   .loading-shade {
     position: absolute;
@@ -198,7 +238,7 @@ mat-icon {
 
   .table-filters {
     padding: 16px;
-    padding-bottom: 0;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
 
     .filter-header {
       display: flex;
@@ -257,6 +297,10 @@ mat-icon {
         color: #f44336;
       }
     }
+  }
+
+  mat-paginator {
+    border-top: 1px solid var(--mat-sys-outline-variant);
   }
 }
 

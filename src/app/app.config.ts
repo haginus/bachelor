@@ -1,5 +1,5 @@
 import { ApplicationConfig, importProvidersFrom, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withViewTransitions } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -20,7 +20,7 @@ registerLocaleData(localeRo);
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection(),
-    provideRouter(routes),
+    provideRouter(routes, withViewTransitions()),
     provideHttpClient(withInterceptorsFromDi()),
     provideAnimations(),
     { provide: LOCALE_ID, useValue: 'ro-RO' },

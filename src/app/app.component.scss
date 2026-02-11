@@ -1,6 +1,10 @@
 .main-drawer {
   cursor: default;
   min-width: 280px;
+  max-width: 280px;
+  border-radius: 0;
+  border-right: 1px solid var(--mat-sys-outline-variant);
+
 
   ::ng-deep .mat-drawer-inner-container {
     display: flex;
