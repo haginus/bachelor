@@ -14,6 +14,9 @@ import { AdminStudentsComponent } from './pages/students/students.component';
 import { AdminTeachersComponent } from './pages/teachers/teachers.component';
 import { AdminTopicsComponent } from './pages/topics/topics.component';
 import { sudoModeGuard } from '../guards/sudo-mode.guard';
+import { teachersResolver } from './resolvers/teachers.resolver';
+import { studentsResolver } from './resolvers/students.resolver';
+import { papersResolver } from './resolvers/papers.resolver';
 
 const routes: Routes = [
   {
@@ -24,13 +27,21 @@ const routes: Routes = [
   {
     path: 'students',
     component: AdminStudentsComponent,
-    data: { title: 'Studenți' }
+    data: { title: 'Studenți' },
+    resolve: {
+      resolverData: studentsResolver,
+    },
+    runGuardsAndResolvers: 'always',
   },
   {
     path: 'teachers',
     component: AdminTeachersComponent,
     canActivate: [roleGuard],
-    data: { title: 'Profesori', role: 'admin' }
+    data: { title: 'Profesori', role: 'admin' },
+    resolve: {
+      resolverData: teachersResolver,
+    },
+    runGuardsAndResolvers: 'always',
   },
   {
     path: 'admins',
@@ -69,7 +80,11 @@ const routes: Routes = [
   {
     path: 'papers',
     component: AdminPapersComponent,
-    data: { title: 'Lucrări' }
+    data: { title: 'Lucrări' },
+    resolve: {
+      resolverData: papersResolver,
+    },
+    runGuardsAndResolvers: 'always',
   },
   {
     path: 'committees',

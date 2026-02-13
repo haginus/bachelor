@@ -1,100 +1,117 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { afterNextRender, Component, DestroyRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
-import { Router } from '@angular/router';
-import { BehaviorSubject, firstValueFrom, merge, of } from 'rxjs';
-import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+import { firstValueFrom, merge, Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { TeacherImportDialogComponent } from '../../dialogs/teacher-import-dialog/teacher-import-dialog.component';
 import { AdminTeacherDeleteDialogComponent } from '../../dialogs/teacher-delete-dialog/teacher-delete-dialog.component';
 import { AdminTeacherDialogComponent } from '../../dialogs/teacher-dialog/teacher-dialog.component';
 import { AuthService } from '../../../services/auth.service';
-import { rowAnimation } from '../../../row-animations';
 import { FormControl, FormGroup } from '@angular/forms';
-import { TeachersService } from '../../../services/teachers.service';
 import { Teacher } from '../../../lib/types';
 import { UsersService } from '../../../services/users.service';
+import { PaginatedResolverResult } from '../../../lib/resolver-factory';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { removeEmptyProperties } from '../../../lib/utils';
 
 @Component({
   selector: 'app-admin-teachers',
   templateUrl: './teachers.component.html',
   styleUrls: ['./teachers.component.scss'],
-  animations: [
-    rowAnimation,
-  ],
   standalone: false
 })
-export class AdminTeachersComponent implements OnInit, AfterViewInit {
+export class AdminTeachersComponent {
 
   constructor(
-    private teachersService: TeachersService,
-    private usersService: UsersService,
-    private auth: AuthService,
-    private router: Router,
-    private dialog: MatDialog,
-    private snackbar: MatSnackBar
-  ) {}
+    private readonly destroyRef: DestroyRef,
+    private readonly usersService: UsersService,
+    private readonly auth: AuthService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly dialog: MatDialog,
+    private readonly snackbar: MatSnackBar,
+  ) {
+    this.route.data.pipe(takeUntilDestroyed()).subscribe(data => {
+      this.resolverData = data['resolverData'];
+    });
+    afterNextRender(() => {
+      this.teacherFilter.patchValue(this.resolverData.params, { emitEvent: false });
+      this.teacherFilterDebounced.patchValue(this.resolverData.params, { emitEvent: false });
+      if(Object.keys(removeEmptyProperties(this.getFilterValue())).length > 0) {
+        this.showFilters = true;
+      }
+      this.performedActions.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        const filterValue = this.getFilterValue();
+        this.router.navigate([], {
+          relativeTo: this.route,
+          replaceUrl: true,
+          onSameUrlNavigation: 'reload',
+          queryParams: {
+            page: this.paginator.pageIndex,
+            pageSize: this.paginator.pageSize,
+            sortBy: this.sort.active,
+            sortDirection: this.sort.direction,
+            ...removeEmptyProperties({
+              ...filterValue,
+              onlyMissingPlagiarismReports: filterValue.onlyMissingPlagiarismReports || undefined,
+            }),
+          },
+        });
+      });
 
-  ngOnInit(): void {
+      const filterValueChanges = merge(
+        this.teacherFilter.valueChanges,
+        this.teacherFilterDebounced.valueChanges.pipe(debounceTime(500)),
+      );
+
+      merge(filterValueChanges, this.sort.sortChange).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        this.paginator.pageIndex = 0;
+      });
+
+      merge(
+        filterValueChanges,
+        this.sort.sortChange,
+        this.paginator.page,
+      ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        this.performedActions.next("refresh");
+      });
+    });
   }
 
   displayedColumns: string[] = ['status', 'id', 'lastName', 'firstName', 'email', 'offerCount', 'paperCount', 'plagiarismReportCount', 'actions'];
+  resolverData!: PaginatedResolverResult<Teacher, { sortBy?: string; sortDirection?: 'asc' | 'desc'; lastName?: string; firstName?: string, email?: string; onlyMissingPlagiarismReports?: boolean; }>;
   showFilters = false;
+
   teacherFilter = new FormGroup({
-    lastName: new FormControl<string | null>(null),
-    firstName: new FormControl<string | null>(null),
-    email: new FormControl<string | null>(null),
-    onlyMissingPlagiarismReports: new FormControl<boolean>(false),
+    onlyMissingPlagiarismReports: new FormControl<boolean | undefined>(undefined),
   });
 
-  data: Teacher[] = [];
-  resultsLength = 0;
-  isLoadingResults = true;
+  teacherFilterDebounced = new FormGroup({
+    lastName: new FormControl<string | undefined>(undefined),
+    firstName: new FormControl<string | undefined>(undefined),
+    email: new FormControl<string | undefined>(undefined),
+  });
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  performedActions: BehaviorSubject<string> = new BehaviorSubject(''); // put in merge to force update after student edit
+  performedActions: Subject<string> = new Subject();
 
-  ngAfterViewInit() {
-    const filterChanges = this.teacherFilter.valueChanges.pipe(debounceTime(500));
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+  private getFilterValue() {
+    return { ...this.teacherFilter.value, ...this.teacherFilterDebounced.value };
+  }
 
-    merge(this.sort.sortChange, this.paginator.page, filterChanges, this.performedActions)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          const filterValues = this.teacherFilter.value;
-          return this.teachersService.findAll({
-            limit: this.paginator.pageSize,
-            offset: this.paginator.pageIndex * this.paginator.pageSize,
-            sortBy: this.sort.active,
-            sortDirection: this.sort.direction || 'asc',
-            detailed: true,
-            ...filterValues,
-          });
-        }),
-        map(data => {
-          // Flip flag to show that loading has finished.
-          this.isLoadingResults = false;
-          this.resultsLength = data.count;
-
-          return data.rows;
-        }),
-        catchError(() => {
-          this.isLoadingResults = false;
-          return of([]);
-        })
-      ).subscribe(data => this.data = data);
+  resetFilters() {
+    this.teacherFilter.reset();
+    this.teacherFilterDebounced.reset();
   }
 
   toggleFilters() {
     if(this.showFilters) {
-      if(this.teacherFilter.dirty) {
-        this.teacherFilter.reset();
-      }
+      this.resetFilters();
     }
     this.showFilters = !this.showFilters;
   }
@@ -118,17 +135,17 @@ export class AdminTeachersComponent implements OnInit, AfterViewInit {
     this.openTeacherDialog('create');
   }
 
-  viewTeacher(teacherId: number) {
-    this.openTeacherDialog('view', this.data.find(teacher => teacher.id == teacherId));
+  viewTeacher(teacher: Teacher) {
+    this.openTeacherDialog('view', teacher);
   }
 
-  editTeacher(teacherId: number) {
-    this.openTeacherDialog('edit', this.data.find(teacher => teacher.id == teacherId));
+  editTeacher(teacher: Teacher) {
+    this.openTeacherDialog('edit', teacher);
   }
 
-  deleteTeacher(teacherId: number) {
+  deleteTeacher(teacher: Teacher) {
     let dialogRef = this.dialog.open(AdminTeacherDeleteDialogComponent, {
-      data: this.data.find(teacher => teacher.id == teacherId)
+      data: teacher
     });
 
     dialogRef.afterClosed().subscribe(result => {

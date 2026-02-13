@@ -1,25 +1,21 @@
 table {
-    width: 100%;
-    overflow-x: auto;
+  width: 100%;
+  overflow-x: auto;
 }
 
 .mat-form-field {
-    font-size: 14px;
-    width: 100%;
+  font-size: 14px;
+  width: 100%;
 }
 
 td:last-child, th:last-child {
-    width: 80px;
-}
-
-.container {
-    padding: 16px 12px;
+  width: 80px;
 }
 
 .toolbar-spacer {
-    flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 
 mat-toolbar button[mat-raised-button] {
-    margin: 0 8px;
+  margin: 0 8px;
 }

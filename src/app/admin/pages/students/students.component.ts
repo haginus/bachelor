@@ -1,12 +1,12 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { afterNextRender, AfterViewInit, Component, DestroyRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
-import { Router } from '@angular/router';
-import { BehaviorSubject, firstValueFrom, merge, of as observableOf, Subscription } from 'rxjs';
-import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject, firstValueFrom, merge, of as observableOf, Subject, Subscription } from 'rxjs';
+import { catchError, debounceTime, filter, map, startWith, switchMap } from 'rxjs/operators';
 import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
 import { StudentDeleteDialogComponent } from '../../dialogs/student-delete-dialog/student-delete-dialog.component';
 import { StudentImportDialogComponent } from '../../dialogs/student-import-dialog/student-import-dialog.component';
@@ -17,6 +17,9 @@ import { Domain, Student, User } from '../../../lib/types';
 import { StudentsService } from '../../../services/students.service';
 import { DomainsService } from '../../../services/domains.service';
 import { UsersService } from '../../../services/users.service';
+import { PaginatedResolverResult } from '../../../lib/resolver-factory';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { removeEmptyProperties } from '../../../lib/utils';
 
 @Component({
   selector: 'app-students',
@@ -27,43 +30,87 @@ import { UsersService } from '../../../services/users.service';
   ],
   standalone: false
 })
-export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AdminStudentsComponent {
 
   constructor(
-    private studentsService: StudentsService,
+    private readonly destroyRef: DestroyRef,
+    private readonly route: ActivatedRoute,
     private readonly usersService: UsersService,
     private domainsService: DomainsService,
     private auth: AuthService,
     private router: Router,
     private dialog: MatDialog,
     private snackbar: MatSnackBar
-  ) {}
-
-  user: User;
-  userSubscription: Subscription;
-
-  ngOnInit(): void {
-    this.userSubscription = this.auth.userData.subscribe(user => {
+  ) {
+    this.auth.userData.pipe(takeUntilDestroyed()).subscribe(user => {
       this.user = user;
+    });
+    this.domainsService.findAll().pipe(takeUntilDestroyed()).subscribe(domains => {
+      this.domains = domains;
+    });
+    this.route.data.pipe(takeUntilDestroyed()).subscribe(data => {
+      this.resolverData = data['resolverData'];
+    });
+    afterNextRender(() => {
+      this.studentFilter.patchValue(this.resolverData.params, { emitEvent: false });
+      this.studentFilterDebounced.patchValue(this.resolverData.params, { emitEvent: false });
+      const filterValue = this.getFilterValue();
+      if(filterValue.domainId) {
+        this.studentFilter.get("specializationId").enable();
+      } else {
+        this.studentFilter.get("specializationId").disable();
+      }
+      if(Object.keys(removeEmptyProperties(filterValue)).length > 0) {
+        this.showFilters = true;
+      }
+      this.performedActions.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        const filterValue = this.getFilterValue();
+        this.router.navigate([], {
+          relativeTo: this.route,
+          replaceUrl: true,
+          onSameUrlNavigation: 'reload',
+          queryParams: {
+            page: this.paginator.pageIndex,
+            pageSize: this.paginator.pageSize,
+            sortBy: this.sort.active,
+            sortDirection: this.sort.direction,
+            ...removeEmptyProperties(filterValue),
+          },
+        });
+      });
+
+      const filterValueChanges = merge(
+        this.studentFilter.valueChanges,
+        this.studentFilterDebounced.valueChanges.pipe(debounceTime(500)),
+      );
+
+      merge(filterValueChanges, this.sort.sortChange).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        this.paginator.pageIndex = 0;
+      });
+
+      merge(
+        filterValueChanges,
+        this.sort.sortChange,
+        this.paginator.page,
+      ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        this.performedActions.next("refresh");
+      });
     });
   }
 
-  ngOnDestroy(): void {
-    this.userSubscription.unsubscribe();
-  }
+  user: User;
 
+  resolverData!: PaginatedResolverResult<Student, ReturnType<typeof this.getFilterValue> & { sortBy?: string; sortDirection?: 'asc' | 'desc' }>;
   displayedColumns: string[] = ['status', 'id', 'lastName', 'firstName', 'domain', 'group', 'promotion', 'email', 'actions'];
-  data: Student[] = [];
 
-  resultsLength = 0;
-  isLoadingResults = true;
-  isRateLimitReached = false;
-
-  domains: Domain[];
+  domains: Domain[] = [];
 
   studentFilter = new FormGroup({
     domainId: new FormControl<number | undefined>(undefined, { nonNullable: true }),
-    specializationId: new FormControl<number | undefined>({ value: undefined, disabled: true }, { nonNullable: true }),
+    specializationId: new FormControl<number | undefined>(undefined, { nonNullable: true }),
+  });
+
+  studentFilterDebounced = new FormGroup({
     group: new FormControl<string | undefined>(undefined, { nonNullable: true }),
     promotion: new FormControl<string | undefined>(undefined, { nonNullable: true }),
     lastName: new FormControl<string | undefined>(undefined, { nonNullable: true }),
@@ -78,43 +125,15 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  performedActions: BehaviorSubject<string> = new BehaviorSubject(''); // put in merge to force update after student edit
+  performedActions: Subject<string> = new Subject();
 
+  getFilterValue() {
+    return { ...this.studentFilter.value, ...this.studentFilterDebounced.value };
+  }
 
-  ngAfterViewInit() {
-    const filterChanges = this.studentFilter.valueChanges.pipe(debounceTime(500));
-    merge(this.sort.sortChange, filterChanges).subscribe(() => this.paginator.pageIndex = 0);
-
-    merge(this.sort.sortChange, this.paginator.page, filterChanges, this.performedActions)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          const filters = this.studentFilter.getRawValue();
-          return this.studentsService.findAll({
-            limit: this.paginator.pageSize,
-            offset: this.paginator.pageIndex * this.paginator.pageSize,
-            sortBy: this.sort.active || 'id',
-            sortDirection: this.sort.direction || 'asc',
-            ...filters
-          });
-        }),
-        map(data => {
-          // Flip flag to show that loading has finished.
-          this.isLoadingResults = false;
-          this.isRateLimitReached = false;
-          this.resultsLength = data.count;
-
-          return data.rows;
-        }),
-        catchError(() => {
-          this.isLoadingResults = false;
-          this.isRateLimitReached = true;
-          return observableOf([]);
-        })
-      ).subscribe(data => this.data = data);
-
-    this.domainsService.findAll().subscribe(domains => this.domains = domains);
+  resetFilters() {
+    this.studentFilter.reset();
+    this.studentFilterDebounced.reset();
   }
 
   async openNewStudentDialog() {
@@ -194,7 +213,7 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
     const domainId = this.studentFilter.get("domainId").value;
     if(!domainId) return [];
     const domain = this.domains.find(domain => domain.id == domainId);
-    return domain.specializations;
+    return domain?.specializations || [];
   }
 
   handleFilterDomainChange(value: number) {
@@ -209,9 +228,7 @@ export class AdminStudentsComponent implements OnInit, OnDestroy, AfterViewInit 
 
   toggleFilters() {
     if(this.showFilters) {
-      if(this.studentFilter.dirty) {
-        this.studentFilter.reset();
-      }
+      this.resetFilters();
     }
     this.showFilters = !this.showFilters;
   }

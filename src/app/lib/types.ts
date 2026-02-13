@@ -315,6 +315,11 @@ export interface Paginated<T> {
   rows: T[];
 }
 
+export type PaginatedQuery<P extends Record<string | number, any> = {}> = P & {
+  limit: number;
+  offset: number;
+};
+
 export interface ImportResult<RowType = any, EntityType = any> {
   summary: {
     proccessed: number;

@@ -1,38 +1,43 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { afterNextRender, ChangeDetectorRef, Component, DestroyRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
-import { BehaviorSubject, firstValueFrom, merge, Observable, of, Subscription } from 'rxjs';
-import { debounceTime, startWith, switchMap } from 'rxjs/operators';
+import { firstValueFrom, merge, Subject, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { StudentDialogComponent } from '../../dialogs/new-student-dialog/student-dialog.component';
 import { PaperValidationDialogComponent, PaperValidationDialogData } from '../../dialogs/paper-validation-dialog/paper-validation-dialog.component';
 import { DOMAIN_TYPES, PAPER_TYPES, STUDY_FORMS } from '../../../lib/constants';
 import { AreDocumentsUploaded, DocumentMapElement } from '../../../shared/components/paper-document-list/paper-document-list.component';
-import { detailExpand, rowAnimation } from '../../../row-animations';
+import { detailExpand } from '../../../row-animations';
 import { PaperQueryDto, PapersService } from '../../../services/papers.service';
 import { EditPaperComponent } from '../../../shared/components/edit-paper/edit-paper.component';
 import { RequestDocumentReuploadDialogComponent, RequestDocumentReuploadDialogData } from '../../dialogs/request-document-reupload-dialog/request-document-reupload-dialog.component';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Domain, Paper, PaperType } from '../../../lib/types';
+import { Paper, PaperType } from '../../../lib/types';
 import { DomainsService } from '../../../services/domains.service';
 import { DocumentReuploadRequestsService } from '../../../services/document-reupload-requests.service';
+import { PaginatedResolverResult } from '../../../lib/resolver-factory';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { removeEmptyProperties } from '../../../lib/utils';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-papers',
   templateUrl: './papers.component.html',
   styleUrls: ['./papers.component.scss'],
   animations: [
-    rowAnimation,
     detailExpand,
   ],
   standalone: false
 })
-export class AdminPapersComponent implements OnInit, AfterViewInit {
+export class AdminPapersComponent {
 
   constructor(
+    private readonly destroyRef: DestroyRef,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
     private readonly domainsService: DomainsService,
     private readonly papersService: PapersService,
     private readonly documentReuploadRequestsService: DocumentReuploadRequestsService,
@@ -40,23 +45,62 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private snackbar: MatSnackBar
   ) {
-    this.paperFilterForm.get('domain')!.valueChanges.pipe(takeUntilDestroyed(), startWith(null)).subscribe((value) => {
-      if(value) {
-        this.paperFilterForm.get('specializationId')!.enable();
+    this.route.data.pipe(takeUntilDestroyed()).subscribe(data => {
+      this.resolverData = data['resolverData'];
+    });
+    afterNextRender(() => {
+      this.paperFilterForm.patchValue(this.resolverData.params, { emitEvent: false });
+      this.paperFilterDebouncedForm.patchValue(this.resolverData.params, { emitEvent: false });
+      const filterValue = this.getFilterValue();
+      if(filterValue.domainId) {
+        this.paperFilterForm.get("specializationId").enable();
       } else {
-        this.paperFilterForm.get('specializationId')!.disable();
+        this.paperFilterForm.get("specializationId").disable();
       }
-      this.paperFilterForm.get('specializationId')!.setValue(null);
-    })
+      if(JSON.stringify(removeEmptyProperties(filterValue)) !== JSON.stringify({ submitted: true })) {
+        this.showFilters = true;
+        this.cd.detectChanges();
+      }
+      this.performedActions.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        const filterValue = this.getFilterValue();
+        this.router.navigate([], {
+          relativeTo: this.route,
+          replaceUrl: true,
+          onSameUrlNavigation: 'reload',
+          queryParams: {
+            page: this.paginator.pageIndex,
+            pageSize: this.paginator.pageSize,
+            sortBy: this.sort.active,
+            sortDirection: this.sort.direction,
+            ...removeEmptyProperties(filterValue),
+          },
+        });
+      });
+
+      const filterValueChanges = merge(
+        this.paperFilterForm.valueChanges,
+        this.paperFilterDebouncedForm.valueChanges.pipe(debounceTime(500)),
+      );
+
+      merge(filterValueChanges, this.sort.sortChange).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        this.paginator.pageIndex = 0;
+      });
+
+      merge(
+        filterValueChanges,
+        this.sort.sortChange,
+        this.paginator.page,
+      ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        this.performedActions.next("refresh");
+      });
+    });
   }
 
+  resolverData!: PaginatedResolverResult<ExtendedPaper, PaperQueryDto>;
   displayedColumns: string[] = ['status', 'id', 'title', 'type', 'student', 'teacher', 'committee'];
   expandedPaperId: string | null;
-  resultsLength: number;
-  isLoadingResults: boolean = true;
-  data: ExtendedPaper[] = [];
 
-  performedActions: BehaviorSubject<string> = new BehaviorSubject('');
+  performedActions: Subject<string> = new Subject();
   paperSubscription: Subscription;
 
   @ViewChild('table') table: MatTable<Paper>;
@@ -71,11 +115,11 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
   showFilters: boolean = false;
 
   paperFilterForm = new FormGroup({
-    validity: new FormControl<('valid' | 'invalid' | 'not_validated')>(null),
+    validity: new FormControl<PaperQueryDto['validity']>(null),
     submitted: new FormControl<boolean>(true),
     assigned: new FormControl<boolean>(null),
     type: new FormControl<PaperType>(null),
-    domain: new FormControl<Domain>(null),
+    domainId: new FormControl<number>(null),
     specializationId: new FormControl<number>(null),
   });
 
@@ -84,42 +128,13 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
     studentName: new FormControl<string>(null),
   });
 
-  ngOnInit() { }
-
-  ngAfterViewInit(): void {
-    const filterChanges = this.paperFilterForm.valueChanges;
-    const filterDebouncedChanges = this.paperFilterDebouncedForm.valueChanges.pipe(debounceTime(500));
-    merge(this.sort.sortChange, filterChanges).subscribe(() => this.paginator.pageIndex = 0);
-
-    this.paperSubscription = merge(this.sort.sortChange, this.paginator.page, filterChanges, filterDebouncedChanges, this.performedActions).pipe(
-      startWith({}),
-      switchMap(() => {
-        this.isLoadingResults = true;
-        const filter = this.parseFilter();
-        return this.papersService.findAll({
-          sortBy: this.sort.active,
-          sortDirection: this.sort.direction || 'asc',
-          limit: this.paginator.pageSize,
-          offset: this.paginator.pageIndex * this.paginator.pageSize,
-          ...filter
-        });
-      }),
-    )
-   .subscribe(papers => {
-      this.data = papers.rows as ExtendedPaper[];
-      this.resultsLength = papers.count;
-      this.isLoadingResults = false;
-    });
-  }
-
-  parseFilter(): PaperQueryDto {
+  getFilterValue(): PaperQueryDto {
     const filterForm = this.paperFilterForm.value;
     const filterDebouncedForm = this.paperFilterDebouncedForm.value;
     return {
       ...filterForm,
       ...filterDebouncedForm,
-      domainId: filterForm.domain ? filterForm.domain.id : null,
-    }
+    };
   }
 
   refreshResults() {
@@ -248,25 +263,15 @@ export class AdminPapersComponent implements OnInit, AfterViewInit {
   }
 
   toggleFilters() {
-    if(this.showFilters && this.paperFilterForm.dirty) {
+    if(this.showFilters) {
       this.resetFilterForm();
     }
     this.showFilters = !this.showFilters;
   }
 
   resetFilterForm() {
-    this.paperFilterForm.setValue({
-      validity: null,
-      submitted: true,
-      assigned: null,
-      type: null,
-      domain: null,
-      specializationId: null,
-    });
-    this.paperFilterDebouncedForm.setValue({
-      title: null,
-      studentName: null
-    }, { emitEvent: false });
+    this.paperFilterForm.reset({ submitted: true });
+    this.paperFilterDebouncedForm.reset();
   }
 
 }

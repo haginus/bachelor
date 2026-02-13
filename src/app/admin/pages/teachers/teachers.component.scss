@@ -1,24 +1,20 @@
 table {
-    width: 100%;
-    overflow-x: auto;
+  width: 100%;
+  overflow-x: auto;
 }
 
 td, th {
-    width: auto;
+  width: auto;
 }
 
 tr th:last-child, tr td:last-child {
-    width: 80px;
-}
-
-.container {
-    padding: 16px 12px;
+  width: 80px;
 }
 
 .toolbar-spacer {
-    flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 
 mat-toolbar button[mat-raised-button] {
-    margin: 0 8px;
+  margin: 0 8px;
 }
