@@ -1,5 +1,6 @@
-<div class="container" [style]="{ width: canvasWidth }">
+<div class="container" [style]="{ width: canvasWidth + 'px' }">
   <canvas
+    [style]="themeService.isDarkMode ? { filter: 'invert(1)' } : {}"
     #signaturePadCanvas
     [width]="canvasWidth"
     [height]="canvasHeight"

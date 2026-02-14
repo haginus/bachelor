@@ -13,6 +13,7 @@ import { firstValueFrom } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoadingComponent } from '../loading/loading.component';
 import { AuthService } from '../../../services/auth.service';
+import { ThemeService } from '../../../services/theme.service';
 
 @Component({
   selector: 'app-sign-dialog',
@@ -37,6 +38,7 @@ export class SignDialogComponent {
     private readonly documentsService: DocumentService,
     private readonly dialog: MatDialog,
     private readonly snackBar: MatSnackBar,
+    protected readonly themeService: ThemeService,
   ) {
     this.loadSignature();
   }

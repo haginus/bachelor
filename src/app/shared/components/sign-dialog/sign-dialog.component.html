@@ -14,7 +14,7 @@
         <mat-progress-spinner mode="indeterminate" [diameter]="48"></mat-progress-spinner>
       } @else {
         @if(signature) {
-          <img [src]="signature.sample" />
+          <img [style]="themeService.isDarkMode ? { filter: 'invert(1)' } : {}" [src]="signature.sample" />
         } @else {
           @if(signatureError) {
             <mat-icon>warning_amber</mat-icon>

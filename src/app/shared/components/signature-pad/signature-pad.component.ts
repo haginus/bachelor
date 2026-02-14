@@ -1,6 +1,7 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Input, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ThemeService } from '../../../services/theme.service';
 
 @Component({
   selector: 'app-signature-pad',
@@ -12,6 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './signature-pad.component.scss'
 })
 export class SignaturePadComponent {
+
+  protected readonly themeService = inject(ThemeService);
 
   @Input() canvasWidth = 270;
   @Input() canvasHeight = 130;
