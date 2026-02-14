@@ -116,9 +116,13 @@
         <re-captcha (resolved)="solvedCaptcha($event)"></re-captcha>
       </div>
       <div class="flex-container align-center">
-          <button mat-raised-button color="accent"
-          [disabled]="signUpForm.invalid || !captchaToken || loading"
-          (click)="signUp()">Înscriere</button>
+          <button
+            matButton="filled"
+            [disabled]="signUpForm.invalid || !captchaToken || loading"
+            (click)="signUp()"
+          >
+            Înscriere
+          </button>
       </div>
     </form>
 

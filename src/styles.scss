@@ -25,6 +25,7 @@ html {
   @include mat.all-component-themes($light-theme);
   @include mat.system-level-colors($light-theme);
   @include mat.system-level-elevation($light-theme);
+  @include mat.color-variants-backwards-compatibility($light-theme);
   --warn: #f57c00;
   --warn-surface: #f57c00e0;
   --on-warn-surface: #000000;
@@ -37,6 +38,7 @@ html.dark-theme {
   @include mat.all-component-themes($dark-theme);
   @include mat.system-level-colors($dark-theme);
   @include mat.system-level-elevation($dark-theme);
+  @include mat.color-variants-backwards-compatibility($dark-theme);
 }
 
 html {
@@ -49,14 +51,6 @@ html {
   @include mat.icon-button-overrides((
     icon-color: var(--mat-sys-primary),
     state-layer-color: var(--mat-sys-primary)
-  ));
-}
-
-.error {
-  @include mat.button-overrides((
-    text-label-text-color: var(--mat-sys-error),
-    text-state-layer-color: var(--mat-sys-error),
-    text-ripple-color: transparent,
   ));
 }
 

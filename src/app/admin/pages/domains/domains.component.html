@@ -1,13 +1,10 @@
 <div class="container">
   <div class="mat-elevation-z8 table-container">
     <mat-toolbar color="white">
-      <button mat-raised-button color="accent" (click)="addDomain()">Adăugați domeniu</button>
+      <button matButton="filled" (click)="addDomain()">Adăugați domeniu</button>
       <span class="toolbar-spacer"></span>
       <button mat-icon-button (click)="refreshResults()">
         <mat-icon>refresh</mat-icon>
-      </button>
-      <button mat-icon-button>
-        <mat-icon>more_vert</mat-icon>
       </button>
     </mat-toolbar>
     @if (isLoadingResults) {

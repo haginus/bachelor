@@ -64,7 +64,7 @@
         </mat-list>
       </div>
       <div fxLayout="column" fxLayoutAlign="center center" class="form-actions">
-        <button mat-raised-button color="primary" (click)="saveSettings()" [disabled]="settingsForm.invalid">
+        <button matButton="filled" (click)="saveSettings()" [disabled]="settingsForm.invalid">
           Salvați setările
         </button>
       </div>
@@ -81,7 +81,7 @@
       <div matListItemTitle>Treceți la o sesiune nouă</div>
       <div matListItemLine>Ștergeți toți studenții și lucrările din platformă.</div>
       <div matListItemMeta>
-        <button mat-stroked-button color="warn" (click)="newSession()">Sesiune nouă</button>
+        <button matButton="outlined" color="warn" (click)="newSession()">Sesiune nouă</button>
       </div>
     </mat-list-item>
   </mat-list>

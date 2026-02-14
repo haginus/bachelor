@@ -213,7 +213,7 @@
                 <button matButton="filled" color="primary" (click)="validatePaper(paper, true)"
                   [disabled]="paper.isLoading">Validați lucrarea</button>
               </div>
-              <button matButton class="error" [disabled]="paper.isLoading" (click)="validatePaper(paper, false)">
+              <button matButton color="warn" [disabled]="paper.isLoading" (click)="validatePaper(paper, false)">
                 Invalidați lucrarea
               </button>
             </div>

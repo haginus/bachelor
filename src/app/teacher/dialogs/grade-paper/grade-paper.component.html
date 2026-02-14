@@ -21,8 +21,7 @@
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Anulați</button>
   <button
-    mat-raised-button
-    color="primary"
+    matButton="filled"
     [mat-dialog-close]="{ forPaper: forPaper.value, forPresentation: forPresentation.value }"
     [disabled]="gradeForm.invalid"
   >
