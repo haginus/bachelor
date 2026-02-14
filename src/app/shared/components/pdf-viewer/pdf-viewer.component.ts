@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { NgxExtendedPdfViewerComponent, NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { ThemeService } from '../../../services/theme.service';
 
 @Component({
   selector: 'app-pdf-viewer',
@@ -11,6 +12,8 @@ import { NgxExtendedPdfViewerComponent, NgxExtendedPdfViewerModule } from 'ngx-e
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PdfViewerComponent {
+
+  protected readonly themeService = inject(ThemeService);
 
   @Input() src: NgxExtendedPdfViewerComponent['src'];
   @Output() pdfLoaded: NgxExtendedPdfViewerComponent['pdfLoaded'] = new EventEmitter();

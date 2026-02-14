@@ -9,7 +9,7 @@
 }
 
 .document-list {
-  background-color: #f5f5f5;
+  background-color: var(--mat-sys-surface-variant);
   padding: 8px;
   border-radius: 8px;
   display: flex;
@@ -17,7 +17,7 @@
   gap: 8px;
 
   .document-item {
-    background-color: #FAFAFA;
+    background-color: var(--mat-sys-surface);
     border-radius: 8px;
     padding: 8px 12px;
 

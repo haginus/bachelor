@@ -2,12 +2,13 @@
   display: block;
   font-size: 11px;
   position: relative;
-  --ngx-json-string: #1c3aa9;
+  --ngx-json-string: var(--mat-sys-on-surface);
+  --ngx-json-key: var(--mat-sys-on-surface-variant);
   --ngx-json-font-size: 11px;
   -webkit-tap-highlight-color: transparent;
 
   &:not(:last-child) {
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
   }
 
   &.expanded::before {
@@ -17,7 +18,7 @@
     top: 0;
     left: 0;
     bottom: 0;
-    background: rgba(26,115,232,.1);
+    background: color-mix(in srgb, var(--mat-sys-primary-container) 42%, transparent);
   }
 }
 
@@ -29,18 +30,12 @@
   cursor: pointer;
 
   &:hover {
-    background: rgba(26,115,232,.04);
-    .resource-field {
-      background-color: #e3f2fd;
-    }
+    background: color-mix(in srgb, var(--mat-sys-primary-container) 42%, transparent);
   }
 
   &.expanded {
-    background: #e8f0fe;
-    border-bottom: 1px solid #e0e0e0;
-    .resource-field {
-      background-color: #c8e4f8;
-    }
+    background: var(--mat-sys-primary-container);
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
   }
 
   .severity {
@@ -89,7 +84,8 @@
   box-sizing: border-box;
   height: 18px;
   padding: 0 6px;
-  background-color: #f5f5f5;
+  background-color: var(--mat-sys-surface-variant);
+  color: var(--mat-sys-on-surface-variant);
   border-radius: 8px;
   max-width: 210px;
 

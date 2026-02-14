@@ -31,8 +31,8 @@
   .group-header {
     text-transform: uppercase;
     font-size: 12px;
-    margin-bottom: 4px;
-    color: #616161;
+    margin-bottom: 12px;
+    color: var(--mat-sys-on-surface-variant);
   }
 
   .group-controls {
@@ -133,15 +133,15 @@
     font-weight: 500;
 
     &.low {
-      color: #43a047;
+      color: var(--success);
     }
 
     &.mid {
-      color: #ef6c00;
+      color: var(--warn);
     }
 
     &.high {
-      color: #e53935;
+      color: var(--mat-sys-error);
     }
   }
 }

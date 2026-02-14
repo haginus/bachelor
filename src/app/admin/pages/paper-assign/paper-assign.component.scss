@@ -8,7 +8,7 @@
   width: 100%;
   height: 100%;
   z-index: 2;
-  background-color: white;
+  background-color: var(--mat-sys-background);
 }
 
 :host {
@@ -17,8 +17,8 @@
 }
 
 .committee-toolbar {
-  background-color: white;
-  border-bottom: 1px solid #e0e0e0;
+  background-color: var(--mat-sys-surface);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
 
   .committee-info {
     margin-left: 8px;
@@ -58,9 +58,9 @@
 }
 
 .paper-list {
-  border: solid 1px #ccc;
+  border: solid 1px var(--mat-sys-outline-variant);
   min-height: 60px;
-  background: white;
+  background: var(--mat-sys-surface);
   border-radius: 4px;
   overflow: hidden;
   display: flex;
@@ -70,21 +70,21 @@
 
 .paper-box {
   padding: 16px 10px;
-  border-bottom: solid 1px #ccc;
+  border-bottom: solid 1px var(--mat-sys-outline);
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   cursor: move;
-  background: white;
+  background: var(--mat-sys-surface-variant);
 
   .paper-title {
     font-size: 16px;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--mat-sys-on-surface-variant);
     margin-bottom: 8px;
   }
 
   .paper-description {
-    color: rgba(0, 0, 0, 0.67);
+    color: var(--mat-sys-on-surface-variant);
     height: 70px;
     overflow: hidden;
     position: relative;
@@ -97,7 +97,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      box-shadow: inset 0px -39px 10px -30px #FFFFFF
+      box-shadow: inset 0px -39px 10px -30px var(--mat-sys-surface-variant);
     }
   }
 
@@ -106,9 +106,9 @@
   }
 
   .paper-authors {
-    color: #616161;
+    color: var(--mat-sys-on-surface-variant);
     margin-top: 6px;
-    border-top: 1px solid #eeeeee;
+    border-top: 1px solid var(--mat-sys-outline);
     padding-top: 8px;
     font-size: 14px;
     margin-bottom: -8px;
@@ -118,18 +118,16 @@
 .cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 4px;
-  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-    0 8px 10px 1px rgba(0, 0, 0, 0.14),
-    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--mat-sys-level3);
 
 }
 
 .paper-box.cdk-drag-disabled {
-  background: #e0e0e0;
+  background: var(--mat-sys-surface);
   cursor: default;
 
   .paper-description::after {
-    box-shadow: inset 0px -39px 10px -30px #e0e0e0
+    box-shadow: inset 0px -39px 10px -30px var(--mat-sys-surface);
   }
 }
 
@@ -160,9 +158,9 @@
   align-self: center;
   justify-self: center;
   font-size: 14px;
-  color: #616161;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .warn-text {
-  color: #f44336;
+  color: var(--mat-sys-error);
 }

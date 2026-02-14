@@ -6,13 +6,13 @@
 .container {
   display: flex;
   flex-direction: column;
-  border: 1px solid #eee;
+  border: 1px solid var(--mat-sys-outline-variant);
   border-radius: 4px;
 
   .toolbar {
     display: flex;
     padding: 4px;
     gap: 4px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--mat-sys-outline-variant);
   }
 }

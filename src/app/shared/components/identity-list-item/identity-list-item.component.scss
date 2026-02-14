@@ -11,7 +11,8 @@
   }
 
   .profile-picture {
-    background-color: #e0e0e0;
+    background-color: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
     display: flex;
     justify-content: center;
     align-items: center;

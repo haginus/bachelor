@@ -19,10 +19,10 @@
 
 <div class="mat-elevation-z8 table-container">
   <mat-toolbar color="white">
-    <button mat-raised-button color="accent" (click)="addPaper()" [disabled]="!canAddPapers">
+    <button matButton="filled" color="accent" (click)="addPaper()" [disabled]="!canAddPapers">
       Adăugați o lucrare
     </button>
-    <button style="margin-left: 8px;" mat-icon-button matTooltip="Descărcați lista în format Excel"
+    <button mat-icon-button matTooltip="Descărcați lista în format Excel"
       (click)="downloadExcel()">
       <mat-icon>download</mat-icon>
     </button>
@@ -30,7 +30,7 @@
     <button mat-icon-button (click)="refreshResults()">
       <mat-icon>refresh</mat-icon>
     </button>
-    <button mat-icon-button (click)="toggleFilters()" [color]="showFilters ? 'primary' : ''">
+    <button mat-icon-button (click)="toggleFilters()" [class.active]="showFilters ? true : false">
       <mat-icon>filter_list</mat-icon>
     </button>
   </mat-toolbar>

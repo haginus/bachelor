@@ -1,12 +1,14 @@
 <ngx-extended-pdf-viewer
   [src]="src"
   [customToolbar]="customToolbar"
+  language="ro-RO"
+  [textLayer]="true"
   (pdfLoaded)="pdfLoaded.emit($event)"
   [enableDragAndDrop]="false"
   [acceptKeys]="['CTRL+F', 'META+F']"
   (findbarVisibleChange)="findbarVisibleChange.emit($event)"
->
-</ngx-extended-pdf-viewer>
+  [theme]="themeService.isDarkMode ? 'dark' : 'light'"
+/>
 
 <ng-template #customToolbar>
   <div id="toolbarViewer">

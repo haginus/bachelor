@@ -33,7 +33,7 @@ mat-toolbar {
     align-items: center;
     height: 100%;
     width: 100%;
-    color: #616161;
+    color: var(--mat-sys-on-surface-variant);
 
     mat-icon {
       font-size: 36px;

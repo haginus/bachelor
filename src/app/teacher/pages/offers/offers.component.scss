@@ -23,11 +23,15 @@ mat-toolbar {
 
     .header-content {
       flex: 1;
+
+      .offer-topics {
+        margin-top: 4px;
+      }
     }
   }
 
   .offer-card-footer {
-    border-top: 1px solid #eeeeee;
+    border-top: 1px solid var(--mat-sys-outline-variant);
   }
 }
 
@@ -43,7 +47,8 @@ mat-toolbar {
 
 
   &:hover {
-    background-color: #eeeeee;
+    background-color: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
   }
 
   span {

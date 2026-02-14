@@ -6,12 +6,12 @@
 .stat-card {
   cursor: pointer;
   border-radius: 8px;
-  background-color: #fff;
+  background-color: var(--mat-sys-surface-variant);
   padding: 16px;
 
   .stat-title {
     font-size: 14px;
-    color: #757575;
+    color: var(--mat-sys-on-surface-variant);
   }
 
   .stat-number-container {
@@ -19,7 +19,7 @@
   }
 
   .stat-number {
-    color: #424242;
+    color: var(--mat-sys-on-surface-variant);
     line-height: 36px;
     font-weight: 300;
     font-size: 36px;
@@ -27,6 +27,6 @@
 
   .stat-extra {
     margin-left: 4px;
-    color: #616161;
+    color: var(--mat-sys-on-surface-variant);
   }
 }

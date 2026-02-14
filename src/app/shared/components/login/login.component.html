@@ -1,3 +1,7 @@
+<button class="toggle-theme-button" matIconButton matTooltip="Comutați tema" (click)="themeService.toggleTheme()">
+  <mat-icon>{{ themeService.isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+</button>
+
 <div class="flex-container align-center v-align-center fullscreen page-container">
   <div class="login-container mat-elevation-z2">
     @if(loading) {
@@ -18,7 +22,7 @@
             <input matInput type="password" formControlName="password">
           </mat-form-field>
           <div class="flex-container align-center captcha-container">
-            <re-captcha (resolved)="solvedCaptcha($event)" #captcha></re-captcha>
+            <re-captcha [theme]="themeService.isDarkMode ? 'dark' : 'light'" (resolved)="solvedCaptcha($event)" #captcha></re-captcha>
           </div>
           <div class="flex-container align-center">
             <button mat-raised-button color="accent" [disabled]="loginForm.invalid || !captchaToken || loading"
@@ -32,7 +36,7 @@
             <input matInput type="email" formControlName="email">
           </mat-form-field>
           <div class="flex-container align-center captcha-container">
-            <re-captcha (resolved)="solvedCaptcha($event)" #captcha></re-captcha>
+            <re-captcha [theme]="themeService.isDarkMode ? 'dark' : 'light'" (resolved)="solvedCaptcha($event)" #captcha></re-captcha>
           </div>
           <div class="flex-container align-center">
             <button mat-raised-button color="accent" [disabled]="forgotPasswordForm.invalid || !captchaToken || loading"

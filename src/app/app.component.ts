@@ -20,7 +20,8 @@ import { IdentityListItemComponent } from "./shared/components/identity-list-ite
 import { ApiUrlPipe } from './shared/pipes/api-url';
 import { getUserDescription } from './lib/utils';
 import { isStudent, SessionSettings, User } from './lib/types';
-
+import { ThemeService } from './services/theme.service';
+import { MatTooltip } from "@angular/material/tooltip";
 
 const SideWidth = 800;
 const DEFAULT_TITLE = 'Finalizare studii';
@@ -43,6 +44,7 @@ const DEFAULT_TITLE = 'Finalizare studii';
     ProblemReportButtonComponent,
     IdentityListItemComponent,
     ApiUrlPipe,
+    MatTooltip,
   ],
 })
 
@@ -57,6 +59,7 @@ export class AppComponent implements OnInit {
     private route: ActivatedRoute,
     private auth: AuthService,
     private dialog: MatDialog,
+    protected themeService: ThemeService,
     private loader: LoaderService,
   ) {}
 

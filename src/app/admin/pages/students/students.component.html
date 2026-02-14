@@ -23,16 +23,11 @@
 
 <div class="table-container full-height">
   <mat-toolbar color="white">
-    <div fxHide.lt-sm>
-      <button mat-raised-button color="accent" (click)="openNewStudentDialog()">Adăugați student</button>
-      <button mat-raised-button color="accent" (click)="bulkAddStudents()">Adăugați din .CSV</button>
-    </div>
-    <div fxHide fxShow.lt-sm>
-      <button mat-mini-fab (click)="openNewStudentDialog()">
-        <mat-icon>add</mat-icon>
-      </button>
-      <button mat-raised-button color="accent" (click)="bulkAddStudents()">Adăugați din .CSV</button>
-    </div>
+    <button fxHide.lt-sm matButton="filled" (click)="openNewStudentDialog()">Adăugați student</button>
+    <button fxHide fxShow.lt-sm mat-mini-fab (click)="openNewStudentDialog()">
+      <mat-icon>add</mat-icon>
+    </button>
+    <button matButton="tonal" (click)="bulkAddStudents()">Adăugați din .CSV</button>
     <span class="toolbar-spacer"></span>
     <button mat-icon-button (click)="refreshResults()">
       <mat-icon>refresh</mat-icon>

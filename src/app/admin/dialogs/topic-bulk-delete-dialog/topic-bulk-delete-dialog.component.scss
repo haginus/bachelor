@@ -14,7 +14,8 @@ mat-form-field {
 
   .topic {
     padding: 12px 8px;
-    background: #eee;
+    background: var(--mat-sys-surface-variant);
+    color: var(--mat-sys-on-surface-variant);
     border-radius: 4px;
     margin-bottom: 8px;
   }

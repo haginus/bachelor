@@ -6,6 +6,7 @@ import { logFilterSchema } from './log-filter.schema';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
+import { ThemeService } from '../../../services/theme.service';
 
 @Component({
   selector: 'app-logs',
@@ -23,6 +24,7 @@ export class LogsComponent {
 
   constructor(
     private readonly logsService: LogsService,
+    protected readonly themeService: ThemeService,
   ) {
     this.queryLogs();
   }

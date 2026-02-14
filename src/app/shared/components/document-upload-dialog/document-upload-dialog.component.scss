@@ -1,5 +1,6 @@
 .header {
-  padding: 24px;
+  color: var(--mat-sys-on-surface);
+  padding: 12px 24px;
   padding-bottom: 0;
 
   .title {
@@ -8,7 +9,7 @@
 }
 
 p {
-  color: #121;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .document-button {

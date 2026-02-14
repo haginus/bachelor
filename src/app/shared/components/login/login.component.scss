@@ -4,6 +4,13 @@
   height: 100%;
 }
 
+.toggle-theme-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+}
+
 .page-container {
   flex-direction: column;
 }
@@ -36,7 +43,7 @@ h2 {
 
 .divider {
   margin: 24px 0;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--mat-sys-outline-variant);
 }
 
 .login-container {
@@ -45,21 +52,23 @@ h2 {
   overflow: hidden;
   width: 100%;
   max-width: 430px;
+  background: var(--mat-sys-surface);
+  box-shadow: var(--mat-sys-level3);
 }
 
 .footer {
-  color: #757575;
+  color: var(--mat-sys-on-surface-variant);
   text-align: center;
   max-width: 430px;
-  margin-top: 8px;
+  margin-top: 16px;
+
+  app-problem-report-button {
+    margin-top: 8px;
+    display: block;
+  }
 
   span {
     display: inline-block;
   }
 
-  .link {
-    margin-top: 4px;
-    font-weight: 500;
-    cursor: pointer;
-  }
 }

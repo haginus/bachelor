@@ -15,7 +15,7 @@ form {
 }
 
 .filter-by {
-  color: rgba(0,0,0,.54);
+  color: var(--mat-sys-on-surface-variant);
   font-weight: 500;
   margin-top: 8px;
   margin-bottom: -8px;
@@ -24,7 +24,7 @@ form {
 .student-scroll {
   height: 200px;
   overflow: scroll;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--mat-sys-outline-variant);
   padding: 0!important;
   position: relative;
   margin-bottom: 16px;
@@ -39,9 +39,9 @@ form {
   h2 {
     margin-bottom: 0px;
   }
-  
+
   .paper-description {
-    color: #616161;
+    color: var(--mat-sys-on-surface-variant);
   }
 }
 

@@ -1,5 +1,6 @@
 .profile-picture {
-  background: #eeeeee;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
   width: 32px;
   min-width: 32px;
   height: 32px;
@@ -40,7 +41,7 @@
   box-sizing: border-box;
 
   &:hover {
-    background: #eeeeee;
+    background: var(--mat-sys-secondary-container);
   }
 
   .text {
@@ -54,6 +55,7 @@
 .committee-card {
   min-width: 280px;
   box-sizing: border-box;
+  color: var(--mat-sys-on-surface);
   a.link {
     font-weight: 500;
   }

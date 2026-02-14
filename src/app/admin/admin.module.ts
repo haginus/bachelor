@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminComponent } from './admin.component';
 import { AdminStudentsComponent } from './pages/students/students.component';
@@ -42,7 +41,6 @@ import { SudoDialogComponent } from './dialogs/sudo-dialog/sudo-dialog.component
 import { ImportResultDialogComponent } from './dialogs/import-result-dialog/import-result-dialog.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { UploadFileDirective } from '../shared/directives/upload-file.directive';
-import { CodeEditorModule } from '@ngstack/code-editor';
 import { DatetimePipe } from '../shared/pipes/datetime.pipe';
 import { TextProgressSpinnerComponent } from '../shared/components/text-progress-spinner/text-progress-spinner.component';
 

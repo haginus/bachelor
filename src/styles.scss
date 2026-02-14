@@ -1,12 +1,47 @@
 @use '@angular/material' as mat;
 
-:root {
+@include mat.core();
+
+// Light theme
+$light-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+));
+
+// Dark theme
+$dark-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+));
+
+
+html {
+  @include mat.all-component-themes($light-theme);
+  @include mat.system-level-colors($light-theme);
+  @include mat.system-level-elevation($light-theme);
+  --warn: #f57c00;
+  --warn-surface: #f57c00e0;
+  --on-warn-surface: #000000;
+  --success: #4caf50;
+  --success-surface: #4caf50e0;
+  --on-success-surface: #000000;
+}
+
+html.dark-theme {
+  @include mat.all-component-themes($dark-theme);
+  @include mat.system-level-colors($dark-theme);
+  @include mat.system-level-elevation($dark-theme);
+}
+
+html {
   @include mat.table-overrides((
     row-item-outline-color: var(--mat-sys-outline-variant),
-  ));
-
-  @include mat.icon-button-overrides((
-    icon-color: #424242,
   ));
 }
 
@@ -89,35 +124,10 @@ body {
   height: 24px;
 }
 
-.nav-item {
-  height: 48px !important;
-  cursor: pointer;
-
-  mat-icon {
-    color: #424242;
-  }
-
-  .mat-list-text {
-    color: #616161;
-    padding-left: 8px !important;
-  }
-
-  :hover {
-    background: #eeeeee;
-  }
-}
-
-.nav-item.active {
-  background: #f5f5f5;
-
-  .mat-list-text {
-    color: #3f51b5;
-  }
-}
-
 .badge {
   padding: 6px;
-  background-color: #eeeeee;
+  background-color: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
   margin: 4px;
   display: inline-block;
   border-radius: 6px;
@@ -139,7 +149,6 @@ body {
 }
 
 mat-icon {
-  //color: #424242;
   font-family: 'Material Icons Outlined' !important;
 }
 
@@ -149,28 +158,55 @@ mat-icon {
   padding: 8px 16px;
   min-height: 64px;
   align-items: center;
-  background: #78909c;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
   box-sizing: border-box;
 
+  @include mat.button-overrides((
+    text-label-text-color: var(--mat-sys-on-secondary-container),
+  ));
+
   &.translucent {
-    background: #eeeeee;
+    background: var(--mat-sys-surface-variant);
+    color: var(--mat-sys-on-surface-variant);
     border-radius: 4px;
 
+    @include mat.button-overrides((
+      text-label-text-color: var(--mat-sys-on-surface-variant),
+    ));
+
     &.warning {
-      background: #ffc107e0;
+      background: var(--warn-surface);
+      color: var(--on-warn-surface);
+
+      @include mat.button-overrides((
+        text-label-text-color: var(--on-warn-surface),
+      ));
     }
   }
 
   &.severe {
-    background: #e53935;
+    background: var(--mat-sys-error-container);
+    color: var(--mat-sys-on-error-container);
+    @include mat.button-overrides((
+      text-label-text-color: var(--mat-sys-on-error-container),
+    ));
   }
 
   &.warning {
-    background: #ff9800;
+    background: var(--warn-surface);
+    color: var(--on-warn-surface);
+    @include mat.button-overrides((
+      text-label-text-color: var(--on-warn-surface),
+    ));
   }
 
   &.success {
-    background: #4caf50;
+    background: var(--success-surface);
+    color: var(--on-success-surface);
+    @include mat.button-overrides((
+      text-label-text-color: var(--on-success-surface),
+    ));
   }
 
   .tip-icon {
@@ -195,13 +231,13 @@ mat-icon {
 .contact-info {
   display: inline-flex;
   padding: 12px 0;
-  color: #424242;
+  color: var(--mat-sys-on-surface-variant);
   align-items: center;
   cursor: default;
 
   a {
     margin-left: 8px;
-    color: #757575;
+    color: var(--mat-sys-on-surface-variant);
     font-weight: 500;
     text-decoration: none;
   }
@@ -254,7 +290,7 @@ mat-icon {
       padding-bottom: 12px;
 
       .text {
-        color: rgba(0, 0, 0, 0.54);
+        color: var(--mat-sys-on-surface-variant);
         font-weight: 500;
         flex: 1;
       }
@@ -318,11 +354,11 @@ mat-icon {
 
 .clickable:hover {
   text-decoration: underline;
-  color: #616161;
+  color: var(--mat-sys-primary);
 }
 
 a.link {
-  color: #1976d2;
+  color: var(--mat-sys-primary);
   text-decoration: none;
 }
 
@@ -333,7 +369,8 @@ app-loading.in-dialog {
 .hero-icon {
   padding: 36px;
   border-radius: 50%;
-  background: #e0e0e0;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
   font-size: 48px;
   width: 48px !important;
   height: 48px !important;
@@ -357,17 +394,6 @@ app-loading.in-dialog {
   }
 }
 
-.subtle-link {
-  color: #616161;
-  text-decoration: none;
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-  }
-}
-
-
 .list {
 
   &.dense {
@@ -379,7 +405,7 @@ app-loading.in-dialog {
 
   .list-header {
     font-size: 14px;
-    color: #424242;
+    color: var(--mat-sys-on-surface-variant);
     font-weight: 500;
     padding: 0 16px;
     margin-bottom: -2px;
@@ -394,7 +420,6 @@ app-loading.in-dialog {
     box-sizing: border-box;
 
     mat-icon {
-      color: #424242;
       margin-right: 8px;
     }
 
@@ -412,7 +437,7 @@ app-loading.in-dialog {
       &>:not(:first-child) {
         font-size: 14px;
         line-height: 14px;
-        color: rgba(0, 0, 0, 0.54);
+        color: var(--mat-sys-on-surface-variant);
       }
     }
   }

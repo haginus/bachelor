@@ -9,7 +9,7 @@
     <h2>Platforma este indisponibilă</h2>
     <p>Dacă problema persistă, contactați administratorul.</p>
     <p></p>
-    <button mat-raised-button color="primary" (click)="reloadApp()">Reîncercați</button>
+    <button matButton="filled" color="primary" (click)="reloadApp()">Reîncercați</button>
   </div>
 }
 <div [matMenuTriggerFor]="userMenu" #userMenuTrigger="matMenuTrigger"></div>
@@ -240,6 +240,9 @@
         @defer {
           <app-problem-report-button />
         }
+        <button matIconButton matTooltip="Comutați tema" (click)="themeService.toggleTheme()">
+          <mat-icon>{{ themeService.isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        </button>
         <span class="flex-spacer"></span>
         @if(user?.type === 'admin') {
           <em class="app-version">v{{ appVersion }}</em>

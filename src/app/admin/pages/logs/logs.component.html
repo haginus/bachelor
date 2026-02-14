@@ -11,6 +11,7 @@
   </div>
   <div class="filter-editor">
     <ngs-code-editor
+      [theme]="themeService.isDarkMode ? 'vs-dark' : 'vs-light'"
       [codeModel]="model"
       [options]="options"
       (valueChanged)="handleValueChange($event)"

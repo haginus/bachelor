@@ -4,15 +4,13 @@
   padding: 12px;
   box-sizing: border-box;
   min-height: 72px;
+  font-size: 14px;
 
   .icon {
     width: 24px;
     height: 24px;
     display: flex;
     margin-right: 12px;
-    mat-icon {
-      color: rgba(0, 0, 0, 0.54);
-    }
   }
 
   .content {
@@ -29,7 +27,7 @@
 }
 
 .reupload-request-notice {
-  color: #F57C00;
+  color: var(--warn);
 }
 
 .upload-request-notice {

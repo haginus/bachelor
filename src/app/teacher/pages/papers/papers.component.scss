@@ -16,11 +16,11 @@ table {
   user-select: none;
 
   &.done {
-    color: #388e3c;
+    color: var(--success);
   }
 
   &.warn {
-    color: #f57c00;
+    color: var(--warn);
   }
 }
 
@@ -33,7 +33,7 @@ table {
 
     .paper-description {
       flex: 1;
-      color: #616161;
+      color: var(--mat-sys-on-surface-variant);
     }
   }
 
@@ -52,22 +52,23 @@ table {
 }
 
 tr.paper-row:not(.expanded-row):hover {
-  background: whitesmoke;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
 }
 
 tr.paper-row:not(.expanded-row):active {
-  background: #efefef;
+  background: var(--mat-sys-surface-variant);
 }
 
 .grade-badge {
-  border: 1px solid #ddd;
+  border: 1px solid var(--mat-sys-outline-variant);
   display: inline-flex;
   align-items: center;
   padding: 6px 8px;
   border-radius: 12px;
 
   mat-icon {
-    color: #616161;
+    color: var(--mat-sys-on-surface-variant);
   }
 
   .text {

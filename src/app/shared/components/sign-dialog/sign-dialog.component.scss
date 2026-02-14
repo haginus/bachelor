@@ -3,13 +3,13 @@
   flex-direction: column;
   max-width: 270px;
   margin: 0 auto;
-  border: 1px solid #eee;
+  border: 1px solid var(--mat-sys-outline-variant);
   border-radius: 4px;
   overflow: hidden;
 
   .header {
     padding: 6px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
     font-size: 14px;
   }
 
@@ -41,7 +41,7 @@
     justify-content: center;
     visibility: hidden;
     padding: 6px 0;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--mat-sys-outline-variant);
 
     &.visible {
       visibility: visible;

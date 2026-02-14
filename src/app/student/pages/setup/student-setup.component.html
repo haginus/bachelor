@@ -70,7 +70,7 @@
           operării acestei platforme.
         </mat-checkbox>
         <div class="flex-container align-end actions-container">
-          <button mat-raised-button matStepperNext [disabled]="validationForm.invalid">
+          <button matButton="filled" matStepperNext [disabled]="validationForm.invalid">
             Pasul următor
           </button>
         </div>
@@ -92,7 +92,7 @@
       </form>
 
       <div class="flex-container align-end actions-container">
-        <button mat-raised-button matStepperNext [disabled]="topicsForm.invalid">Pasul următor</button>
+        <button matButton="filled" matStepperNext [disabled]="topicsForm.invalid">Pasul următor</button>
       </div>
     </mat-step>
     <mat-step>
@@ -114,8 +114,8 @@
         } @else {
           <div>
             <h3>A apărut o eroare.</h3>
-            <button mat-raised-button (click)="validateStudent()">Reîncercați</button>
-            <button mat-raised-button (click)="stepper.reset()">Reluați validarea</button>
+            <button matButton="filled" (click)="validateStudent()">Reîncercați</button>
+            <button matButton="outlined" (click)="stepper.reset()">Reluați validarea</button>
           </div>
         }
       </div>

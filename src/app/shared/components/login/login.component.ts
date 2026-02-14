@@ -13,6 +13,9 @@ import { LoadingComponent } from '../loading/loading.component';
 import { ProblemReportButtonComponent } from '../../../components/problem-report/problem-report.component';
 import { IdentityListItemComponent } from '../identity-list-item/identity-list-item.component';
 import { User } from '../../../lib/types';
+import { ThemeService } from '../../../services/theme.service';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-login',
@@ -30,6 +33,8 @@ import { User } from '../../../lib/types';
     LoadingComponent,
     RouterLink,
     IdentityListItemComponent,
+    MatIcon,
+    MatTooltip,
   ]
 })
 export class LoginComponent implements OnInit, OnDestroy {
@@ -39,7 +44,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private router: Router,
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    protected themeService: ThemeService,
   ) {}
 
   ngOnInit(): void {

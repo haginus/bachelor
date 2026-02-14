@@ -17,12 +17,12 @@
 
     .drawer-footer {
       display: flex;
-      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      border-top: 1px solid var(--mat-sys-outline-variant);
       padding: 8px;
       align-items: center;
 
       .app-version {
-        color: #757575;
+        color: color-mix(in srgb, var(--mat-sys-on-surface) 55%, transparent);
         user-select: none;
       }
     }
@@ -42,7 +42,8 @@
 }
 
 .profile-picture {
-  background-color: #e0e0e0;
+  background-color: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,7 +75,11 @@
 
       :last-child {
         margin-top: 4px;
-        color: #444;
+        color: var(--mat-sys-on-surface-variant);
+      }
+
+      :first-child {
+        color: var(--mat-sys-on-surface);
       }
     }
   }
@@ -83,8 +88,9 @@
 .account-menu-content {
   padding-top: 16px;
   padding-bottom: 8px;
+  color: var(--mat-sys-on-surface);
   .email {
-    color: #616161;
+    color: var(--mat-sys-on-surface-variant);
     text-align: center;
   }
 
@@ -118,7 +124,7 @@
 
       .second-row {
         margin-top: 4px;
-        color: #444;
+        color: var(--mat-sys-on-surface-variant);
       }
     }
   }
@@ -127,7 +133,7 @@
     margin: 8px;
     border-radius: 12px;
     overflow: hidden;
-    background-color: #f5f5f5;
+    background-color: var(--mat-sys-surface-variant);
     > * {
       width: 100%;
       min-height: 56px;
@@ -142,13 +148,13 @@
 
 .main-content {
   height: 100%;
-  background-color: white;
+  background-color: var(--mat-sys-surface-container-lowest);
   overflow: auto;
 }
 
 .nav-list {
   padding: 8px 0;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
 
   &:last-of-type, &.nb {
     border-bottom: none;
@@ -164,11 +170,11 @@
     text-decoration: none;
 
     mat-icon {
-      color: #424242;
+      color: var(--mat-sys-on-surface);
     }
 
     span {
-      color: #616161;
+      color: var(--mat-sys-on-surface);
       margin-left: 8px;
       flex: 1;
       overflow: hidden;
@@ -178,14 +184,14 @@
     }
 
     &:hover {
-      background: #eeeeee;
+      background: color-mix(in srgb, var(--mat-sys-primary-container) 42%, transparent);
     }
 
     &.active {
-      background: #f5f5f5;
+      background: var(--mat-sys-primary-container);
 
       mat-icon, span {
-        color: #283593;
+        color: var(--mat-sys-on-primary-container);
       }
     }
   }
@@ -195,7 +201,8 @@
   position: fixed;
   inset: 0 0 0 0;
   z-index: 2;
-  background: white;
+  background: var(--mat-sys-background);
+  color: var(--mat-sys-on-background);
   flex-direction: column;
 }
 

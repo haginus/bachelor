@@ -194,7 +194,7 @@ export class TeacherPapersComponent
       data: paper,
     });
     const result = await firstValueFrom(dialogRef.afterClosed());
-    if(result.result) {
+    if(result?.result) {
       this.refreshResults();
       if (result.documentsGenerated) {
         this.snackbar.open(

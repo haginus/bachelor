@@ -23,11 +23,11 @@
 
 .paper-type,
 .paper-teacher {
-  color: #424242;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .paper-description {
-  color: #616161;
+  color: var(--mat-sys-on-surface-variant);
   margin-top: 16px;
   white-space: pre-wrap;
 }
@@ -41,7 +41,8 @@
 .tip-card {
   &.isGenerating {
     position: relative;
-    background-color: #03a9f4;
+    background-color: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
 
     mat-progress-bar {
       position: absolute;

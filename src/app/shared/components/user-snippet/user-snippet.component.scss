@@ -1,5 +1,6 @@
 .profile-picture {
-  background: #eeeeee;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -37,7 +38,7 @@
   border-radius: 4px;
 
   &:hover {
-    background: #eeeeee;
+    background: var(--mat-sys-secondary-container);
   }
 
   .text {
@@ -49,6 +50,7 @@
 }
 
 .user-card {
+  color: var(--mat-sys-on-surface-variant);
   min-width: 280px;
   box-sizing: border-box;
   a.link {

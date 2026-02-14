@@ -20,7 +20,7 @@
       }
     </div>
   </div>
-  <button mat-raised-button color="primary" fxHide.lt-sm (click)="saveChanges()">Salvați modificările</button>
+  <button matButton="filled" fxHide.lt-sm (click)="saveChanges()">Salvați modificările</button>
   <button mat-icon-button fxHide.gt-xs>
     <mat-icon>save</mat-icon>
   </button>
@@ -30,8 +30,7 @@
 <div cdkDropListGroup class="paper-assign-container" fxLayout="grid" fxLayoutGap="16px">
   <div class="list-container" fxFlex="50">
     <h2>Lucrări atribuite acestei comisii</h2>
-    <div cdkDropList [cdkDropListData]="assignedPappers" class="paper-list" cdkDropListSortingDisabled
-      (cdkDropListDropped)="drop($event)">
+    <div cdkDropList [cdkDropListData]="assignedPappers" class="paper-list" (cdkDropListDropped)="drop($event)">
       @if (isLoadingAssignedPapers) {
         <div class="spinner-container">
           <mat-spinner diameter="36"></mat-spinner>
@@ -84,8 +83,7 @@
         </mat-form-field>
       </div>
     </div>
-    <div cdkDropList [cdkDropListData]="otherPapers" class="paper-list" cdkDropListSortingDisabled
-      (cdkDropListDropped)="drop($event)">
+    <div cdkDropList [cdkDropListData]="otherPapers" class="paper-list" (cdkDropListDropped)="drop($event)">
       @if (isLoadingOtherPapers) {
         <div class="spinner-container">
           <mat-spinner diameter="36"></mat-spinner>
