@@ -18,6 +18,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DomainsService } from '../../../services/domains.service';
 import { Domain } from '../../../lib/types';
+import { ThemedImageDirective } from '../../directives/themed-image.directive';
 
 @Component({
   selector: 'app-sign-up',
@@ -35,7 +36,8 @@ import { Domain } from '../../../lib/types';
     MatCheckboxModule,
     LoadingComponent,
     RouterLink,
-  ]
+    ThemedImageDirective,
+  ],
 })
 export class SignUpComponent implements OnInit, OnDestroy {
 

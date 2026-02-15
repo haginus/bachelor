@@ -1,7 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,6 +9,7 @@ import { LoadingComponent } from '../loading/loading.component';
 import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { firstValueFrom } from 'rxjs';
+import { ThemedImageDirective } from "../../directives/themed-image.directive";
 
 @Component({
   selector: 'app-change-password',
@@ -22,7 +22,8 @@ import { firstValueFrom } from 'rxjs';
     MatInputModule,
     MatButtonModule,
     LoadingComponent,
-  ]
+    ThemedImageDirective,
+  ],
 })
 export class ChangePasswordComponent implements OnInit {
 

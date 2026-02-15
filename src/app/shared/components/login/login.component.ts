@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { RecaptchaComponent, RecaptchaModule } from 'ng-recaptcha';
@@ -16,6 +16,7 @@ import { User } from '../../../lib/types';
 import { ThemeService } from '../../../services/theme.service';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from "@angular/material/tooltip";
+import { ThemedImageDirective } from '../../directives/themed-image.directive';
 
 @Component({
   selector: 'app-login',
@@ -35,7 +36,8 @@ import { MatTooltip } from "@angular/material/tooltip";
     IdentityListItemComponent,
     MatIcon,
     MatTooltip,
-  ]
+    ThemedImageDirective,
+  ],
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
