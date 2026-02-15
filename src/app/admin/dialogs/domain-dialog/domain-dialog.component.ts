@@ -28,6 +28,7 @@ export class AdminDomainDialogComponent implements OnInit {
     name: new FormControl<string>(this.data.domain?.name || '', { validators: [Validators.required], nonNullable: true }),
     type: new FormControl<DomainType>(this.data.domain?.type || 'bachelor', { validators: [Validators.required], nonNullable: true }),
     paperType: new FormControl<PaperType>(this.data.domain?.paperType || 'bachelor', { validators: [Validators.required], nonNullable: true }),
+    hasWrittenExam: new FormControl<boolean>(this.data.domain?.hasWrittenExam || false, { nonNullable: true }),
     specializations: new FormArray([])
   });
 

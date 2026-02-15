@@ -19,7 +19,7 @@
         <mat-label>Nume domeniu</mat-label>
         <input matInput type="text" formControlName="name" name="domainName">
       </mat-form-field>
-      <div fxLayout="row" fxLayoutGap="5px">
+      <div fxLayout="row" fxLayoutGap="6px">
         <mat-form-field appearance="outline" subscriptSizing="fixed" fxFlex="50">
           <mat-label>Tip</mat-label>
           <mat-select formControlName="type" (valueChange)="paperType.setValue(null)">
@@ -48,6 +48,9 @@
           </mat-select>
         </mat-form-field>
       </div>
+      <mat-slide-toggle formControlName="hasWrittenExam" color="primary">
+        Probă scrisă
+      </mat-slide-toggle>
       <div formArrayName="specializations">
         <h3>Programe de studii</h3>
         @for (specialization of formSpecializations.controls; track specialization; let i = $index) {

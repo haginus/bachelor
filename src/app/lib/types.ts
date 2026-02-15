@@ -63,6 +63,7 @@ export interface Domain {
   name: string;
   type: DomainType;
   paperType: PaperType;
+  hasWrittenExam: boolean;
   specializations: Specialization[];
 }
 
