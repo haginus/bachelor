@@ -311,6 +311,12 @@ export class PaperDocumentListComponent implements OnChanges {
       duration: null,
     });
     const id = mapElement.lastId;
+    if(!id) {
+      snackbarRef.dismiss();
+      this.snackbar.open("Document inexistent.");
+      mapElement.actionPending = false;
+      return null;
+    }
     const type = this.documents.find(doc => doc.id == id).mimeType;
     const title = [mapElement.title, this.documentNameSuffix].filter(Boolean).join(' - ').slice(0, 255);
     const buffer = await firstValueFrom(this.document.getDocument(id));
