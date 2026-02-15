@@ -36,7 +36,8 @@ export class SessionSettingsComponent implements OnInit {
   }
 
   private setFormValue(sessionSettings: SessionSettings) {
-    const _formatDate = (date: string) => formatDate(date, 'yyyy-MM-dd', 'en-US', 'Europe/Bucharest');
+    const _formatDate = (date: string) => formatDate(date, 'yyyy-MM-dd', 'ro-RO', 'Europe/Bucharest');
+    console.log(_formatDate(sessionSettings.applyStartDate));
     const settings = {
       sessionName: sessionSettings.sessionName,
       currentPromotion: sessionSettings.currentPromotion,

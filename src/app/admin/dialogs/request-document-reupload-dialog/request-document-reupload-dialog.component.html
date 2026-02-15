@@ -11,7 +11,9 @@
   <form [formGroup]="requestReuploadForm">
     <mat-form-field>
       <mat-label>Termen limită (inclusiv)</mat-label>
-      <input matInput type="date" formControlName="deadline">
+      <input matInput [matDatepicker]="deadlineDatePicker" formControlName="deadline">
+      <mat-datepicker-toggle matSuffix [for]="deadlineDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #deadlineDatePicker></mat-datepicker>
     </mat-form-field>
     <div class="document-list-header">
       <span>Documente</span>

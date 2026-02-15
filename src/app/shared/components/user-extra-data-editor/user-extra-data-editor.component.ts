@@ -15,6 +15,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
 import { User, UserExtraData } from '../../../lib/types';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-user-extra-data-editor',
@@ -30,6 +32,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatInputModule,
     MatSelectModule,
     MatProgressSpinnerModule,
+    MatDatepickerModule,
+  ],
+  providers: [
+    provideNativeDateAdapter(),
   ]
 })
 export class UserExtraDataEditorComponent implements OnInit {

@@ -12,6 +12,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { RequiredDocument } from '../../../lib/types';
 import { DocumentReuploadRequestsService } from '../../../services/document-reupload-requests.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-request-document-reupload-dialog',
@@ -24,6 +25,7 @@ import { DocumentReuploadRequestsService } from '../../../services/document-reup
     MatButtonModule,
     MatMenuModule,
     LoadingComponent,
+    MatDatepickerModule,
   ],
   templateUrl: './request-document-reupload-dialog.component.html',
   styleUrl: './request-document-reupload-dialog.component.scss'

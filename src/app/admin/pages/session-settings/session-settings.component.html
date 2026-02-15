@@ -22,32 +22,42 @@
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
           <mat-label>Dată începere cereri asociere</mat-label>
-          <input matInput type="date" formControlName="applyStartDate" [errorStateMatcher]="settingsFormMatcher">
+          <input matInput [matDatepicker]="applyStartDatePicker" formControlName="applyStartDate" [errorStateMatcher]="settingsFormMatcher">
+          <mat-datepicker-toggle matSuffix [for]="applyStartDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #applyStartDatePicker></mat-datepicker>
           <mat-hint>Data de la care studenții pot trimite cereri către profesori</mat-hint>
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
           <mat-label>Dată încheiere cereri asociere</mat-label>
-          <input matInput type="date" formControlName="applyEndDate" [errorStateMatcher]="settingsFormMatcher">
+          <input matInput [matDatepicker]="applyEndDatePicker" formControlName="applyEndDate" [errorStateMatcher]="settingsFormMatcher">
+          <mat-datepicker-toggle matSuffix [for]="applyEndDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #applyEndDatePicker></mat-datepicker>
           <mat-hint>Data până la care studenții pot trimite cereri către profesori</mat-hint>
           <mat-error>Data încheierii sesiunii de cereri nu poate fi mai devreme de cea a începerii!</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
           <mat-label>Dată începere depuneri documente</mat-label>
-          <input matInput type="date" formControlName="fileSubmissionStartDate" [errorStateMatcher]="settingsFormMatcher">
+          <input matInput [matDatepicker]="fileSubmissionStartDatePicker" formControlName="fileSubmissionStartDate" [errorStateMatcher]="settingsFormMatcher">
+          <mat-datepicker-toggle matSuffix [for]="fileSubmissionStartDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #fileSubmissionStartDatePicker></mat-datepicker>
           <mat-hint>Data de la care studenții pot începe depunerea documentelor la dosar</mat-hint>
           <mat-error>Data începerii depunerilor de documente nu poate fi mai devreme de cea a începerii sesiunii de
           cereri!</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
           <mat-label>Dată încheiere depuneri documente</mat-label>
-          <input matInput type="date" formControlName="fileSubmissionEndDate" [errorStateMatcher]="settingsFormMatcher">
+          <input matInput [matDatepicker]="fileSubmissionEndDatePicker" formControlName="fileSubmissionEndDate" [errorStateMatcher]="settingsFormMatcher">
+          <mat-datepicker-toggle matSuffix [for]="fileSubmissionEndDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #fileSubmissionEndDatePicker></mat-datepicker>
           <mat-hint>Data până la care studenții pot depune documentele la dosar</mat-hint>
           <mat-error>Data încheierii depunerilor de documente nu poate fi mai devreme de cea a începerii!</mat-error>
         </mat-form-field>
         <div fxFlex="50" fxHide.xs></div>
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
           <mat-label>Termen limită depunere lucrări</mat-label>
-          <input matInput type="date" formControlName="paperSubmissionEndDate" [errorStateMatcher]="settingsFormMatcher">
+          <input matInput [matDatepicker]="paperSubmissionEndDatePicker" formControlName="paperSubmissionEndDate" [errorStateMatcher]="settingsFormMatcher">
+          <mat-datepicker-toggle matSuffix [for]="paperSubmissionEndDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #paperSubmissionEndDatePicker></mat-datepicker>
           <mat-hint>Data până la care studenții și profesorii pot depune lucrarea, respectiv referatul.</mat-hint>
           <mat-error>
             Termenul limită pentru depunerea lucrărilor nu poate fi mai devreme de data începerii depunerilor de

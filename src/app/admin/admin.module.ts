@@ -43,6 +43,8 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { UploadFileDirective } from '../shared/directives/upload-file.directive';
 import { DatetimePipe } from '../shared/pipes/datetime.pipe';
 import { TextProgressSpinnerComponent } from '../shared/components/text-progress-spinner/text-progress-spinner.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 const materialDeps = [
   MatPaginatorModule,
@@ -52,8 +54,9 @@ const materialDeps = [
   MatSortModule,
   MatSlideToggleModule,
   MatButtonToggleModule,
-  MatCheckboxModule
-]
+  MatCheckboxModule,
+  MatDatepickerModule,
+];
 
 @NgModule({
   declarations: [
@@ -97,6 +100,9 @@ const materialDeps = [
     UploadFileDirective,
     DatetimePipe,
     ...materialDeps
-  ]
+  ],
+  providers: [
+    provideNativeDateAdapter(),
+  ],
 })
 export class AdminModule { }
