@@ -156,6 +156,11 @@ mat-icon {
   color: var(--mat-sys-on-secondary-container);
   box-sizing: border-box;
 
+  &.rounded {
+    margin: 0;
+    border-radius: 8px;
+  }
+
   @include mat.button-overrides((
     text-label-text-color: var(--mat-sys-on-secondary-container),
   ));
@@ -163,7 +168,7 @@ mat-icon {
   &.translucent {
     background: var(--mat-sys-surface-variant);
     color: var(--mat-sys-on-surface-variant);
-    border-radius: 4px;
+    border-radius: 8px;
 
     @include mat.button-overrides((
       text-label-text-color: var(--mat-sys-on-surface-variant),

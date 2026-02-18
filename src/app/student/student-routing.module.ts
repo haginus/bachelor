@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { notValidatedGuard } from '../guards/not-validated.guard';
 import { paperGuard } from '../guards/paper.guard';
 import { validatedGuard } from '../guards/validated.guard';
+import { paperResolver } from './resolvers/paper.resolver';
+import { extraDataResolver } from './resolvers/extra-data.resolver';
 
 const routes: Routes = [
   {
@@ -45,6 +47,16 @@ const routes: Routes = [
     path: 'paper',
     loadComponent: () => import('./pages/paper/paper.component').then(m => m.StudentPaperComponent),
     data: { title: "Lucrarea dvs." },
+    canActivate: [validatedGuard, paperGuard]
+  },
+  {
+    path: 'submission',
+    loadComponent: () => import('./pages/my-submission/my-submission.component').then(m => m.MySubmissionComponent),
+    data: { title: "Lucrare și dosar" },
+    resolve: {
+      paper: paperResolver,
+      extraData: extraDataResolver,
+    },
     canActivate: [validatedGuard, paperGuard]
   }
 

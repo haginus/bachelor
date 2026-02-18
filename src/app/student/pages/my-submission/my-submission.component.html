@@ -1,0 +1,168 @@
+@if(hasWrittenExam()) {
+  <mat-card class="section-card">
+    <h1>I. Proba scrisă - Cunoștințe fundamentale și de specialitate</h1>
+    <p>Nu ați susținut încă proba scrisă.</p>
+  </mat-card>
+}
+
+<mat-card class="section-card">
+  <h1>{{ hasWrittenExam() ? 'II.' : 'I.' }} Prezentarea și susținerea lucrării</h1>
+  <div class="paper-wrapper">
+    <div class="paper-content">
+      <h2 class="paper-title">{{paper().title}}</h2>
+      <h4 class="paper-type">
+        Lucrare de {{PAPER_TYPES[paper().type]}}
+      </h4>
+      <div class="paper-topics">
+        @for(topic of paper().topics; track topic.id) {
+          <span class="badge">{{topic.name}}</span>
+        }
+      </div>
+      <p class="paper-description">{{ paper().description }}</p>
+      <div class="paper-snippets">
+        <app-user-snippet [user]="paper().teacher">
+          <span class="paper-teacher">Profesor coordonator</span>
+        </app-user-snippet>
+        @if(paper().committee) {
+          @defer {
+            <app-committee-snippet [committee]="paper().committee" [paper]="paper()">
+              Programare susținere:
+              @if(paper().scheduledGrading) {
+                {{ paper().scheduledGrading | datetime }} ({{ paper().committee.paperPresentationTime }} min.)
+                @if(paperSchedulingLocation()) {
+                  - {{ paperSchedulingLocation() }}
+                }
+              } @else {
+                TBA
+              }
+            </app-committee-snippet>
+          }
+        }
+      </div>
+    </div>
+    <div class="paper-actions">
+      <button
+        mat-icon-button
+        [disabled]="!canEditPaper() || paper().isValid != null"
+        (click)="openEditPaperDialog()"
+        matTooltip="Editați lucrarea"
+      >
+        <mat-icon>mode</mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-card>
+
+<mat-card class="section-card">
+  <h1>Dosar înscriere</h1>
+  @if(!submissionStarted()) {
+    <div class="tip-card rounded">
+      <mat-icon class="tip-icon">event</mat-icon>
+      <div class="tip-card-content">
+        Veți putea începe procesul de înscriere începând cu data de
+        {{ sessionSettings().fileSubmissionStartDate | date:"dd.MM.yyyy" }}.
+      </div>
+    </div>
+  } @else if(paper().isValid == null) {
+    @if(deadlinePassed()) {
+      <div class="tip-card severe">
+        <mat-icon class="tip-icon">priority_high</mat-icon>
+        <div class="tip-card-content">
+          Perioada de încărcare a documententelor s-a încheiat. <br>
+          Nu ați încărcat documentele la timp.
+        </div>
+      </div>
+    } @else if(!extraData()) {
+      <div class="tip-card warning rounded">
+        <mat-icon class="tip-icon">info</mat-icon>
+        <div class="tip-card-content">Înainte de a începe încărcarea documentelor, trebuie să completați datele necesare înscrierii.</div>
+        <button mat-button (click)="openUserExtraDataEditorDialog()">Completați</button>
+      </div>
+    }
+  }
+  @if(extraData()) {
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Date necesare înscrierii</mat-panel-title>
+        @if(canUploadSecretaryFiles()) {
+          <button matButton (click)="$event.stopPropagation(); openUserExtraDataEditorDialog()">
+            <mat-icon>edit</mat-icon>
+            <span>Editați</span>
+          </button>
+        }
+      </mat-expansion-panel-header>
+      <div class="extra-data-content">
+        <section>
+          <h4>Date personale</h4>
+          <div class="extra-data-row">Nume de familie la naștere: {{ extraData().birthLastName }}</div>
+          <div class="extra-data-row">Nume de familie actual: {{ user().lastName }}</div>
+          <div class="extra-data-row">Prenume: {{ user().firstName }}</div>
+          <div class="extra-data-row">Inițiala părintelui: {{ extraData().parentInitial }}</div>
+          <div class="extra-data-row">Prenume tată: {{ extraData().fatherName }}</div>
+          <div class="extra-data-row">Prenume mamă: {{ extraData().motherName }}</div>
+          <div class="extra-data-row">Data nașterii: {{ extraData().dateOfBirth | date:"dd.MM.yyyy"}}</div>
+          <div class="extra-data-row">Stare civilă: {{ extraData().civilState }}</div>
+          <div class="extra-data-row">Cetățenie: {{ extraData().citizenship }}</div>
+          <div class="extra-data-row">Etnie: {{ extraData().ethnicity }}</div>
+          <div class="extra-data-row">CNP: {{ user().CNP || '-' }}</div>
+        </section>
+        <section>
+          <h4>Locul nașterii</h4>
+          <div class="extra-data-row">Țară: {{ extraData().placeOfBirthCountry }}</div>
+          <div class="extra-data-row">Județ/Sector: {{ extraData().placeOfBirthCounty }}</div>
+          <div class="extra-data-row">Localitate: {{ extraData().placeOfBirthLocality }}</div>
+        </section>
+        <section>
+          <h4>Date de contact</h4>
+          <div class="extra-data-row">Telefon fix: {{ extraData().landline }}</div>
+          <div class="extra-data-row">Telefon mobil: {{ extraData().mobilePhone }}</div>
+          <div class="extra-data-row">E-mail personal: {{ extraData().personalEmail }}</div>
+        </section>
+        <section>
+          <h4>Domiciliu</h4>
+          <div class="extra-data-row">Țară: România</div>
+          <div class="extra-data-row">Județ/Sector: {{ extraData().address.county }}</div>
+          <div class="extra-data-row">Localitate: {{ extraData().address.locality }}</div>
+          <div class="extra-data-row">Linia 1: {{ extraData().address.street }} nr. {{ extraData().address.streetNumber }}</div>
+          @if(extraData().address.apartment) {
+            <div class="extra-data-row">Linia 2: Bl. {{ extraData().address.building }}, Sc. {{ extraData().address.stair }}, Et. {{ extraData().address.floor }}, Ap. {{ extraData().address.apartment }}</div>
+          }
+        </section>
+      </div>
+    </mat-expansion-panel>
+  }
+  <div class="document-section">
+    <div class="section-header">
+      <h4>Documente administrative</h4>
+      <div>Termen limită: {{ sessionSettings().fileSubmissionEndDate | date:"dd.MM.yyyy" }}</div>
+    </div>
+    <app-paper-document-list
+      #secretaryDocumentList
+      [paperId]="paper().id"
+      [requiredDocuments]="requiredSecretaryDocuments()"
+      [documents]="paper().documents"
+      [documentReuploadRequests]="paper().documentReuploadRequests"
+      [sessionSettings]="sessionSettings()"
+      perspective="student"
+      [canEdit]="paper().isValid == null && !!extraData()"
+      (areDocumentsUploaded)="areSecretaryDocumentsUploaded.set($event)"
+    />
+  </div>
+  <div class="document-section">
+    <div class="section-header">
+      <h4>Documente lucrare</h4>
+      <div>Termen limită: {{ sessionSettings().paperSubmissionEndDate | date:"dd.MM.yyyy" }}</div>
+    </div>
+    <app-paper-document-list
+      #paperDocumentList
+      [paperId]="paper().id"
+      [requiredDocuments]="requiredPaperDocuments()"
+      [documents]="paper().documents"
+      [documentReuploadRequests]="paper().documentReuploadRequests"
+      [sessionSettings]="sessionSettings()"
+      perspective="student"
+      [canEdit]="paper().isValid == null && !!extraData()"
+      (areDocumentsUploaded)="arePaperDocumentsUploaded.set($event)"
+    />
+  </div>
+</mat-card>

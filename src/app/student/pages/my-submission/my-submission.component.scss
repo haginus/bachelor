@@ -1,0 +1,83 @@
+.section-card {
+  margin: 16px;
+  padding: 24px;
+
+  h1, h2, h3, h4 {
+    margin: 0;
+  }
+
+  &> h1 {
+    margin-bottom: 12px;
+  }
+
+}
+
+.paper-wrapper {
+  display: flex;
+
+  .paper-content {
+    flex: 1;
+
+    .paper-title {
+      margin-bottom: 4px;
+    }
+
+    .paper-type {
+      color: var(--mat-sys-on-surface-variant);
+      margin-bottom: 8px;
+    }
+
+    .paper-description {
+      color: var(--mat-sys-on-surface-variant);
+      margin-top: 12px;
+      white-space: pre-wrap;
+    }
+
+    .paper-snippets {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+  }
+}
+
+.tip-card {
+  margin-bottom: 16px;
+}
+
+mat-expansion-panel {
+  margin-bottom: 24px;
+}
+
+.extra-data-content {
+  section:not(:last-child) {
+    margin-bottom: 12px;
+  }
+}
+
+.document-section {
+  &:not(:last-child) {
+    margin-bottom: 24px;
+  }
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: calc(100% - 12px);
+    top: 9.5px;
+    left: 0;
+    border: 1px solid var(--mat-sys-primary);
+    border-right: none;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+  }
+
+  .section-header {
+    padding-left: 32px;
+    div {
+      color: var(--mat-sys-on-surface-variant);
+    }
+  }
+}
