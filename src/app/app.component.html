@@ -215,6 +215,10 @@
               <mat-icon>group</mat-icon>
               <span>Comisii</span>
             </a>
+            <a class="nav-list-item" routerLink="admin/written-exam" routerLinkActive="active">
+              <mat-icon>edit</mat-icon>
+              <span>Proba scrisă</span>
+            </a>
           </div>
           @if(['secretary', 'admin'].includes(user?.type)) {
             <div class="nav-list">

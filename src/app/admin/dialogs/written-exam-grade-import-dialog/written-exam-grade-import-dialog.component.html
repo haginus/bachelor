@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Notați proba scrisă în bloc</h2>
+
+<mat-dialog-content>
+  <p>1. Descărcați fișierul CSV care conține toți studenții înscriși la proba scrisă.</p>
+  <button matButton="outlined" (click)="downloadTemplate()">
+    <mat-icon>cloud_download</mat-icon>
+    <span>Descărcați lista studenților</span>
+  </button>
+  <p>2. Completați fișierul cu notele obținute de studenți. Pentru a marca un student ca absent, introduceți <code>0</code> în coloana <code>NOTA_INITIALA</code>.</p>
+  <p>3. Reîncărcați fișierul completat pentru a actualiza notele studenților.</p>
+  <div class="row">
+    @if(!isSubmitting) {
+      <button matButton="filled" appUploadFile accept="text/csv" (file)="handleFileInput($event)">
+        <mat-icon>cloud_upload</mat-icon>
+        <span>Încărcați notele studenților</span>
+      </button>
+    } @else {
+      <mat-progress-spinner mode="indeterminate" [diameter]="32" />
+    }
+  </div>
+</mat-dialog-content>

@@ -45,6 +45,7 @@ import { DatetimePipe } from '../shared/pipes/datetime.pipe';
 import { TextProgressSpinnerComponent } from '../shared/components/text-progress-spinner/text-progress-spinner.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { WrittenExamGradesComponent } from './pages/written-exam-grades/written-exam-grades.component';
 
 const materialDeps = [
   MatPaginatorModule,
@@ -88,6 +89,7 @@ const materialDeps = [
     AdminEditDialogComponent,
     SudoDialogComponent,
     ImportResultDialogComponent,
+    WrittenExamGradesComponent,
   ],
   imports: [
     CommonModule,

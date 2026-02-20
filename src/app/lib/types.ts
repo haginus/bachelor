@@ -196,8 +196,19 @@ export interface Application {
   student: Student;
 }
 
+export interface WrittenExamGrade {
+  submissionId: number;
+  initialGrade: number;
+  isDisputed: boolean;
+  disputeGrade: number | null;
+  finalGrade: number;
+}
+
 export interface Submission {
   id: number;
+  isSubmitted: boolean;
+  writtenExamGrade?: WrittenExamGrade;
+  student: Student;
   submittedAt: string;
 }
 
@@ -324,7 +335,7 @@ export type PaginatedQuery<P extends Record<string | number, any> = {}> = P & {
 export interface ImportResult<RowType = any, EntityType = any> {
   summary: {
     proccessed: number;
-    created: number;
+    created?: number;
     updated?: number;
     failed: number;
   };

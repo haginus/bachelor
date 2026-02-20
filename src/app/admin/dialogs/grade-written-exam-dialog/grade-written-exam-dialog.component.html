@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>Notați proba scrisă</h2>
+
+<mat-dialog-content>
+  <p>{{ data.submission.student.fullName }}</p>
+  <form [formGroup]="writtenExamGradeForm">
+    <mat-checkbox
+      [checked]="isAbsent"
+      (change)="onAbsentChange($event.checked)"
+    >
+      Absent
+    </mat-checkbox>
+    <mat-form-field appearance="outline">
+      <mat-label>Nota inițială</mat-label>
+      <input matInput type="number" step="1" formControlName="initialGrade">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Nota după contestație</mat-label>
+      <input matInput type="number" step="1" formControlName="disputeGrade">
+      @if(disputeGradeControl.disabled) {
+        <mat-hint>Studentul nu a făcut contestație.</mat-hint>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Anulați</button>
+  <button mat-button (click)="grade()" [disabled]="writtenExamGradeForm.invalid && !isAbsent">Notați</button>
+</mat-dialog-actions>

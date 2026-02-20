@@ -17,6 +17,8 @@ import { sudoModeGuard } from '../guards/sudo-mode.guard';
 import { teachersResolver } from './resolvers/teachers.resolver';
 import { studentsResolver } from './resolvers/students.resolver';
 import { papersResolver } from './resolvers/papers.resolver';
+import { WrittenExamGradesComponent } from './pages/written-exam-grades/written-exam-grades.component';
+import { submissionsResolver } from './resolvers/submissions.resolver';
 
 const routes: Routes = [
   {
@@ -96,6 +98,16 @@ const routes: Routes = [
     component: PaperAssignComponent,
     canActivate: [roleGuard],
     data: { title: 'Atribuire lucrări', role: 'admin' }
+  },
+  {
+    path: 'written-exam',
+    component: WrittenExamGradesComponent,
+    resolve: {
+      resolverData: submissionsResolver,
+    },
+    data: { title: 'Note examen scris', role: 'admin' },
+    runGuardsAndResolvers: 'always',
+    canActivate: [roleGuard],
   },
   {
     path: 'logs',

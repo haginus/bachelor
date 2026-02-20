@@ -6,10 +6,12 @@
       <mat-icon>format_list_numbered</mat-icon>
       <span class="label">{{ data.summary.proccessed }} procesate</span>
     </div>
-    <div class="result-item">
-      <mat-icon>add_circle_outline</mat-icon>
-      <span class="label">{{ data.summary.created }} adăugate</span>
-    </div>
+    @if(data.summary.created !== undefined) {
+      <div class="result-item">
+        <mat-icon>add_circle_outline</mat-icon>
+        <span class="label">{{ data.summary.created }} adăugate</span>
+      </div>
+    }
     @if(data.summary.updated !== undefined) {
       <div class="result-item">
         <mat-icon>edit</mat-icon>

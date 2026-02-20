@@ -1,0 +1,149 @@
+<div class="table-container full-height">
+  <mat-toolbar color="white">
+    <button matButton="filled" (click)="bulkGradeWrittenExam()">Notați în bloc</button>
+    <span class="toolbar-spacer"></span>
+    <button mat-icon-button (click)="refreshResults()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+    <button mat-icon-button (click)="toggleFilters()" [class.active]="showFilters()">
+      <mat-icon>filter_list</mat-icon>
+    </button>
+  </mat-toolbar>
+  @if (showFilters()) {
+    <div class="table-filters">
+      <div class="filter-header">
+        <span class="text">Filtrați după</span>
+        <button mat-button (click)="resetFilters()">Resetați</button>
+      </div>
+      <form fxLayout="row grid" fxLayoutGap="10px grid">
+        <div fxFlex="100" [formGroup]="filterForm">
+          <mat-button-toggle-group formControlName="writtenExamState">
+            <mat-button-toggle value="not_graded">Nenotate</mat-button-toggle>
+            <mat-button-toggle value="graded">Notate</mat-button-toggle>
+            <mat-button-toggle value="absent">Absente</mat-button-toggle>
+            <mat-button-toggle value="disputed">Contestate</mat-button-toggle>
+            <mat-button-toggle [value]="null">Toate</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <mat-form-field [formGroup]="filterForm" appearance="outline" fxFlex="50">
+          <mat-label>Domeniu</mat-label>
+          <mat-select formControlName="domainId" name="domainId">
+            <mat-option [value]="null">-- Oricare --</mat-option>
+            @for (domain of domains(); track domain) {
+              @if(domain.hasWrittenExam) {
+                <mat-option [value]="domain.id">
+                  {{ domain.name }}, {{ DOMAIN_TYPES[domain.type] | titlecase }}
+                </mat-option>
+              }
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field [formGroup]="filterFormDebounced" appearance="outline" fxFlex="50">
+          <mat-label>Nume student</mat-label>
+          <input matInput type="text" formControlName="studentName" name="student_name" autocomplete="off" />
+        </mat-form-field>
+      </form>
+    </div>
+  }
+  <div class="discrete-scroll">
+    <table
+      mat-table
+      [dataSource]="resolverData().rows"
+      matSort
+      matSortDisableClear
+      [matSortActive]="resolverData().params.sortBy || 'id'"
+      [matSortDirection]="resolverData().params.sortDirection || 'asc'"
+    >
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <td mat-cell *matCellDef="let row"> {{ row.id }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let row">
+          @if(row.writtenExamGrade?.isDisputed && row.writtenExamGrade.disputeGrade == null) {
+            <mat-icon class="status-icon warn" matTooltip="Notă contestată">campaign</mat-icon>
+          } @else if(!row.writtenExamGrade || row.writtenExamGrade.initialGrade == null) {
+             <mat-icon class="status-icon warn" matTooltip="Necesită acordarea notei">pending_actions</mat-icon>
+          } @else {
+            <mat-icon class="status-icon done" matTooltip="Notă acordată">done</mat-icon>
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="student.fullName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nume student </th>
+        <td mat-cell *matCellDef="let row"> {{row.student.fullName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="student.domain.name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Domeniu </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.student.specialization.domain.name }}, {{ DOMAIN_TYPES[row.student.specialization.domain.type] | titlecase }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="writtenExamGrade.initialGrade">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Notă inițială </th>
+        <td mat-cell *matCellDef="let row">
+          @if(row.writtenExamGrade?.initialGrade === 0) {
+            Absent
+          } @else if(row.writtenExamGrade?.initialGrade != null) {
+            {{ row.writtenExamGrade?.initialGrade | number:'1.0-0' }}
+          } @else {
+            -
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="writtenExamGrade.disputeGrade">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Notă la contestație </th>
+        <td mat-cell *matCellDef="let row">
+          @if(row.writtenExamGrade?.disputeGrade != null) {
+            {{ row.writtenExamGrade?.disputeGrade | number:'1.0-0' }}
+          } @else {
+            -
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="writtenExamGrade.finalGrade">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Notă finală </th>
+        <td mat-cell *matCellDef="let row">
+          @if(row.writtenExamGrade?.finalGrade === 0) {
+            Absent
+          } @else if(row.writtenExamGrade?.finalGrade != null) {
+            {{ row.writtenExamGrade?.finalGrade | number:'1.0-0' }}
+          } @else {
+            -
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acțiuni</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button matTooltip="Notați" (click)="gradeWrittenExam(row)">
+            <mat-icon>star</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr class="mat-mdc-row mdc-data-table__row" *matNoDataRow>
+        <td class="mat-mdc-cell mdc-data-table__cell" colspan="1000">
+          Nu există studenți înscriși.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <mat-paginator
+    [pageSize]="resolverData().pageSize"
+    [pageIndex]="resolverData().page"
+    [length]="resolverData().count"
+    [pageSizeOptions]="resolverData().pageSizes"
+  />
+</div>
