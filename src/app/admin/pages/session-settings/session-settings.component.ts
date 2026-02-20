@@ -9,6 +9,7 @@ import { formatDate } from '@angular/common';
 import { SessionSettings } from '../../../lib/types';
 import { SessionSettingsService } from '../../../services/session-settings.service';
 import { firstValueFrom } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-session-settings',
@@ -23,7 +24,26 @@ export class SessionSettingsComponent implements OnInit {
     private sessionSettingsService: SessionSettingsService,
     private snackbar: MatSnackBar,
     private dialog: MatDialog
-  ) {}
+  ) {
+    const writtenExamDateControl = this.settingsForm.get('writtenExamDate')!;
+    const writtenExamDisputeEndDateControl = this.settingsForm.get('writtenExamDisputeEndDate')!;
+    const writtenExamGradesPublicControl = this.settingsForm.get('writtenExamGradesPublic')!;
+    const writtenExamDisputedGradesPublicControl = this.settingsForm.get('writtenExamDisputedGradesPublic')!;
+    writtenExamDateControl.valueChanges.pipe(takeUntilDestroyed()).subscribe(value => {
+      if(value) {
+        writtenExamDisputeEndDateControl.enable();
+        writtenExamGradesPublicControl.enable();
+        writtenExamDisputedGradesPublicControl.enable();
+      } else {
+        writtenExamDisputeEndDateControl.disable();
+        writtenExamDisputeEndDateControl.setValue(null);
+        writtenExamGradesPublicControl.disable();
+        writtenExamGradesPublicControl.setValue(false);
+        writtenExamDisputedGradesPublicControl.disable();
+        writtenExamDisputedGradesPublicControl.setValue(false);
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.auth.getSessionSettings().subscribe(settings => {
@@ -37,7 +57,6 @@ export class SessionSettingsComponent implements OnInit {
 
   private setFormValue(sessionSettings: SessionSettings) {
     const _formatDate = (date: string) => formatDate(date, 'yyyy-MM-dd', 'ro-RO', 'Europe/Bucharest');
-    console.log(_formatDate(sessionSettings.applyStartDate));
     const settings = {
       sessionName: sessionSettings.sessionName,
       currentPromotion: sessionSettings.currentPromotion,
@@ -46,7 +65,11 @@ export class SessionSettingsComponent implements OnInit {
       fileSubmissionStartDate: _formatDate(sessionSettings.fileSubmissionStartDate),
       fileSubmissionEndDate: _formatDate(sessionSettings.fileSubmissionEndDate),
       paperSubmissionEndDate: _formatDate(sessionSettings.paperSubmissionEndDate),
-      allowGrading: sessionSettings.allowGrading
+      allowPaperGrading: sessionSettings.allowPaperGrading,
+      writtenExamDate: sessionSettings.writtenExamDate ? _formatDate(sessionSettings.writtenExamDate) : null,
+      writtenExamDisputeEndDate: sessionSettings.writtenExamDisputeEndDate ? _formatDate(sessionSettings.writtenExamDisputeEndDate) : null,
+      writtenExamGradesPublic: sessionSettings.writtenExamGradesPublic,
+      writtenExamDisputedGradesPublic: sessionSettings.writtenExamDisputedGradesPublic
     };
     this.settingsForm.setValue(settings);
   }
@@ -62,14 +85,18 @@ export class SessionSettingsComponent implements OnInit {
     "fileSubmissionStartDate": new FormControl(null, [Validators.required]),
     "fileSubmissionEndDate": new FormControl(null, [Validators.required]),
     "paperSubmissionEndDate": new FormControl(null, [Validators.required]),
-    "allowGrading": new FormControl(null, [Validators.required]),
+    "allowPaperGrading": new FormControl(false, [Validators.required]),
+    "writtenExamDate": new FormControl(null),
+    "writtenExamDisputeEndDate": new FormControl(null),
+    "writtenExamGradesPublic": new FormControl(false),
+    "writtenExamDisputedGradesPublic": new FormControl(false),
   }, {
     validators: [dateValidator]
   });
   settingsFormMatcher = new SettingsFormErrorStateMatcher();
 
   async saveSettings() {
-    const settings = new SessionSettings(this.settingsForm.value as any);
+    const settings = new SessionSettings(this.settingsForm.getRawValue() as any);
     this.isLoadingSettings = true;
     try {
       await firstValueFrom(this.sessionSettingsService.updateSessionSettings(settings));
@@ -104,6 +131,12 @@ const dateValidator: ValidatorFn = (control: FormGroup): ValidationErrors | null
   }
   if(new Date(settings.paperSubmissionEndDate).getTime() < new Date(settings.fileSubmissionStartDate).getTime()) {
     errors['paperSubmissionEndDateLowerThanFileSubmissionStartDate'] = true;
+  }
+  if(settings.writtenExamDate && new Date(settings.writtenExamDate).getTime() < new Date(settings.fileSubmissionStartDate).getTime()) {
+    errors['writtenExamDateLowerThanFileSubmissionStartDate'] = true;
+  }
+  if(settings.writtenExamDisputeEndDate && settings.writtenExamDate && new Date(settings.writtenExamDisputeEndDate).getTime() < new Date(settings.writtenExamDate).getTime()) {
+    errors['writtenExamDisputeEndDateLowerThanWrittenExamDate'] = true;
   }
   return Object.keys(errors).length ? errors : null;
 };

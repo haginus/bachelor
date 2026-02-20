@@ -8,7 +8,11 @@ export interface ISessionSettings {
   fileSubmissionStartDate: string;
   fileSubmissionEndDate: string;
   paperSubmissionEndDate: string;
-  allowGrading: boolean;
+  allowPaperGrading: boolean;
+  writtenExamDate: string | null;
+  writtenExamDisputeEndDate: string | null;
+  writtenExamGradesPublic: boolean;
+  writtenExamDisputedGradesPublic: boolean;
 }
 
 export class SessionSettings implements ISessionSettings {
@@ -19,7 +23,11 @@ export class SessionSettings implements ISessionSettings {
   public fileSubmissionStartDate: string;
   public fileSubmissionEndDate: string;
   public paperSubmissionEndDate: string;
-  public allowGrading: boolean;
+  public allowPaperGrading: boolean;
+  public writtenExamDate: string | null;
+  public writtenExamDisputeEndDate: string | null;
+  public writtenExamGradesPublic: boolean;
+  public writtenExamDisputedGradesPublic: boolean;
 
   constructor(sessionSettings: ISessionSettings) {
     Object.assign(this, sessionSettings);

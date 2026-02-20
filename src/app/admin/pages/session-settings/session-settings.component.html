@@ -58,17 +58,59 @@
           <input matInput [matDatepicker]="paperSubmissionEndDatePicker" formControlName="paperSubmissionEndDate" [errorStateMatcher]="settingsFormMatcher">
           <mat-datepicker-toggle matSuffix [for]="paperSubmissionEndDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #paperSubmissionEndDatePicker></mat-datepicker>
-          <mat-hint>Data până la care studenții și profesorii pot depune lucrarea, respectiv referatul.</mat-hint>
+          <mat-hint>Data până la care studenții și profesorii pot depune lucrarea, respectiv referatul</mat-hint>
           <mat-error>
             Termenul limită pentru depunerea lucrărilor nu poate fi mai devreme de data începerii depunerilor de
             documente!
           </mat-error>
         </mat-form-field>
+        <div fxFlex="100" fxFlex.gt-xs="50">
+          <mat-form-field appearance="outline">
+            <mat-label>Dată probă scrisă</mat-label>
+            <input matInput [matDatepicker]="writtenExamDatePicker" formControlName="writtenExamDate" [errorStateMatcher]="settingsFormMatcher">
+            @if(settingsForm.get('writtenExamDate')?.value) {
+              <button matSuffix matIconButton (click)="$event.stopPropagation(); settingsForm.get('writtenExamDate')?.setValue(null)">
+                <mat-icon>close</mat-icon>
+              </button>
+            }
+            <mat-datepicker-toggle matSuffix [for]="writtenExamDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #writtenExamDatePicker></mat-datepicker>
+            <mat-hint>Data la care va avea loc proba scrisă</mat-hint>
+            <mat-error>Data probei scrise nu poate fi mai devreme de data începerii depunerilor de documente!</mat-error>
+          </mat-form-field>
+        </div>
+        <div fxFlex="100" fxFlex.gt-xs="50">
+          <mat-form-field appearance="outline">
+            <mat-label>Dată limită contestații probă scrisă</mat-label>
+            <input matInput [matDatepicker]="writtenExamDisputeEndDatePicker" formControlName="writtenExamDisputeEndDate" [errorStateMatcher]="settingsFormMatcher">
+            @if(settingsForm.get('writtenExamDisputeEndDate')?.value) {
+              <button matSuffix matIconButton (click)="$event.stopPropagation(); settingsForm.get('writtenExamDisputeEndDate')?.setValue(null)">
+                <mat-icon>close</mat-icon>
+              </button>
+            }
+            <mat-datepicker-toggle matSuffix [for]="writtenExamDisputeEndDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #writtenExamDisputeEndDatePicker></mat-datepicker>
+            <mat-hint>Data până la care studenții pot depune contestații pentru proba scrisă</mat-hint>
+            <mat-error>Data limită pentru contestațiile probei scrise nu poate fi mai devreme de data probei scrise!</mat-error>
+          </mat-form-field>
+        </div>
         <mat-list fxFlex="100">
           <mat-list-item>
-            <div matListItemTitle>Permiteți notarea de către comisii</div>
+            <div matListItemTitle>Permiteți notarea lucrărilor de către comisii</div>
             <div matListItemMeta>
-              <mat-slide-toggle formControlName="allowGrading"></mat-slide-toggle>
+              <mat-slide-toggle formControlName="allowPaperGrading"></mat-slide-toggle>
+            </div>
+          </mat-list-item>
+          <mat-list-item>
+            <div matListItemTitle>Permiteți vizualizarea notelor inițiale la proba scrisă</div>
+            <div matListItemMeta>
+              <mat-slide-toggle formControlName="writtenExamGradesPublic"></mat-slide-toggle>
+            </div>
+          </mat-list-item>
+          <mat-list-item>
+            <div matListItemTitle>Permiteți vizualizarea notelor contestate la proba scrisă</div>
+            <div matListItemMeta>
+              <mat-slide-toggle formControlName="writtenExamDisputedGradesPublic"></mat-slide-toggle>
             </div>
           </mat-list-item>
         </mat-list>

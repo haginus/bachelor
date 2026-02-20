@@ -121,7 +121,7 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
     ])
       .pipe(
         switchMap(([params, settings, userData]) => {
-          this.gradingAllowed = settings.allowGrading;
+          this.gradingAllowed = settings.allowPaperGrading;
           this.user = userData;
           this.isLoadingResults = true;
           return this.committeesService.findOne(+params['id']);

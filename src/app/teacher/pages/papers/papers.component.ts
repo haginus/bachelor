@@ -142,7 +142,7 @@ export class TeacherPapersComponent
         this.canAddPapers = settings.canApply();
         this.canUploadDocuments =
           Date.now() >= parseDate(settings.fileSubmissionStartDate).getTime() &&
-          !settings.allowGrading;
+          !settings.allowPaperGrading;
       });
   }
 
