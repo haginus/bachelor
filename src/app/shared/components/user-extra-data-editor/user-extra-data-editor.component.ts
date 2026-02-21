@@ -13,11 +13,12 @@ import { countries } from '../../../lib/countries';
 import { counties_ro } from '../../../lib/counties_ro';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
-import { User, UserExtraData } from '../../../lib/types';
+import { CivilState, User, UserExtraData } from '../../../lib/types';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { provideAppDateAdapter } from '../../../providers/date-adapter';
+import { CIVIL_STATE } from '../../../lib/constants';
 
 @Component({
   selector: 'app-user-extra-data-editor',
@@ -81,6 +82,9 @@ export class UserExtraDataEditorComponent implements OnInit {
   studentExtraData: UserExtraData;
   userData: User;
   isSavingData: boolean = false;
+
+  CIVIL_STATE = CIVIL_STATE;
+  civilStates = Object.keys(CIVIL_STATE) as CivilState[];
 
   countries = Object.values(countries);
   counties_ro = Object.values(counties_ro);

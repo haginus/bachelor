@@ -10,15 +10,15 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../services/auth.service';
 import { PapersService } from '../../../services/papers.service';
 import { ActivatedRoute } from '@angular/router';
-import { Paper, Student, UserExtraData } from '../../../lib/types';
-import { PAPER_TYPES } from '../../../lib/constants';
+import { Paper, Student, Submission, UserExtraData } from '../../../lib/types';
+import { CIVIL_STATE, PAPER_TYPES } from '../../../lib/constants';
 import { formatDate, getNowSignal, inclusiveDate, parseDate } from '../../../lib/utils';
 import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';
-import { firstValueFrom, interval, map } from 'rxjs';
+import { first, firstValueFrom } from 'rxjs';
 import { EditPaperComponent } from '../../../shared/components/edit-paper/edit-paper.component';
 import { MatTooltip } from "@angular/material/tooltip";
 import { DatePipe } from '@angular/common';
-import { AreDocumentsUploaded, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
+import { AreDocumentsUploaded, DocumentMapElement, PaperDocumentEvent, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { UserExtraDataEditorComponent, UserExtraDataEditorData } from '../../../shared/components/user-extra-data-editor/user-extra-data-editor.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 
@@ -48,12 +48,15 @@ export class MySubmissionComponent {
   private readonly authService = inject(AuthService);
   private readonly papersService = inject(PapersService);
 
-  user = toSignal<Student>(this.authService.userData);
+  user = toSignal<Student>(this.authService.userData.pipe(first()));
   sessionSettings = toSignal(this.authService.sessionSettings);
+  submission = signal<Submission>(this.route.snapshot.data['submission']);
   paper = signal<Paper>(this.route.snapshot.data['paper']);
   extraData = signal<UserExtraData>(this.route.snapshot.data['extraData']);
   areSecretaryDocumentsUploaded = signal<AreDocumentsUploaded | null>(null);
   arePaperDocumentsUploaded = signal<AreDocumentsUploaded | null>(null);
+  reuploadRequestSecretaryDocuments = signal<DocumentMapElement[]>([]);
+  reuploadRequestPaperDocuments = signal<DocumentMapElement[]>([]);
   isWaitingForDocumentGeneration = signal(false);
 
   hasWrittenExam = computed(() => this.user()?.specialization.domain.hasWrittenExam ?? false);
@@ -69,10 +72,24 @@ export class MySubmissionComponent {
   submissionStarted = computed(() => this.now() >= parseDate(this.sessionSettings().fileSubmissionStartDate));
   canUploadSecretaryFiles = computed(() => this.now() && this.sessionSettings().canUploadSecretaryFiles());
   canUploadPaperFiles = computed(() => this.now() && this.sessionSettings().canUploadPaperFiles());
+  reuploadRequestDocuments = computed(() => [...this.reuploadRequestSecretaryDocuments(), ...this.reuploadRequestPaperDocuments()]);
+  hasPendingReuploadRequests = computed(() => this.reuploadRequestDocuments().filter(doc => !doc.isUploaded).length > 0);
   deadlinePassed = computed(() => (
     (!this.canUploadSecretaryFiles() && !this.areSecretaryDocumentsUploaded()?.byUploader.student) ||
     (!this.canUploadPaperFiles() && !this.arePaperDocumentsUploaded()?.byUploader.student)
   ));
+  areAllDocumentsUploaded = computed(() => {
+    const secretaryFilesUploaded = this.areSecretaryDocumentsUploaded()?.byUploader.student ?? false;
+    const paperFilesUploaded = this.arePaperDocumentsUploaded()?.byUploader.student ?? false;
+    return secretaryFilesUploaded && paperFilesUploaded;
+  });
+  submissionRequirements = computed(() => {
+    return [
+      { title: 'Completați datele necesare înscrierii', fulfilled: !!this.extraData() },
+      { title: 'Semnați cererea de înscriere', fulfilled: this.paper().documents.some(d => d.name === 'sign_up_form' && d.type === 'signed') },
+    ];
+  });
+  allSubmissionRequirementsFulfilled = computed(() => this.submissionRequirements().every(r => r.fulfilled));
 
   canEditPaper = computed(() => {
     const paperCreatedAt = parseDate(this.paper()?.createdAt);
@@ -82,6 +99,14 @@ export class MySubmissionComponent {
     return (
       (paperCreatedAt.getTime() + SEVEN_DAYS <= nowMs || nowMs + SEVEN_DAYS >= endDateSecretary) &&
       nowMs <= endDateSecretary
+    );
+  });
+
+  canEditExtraData = computed(() => {
+    const reuploadRequestDocumentNames = new Set(this.reuploadRequestDocuments().map(doc => doc.requiredDocument.name));
+    return this.paper().isValid == null && (
+      this.canUploadSecretaryFiles() ||
+      (reuploadRequestDocumentNames.has('sign_up_form') && reuploadRequestDocumentNames.has('liquidation_form'))
     );
   });
 
@@ -125,5 +150,13 @@ export class MySubmissionComponent {
     }
   }
 
+  async toggleSubmission(isSubmitted: boolean) {
+  }
+
+  async onDocumentsChange(event: PaperDocumentEvent) {
+    this.paper.update(paper => ({ ...paper, documents: event.documents }));
+  }
+
   PAPER_TYPES = PAPER_TYPES;
+  CIVIL_STATE = CIVIL_STATE;
 }

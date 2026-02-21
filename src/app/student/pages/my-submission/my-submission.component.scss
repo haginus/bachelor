@@ -45,6 +45,18 @@
   margin-bottom: 16px;
 }
 
+.requirement-item {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--mat-sys-on-surface-variant);
+
+  &.fulfilled span {
+    text-decoration: line-through;
+  }
+}
+
 mat-expansion-panel {
   margin-bottom: 24px;
 }

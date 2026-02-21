@@ -162,7 +162,7 @@ mat-icon {
 
   &.rounded {
     margin: 0;
-    border-radius: 8px;
+    border-radius: 12px;
   }
 
   @include mat.button-overrides((

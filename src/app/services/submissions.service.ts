@@ -22,6 +22,14 @@ export class SubmissionsService {
     return this.http.get<Paginated<Submission>>(this.apiUrl, { params: removeEmptyProperties(params) });
   }
 
+  findMine(): Observable<Submission> {
+    return this.http.get<Submission>(`${this.apiUrl}/me`);
+  }
+
+  findOne(id: number): Observable<Submission> {
+    return this.http.get<Submission>(`${this.apiUrl}/${id}`);
+  }
+
   getExportCsv() {
     return this.filesService.getFileWithProgress(`${this.apiUrl}/export/csv`);
   }

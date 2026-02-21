@@ -64,11 +64,9 @@
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
         <mat-label>Stare civilă</mat-label>
         <mat-select formControlName="civilState">
-          <mat-option value="not_married">Necăsătorit</mat-option>
-          <mat-option value="married">Căsătorit</mat-option>
-          <mat-option value="divorced">Divorțat</mat-option>
-          <mat-option value="widow">Văduv</mat-option>
-          <mat-option value="re_married">Recăsătorit</mat-option>
+          @for(option of civilStates; track option) {
+            <mat-option [value]="option">{{ CIVIL_STATE[option] }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
 

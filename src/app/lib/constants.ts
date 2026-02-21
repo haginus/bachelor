@@ -1,4 +1,4 @@
-import { CommitteeMemberRole } from "./types";
+import { CivilState, CommitteeMemberRole } from "./types";
 
 export const DOMAIN_TYPES = {
   bachelor: 'licență',
@@ -29,6 +29,14 @@ export const PAPER_TYPES = {
   diploma: 'diplomă',
   master: 'disertație',
 };
+
+export const CIVIL_STATE = {
+  not_married: 'Necăsătorit(ă)',
+  married: 'Căsătorit(ă)',
+  divorced: 'Divorțat(ă)',
+  widow: 'Văduv(ă)',
+  re_married: 'Recăsătorit(ă)',
+} as const satisfies Record<CivilState, string>;
 
 export const COMMITTEE_MEMBER_ROLE = {
   president: 'Președinte',

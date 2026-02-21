@@ -10,7 +10,7 @@
     <div class="content">
       <div class="title">{{ document.title }}</div>
       <div>
-        @if(documentMap[document.name].reuploadRequest) {
+        @if(documentMap[document.name].reuploadRequest && !documentMap[document.name].isUploaded) {
           <div class="reupload-request-notice upload-request-notice">
             <span>
               Reîncărcare solicitată până pe {{ documentMap[document.name].reuploadRequest.deadline | date:"dd.MM.yyyy" }}
@@ -110,7 +110,7 @@
         <mat-icon>upload</mat-icon>
         <span>Reîncărcați documentul</span>
       </button>
-      @if(document.reuploadRequest) {
+      @if(document.reuploadRequest && !document.isUploaded) {
         <button mat-menu-item (click)="reuploadRequest.emit({ document, reuploadRequested: false })">
           <mat-icon>cancel</mat-icon>
           <span>Anulați solicitarea de reîncărcare</span>

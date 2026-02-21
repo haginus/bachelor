@@ -1,7 +1,7 @@
 @if(hasWrittenExam()) {
   <mat-card class="section-card">
     <h1>I. Proba scrisă - Cunoștințe fundamentale și de specialitate</h1>
-    <p>Nu ați susținut încă proba scrisă.</p>
+    <p>Nota dvs. va apărea aici după corectarea probei scrise.</p>
   </mat-card>
 }
 
@@ -55,6 +55,51 @@
 
 <mat-card class="section-card">
   <h1>Dosar înscriere</h1>
+  @if(submission().isSubmitted && paper().isValid !== false) {
+    <div class="tip-card success rounded">
+      <mat-icon class="tip-icon">check_circle</mat-icon>
+      <div class="tip-card-content">
+        <h4>Sesiunea {{ sessionSettings().sessionName }}</h4>
+        <div>Sunteți înscris în această sesiune de finalizare a studiilor.</div>
+      </div>
+      @if(paper().isValid == null && canUploadPaperFiles()) {
+        <button mat-button (click)="toggleSubmission(false)">Retragere</button>
+      }
+    </div>
+  } @else if(submissionStarted() && !deadlinePassed()) {
+    <div class="tip-card rounded">
+      <mat-icon class="tip-icon">announcement</mat-icon>
+      <div class="tip-card-content">
+        <h4>Sesiunea {{ sessionSettings().sessionName }}</h4>
+        <div style="margin-top: 6px;">
+          Termen limită înscriere: <b>{{ sessionSettings().paperSubmissionEndDate | date:"dd.MM.yyyy" }}.</b>
+        </div>
+        <div style="margin-top: 6px;">
+          <div style="margin-bottom: 6px;">Nu sunteți înscris în această sesiune.</div>
+          @if(canUploadPaperFiles()) {
+            <div>În vederea înscrierii, trebuie să:</div>
+            @for(requirement of submissionRequirements(); track requirement.title) {
+              <div class="requirement-item" [class.fulfilled]="requirement.fulfilled">
+                <mat-icon [color]="requirement.fulfilled ? 'primary' : undefined">
+                  {{ requirement.fulfilled ? 'check_circle' : 'circle' }}
+                </mat-icon>
+                <span>{{ requirement.title }}</span>
+              </div>
+            }
+
+          } @else {
+            <div>Termenul limită de înscriere a trecut.</div>
+          }
+        </div>
+        @if(canUploadPaperFiles()) {
+          <button style="margin-top: 4px;" [disabled]="!allSubmissionRequirementsFulfilled()" matButton="filled" (click)="toggleSubmission(true)">
+            <mat-icon>send</mat-icon>
+            <span>Înscriere</span>
+          </button>
+        }
+      </div>
+    </div>
+  }
   @if(!submissionStarted()) {
     <div class="tip-card rounded">
       <mat-icon class="tip-icon">event</mat-icon>
@@ -64,8 +109,25 @@
       </div>
     </div>
   } @else if(paper().isValid == null) {
-    @if(deadlinePassed()) {
-      <div class="tip-card severe">
+    @if(hasPendingReuploadRequests()) {
+      <div class="tip-card warning rounded">
+        <mat-icon class="tip-icon">warning_amber</mat-icon>
+        <div class="tip-card-content">
+          Secretariatul a cerut reîncărcarea unor documente.
+          @if(!extraData()) {
+            Este necesar să completați date suplimentare pentru generarea documentelor.
+          }
+        </div>
+        <div class="tip-card-action">
+          @if(canEditExtraData() && !extraData()) {
+            <button mat-button (click)="openUserExtraDataEditorDialog()">
+              Completați datele
+            </button>
+          }
+        </div>
+      </div>
+    } @else if(deadlinePassed()) {
+      <div class="tip-card severe rounded">
         <mat-icon class="tip-icon">priority_high</mat-icon>
         <div class="tip-card-content">
           Perioada de încărcare a documententelor s-a încheiat. <br>
@@ -78,13 +140,33 @@
         <div class="tip-card-content">Înainte de a începe încărcarea documentelor, trebuie să completați datele necesare înscrierii.</div>
         <button mat-button (click)="openUserExtraDataEditorDialog()">Completați</button>
       </div>
+    } @else if(!areAllDocumentsUploaded()) {
+      <div class="tip-card rounded">
+        <mat-icon class="tip-icon">info</mat-icon>
+        <div class="tip-card-content">Aveți documente de încărcat. Încărcați-le până la termenul limită pentru a vă completa dosarul de înscriere.</div>
+      </div>
+    } @else {
+      <div class="tip-card success rounded">
+        <mat-icon class="tip-icon">done</mat-icon>
+        <div class="tip-card-content">Ați încărcat toate documentele.</div>
+      </div>
     }
+  } @else if(paper().isValid) {
+    <div class="tip-card success rounded">
+      <mat-icon class="tip-icon">check_circle</mat-icon>
+      <div class="tip-card-content">Dosarul dvs. a fost validat de către secretariat.</div>
+    </div>
+  } @else {
+    <div class="tip-card severe rounded">
+      <mat-icon class="tip-icon">cancel</mat-icon>
+      <div class="tip-card-content">Dosarul dvs. a fost invalidat de către secretariat.</div>
+    </div>
   }
   @if(extraData()) {
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>Date necesare înscrierii</mat-panel-title>
-        @if(canUploadSecretaryFiles()) {
+        @if(canEditExtraData()) {
           <button matButton (click)="$event.stopPropagation(); openUserExtraDataEditorDialog()">
             <mat-icon>edit</mat-icon>
             <span>Editați</span>
@@ -101,7 +183,7 @@
           <div class="extra-data-row">Prenume tată: {{ extraData().fatherName }}</div>
           <div class="extra-data-row">Prenume mamă: {{ extraData().motherName }}</div>
           <div class="extra-data-row">Data nașterii: {{ extraData().dateOfBirth | date:"dd.MM.yyyy"}}</div>
-          <div class="extra-data-row">Stare civilă: {{ extraData().civilState }}</div>
+          <div class="extra-data-row">Stare civilă: {{ CIVIL_STATE[extraData().civilState] }}</div>
           <div class="extra-data-row">Cetățenie: {{ extraData().citizenship }}</div>
           <div class="extra-data-row">Etnie: {{ extraData().ethnicity }}</div>
           <div class="extra-data-row">CNP: {{ user().CNP || '-' }}</div>
@@ -146,6 +228,8 @@
       perspective="student"
       [canEdit]="paper().isValid == null && !!extraData()"
       (areDocumentsUploaded)="areSecretaryDocumentsUploaded.set($event)"
+      (documentEvents)="onDocumentsChange($event)"
+      (reuploadRequestsResolved)="reuploadRequestSecretaryDocuments.set($event)"
     />
   </div>
   <div class="document-section">
@@ -163,6 +247,8 @@
       perspective="student"
       [canEdit]="paper().isValid == null && !!extraData()"
       (areDocumentsUploaded)="arePaperDocumentsUploaded.set($event)"
+      (documentEvents)="onDocumentsChange($event)"
+      (reuploadRequestsResolved)="reuploadRequestPaperDocuments.set($event)"
     />
   </div>
 </mat-card>

@@ -51,7 +51,7 @@ export class PaperDocumentListComponent implements OnChanges {
   @Input() sessionSettings: SessionSettings;
   /** Suffix for all document names. Useful when viewing multiple papers in the same view. */
   @Input() documentNameSuffix?: string;
-  /**  Emit events when documents change (signed / copy uploaded) */
+  /**  Emit events when documents change */
   @Output() documentEvents = new EventEmitter<PaperDocumentEvent>();
   /**  Output variable that tells whether all the documents are uploaded (by uploader and category) */
   @Output() areDocumentsUploaded = new EventEmitter<AreDocumentsUploaded>();
@@ -171,7 +171,7 @@ export class PaperDocumentListComponent implements OnChanges {
         isUploaded,
         uploadBy: requiredDoc.uploadBy,
         category: requiredDoc.category,
-        reuploadRequest: !isUploaded ? reuploadRequest : null,
+        reuploadRequest,
         canChange: this.canEdit && (this._checkSubmissionDates(requiredDoc.category) || !!reuploadRequest),
       } satisfies Partial<DocumentMapElement>;
       doc['nextAction'] = this._computeNextAction(doc);
@@ -241,8 +241,12 @@ export class PaperDocumentListComponent implements OnChanges {
     });
     dialogRef.afterClosed().subscribe(document => {
       if(document) {
-        this.documentEvents.emit({ documentName: mapElement.requiredDocument.name, action: 'uploadCopy' });
         this.documents.push(document);
+        this.documentEvents.emit({
+          documentName: mapElement.requiredDocument.name,
+          action: 'upload',
+          documents: this.documents
+        });
         this._generateDocumentMap();
       }
     })
@@ -258,11 +262,12 @@ export class PaperDocumentListComponent implements OnChanges {
       { requiredDocument: mapElement.requiredDocument, paperId: this.paperId, signUserId: this.signUserId }
     );
     dialogRef.componentInstance.documentSigned.subscribe(document => {
+      this.documents.push(document);
       this.documentEvents.emit({
         documentName: document.name,
         action: 'sign',
+        documents: this.documents,
       });
-      this.documents.push(document);
       this._generateDocumentMap();
     });
   }
@@ -290,6 +295,11 @@ export class PaperDocumentListComponent implements OnChanges {
       this.documents.splice(idx, 1);
       this._generateDocumentMap();
       this.snackbar.open('Document șters.');
+      this.documentEvents.emit({
+        documentName: mapElement.requiredDocument.name,
+        action: 'delete',
+        documents: this.documents
+      });
     } finally {
       mapElement.actionPending = false;
     }
@@ -354,7 +364,8 @@ type DocumentAction = 'sign' | 'upload'  | 'view' | null;
 
 export interface PaperDocumentEvent {
   documentName: string;
-  action: 'sign' | 'uploadCopy';
+  action: 'sign' | 'upload' | 'delete';
+  documents: Document[];
 }
 
 export interface AreDocumentsUploaded {

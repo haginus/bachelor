@@ -5,6 +5,7 @@ import { paperGuard } from '../guards/paper.guard';
 import { validatedGuard } from '../guards/validated.guard';
 import { paperResolver } from './resolvers/paper.resolver';
 import { extraDataResolver } from './resolvers/extra-data.resolver';
+import { submissionResolver } from './resolvers/submission.resolver';
 
 const routes: Routes = [
   {
@@ -54,6 +55,7 @@ const routes: Routes = [
     loadComponent: () => import('./pages/my-submission/my-submission.component').then(m => m.MySubmissionComponent),
     data: { title: "Lucrare și dosar" },
     resolve: {
+      submission: submissionResolver,
       paper: paperResolver,
       extraData: extraDataResolver,
     },
