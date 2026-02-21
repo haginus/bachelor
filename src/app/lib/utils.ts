@@ -1,5 +1,7 @@
+import { toSignal } from "@angular/core/rxjs-interop";
 import { DOMAIN_TYPES, USER_TYPES } from "./constants";
 import { isStudent, User } from "./types";
+import { interval, map } from "rxjs";
 
 // export interface UrlParam {
 //   name: string;
@@ -100,4 +102,8 @@ export function removeEmptyProperties<T extends Object>(obj: T): Partial<T> {
     }
   }
   return newObj;
+}
+
+export function getNowSignal(intervalMs: number = 60000) {
+  return toSignal(interval(intervalMs).pipe(map(() => new Date())), { initialValue: new Date() });
 }

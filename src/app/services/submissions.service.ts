@@ -26,6 +26,10 @@ export class SubmissionsService {
     return this.filesService.getFileWithProgress(`${this.apiUrl}/export/csv`);
   }
 
+  getStats() {
+    return this.http.get<SubmissionStats>(`${this.apiUrl}/stats`);
+  }
+
 }
 
 export interface SubmissionQueryDto {
@@ -37,4 +41,12 @@ export interface SubmissionQueryDto {
   writtenExamState?: string;
   domainId?: number;
   studentName?: string;
+}
+
+export interface SubmissionStats {
+  totalWithWrittenExam: number;
+  notGraded: number;
+  initiallyGraded: number;
+  disputed: number;
+  disputeGraded: number;
 }

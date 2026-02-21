@@ -12,7 +12,7 @@ import { PapersService } from '../../../services/papers.service';
 import { ActivatedRoute } from '@angular/router';
 import { Paper, Student, UserExtraData } from '../../../lib/types';
 import { PAPER_TYPES } from '../../../lib/constants';
-import { formatDate, inclusiveDate, parseDate } from '../../../lib/utils';
+import { formatDate, getNowSignal, inclusiveDate, parseDate } from '../../../lib/utils';
 import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';
 import { firstValueFrom, interval, map } from 'rxjs';
 import { EditPaperComponent } from '../../../shared/components/edit-paper/edit-paper.component';
@@ -64,7 +64,7 @@ export class MySubmissionComponent {
       : null
   );
 
-  now = toSignal(interval(60000).pipe(map(() => new Date())), { initialValue: new Date() });
+  now = getNowSignal();
 
   submissionStarted = computed(() => this.now() >= parseDate(this.sessionSettings().fileSubmissionStartDate));
   canUploadSecretaryFiles = computed(() => this.now() && this.sessionSettings().canUploadSecretaryFiles());

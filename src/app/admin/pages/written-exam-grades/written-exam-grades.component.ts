@@ -1,11 +1,11 @@
-import { afterNextRender, Component, DestroyRef, inject, signal, viewChild } from '@angular/core';
+import { afterNextRender, Component, computed, DestroyRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, firstValueFrom, map, merge, Subject } from 'rxjs';
 import { PaginatedResolverResult } from '../../../lib/resolver-factory';
 import { Submission } from '../../../lib/types';
 import { FormControl, FormGroup } from '@angular/forms';
-import { removeEmptyProperties } from '../../../lib/utils';
+import { getNowSignal, removeEmptyProperties } from '../../../lib/utils';
 import { MatPaginator } from '@angular/material/paginator';
 import { DOMAIN_TYPES } from '../../../lib/constants';
 import { DomainsService } from '../../../services/domains.service';
@@ -14,6 +14,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { GradeWrittenExamDialogComponent } from '../../dialogs/grade-written-exam-dialog/grade-written-exam-dialog.component';
 import { BulkGradeWrittenExamDialogComponent } from '../../dialogs/written-exam-grade-import-dialog/written-exam-grade-import-dialog.component';
 import { SudoService } from '../../../services/sudo.service';
+import { SessionSettingsService } from '../../../services/session-settings.service';
+import { AuthService } from '../../../services/auth.service';
+import { SubmissionStats } from '../../../services/submissions.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-written-exam-grades',
@@ -27,6 +31,9 @@ export class WrittenExamGradesComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly dialogService = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly authService = inject(AuthService);
+  private readonly sessionSettingsService = inject(SessionSettingsService);
   private readonly domainsService = inject(DomainsService);
   private readonly sudoService = inject(SudoService);
 
@@ -34,6 +41,8 @@ export class WrittenExamGradesComponent {
   resolverData = toSignal<PaginatedResolverResult<Submission, { sortBy?: string; sortDirection?: 'asc' | 'desc'; studentName?: string; domainId?: number; writtenExamState?: string; }>>(
     this.route.data.pipe(map(data => data['resolverData']))
   );
+  stats = toSignal<SubmissionStats>(this.route.data.pipe(map(data => data['stats'])));
+  sessionSettings = toSignal(this.authService.sessionSettings);
   domains = toSignal(this.domainsService.findAll());
   showFilters = signal(false);
   performedActions = new Subject<string>();
@@ -47,6 +56,8 @@ export class WrittenExamGradesComponent {
     writtenExamState: new FormControl<string | null>(null),
   });
   DOMAIN_TYPES = DOMAIN_TYPES;
+  now = getNowSignal();
+  canGrade = computed(() => !!this.sessionSettings()?.writtenExamDate && this.now().getTime() > new Date(this.sessionSettings().writtenExamDate).getTime());
 
   constructor() {
     afterNextRender(() => {
@@ -135,5 +146,19 @@ export class WrittenExamGradesComponent {
     if(await firstValueFrom(dialogRef.afterClosed())) {
       this.performedActions.next("refresh");
     }
+  }
+
+  async publishInitialGrades() {
+    if(!await firstValueFrom(this.sudoService.enterSudoMode())) return;
+    await firstValueFrom(this.sessionSettingsService.updateSessionSettings({ writtenExamGradesPublic: true }));
+    this.snackBar.open('Notele au fost publicate.');
+    this.performedActions.next("refresh");
+  }
+
+  async publishDisputedGrades() {
+    if(!await firstValueFrom(this.sudoService.enterSudoMode())) return;
+    await firstValueFrom(this.sessionSettingsService.updateSessionSettings({ writtenExamDisputedGradesPublic: true }));
+    this.snackBar.open('Notele contestate au fost publicate.');
+    this.performedActions.next("refresh");
   }
 }

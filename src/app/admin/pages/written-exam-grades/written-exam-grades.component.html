@@ -1,6 +1,8 @@
 <div class="table-container full-height">
   <mat-toolbar color="white">
-    <button matButton="filled" (click)="bulkGradeWrittenExam()">Notați în bloc</button>
+    <button matButton="filled" (click)="bulkGradeWrittenExam()" [disabled]="!canGrade()">
+      Notați în bloc
+    </button>
     <span class="toolbar-spacer"></span>
     <button mat-icon-button (click)="refreshResults()">
       <mat-icon>refresh</mat-icon>
@@ -43,6 +45,51 @@
           <input matInput type="text" formControlName="studentName" name="student_name" autocomplete="off" />
         </mat-form-field>
       </form>
+    </div>
+  }
+  @if(!canGrade()) {
+    <div class="tip-card nm">
+      <mat-icon class="tip-icon">tips_and_updates</mat-icon>
+      <div class="tip-card-content">
+        Veți putea acorda note la proba scrisă începând cu {{ sessionSettings()?.writtenExamDate | date:"dd.MM.yyyy" }}.
+      </div>
+    </div>
+  } @else if(stats().initiallyGraded < stats().totalWithWrittenExam) {
+    <div class="tip-card nm">
+      <mat-icon class="tip-icon">warning_amber</mat-icon>
+      <div class="tip-card-content">
+        {{ stats().initiallyGraded }} din {{ stats().totalWithWrittenExam }} studenți cu probă scrisă au notă inițială acordată.
+      </div>
+    </div>
+  } @else if(!sessionSettings()?.writtenExamGradesPublic) {
+    <div class="tip-card nm">
+      <mat-icon class="tip-icon">warning_amber</mat-icon>
+      <div class="tip-card-content">
+        Toți studenții au notă inițială acordată, dar notele nu sunt vizibile public.
+      </div>
+      <button mat-button (click)="publishInitialGrades()">Publicați notele</button>
+    </div>
+  } @else if(stats().disputed > 0 && stats().disputed > stats().disputeGraded) {
+    <div class="tip-card nm">
+      <mat-icon class="tip-icon">warning_amber</mat-icon>
+      <div class="tip-card-content">
+        {{ stats().disputed }} studenți au depus contestație, dar doar {{ stats().disputeGraded }} au notă la contestație acordată.
+      </div>
+    </div>
+  } @else if(stats().disputed > 0 && !sessionSettings()?.writtenExamDisputedGradesPublic) {
+    <div class="tip-card nm">
+      <mat-icon class="tip-icon">warning_amber</mat-icon>
+      <div class="tip-card-content">
+        Ați notat toate cele {{ stats().disputed }} contestații, dar notele acestora nu sunt vizibile public.
+      </div>
+      <button mat-button (click)="publishDisputedGrades()">Publicați notele la contestație</button>
+    </div>
+  } @else {
+    <div class="tip-card nm">
+      <mat-icon class="tip-icon">check_circle</mat-icon>
+      <div class="tip-card-content">
+        Toți studenții au note acordate, iar acestea sunt vizibile public. Nu mai sunt acțiuni necesare.
+      </div>
     </div>
   }
   <div class="discrete-scroll">
@@ -124,7 +171,7 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Acțiuni</th>
         <td mat-cell *matCellDef="let row">
-          <button mat-icon-button matTooltip="Notați" (click)="gradeWrittenExam(row)">
+          <button mat-icon-button matTooltip="Notați" (click)="gradeWrittenExam(row)" [disabled]="!canGrade()">
             <mat-icon>star</mat-icon>
           </button>
         </td>

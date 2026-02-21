@@ -19,6 +19,7 @@ import { studentsResolver } from './resolvers/students.resolver';
 import { papersResolver } from './resolvers/papers.resolver';
 import { WrittenExamGradesComponent } from './pages/written-exam-grades/written-exam-grades.component';
 import { submissionsResolver } from './resolvers/submissions.resolver';
+import { submissionStatsResolver } from './resolvers/submissions-stats.resolver';
 
 const routes: Routes = [
   {
@@ -104,6 +105,7 @@ const routes: Routes = [
     component: WrittenExamGradesComponent,
     resolve: {
       resolverData: submissionsResolver,
+      stats: submissionStatsResolver,
     },
     data: { title: 'Note examen scris', role: 'admin' },
     runGuardsAndResolvers: 'always',

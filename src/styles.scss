@@ -156,6 +156,10 @@ mat-icon {
   color: var(--mat-sys-on-secondary-container);
   box-sizing: border-box;
 
+  &.nm {
+    margin: 0;
+  }
+
   &.rounded {
     margin: 0;
     border-radius: 8px;
