@@ -44,7 +44,7 @@ import { UploadFileDirective } from '../shared/directives/upload-file.directive'
 import { DatetimePipe } from '../shared/pipes/datetime.pipe';
 import { TextProgressSpinnerComponent } from '../shared/components/text-progress-spinner/text-progress-spinner.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideAppDateAdapter } from '../providers/date-adapter';
 import { WrittenExamGradesComponent } from './pages/written-exam-grades/written-exam-grades.component';
 
 const materialDeps = [
@@ -104,7 +104,7 @@ const materialDeps = [
     ...materialDeps
   ],
   providers: [
-    provideNativeDateAdapter(),
+    provideAppDateAdapter(),
   ],
 })
 export class AdminModule { }
