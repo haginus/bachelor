@@ -119,6 +119,7 @@ export interface Student extends User {
   generalAverage: number;
   specialization: Specialization;
   paper?: Paper;
+  submission?: Submission;
   hasPaper?: boolean;
 }
 

@@ -268,7 +268,7 @@ export class TeacherPapersComponent
       const filterForm = JSON.parse(filter);
       let result = true;
       if (filterForm.submitted != null) {
-        result = result && filterForm.submitted === !!paper.submissionId;
+        result = result && filterForm.submitted === !!paper.student.submission?.isSubmitted;
       }
       if (filterForm.type != null) {
         result = result && filterForm.type == paper.type;
