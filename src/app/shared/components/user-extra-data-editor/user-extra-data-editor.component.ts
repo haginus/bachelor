@@ -17,6 +17,7 @@ import { User, UserExtraData } from '../../../lib/types';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideAppDateAdapter } from '../../../providers/date-adapter';
 
 @Component({
   selector: 'app-user-extra-data-editor',
@@ -35,7 +36,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
     MatDatepickerModule,
   ],
   providers: [
-    provideNativeDateAdapter(),
+    provideAppDateAdapter(),
   ]
 })
 export class UserExtraDataEditorComponent implements OnInit {
