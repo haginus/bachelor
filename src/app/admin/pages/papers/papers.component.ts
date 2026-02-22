@@ -22,6 +22,7 @@ import { PaginatedResolverResult } from '../../../lib/resolver-factory';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { removeEmptyProperties } from '../../../lib/utils';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SubmissionsService } from '../../../services/submissions.service';
 
 @Component({
   selector: 'app-papers',
@@ -40,6 +41,7 @@ export class AdminPapersComponent {
     private readonly router: Router,
     private readonly domainsService: DomainsService,
     private readonly papersService: PapersService,
+    private readonly submissionsService: SubmissionsService,
     private readonly documentReuploadRequestsService: DocumentReuploadRequestsService,
     private cd: ChangeDetectorRef,
     private dialog: MatDialog,
@@ -149,13 +151,13 @@ export class AdminPapersComponent {
 
   async submitPaper(paper: ExtendedPaper, submit = true) {
     paper.isLoading = true;
+    const submissionId = paper.student.submission.id;
     const action = submit
-      ? this.papersService.submitPaper(paper.id)
-      : this.papersService.unsubmitPaper(paper.id);
+      ? this.submissionsService.submit(submissionId)
+      : this.submissionsService.unsubmit(submissionId);
     try {
-      const { submission, submissionId } = await firstValueFrom(action);
-      paper.submission = submission;
-      paper.submissionId = submissionId;
+      const submission = await firstValueFrom(action);
+      paper.student.submission = submission;
       this.snackbar.open(submit ? 'Studentul a fost înscris în această sesiune.' : 'Studentul a fost retras din această sesiune.');
     } finally {
       paper.isLoading = false;

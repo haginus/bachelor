@@ -45,12 +45,6 @@ const routes: Routes = [
     canActivate: [validatedGuard, paperGuard]
   },
   {
-    path: 'paper',
-    loadComponent: () => import('./pages/paper/paper.component').then(m => m.StudentPaperComponent),
-    data: { title: "Lucrarea dvs." },
-    canActivate: [validatedGuard, paperGuard]
-  },
-  {
     path: 'submission',
     loadComponent: () => import('./pages/my-submission/my-submission.component').then(m => m.MySubmissionComponent),
     data: { title: "Lucrare și dosar" },

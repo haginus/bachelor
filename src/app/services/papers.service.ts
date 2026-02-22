@@ -52,16 +52,6 @@ export class PapersService {
     return this.http.put<{ result: Paper; documentsGenerated: boolean; }>(url, paper);
   }
 
-  submitPaper(paperId: number) {
-    const url = `${this.apiUrl}/${paperId}/submit`;
-    return this.http.post<Paper>(url, {});
-  }
-
-  unsubmitPaper(paperId: number) {
-    const url = `${this.apiUrl}/${paperId}/unsubmit`;
-    return this.http.post<Paper>(url, {});
-  }
-
   validate(paperId: number, validationDto: ValidatePaperDto) {
     return this.http.post<Paper>(`${this.apiUrl}/${paperId}/validate`, validationDto);
   }

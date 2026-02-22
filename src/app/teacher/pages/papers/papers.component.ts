@@ -36,6 +36,7 @@ import { PapersService } from '../../../services/papers.service';
 import { PaperTitlePipe } from '../../../shared/pipes/paper-title.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Paper, SessionSettings } from '../../../lib/types';
+import { SubmissionsService } from '../../../services/submissions.service';
 
 @Component({
   selector: 'app-papers',
@@ -74,6 +75,7 @@ export class TeacherPapersComponent
 {
   constructor(
     private readonly papersService: PapersService,
+    private readonly submissionsService: SubmissionsService,
     private cd: ChangeDetectorRef,
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
@@ -220,7 +222,7 @@ export class TeacherPapersComponent
     const result = await firstValueFrom(dialogRef.afterClosed());
     if (!result) return;
     try {
-      await firstValueFrom(this.papersService.unsubmitPaper(paper.id));
+      await firstValueFrom(this.submissionsService.unsubmit(paper.student.submission.id));
       this.refreshResults();
       this.snackbar.open('Înscrierea a fost anulată.');
     } catch {

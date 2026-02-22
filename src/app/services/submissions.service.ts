@@ -38,6 +38,16 @@ export class SubmissionsService {
     return this.http.get<SubmissionStats>(`${this.apiUrl}/stats`);
   }
 
+  submit(id: number) {
+    const url = `${this.apiUrl}/${id}/submit`;
+    return this.http.post<Submission>(url, {});
+  }
+
+  unsubmit(id: number) {
+    const url = `${this.apiUrl}/${id}/unsubmit`;
+    return this.http.post<Submission>(url, {});
+  }
+
 }
 
 export interface SubmissionQueryDto {

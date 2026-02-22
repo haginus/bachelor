@@ -227,8 +227,6 @@ export interface Paper {
   description: string;
   type: PaperType;
   isValid: boolean;
-  submission: Submission | null;
-  submissionId: number | null;
   scheduledGrading: string;
   studentId: number;
   teacherId: number;

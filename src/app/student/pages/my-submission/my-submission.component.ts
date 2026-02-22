@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { UserSnippetComponent } from '../../../shared/components/user-snippet/user-snippet.component';
@@ -21,6 +22,8 @@ import { DatePipe } from '@angular/common';
 import { AreDocumentsUploaded, DocumentMapElement, PaperDocumentEvent, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { UserExtraDataEditorComponent, UserExtraDataEditorData } from '../../../shared/components/user-extra-data-editor/user-extra-data-editor.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { SubmitPaperDialogComponent } from '../../dialogs/submit-paper-dialog/submit-paper-dialog.component';
+import { SubmissionsService } from '../../../services/submissions.service';
 
 @Component({
   selector: 'app-my-submission',
@@ -45,8 +48,10 @@ export class MySubmissionComponent {
 
   private readonly route = inject(ActivatedRoute);
   private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
   private readonly authService = inject(AuthService);
   private readonly papersService = inject(PapersService);
+  private readonly submissionsService = inject(SubmissionsService);
 
   user = toSignal<Student>(this.authService.userData.pipe(first()));
   sessionSettings = toSignal(this.authService.sessionSettings);
@@ -151,6 +156,20 @@ export class MySubmissionComponent {
   }
 
   async toggleSubmission(isSubmitted: boolean) {
+    let result: Submission;
+    if(isSubmitted) {
+      const confirmDialogRef = this.dialog.open(SubmitPaperDialogComponent, {
+        autoFocus: 'dialog',
+        data: this.paper(),
+      });
+      if(!await firstValueFrom(confirmDialogRef.afterClosed())) return;
+      result = await firstValueFrom(this.submissionsService.submit(this.submission().id));
+      this.snackBar.open('V-ați înscris în această sesiune.');
+    } else {
+      result = await firstValueFrom(this.submissionsService.unsubmit(this.submission().id));
+      this.snackBar.open('V-ați retras din această sesiune.');
+    }
+    this.submission.set(result);
   }
 
   async onDocumentsChange(event: PaperDocumentEvent) {
