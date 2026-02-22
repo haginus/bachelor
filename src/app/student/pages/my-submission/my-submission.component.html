@@ -1,7 +1,58 @@
 @if(hasWrittenExam()) {
   <mat-card class="section-card">
     <h1>I. Proba scrisă - Cunoștințe fundamentale și de specialitate</h1>
-    <p>Nota dvs. va apărea aici după corectarea probei scrise.</p>
+    <div class="list">
+      <div class="list-item">
+        <mat-icon>edit_calendar</mat-icon>
+        <div class="content">
+          <div>Dată probă scrise</div>
+          <div>{{ sessionSettings().writtenExamDate | date:'longDate' }}</div>
+        </div>
+      </div>
+      <div class="list-item">
+        <mat-icon>grade</mat-icon>
+        <div class="content">
+          <div>Notă inițială</div>
+          @if(submission().writtenExamGrade?.initialGrade == null) {
+            <div>–</div>
+          } @else {
+            <div>{{ submission().writtenExamGrade?.initialGrade || 'Absent' }}</div>
+            @if(canDisputeWrittenExamGrade() && !submission().writtenExamGrade.isDisputed) {
+              <div>Puteți contesta nota până pe {{ sessionSettings().writtenExamDisputeEndDate | date:'longDate' }}.</div>
+            }
+          }
+        </div>
+        @if(submission().writtenExamGrade.isDisputed) {
+          <button matButton disabled>
+            <mat-icon>gavel</mat-icon>
+            <span>Contestată</span>
+          </button>
+        } @else if(canDisputeWrittenExamGrade()) {
+          <button matButton (click)="disputeWrittenExamGrade()">
+            <mat-icon>gavel</mat-icon>
+            <span>Contestați</span>
+          </button>
+        }
+      </div>
+      @if(submission().writtenExamGrade?.isDisputed) {
+        <div class="list-item">
+          <mat-icon>gavel</mat-icon>
+          <div class="content">
+            <div>Notă după contestație</div>
+            <div>{{ submission().writtenExamGrade?.disputeGrade || 'În așteptare' }}</div>
+          </div>
+        </div>
+      }
+      @if(writtenExamFinalGrade() != null) {
+        <div class="list-item">
+          <mat-icon>star</mat-icon>
+          <div class="content">
+            <div>Notă finală</div>
+            <div>{{ writtenExamFinalGrade() || 'Absent' }}</div>
+          </div>
+        </div>
+      }
+    </div>
   </mat-card>
 }
 

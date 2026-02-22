@@ -25,6 +25,10 @@ export class WrittenExamService {
     return this.http.post<ImportResult<GradePayload, WrittenExamGrade>>(`${this.apiUrl}/grades/import`, formData);
   }
 
+  disputeGrade(submissionId: number): Observable<WrittenExamGrade> {
+    return this.http.post<WrittenExamGrade>(`${this.apiUrl}/grades/${submissionId}/dispute`, {});
+  }
+
 }
 
 type GradePayload = {

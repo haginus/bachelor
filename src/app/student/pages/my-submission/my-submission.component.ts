@@ -24,6 +24,7 @@ import { UserExtraDataEditorComponent, UserExtraDataEditorData } from '../../../
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SubmitPaperDialogComponent } from '../../dialogs/submit-paper-dialog/submit-paper-dialog.component';
 import { SubmissionsService } from '../../../services/submissions.service';
+import { WrittenExamService } from '../../../services/written-exam.service';
 
 @Component({
   selector: 'app-my-submission',
@@ -52,6 +53,7 @@ export class MySubmissionComponent {
   private readonly authService = inject(AuthService);
   private readonly papersService = inject(PapersService);
   private readonly submissionsService = inject(SubmissionsService);
+  private readonly writtenExamService = inject(WrittenExamService);
 
   user = toSignal<Student>(this.authService.userData.pipe(first()));
   sessionSettings = toSignal(this.authService.sessionSettings);
@@ -74,6 +76,17 @@ export class MySubmissionComponent {
 
   now = getNowSignal();
 
+  canDisputeWrittenExamGrade = computed(() => (
+    this.sessionSettings().writtenExamDisputeEndDate &&
+    this.now() <= inclusiveDate(this.sessionSettings().writtenExamDisputeEndDate) &&
+    (this.submission().writtenExamGrade?.initialGrade ?? 0) !== 0
+  ));
+  writtenExamFinalGrade = computed(() => {
+    const grade = this.submission().writtenExamGrade;
+    if(!grade || (this.canDisputeWrittenExamGrade() && !grade.isDisputed)) return null;
+    if(grade.isDisputed && !grade.disputeGrade) return null;
+    return Math.max(grade.initialGrade, grade.disputeGrade ?? 0);
+  });
   submissionStarted = computed(() => this.now() >= parseDate(this.sessionSettings().fileSubmissionStartDate));
   canUploadSecretaryFiles = computed(() => this.now() && this.sessionSettings().canUploadSecretaryFiles());
   canUploadPaperFiles = computed(() => this.now() && this.sessionSettings().canUploadPaperFiles());
@@ -174,6 +187,12 @@ export class MySubmissionComponent {
 
   async onDocumentsChange(event: PaperDocumentEvent) {
     this.paper.update(paper => ({ ...paper, documents: event.documents }));
+  }
+
+  async disputeWrittenExamGrade() {
+    const writtenExamGrade = await firstValueFrom(this.writtenExamService.disputeGrade(this.submission().id));
+    this.submission.update(submission => ({ ...submission, writtenExamGrade }));
+    this.snackBar.open('Ați contestat nota la examenul scris.');
   }
 
   PAPER_TYPES = PAPER_TYPES;
