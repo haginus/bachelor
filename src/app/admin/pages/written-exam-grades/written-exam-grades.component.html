@@ -1,7 +1,24 @@
+<mat-menu #catalogGeneration="matMenu">
+  <ng-template matMenuContent>
+    <button mat-menu-item (click)="reportsService.openFile('written_exam_catalog_pdf')">
+      <mat-icon>description</mat-icon>
+      <span>Format PDF</span>
+    </button>
+    <button mat-menu-item (click)="reportsService.openFile('written_exam_catalog_docx')">
+      <mat-icon>description</mat-icon>
+      <span>Format DOCX</span>
+    </button>
+  </ng-template>
+</mat-menu>
+
 <div class="table-container full-height">
   <mat-toolbar color="white">
     <button matButton="filled" (click)="bulkGradeWrittenExam()" [disabled]="!canGrade()">
       Notați în bloc
+    </button>
+    <button matButton [matMenuTriggerFor]="catalogGeneration" [disabled]="!canGrade()">
+      <span>Generați catalogul</span>
+      <mat-icon>arrow_drop_down</mat-icon>
     </button>
     <span class="toolbar-spacer"></span>
     <button mat-icon-button (click)="refreshResults()">

@@ -18,6 +18,7 @@ import { SessionSettingsService } from '../../../services/session-settings.servi
 import { AuthService } from '../../../services/auth.service';
 import { SubmissionStats } from '../../../services/submissions.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ReportsService } from '../../../services/reports.service';
 
 @Component({
   selector: 'app-written-exam-grades',
@@ -36,6 +37,7 @@ export class WrittenExamGradesComponent {
   private readonly sessionSettingsService = inject(SessionSettingsService);
   private readonly domainsService = inject(DomainsService);
   private readonly sudoService = inject(SudoService);
+  protected readonly reportsService = inject(ReportsService);
 
   displayedColumns: string[] = ['status', 'student.fullName', 'student.domain.name', 'writtenExamGrade.initialGrade', 'writtenExamGrade.disputeGrade', 'writtenExamGrade.finalGrade', 'actions'];
   resolverData = toSignal<PaginatedResolverResult<Submission, { sortBy?: string; sortDirection?: 'asc' | 'desc'; studentName?: string; domainId?: number; writtenExamState?: string; }>>(

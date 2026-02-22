@@ -18,8 +18,18 @@
   <div class="list">
     <div class="list-item">
       <div class="content">
+        <div>Generați catalogul probei scrise</div>
+        <div>Conține notele studenților din această sesiune care susțin proba scrisă</div>
+      </div>
+      <button mat-stroked-button [matMenuTriggerFor]="catalogFormatMenu" [matMenuTriggerData]="{ catalogName: 'written_exam_catalog' }">
+        <span>Generați</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+    </div>
+    <div class="list-item">
+      <div class="content">
         <div>Generați catalogul final</div>
-        <div>Conține notele studenților din această sesiune</div>
+        <div>Conține mediile notelor studenților din această sesiune</div>
       </div>
       <button mat-stroked-button [matMenuTriggerFor]="catalogFormatMenu" [matMenuTriggerData]="{ catalogName: 'final_catalog' }">
         <span>Generați</span>
@@ -29,7 +39,7 @@
     <div class="list-item">
       <div class="content">
         <div>Generați catalogul centralizator</div>
-        <div>Conține notele studenților din această sesiune care au fost declarați admiși</div>
+        <div>Conține mediile notelor studenților din această sesiune care au fost declarați admiși</div>
       </div>
       <button mat-stroked-button [matMenuTriggerFor]="catalogFormatMenu" [matMenuTriggerData]="{ catalogName: 'centralizing_catalog' }">
         <span>Generați</span>

@@ -62,6 +62,8 @@ export class ReportsService {
 }
 
 export const ReportFilesFormat = {
+  'written_exam_catalog_pdf': ['application/pdf', 'Catalog proba scrisă'],
+  'written_exam_catalog_docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Catalog proba scrisă'],
   'final_catalog_pdf': ['application/pdf', 'Catalog final'],
   'final_catalog_docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Catalog final'],
   'centralizing_catalog_pdf': ['application/pdf', 'Catalog centralizator'],
