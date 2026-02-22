@@ -25,6 +25,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { SubmitPaperDialogComponent } from '../../dialogs/submit-paper-dialog/submit-paper-dialog.component';
 import { SubmissionsService } from '../../../services/submissions.service';
 import { WrittenExamService } from '../../../services/written-exam.service';
+import { FixedPipe } from '../../../shared/pipes/fixed.pipe';
+import { SubmissionGradeTableComponent } from "../../../shared/components/submission-grade-table/submission-grade-table.component";
 
 @Component({
   selector: 'app-my-submission',
@@ -41,6 +43,8 @@ import { WrittenExamService } from '../../../services/written-exam.service';
     MatTooltip,
     PaperDocumentListComponent,
     MatExpansionModule,
+    FixedPipe,
+    SubmissionGradeTableComponent,
   ],
   templateUrl: './my-submission.component.html',
   styleUrl: './my-submission.component.scss',

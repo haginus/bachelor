@@ -5,7 +5,7 @@
       <div class="list-item">
         <mat-icon>edit_calendar</mat-icon>
         <div class="content">
-          <div>Dată probă scrise</div>
+          <div>Dată probă scrisă</div>
           <div>{{ sessionSettings().writtenExamDate | date:'longDate' }}</div>
         </div>
       </div>
@@ -90,6 +90,17 @@
           }
         }
       </div>
+      @if(paper().gradeAverage !== undefined) {
+        <div class="list">
+          <div class="list-item">
+            <mat-icon>grade</mat-icon>
+            <div class="content">
+              <div>Notă obținută</div>
+              <div>{{ paper().gradeAverage === null ? 'Absent' : (paper().gradeAverage | fixed) }}</div>
+            </div>
+          </div>
+        </div>
+      }
     </div>
     <div class="paper-actions">
       <button
@@ -103,6 +114,47 @@
     </div>
   </div>
 </mat-card>
+
+@if(writtenExamFinalGrade() != null || paper().gradeAverage !== undefined) {
+  @defer {
+    <mat-card class="section-card">
+      <h1>Media examenului de finalizare a studiilor</h1>
+      <app-submission-grade-table
+        #submissionGradeTable
+        [hasWrittenExam]="hasWrittenExam()"
+        [writtenExamFinalGrade]="writtenExamFinalGrade()"
+        [paperGrade]="paper().gradeAverage"
+      />
+      @if(submissionGradeTable?.submissionGrade().average !== undefined) {
+        <div
+          style="margin-top: 12px;"
+          class="tip-card rounded"
+          [class.success]="submissionGradeTable.submissionGrade().average >= 6"
+          [class.severe]="submissionGradeTable.submissionGrade().average < 6"
+        >
+          <mat-icon class="tip-icon">
+            @if(submissionGradeTable.submissionGrade().average === null) {
+              cancel
+            } @else if(submissionGradeTable.submissionGrade().average < 6) {
+              sentiment_dissatisfied
+            } @else {
+              sentiment_satisfied
+            }
+          </mat-icon>
+          <div class="tip-card-content">
+            @if(submissionGradeTable?.submissionGrade().average === null) {
+              <div>Din păcate, nu ați promovat examenul de finalizare studii, deoarece ați fost absent la una dintre probe.</div>
+            } @else if(submissionGradeTable?.submissionGrade().average < 6) {
+              <div>Din păcate, nu ați promovat examenul de finalizare studii.</div>
+            } @else {
+              <div>Felicitări! Ați promovat examenul de finalizare studii.</div>
+            }
+          </div>
+        </div>
+      }
+    </mat-card>
+  }
+}
 
 <mat-card class="section-card">
   <h1>Dosar înscriere</h1>

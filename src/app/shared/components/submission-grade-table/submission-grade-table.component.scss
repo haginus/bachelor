@@ -1,0 +1,20 @@
+:host {
+  display: block;
+  background-color: var(--mat-sys-surface);
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: var(--mat-sys-level1);
+}
+
+.mat-mdc-footer-cell {
+  border-top: 1px solid var(--mat-table-row-item-outline-color);
+}
+
+tr.error {
+  background-color: color-mix(in srgb, var(--mat-sys-error) 8%, transparent);
+  color: var(--mat-sys-on-error-container);
+
+  &.mat-mdc-footer-row {
+    background-color: color-mix(in srgb, var(--mat-sys-error) 12%, transparent);
+  }
+}
