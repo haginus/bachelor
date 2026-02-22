@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, computed } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { DatePipe } from '@angular/common';
-import { SessionSettings } from '../../../lib/types';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { isStudent } from '../../../lib/types';
 
 @Component({
   selector: 'app-session-info',
@@ -14,22 +14,17 @@ import { SessionSettings } from '../../../lib/types';
     MatCardModule,
     MatListModule,
     DatePipe,
-  ]
+  ],
 })
-export class SessionInfoComponent implements OnInit, OnDestroy {
+export class SessionInfoComponent {
 
   constructor(private auth: AuthService) { }
 
-  sessionSettings: SessionSettings;
-  subscription: Subscription;
-  ngOnInit(): void {
-    this.subscription = this.auth.sessionSettings.subscribe(settings => {
-      this.sessionSettings = settings;
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
+  user = toSignal(this.auth.userData);
+  sessionSettings = toSignal(this.auth.sessionSettings);
+  showWrittenExamInfo = computed(() => {
+    const user = this.user();
+    return this.sessionSettings().writtenExamDate && (!isStudent(user) || (user.specialization?.domain?.hasWrittenExam ?? true));
+  });
 
 }

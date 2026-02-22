@@ -1,23 +1,35 @@
-@if(sessionSettings) {
+@if(sessionSettings()) {
   <mat-card>
     <mat-card-header>
       <h3 matCardTitle>Platforma de finalizare studii FMI</h3>
-      <mat-card-subtitle>Sesiunea {{ sessionSettings?.sessionName }}</mat-card-subtitle>
+      <mat-card-subtitle>Sesiunea {{ sessionSettings().sessionName }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <mat-list>
         <mat-list-item>
           <div matListItemTitle>Perioadă cereri de asociere</div>
-          <div matListItemLine>{{ sessionSettings.applyStartDate | date:"dd.MM.yyyy" }} - {{ sessionSettings.applyEndDate | date:"dd.MM.yyyy" }}</div>
+          <div matListItemLine>{{ sessionSettings().applyStartDate | date:'longDate' }} – {{ sessionSettings().applyEndDate | date:'longDate' }}</div>
         </mat-list-item>
         <mat-list-item>
           <div matListItemTitle>Perioadă depunere documente</div>
-          <div matListItemLine>{{ sessionSettings.fileSubmissionStartDate | date:"dd.MM.yyyy" }} - {{ sessionSettings.fileSubmissionEndDate | date:"dd.MM.yyyy" }}</div>
+          <div matListItemLine>{{ sessionSettings().fileSubmissionStartDate | date:'longDate' }} – {{ sessionSettings().fileSubmissionEndDate | date:'longDate' }}</div>
         </mat-list-item>
         <mat-list-item>
           <div matListItemTitle>Termen limită predare lucrare</div>
-          <div matListItemLine>{{sessionSettings.paperSubmissionEndDate | date:"dd.MM.yyyy"}}</div>
+          <div matListItemLine>{{sessionSettings().paperSubmissionEndDate | date:'longDate'}}</div>
         </mat-list-item>
+        @if(showWrittenExamInfo()) {
+          <mat-list-item>
+            <div matListItemTitle>Dată probă scrisă</div>
+            <div matListItemLine>{{ sessionSettings().writtenExamDate | date:'longDate' }}</div>
+          </mat-list-item>
+          @if(sessionSettings().writtenExamDisputeEndDate) {
+            <mat-list-item>
+              <div matListItemTitle>Termen limită contestații probă scrisă</div>
+              <div matListItemLine>{{ sessionSettings().writtenExamDisputeEndDate | date:'longDate' }}</div>
+            </mat-list-item>
+          }
+        }
       </mat-list>
     </mat-card-content>
   </mat-card>
