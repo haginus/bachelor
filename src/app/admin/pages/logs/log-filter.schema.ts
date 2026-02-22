@@ -57,6 +57,10 @@ export const logFilterSchema = {
           $ref: '#/$defs/matchOrNotMatchNumbersOrNull',
           description: 'ID-ul datelor suplimentare ale utilizatorului',
         },
+        submissionId: {
+          $ref: '#/$defs/matchOrNotMatchNumbersOrNull',
+          description: 'ID-ul înscrierii',
+        },
         paperId: {
           $ref: '#/$defs/matchOrNotMatchNumbersOrNull',
           description: 'ID-ul lucrării',

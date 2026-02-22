@@ -93,11 +93,21 @@ export class LogEntryComponent {
           'userExtraData',
         ];
         break;
+      case LogName.SubmissionCreated:
+      case LogName.SubmissionSubmitted:
+      case LogName.SubmissionUnsubmitted:
+      case LogName.WrittenExamGradeGiven:
+      case LogName.WrittenExamGradeDisputed:
+        byLogAttributes = [
+          'userId',
+          'user',
+          'submissionId',
+          'submission',
+        ];
+        break;
       case LogName.PaperCreated:
       case LogName.PaperUpdated:
       case LogName.PaperDeleted:
-      case LogName.PaperSubmitted:
-      case LogName.PaperUnsubmitted:
       case LogName.PaperValidated:
       case LogName.PaperInvalidated:
       case LogName.PaperCancelledValidation:
@@ -149,21 +159,6 @@ export class LogEntryComponent {
       }
     }).filter(resource => resource.resourceId || resource.resource);
     switch(this.log.name) {
-      case LogName.PaperCreated:
-        this.message = 'Lucrarea a fost creată.';
-        break;
-      case LogName.PaperUpdated:
-        this.message = 'Lucrarea a fost editată.';
-        break;
-      case LogName.PaperDeleted:
-        this.message = 'Lucrarea a fost ștearsă.';
-        break;
-      case LogName.PaperSubmitted:
-        this.message = 'Lucrarea a fost înscrisă în sesiune.';
-        break;
-      case LogName.PaperUnsubmitted:
-        this.message = 'Lucrarea a fost retrasă din sesiune.';
-        break;
       default:
         this.message = '';
     }
