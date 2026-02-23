@@ -50,6 +50,15 @@ export class AdminPapersComponent {
     this.route.data.pipe(takeUntilDestroyed()).subscribe(data => {
       this.resolverData = data['resolverData'];
     });
+    this.paperFilterForm.get("domainId").valueChanges.pipe(takeUntilDestroyed()).subscribe(domainId => {
+      const specializationControl = this.paperFilterForm.get("specializationId")!;
+      if(domainId) {
+        specializationControl.enable();
+      } else {
+        specializationControl.disable();
+        specializationControl.setValue(null);
+      }
+    });
     afterNextRender(() => {
       this.paperFilterForm.patchValue(this.resolverData.params, { emitEvent: false });
       this.paperFilterDebouncedForm.patchValue(this.resolverData.params, { emitEvent: false });
@@ -273,7 +282,7 @@ export class AdminPapersComponent {
 
   resetFilterForm() {
     this.paperFilterForm.reset({ submitted: true });
-    this.paperFilterDebouncedForm.reset();
+    this.paperFilterDebouncedForm.reset({}, { emitEvent: false });
   }
 
 }

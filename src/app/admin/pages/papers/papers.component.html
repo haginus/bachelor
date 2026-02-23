@@ -99,7 +99,7 @@
               @if(domain.id === paperFilterForm.get('domainId').value) {
                 @for (specialization of domain.specializations; track specialization) {
                   <mat-option [value]="specialization.id">
-                    {{ specialization.name }} ({{ STUDY_FORMS[specialization.studyForm] | titlecase }})
+                    {{ specialization.name }} ({{ STUDY_FORMS[specialization.studyForm] }})
                   </mat-option>
                 }
               }
