@@ -7,7 +7,7 @@
         @for (domain of domains | async; track domain) {
           @for (specialization of domain.specializations; track specialization) {
             <mat-option [value]="specialization.id">
-              <span>{{specialization.name}}</span>
+              <span>{{specialization.name}} ({{ specialization.studyForm.toLocaleUpperCase()}})</span>
               <span> - Domeniul {{domain.name}} </span>
               <span>
                 @if (domain.type == 'bachelor') {
