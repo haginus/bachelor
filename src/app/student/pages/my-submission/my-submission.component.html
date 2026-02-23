@@ -6,7 +6,12 @@
         <mat-icon>edit_calendar</mat-icon>
         <div class="content">
           <div>Dată probă scrisă</div>
-          <div>{{ sessionSettings().writtenExamDate | date:'longDate' }}</div>
+          <div>
+            {{ sessionSettings().writtenExamDate | date:'longDate' }}
+            @if(!sessionSettings().writtenExamDate) {
+              –
+            }
+          </div>
         </div>
       </div>
       <div class="list-item">
@@ -17,12 +22,12 @@
             <div>–</div>
           } @else {
             <div>{{ submission().writtenExamGrade?.initialGrade || 'Absent' }}</div>
-            @if(canDisputeWrittenExamGrade() && !submission().writtenExamGrade.isDisputed) {
+            @if(canDisputeWrittenExamGrade() && !submission().writtenExamGrade?.isDisputed) {
               <div>Puteți contesta nota până pe {{ sessionSettings().writtenExamDisputeEndDate | date:'longDate' }}.</div>
             }
           }
         </div>
-        @if(submission().writtenExamGrade.isDisputed) {
+        @if(submission().writtenExamGrade?.isDisputed) {
           <button matButton disabled>
             <mat-icon>gavel</mat-icon>
             <span>Contestată</span>
