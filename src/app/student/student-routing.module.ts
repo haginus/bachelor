@@ -54,8 +54,8 @@ const routes: Routes = [
       extraData: extraDataResolver,
     },
     canActivate: [validatedGuard, paperGuard]
-  }
-
+  },
+  { path: 'paper', redirectTo: 'submission', pathMatch: 'full' },
 ];
 
 @NgModule({
