@@ -39,12 +39,12 @@ export class WrittenExamGradesComponent {
   private readonly sudoService = inject(SudoService);
   protected readonly reportsService = inject(ReportsService);
 
-  displayedColumns: string[] = ['status', 'student.fullName', 'student.domain.name', 'writtenExamGrade.initialGrade', 'writtenExamGrade.disputeGrade', 'writtenExamGrade.finalGrade', 'actions'];
   resolverData = toSignal<PaginatedResolverResult<Submission, { sortBy?: string; sortDirection?: 'asc' | 'desc'; studentName?: string; domainId?: number; writtenExamState?: string; }>>(
     this.route.data.pipe(map(data => data['resolverData']))
   );
   stats = toSignal<SubmissionStats>(this.route.data.pipe(map(data => data['stats'])));
   sessionSettings = toSignal(this.authService.sessionSettings);
+  user = toSignal(this.authService.userData);
   domains = toSignal(this.domainsService.findAll());
   showFilters = signal(false);
   performedActions = new Subject<string>();
@@ -59,7 +59,15 @@ export class WrittenExamGradesComponent {
   });
   DOMAIN_TYPES = DOMAIN_TYPES;
   now = getNowSignal();
-  canGrade = computed(() => !!this.sessionSettings()?.writtenExamDate && this.now().getTime() > new Date(this.sessionSettings().writtenExamDate).getTime());
+  examHeld = computed(() => !!this.sessionSettings()?.writtenExamDate && this.now().getTime() > new Date(this.sessionSettings().writtenExamDate).getTime());
+  hasGradingRights = computed(() => this.user()?.type === 'admin');
+  displayedColumns = computed(() => {
+    const columns = ['status', 'student.fullName', 'student.domain.name', 'writtenExamGrade.initialGrade', 'writtenExamGrade.disputeGrade', 'writtenExamGrade.finalGrade'];
+    if(this.hasGradingRights()) {
+      columns.push('actions');
+    }
+    return columns;
+  });
 
   constructor() {
     afterNextRender(() => {

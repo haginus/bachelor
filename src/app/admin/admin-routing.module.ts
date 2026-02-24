@@ -107,9 +107,8 @@ const routes: Routes = [
       resolverData: submissionsResolver,
       stats: submissionStatsResolver,
     },
-    data: { title: 'Note examen scris', role: 'admin' },
+    data: { title: 'Note examen scris' },
     runGuardsAndResolvers: 'always',
-    canActivate: [roleGuard],
   },
   {
     path: 'logs',
