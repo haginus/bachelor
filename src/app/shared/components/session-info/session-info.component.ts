@@ -24,7 +24,7 @@ export class SessionInfoComponent {
   sessionSettings = toSignal(this.auth.sessionSettings);
   showWrittenExamInfo = computed(() => {
     const user = this.user();
-    return this.sessionSettings().writtenExamDate && (!isStudent(user) || (user.specialization?.domain?.hasWrittenExam ?? true));
+    return this.sessionSettings().writtenExamDate && (!user || !isStudent(user) || (user.specialization?.domain?.hasWrittenExam ?? true));
   });
 
 }
