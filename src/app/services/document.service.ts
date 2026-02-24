@@ -4,7 +4,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { AuthService } from './auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DocumentViewerDialogComponent, DocumentViewerDialogData } from '../shared/components/document-viewer-dialog/document-viewer-dialog.component';
 import { Document } from '../lib/types';
@@ -15,7 +14,6 @@ import { Document } from '../lib/types';
 export class DocumentService {
 
   constructor(
-    private auth: AuthService,
     private http: HttpClient,
     private snackbar: MatSnackBar,
     private dialog: MatDialog,
@@ -55,7 +53,7 @@ export class DocumentService {
     formData.append('name', name);
     formData.append('type', type);
     formData.append('paperId', String(paperId));
-    return this.http.post<Document>(url, formData, this.auth.getPrivateHeaders()).pipe(
+    return this.http.post<Document>(url, formData).pipe(
       catchError(this.handleError("uploadDocument", null))
     );
   }
@@ -67,10 +65,11 @@ export class DocumentService {
 
   getDocument(id: number): Observable<ArrayBuffer> {
     const url = `${environment.apiUrl}/documents/${id}/content`;
-    const options = this.auth.getPrivateHeaders();
-    options.headers.append('Cache-Control', 'no-store');
     return this.http
-      .get<any>(url, {...options, responseType: 'arraybuffer' as 'json'})
+      .get<any>(url, {
+        headers: { 'Cache-Control': 'no-store' },
+        responseType: 'arraybuffer' as 'json'
+      })
       .pipe(
         catchError(this.handleError<any>('getDocument', null))
       );
@@ -82,7 +81,7 @@ export class DocumentService {
 
   getDocumentUploadHistory(paperId: number, name: string): Observable<Document[]> {
     const url = `${environment.apiUrl}/documents/history?paperId=${paperId}&name=${name}`;
-    return this.http.get<Document[]>(url, this.auth.getPrivateHeaders()).pipe(
+    return this.http.get<Document[]>(url).pipe(
       catchError(this.handleError<Document[]>('getDocumentUploadHistory', []))
     );
   }

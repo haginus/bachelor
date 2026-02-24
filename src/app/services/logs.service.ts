@@ -1,8 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { AuthService } from "./auth.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { Observable, catchError, filter, of } from "rxjs";
+import { Observable, catchError, of } from "rxjs";
 import { environment } from "../../environments/environment";
 import { Paginated } from "../lib/types";
 
@@ -11,7 +10,7 @@ import { Paginated } from "../lib/types";
 })
 export class LogsService {
 
-  constructor(private http: HttpClient, private auth: AuthService, private snackbar: MatSnackBar) { }
+  constructor(private http: HttpClient, private snackbar: MatSnackBar) { }
 
   private readonly apiUrl = `${environment.apiUrl}/logs`;
 
@@ -32,7 +31,7 @@ export class LogsService {
       });
     }
     return this.http
-      .get<Paginated<any>>(url, this.auth.getPrivateHeaders())
+      .get<Paginated<any>>(url)
       .pipe(
         catchError(this.handleError<Paginated<any>>('findAll', { count: 0, rows: [] }))
       );

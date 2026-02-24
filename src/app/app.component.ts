@@ -140,9 +140,7 @@ export class AppComponent implements OnInit {
   }
 
   signOut() {
-    this.auth.signOut().subscribe(res => {
-      this.router.navigate(['login']);
-    });
+    this.auth.signOut().subscribe();
   }
 
   switchUser(user: User) {

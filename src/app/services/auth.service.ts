@@ -7,6 +7,8 @@ import { catchError, first, map, switchMap, take, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { SudoService } from './sudo.service';
 import { Profile, SessionSettings, SignUpRequest, User, UserExtraData } from '../lib/types';
+import { AccessTokenService } from './access-token.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root'
@@ -14,16 +16,17 @@ import { Profile, SessionSettings, SignUpRequest, User, UserExtraData } from '..
 export class AuthService {
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
-    private snackbar: MatSnackBar,
-    private sudoService: SudoService,
+    private readonly http: HttpClient,
+    private readonly accessTokenService: AccessTokenService,
+    private readonly router: Router,
+    private readonly snackbar: MatSnackBar,
+    private readonly sudoService: SudoService,
   ) {
     if(this.isSignedIn()) {
-      combineLatest([this.getUserData(), this.getAlternativeIdentities()]).subscribe(([user, alternativeIdentities]) => {
+      combineLatest([this.getUserData(), this.getAlternativeIdentities()]).pipe(takeUntilDestroyed()).subscribe(([user, alternativeIdentities]) => {
         this.userDataSource.next(user);
         this.alternativeIdentitiesSource.next(alternativeIdentities);
-      })
+      });
     } else {
       this.userDataSource.next(undefined);
       this.alternativeIdentitiesSource.next([]);
@@ -31,39 +34,31 @@ export class AuthService {
     this.getSessionSettings().pipe(first()).subscribe(settings => {
       this.sessionSettingsSource.next(settings);
     });
+    this.accessTokenService.tokenChanges$.pipe(takeUntilDestroyed()).subscribe(tokens => {
+      if(!tokens) {
+        this._onSignOut();
+      }
+    });
   }
 
-  private setToken(token : string) {
-    return localStorage.setItem('token', token);
+  public isSignedIn(): boolean {
+    return this.accessTokenService.hasTokens();
   }
 
-  private removeToken() {
-    return localStorage.removeItem('token');
-  }
-
-  private getToken() : string | null {
-    return localStorage.getItem('token');
-  }
-
-  public appendTokenQuery(url: string): string {
-    const token = this.getToken();
-    if(!token) return url;
-    return url + (url.includes('?') ? '&' : '?') + 'token=' + token;
-  }
-
-  isSignedIn() : boolean {
-    return this.getToken() != null;
+  private handleAuthSuccess(res: AuthResponse) {
+    this.accessTokenService.setTokens({
+      accessToken: res.accessToken,
+      refreshToken: res.refreshToken,
+    });
+    this.userDataSource.next(res.user);
+    this.alternativeIdentitiesSource.next(res.alternativeIdentities || []);
+    return res;
   }
 
   signInWithEmailAndPassword(email: string, password: string, recaptcha: string) : Observable<AuthResponse> {
     const url = `${environment.apiUrl}/auth/sign-in`;
     return this.http.post<AuthResponse>(url, { email, password }, { headers: { recaptcha } }).pipe(
-      map(res => {
-        this.setToken((res as any).accessToken);
-        this.userDataSource.next((res as any).user);
-        this.alternativeIdentitiesSource.next((res as any).alternativeIdentities || []);
-        return res;
-      }),
+      map(res => this.handleAuthSuccess(res)),
       catchError(this.handleAuthError('signInWithEmailAndPassword'))
     );
   }
@@ -71,24 +66,15 @@ export class AuthService {
   signInWithTokenAndChangePassword(token: string, newPassword: string): Observable<AuthResponse> {
     const url = `${environment.apiUrl}/auth/sign-in/token`;
     return this.http.post<AuthResponse>(url, { token, newPassword }).pipe(
-      map(res => {
-        this.setToken((res as any).accessToken);
-        this.userDataSource.next((res as any).user);
-        return res
-      }),
+      map(res => this.handleAuthSuccess(res)),
       catchError(this.handleAuthError('signInWithTokenAndChangePassword'))
     );
   }
 
   switchUser(userId: number): Observable<AuthResponse> {
     const url = `${environment.apiUrl}/auth/switch/${userId}`;
-    return this.http.post<AuthResponse>(url, {}, this.getPrivateHeaders()).pipe(
-      map(res => {
-        this.setToken((res as any).accessToken);
-        this.userDataSource.next((res as any).user);
-        this.alternativeIdentitiesSource.next((res as any).alternativeIdentities || []);
-        return res;
-      }),
+    return this.http.post<AuthResponse>(url, {}).pipe(
+      map(res => this.handleAuthSuccess(res)),
       catchError(this.handleAuthError('switchUser'))
     );
   }
@@ -105,9 +91,7 @@ export class AuthService {
         if(!res) {
           return { error: { message: "Ați renunțat la intrarea în modul sudo." } };
         }
-        this.setToken((res as any).accessToken);
-        this.userDataSource.next((res as any).user);
-        this.alternativeIdentitiesSource.next((res as any).alternativeIdentities || []);
+        this.handleAuthSuccess(res);
         return res;
       }),
       catchError(this.handleAuthError('impersonateUser'))
@@ -116,13 +100,8 @@ export class AuthService {
 
   releaseUser(): Observable<AuthResponse> {
     const url = `${environment.apiUrl}/auth/release`;
-    return this.http.post<AuthResponse>(url, {}, this.getPrivateHeaders()).pipe(
-      map(res => {
-        this.setToken((res as any).accessToken);
-        this.userDataSource.next((res as any).user);
-        this.alternativeIdentitiesSource.next((res as any).alternativeIdentities || []);
-        return res;
-      }),
+    return this.http.post<AuthResponse>(url, {}).pipe(
+      map(res => this.handleAuthSuccess(res)),
       catchError(this.handleAuthError('releaseUser'))
     );
   }
@@ -134,7 +113,7 @@ export class AuthService {
 
   checkSudoPassword(password: string): Observable<boolean> {
     const url = `${environment.apiUrl}/auth/sudo`;
-    return this.http.post<any>(url, { password }, this.getPrivateHeaders()).pipe(
+    return this.http.post<any>(url, { password }).pipe(
       map(res => res.success),
       catchError(this.handleError("checkSudoPassword", false))
     );
@@ -144,10 +123,18 @@ export class AuthService {
     return this.sudoService.enterSudoMode();
   }
 
-  signOut(): Observable<boolean> {
-    this.removeToken();
+  _onSignOut() {
     this.userDataSource.next(undefined);
-    return of(true);
+    this.alternativeIdentitiesSource.next([]);
+    this.router.navigate(["login"]);
+  }
+
+  signOut(): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/auth/sign-out`, {}).pipe(
+      tap(() => {
+        this.accessTokenService.removeTokens();
+      }),
+    );
   }
 
   sendResetPasswordEmail(email: string, recaptcha: string) {
@@ -162,21 +149,6 @@ export class AuthService {
     );
   }
 
-  getPrivateHeaders() {
-    let headers = new HttpHeaders();
-    const token = this.getToken();
-    if(token) {
-      headers = headers.append('Authorization', 'Bearer ' + token);
-    }
-    if(this.sudoService.sudoPasswordSource.value) {
-      headers = headers.append('X-Sudo-Password', this.sudoService.sudoPasswordSource.value);
-    }
-    return {
-      headers,
-      withCredentials: false,
-    };
-  }
-
   userDataSource: ReplaySubject<User | undefined> = new ReplaySubject<User | undefined>(1);
   userData = this.userDataSource.asObservable();
   alternativeIdentitiesSource: ReplaySubject<User[]> = new ReplaySubject<User[]>(1);
@@ -184,14 +156,14 @@ export class AuthService {
 
   getUserData(): Observable<User | undefined> {
     const url = `${environment.apiUrl}/auth/user`;
-    return this.http.get<User>(url, this.getPrivateHeaders()).pipe(
+    return this.http.get<User>(url).pipe(
       catchError(this.handleUserError('getUserData'))
     );
   }
 
   getAlternativeIdentities(): Observable<User[]> {
     const url = `${environment.apiUrl}/auth/alternative-identities`;
-    return this.http.get<User[]>(url, this.getPrivateHeaders()).pipe(
+    return this.http.get<User[]>(url).pipe(
       catchError(this.handleError('getAlternativeIdentities', []))
     );
   }
@@ -253,7 +225,7 @@ export class AuthService {
     }
     formData.append('bio', bio);
     formData.append('website', website);
-    return this.http.patch<Profile>(url, formData, this.getPrivateHeaders()).pipe(
+    return this.http.patch<Profile>(url, formData).pipe(
       tap(profile => {
         this.userData.pipe(take(1)).subscribe(user => { // change
           (user as User).profile = profile;
@@ -267,10 +239,7 @@ export class AuthService {
   private handleUserError(result?: any) {
     return (error: HttpErrorResponse): Observable<User | undefined> => {
       if(result == "getUserData") {
-        console.log("INVALID TOKEN");
-        this.signOut().subscribe(r => {
-          this.router.navigate(["login"]);
-        });
+        this.accessTokenService.removeTokens();
       }
       return of(undefined);
     };
@@ -293,7 +262,8 @@ export class AuthService {
 }
 
 interface AuthResponse {
-  token?: string;
+  accessToken?: string;
+  refreshToken?: string;
   user?: User;
   alternativeIdentities?: User[];
   error?: string;
