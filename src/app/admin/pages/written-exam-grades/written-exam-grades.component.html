@@ -2,11 +2,19 @@
   <ng-template matMenuContent>
     <button mat-menu-item (click)="reportsService.openFile('written_exam_catalog_pdf')">
       <mat-icon>description</mat-icon>
-      <span>Format PDF</span>
+      <span>[PDF] Catalog note inițiale</span>
     </button>
     <button mat-menu-item (click)="reportsService.openFile('written_exam_catalog_docx')">
       <mat-icon>description</mat-icon>
-      <span>Format DOCX</span>
+      <span>[DOCX] Catalog note inițiale</span>
+    </button>
+     <button mat-menu-item (click)="reportsService.openFile('written_exam_after_disputes_catalog_pdf')">
+      <mat-icon>description</mat-icon>
+      <span>[PDF] Catalog note după contestații</span>
+    </button>
+    <button mat-menu-item (click)="reportsService.openFile('written_exam_after_disputes_catalog_docx')">
+      <mat-icon>description</mat-icon>
+      <span>[DOCX] Catalog note după contestații</span>
     </button>
   </ng-template>
 </mat-menu>
