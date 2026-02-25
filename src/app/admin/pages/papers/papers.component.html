@@ -92,7 +92,7 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="50" fxFlex.lt-md="100">
-          <mat-label>Specializare</mat-label>
+          <mat-label>Program de studiu</mat-label>
           <mat-select formControlName="specializationId">
             <mat-option [value]="null">--</mat-option>
             @for (domain of domains | async; track domain.id) {
