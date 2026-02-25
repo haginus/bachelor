@@ -19,7 +19,7 @@
         <mat-label>Nume domeniu</mat-label>
         <input matInput type="text" formControlName="name" name="domainName">
       </mat-form-field>
-      <div fxLayout="row" fxLayoutGap="6px">
+      <div fxLayout="row" fxLayoutGap="12px">
         <mat-form-field appearance="outline" subscriptSizing="fixed" fxFlex="50">
           <mat-label>Tip</mat-label>
           <mat-select formControlName="type" (valueChange)="paperType.setValue(null)">
@@ -54,31 +54,55 @@
       <div formArrayName="specializations">
         <h3>Programe de studii</h3>
         @for (specialization of formSpecializations.controls; track specialization; let i = $index) {
-          <div [formGroupName]="i" class="specialization-row">
-            <mat-form-field appearance="outline">
-              <mat-label>Nume program de studiu</mat-label>
-              <input matInput type="text" formControlName="name" name="specializationName">
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Ani de studiu</mat-label>
-              <input matInput type="number" formControlName="studyYears" min="1">
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Forma de învățământ</mat-label>
-              <mat-select formControlName="studyForm">
-                <mat-option value="if">Învățământ cu frecvență</mat-option>
-                <mat-option value="ifr">Învățământ cu frecvență redusă</mat-option>
-                <mat-option value="id">Învățământ la distanță</mat-option>
-              </mat-select>
-            </mat-form-field>
-            <div
-              [matTooltip]="specialization.get('studentNumber')?.value > 0 ? 'Mutați întâi studenții la alt program de studiu' : 'Ștergeți programul de studiu'">
-              <button mat-icon-button (click)="$event.preventDefault(); removeSpecialization(i)"
-                [disabled]="specialization.get('studentNumber')?.value > 0">
-                <mat-icon>delete</mat-icon>
-              </button>
+          <mat-card class="specialization-card" [formGroupName]="i">
+            <div fxLayout="row grid" fxLayoutGap="12px grid">
+              <mat-form-field appearance="outline" fxFlex="100">
+                <mat-label>Nume program de studiu</mat-label>
+                <input matInput type="text" formControlName="name" name="specializationName">
+              </mat-form-field>
+              <mat-form-field appearance="outline" fxFlex="30">
+                <mat-label>Ani de studiu</mat-label>
+                <input matInput type="number" formControlName="studyYears" min="1">
+              </mat-form-field>
+              <mat-form-field appearance="outline" fxFlex="70">
+                <mat-label>Forma de învățământ</mat-label>
+                <mat-select formControlName="studyForm">
+                  <mat-option value="if">Învățământ cu frecvență</mat-option>
+                  <mat-option value="ifr">Învățământ cu frecvență redusă</mat-option>
+                  <mat-option value="id">Învățământ la distanță</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="60">
+                <mat-label>Nume în catalog</mat-label>
+                <input matInput type="text" formControlName="catalogName" name="specializationCatalogName">
+              </mat-form-field>
+              <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="40">
+                <mat-label>Secretar</mat-label>
+                <mat-select formControlName="secretaryId">
+                  <mat-option [value]="null">-- Niciunul --</mat-option>
+                  @for (secretary of secretaries(); track secretary) {
+                    <mat-option [value]="secretary.id">
+                      {{ secretary.lastName }} {{ secretary.firstName }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
             </div>
-          </div>
+            <span
+              class="delete-button"
+              [matTooltip]="specialization.get('studentNumber')?.value > 0 ? 'Mutați întâi studenții la alt program de studiu.' : ''"
+            >
+              <button
+                matButton="outlined"
+                color="warn"
+                (click)="$event.preventDefault(); removeSpecialization(i)"
+                [disabled]="specialization.get('studentNumber')?.value > 0"
+              >
+                <mat-icon>delete</mat-icon>
+                <span>Ștergeți</span>
+              </button>
+            </span>
+          </mat-card>
         }
         <div fxLayout="column" fxLayoutAlign="center center">
           <button mat-stroked-button (click)="$event.preventDefault(); addSpecialization()">

@@ -13,8 +13,8 @@ export class AdminsService {
 
   private readonly baseUrl = `${environment.apiUrl}/admins`;
 
-  findAll(): Observable<User[]> {
-    return this.http.get<User[]>(this.baseUrl);
+  findAll(params: { type?: 'admin' | 'secretary' } = {}): Observable<User[]> {
+    return this.http.get<User[]>(this.baseUrl, { params });
   }
 
   findOne(id: number): Observable<User> {

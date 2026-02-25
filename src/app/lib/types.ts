@@ -60,8 +60,10 @@ export type FundingForm = 'budget' | 'tax';
 export interface Specialization {
   id: number;
   name: string;
+  catalogName: string | null;
   studyYears: number;
   studyForm: StudyForm;
+  secretary: Secretary | null;
   studentCount?: number;
   domain?: Domain;
 }

@@ -6,6 +6,8 @@ import { PAPER_TYPES } from '../../../lib/constants';
 import { DomainsService } from '../../../services/domains.service';
 import { firstValueFrom } from 'rxjs';
 import { Domain, DomainType, PaperType, Specialization, StudyForm } from '../../../lib/types';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { AdminsService } from '../../../services/admins.service';
 
 @Component({
   selector: 'app-domain-dialog',
@@ -18,11 +20,13 @@ export class AdminDomainDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DomainDialogData,
     private domains: DomainsService,
+    private readonly adminsService: AdminsService,
     private dialogRef: MatDialogRef<AdminDomainDialogComponent>,
     private snackbar: MatSnackBar
   ) {}
 
   isLoading = false;
+  secretaries = toSignal(this.adminsService.findAll({ type: 'secretary' }));
 
   editDomainForm = new FormGroup({
     name: new FormControl<string>(this.data.domain?.name || '', { validators: [Validators.required], nonNullable: true }),
@@ -50,8 +54,10 @@ export class AdminDomainDialogComponent implements OnInit {
     let group = new FormGroup({
       id: new FormControl<number | undefined>(specialization?.id, { nonNullable: true }),
       name: new FormControl<string>(specialization?.name, { validators: [Validators.required], nonNullable: true }),
+      catalogName: new FormControl<string>(specialization?.catalogName || '', { nonNullable: true }),
       studyYears: new FormControl(specialization?.studyYears, { validators: [Validators.required, Validators.min(1)], nonNullable: true }),
       studyForm: new FormControl<StudyForm>(specialization?.studyForm || 'if', { validators: [Validators.required], nonNullable: true }),
+      secretaryId: new FormControl<number | null>(specialization?.secretary?.id || null, { nonNullable: true }),
       studentNumber: new FormControl((specialization?.studentCount ?? 0), { nonNullable: true })
     });
     this.formSpecializations.push(group);

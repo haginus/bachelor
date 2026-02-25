@@ -51,7 +51,9 @@ export class AdminDomainsComponent implements OnInit, OnDestroy {
       data: {
         mode: 'create',
         domains: this.data
-      }
+      },
+      width: '90%',
+      maxWidth: '700px'
     });
 
     dialogRef.afterClosed().subscribe(domain => {
@@ -67,7 +69,9 @@ export class AdminDomainsComponent implements OnInit, OnDestroy {
       data: {
         mode: 'edit',
         domain: this.data.find(domain => domain.id == id)
-      }
+      },
+      width: '90%',
+      maxWidth: '700px'
     });
 
     dialogRef.afterClosed().subscribe(domain => {
