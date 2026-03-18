@@ -96,6 +96,7 @@ export class LogEntryComponent {
       case LogName.SubmissionCreated:
       case LogName.SubmissionSubmitted:
       case LogName.SubmissionUnsubmitted:
+      case LogName.SubmissionDeleted:
       case LogName.WrittenExamGradeGiven:
       case LogName.WrittenExamGradeDisputed:
         byLogAttributes = [
