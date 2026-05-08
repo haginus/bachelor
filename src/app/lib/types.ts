@@ -128,6 +128,11 @@ export interface Student extends User {
 export function isStudent(user: User): user is Student {
   return user.type === 'student';
 }
+
+export function isTeacher(user: User): user is Teacher {
+  return user.type === 'teacher';
+}
+
 export interface Address {
   county: string;
   locality: string;

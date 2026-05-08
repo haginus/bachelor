@@ -1,4 +1,4 @@
-@if(isLoadingQuery) {
+@if(isSubmitting) {
   <app-loading class="in-dialog" color="primary"></app-loading>
 }
 <h2 mat-dialog-title>Adăugați o lucrare</h2>
@@ -6,8 +6,8 @@
 <mat-dialog-content>
   <mat-vertical-stepper linear #stepper>
     <mat-step [stepControl]="paperForm">
+      <ng-template matStepLabel>Completați detaliile lucrării</ng-template>
       <form [formGroup]="paperForm" fxLayout="row grid" fxLayoutGap="10px grid">
-        <ng-template matStepLabel>Completați detaliile lucrării</ng-template>
         <mat-form-field appearance="outline" fxFlex="100">
           <mat-label>Titlu</mat-label>
           <input type="text" matInput formControlName="title" />
@@ -55,9 +55,9 @@
       </form>
     </mat-step>
     <mat-step [stepControl]="selectedStudentControl">
+      <ng-template matStepLabel>Alegeți studentul</ng-template>
       <div class="filter-by">Filtrați după</div>
       <form [formGroup]="studentLookupForm" fxLayout="row grid" fxLayoutGap="10px grid">
-        <ng-template matStepLabel>Alegeți studentul</ng-template>
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-sm="50">
           <mat-label>Nume de familie</mat-label>
           <input type="text" matInput formControlName="lastName" />
@@ -81,9 +81,9 @@
             }
           </mat-select>
         </mat-form-field>
-        <div class="student-scroll" fxFlex="100">
+        <div class="user-scroll" fxFlex="100">
 
-          @if(isLoadingUsers) {
+          @if(isLoadingStudents) {
             <app-loading color="primary"></app-loading>
           }
           <mat-selection-list [multiple]="false" [formControl]="selectedStudentControl">
@@ -110,9 +110,45 @@
         </div>
       </form>
     </mat-step>
+    @if(!userIsTeacher) {
+      <mat-step [stepControl]="selectedTeacherControl">
+        <ng-template matStepLabel>Alegeți profesorul</ng-template>
+        <div class="filter-by">Filtrați după</div>
+        <form [formGroup]="teacherLookupForm" fxLayout="row grid" fxLayoutGap="10px grid">
+          <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-sm="50">
+            <mat-label>Nume de familie</mat-label>
+            <input type="text" matInput formControlName="lastName" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-sm="50">
+            <mat-label>Prenume</mat-label>
+            <input type="text" matInput formControlName="firstName" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-sm="50">
+            <mat-label>E-mail</mat-label>
+            <input type="email" matInput formControlName="email" name="teacherEmail rpd" />
+          </mat-form-field>
+          <div class="user-scroll" fxFlex="100">
+            @if(isLoadingTeachers) {
+              <app-loading color="primary"></app-loading>
+            }
+            <mat-selection-list [multiple]="false" [formControl]="selectedTeacherControl">
+              @for(teacher of teacherResults; track teacher.id) {
+                <mat-list-option [value]="teacher">
+                  <h3 matListItemTitle>{{ teacher.firstName }} {{ teacher.lastName }}</h3>
+                  <b matListItemLine>{{ teacher.email }}</b>
+                </mat-list-option>
+              }
+            </mat-selection-list>
+          </div>
+          <div class="actions">
+            <button mat-button matStepperNext [disabled]="selectedTeacherControl.invalid">Pasul următor</button>
+          </div>
+        </form>
+      </mat-step>
+    }
     <mat-step>
       <ng-template matStepLabel>Vedeți rezultatul</ng-template>
-      <div class="paper-snippet mat-elevation-z1">
+      <div class="paper-snippet">
         <h2>{{ resultedPaper.title }}</h2>
         @if(resultedPaper?.student) {
           <p class="paper-type">
@@ -130,12 +166,16 @@
         @if(resultedPaper?.student) {
           <app-user-snippet [user]="$any(resultedPaper).student">Student</app-user-snippet>
         }
-      </div>
-
-      <div fxLayoutAlign="end" class="dialog-buttons">
-        <button mat-button mat-dialog-close>Anulați</button>
-        <button matButton="filled" (click)="savePaper()">Salvați</button>
+        @if(resultedPaper?.teacher) {
+          <app-user-snippet [user]="$any(resultedPaper).teacher">Profesor</app-user-snippet>
+        }
       </div>
     </mat-step>
   </mat-vertical-stepper>
 </mat-dialog-content>
+@if(showFooter) {
+  <div mat-dialog-actions align="end">
+    <button matButton mat-dialog-close>Anulați</button>
+    <button matButton="filled" (click)="savePaper()" [disabled]="!formValid">Adăugați</button>
+  </div>
+}

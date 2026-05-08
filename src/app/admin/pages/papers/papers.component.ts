@@ -23,6 +23,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { removeEmptyProperties } from '../../../lib/utils';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubmissionsService } from '../../../services/submissions.service';
+import { AddPaperComponent } from '../../../teacher/dialogs/add-paper/add-paper.component';
+import { CommonDialogComponent, CommonDialogData } from '../../../shared/components/common-dialog/common-dialog.component';
 
 @Component({
   selector: 'app-papers',
@@ -283,6 +285,34 @@ export class AdminPapersComponent {
   resetFilterForm() {
     this.paperFilterForm.reset({ submitted: true });
     this.paperFilterDebouncedForm.reset({}, { emitEvent: false });
+  }
+
+  async addPaper() {
+    const dialogRef = this.dialog.open(AddPaperComponent);
+    if(await firstValueFrom(dialogRef.afterClosed())) {
+      this.refreshResults();
+    }
+  }
+
+  async removePaper(paper: Paper) {
+    const dialogRef = this.dialog.open<CommonDialogComponent, CommonDialogData, boolean>(CommonDialogComponent, {
+      data: {
+        title: 'Rupeți asocierea?',
+        content: `Sunteți sigur că doriți să rupeți asocierea dintre ${paper.student.fullName} și ${paper.teacher?.fullName}?`,
+        actions: [
+          { name: 'Anulați', value: false },
+          { name: 'Rupeți asocierea', value: true },
+        ],
+      },
+    });
+    if(!await firstValueFrom(dialogRef.afterClosed())) return;
+    try {
+      await firstValueFrom(this.papersService.delete(paper.id));
+      this.snackbar.open('Asociere ruptă.');
+      this.refreshResults();
+    } catch (error) {
+      this.snackbar.open('A apărut o eroare la ruperea asocierii.');
+    }
   }
 
 }

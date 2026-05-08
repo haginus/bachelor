@@ -19,11 +19,18 @@
       <span>Înscrieți lucrarea</span>
     </button>
     }
+    <button mat-menu-item [disabled]="paper.isValid != null" (click)="removePaper(paper)">
+      <mat-icon>delete</mat-icon>
+      <span>Rupeți asocierea</span>
+    </button>
   </ng-template>
 </mat-menu>
 
 <div class="table-container">
   <mat-toolbar color="white">
+    <button matButton="filled" (click)="addPaper()">
+      Adăugați o lucrare
+    </button>
     <span class="toolbar-spacer"></span>
     <button mat-icon-button (click)="refreshResults()">
       <mat-icon>refresh</mat-icon>

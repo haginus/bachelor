@@ -1,15 +1,15 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, DestroyRef, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { firstValueFrom, Observable } from 'rxjs';
+import { firstValueFrom, Observable, of } from 'rxjs';
 import { debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { TopicsService } from '../../../services/topics.service';
 import { DOMAIN_TYPES, PAPER_TYPES } from '../../../lib/constants';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,10 +22,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSelectModule } from '@angular/material/select';
 import { StudentsService } from '../../../services/students.service';
 import { DomainsService } from '../../../services/domains.service';
-import { Student, Topic } from '../../../lib/types';
+import { isTeacher, Student, Teacher, Topic } from '../../../lib/types';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PapersService } from '../../../services/papers.service';
 import { AuthService } from '../../../services/auth.service';
+import { TeachersService } from '../../../services/teachers.service';
 
 @Component({
   selector: 'app-add-paper',
@@ -56,32 +57,70 @@ export class AddPaperComponent {
     private readonly authService: AuthService,
     private readonly domainsService: DomainsService,
     private readonly studentsService: StudentsService,
+    private readonly teachersService: TeachersService,
     private readonly topicsService: TopicsService,
     private readonly papersService: PapersService,
     private dialog: MatDialogRef<AddPaperComponent>,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private readonly destroyRef: DestroyRef,
   ) {
+    this.authService.userData.pipe(takeUntilDestroyed()).subscribe(user => {
+      if(isTeacher(user)) {
+        this.selectedTeacherControl.setValue([user]);
+        this.userIsTeacher = true;
+      } else {
+        this.userIsTeacher = false;
+      }
+    });
     this.filteredTopics = this.paperForm.get("topics").valueChanges.pipe(
       startWith(null),
       map((topicName: string | null) => typeof topicName == 'string' ? this._filter(topicName) : this.remainingTopics.slice())
     );
+    this.topicsService.findAll().pipe(takeUntilDestroyed()).subscribe(topics => {
+      this.remainingTopics =
+        topics.filter(topic => !this.selectedTopics.find(t => t.id == topic.id));
+    });
     this.studentLookupForm.valueChanges.pipe(
       takeUntilDestroyed(),
       startWith(this.studentLookupForm.value),
       debounceTime(500),
       switchMap((query) => {
-        this.isLoadingUsers = true;
+        this.isLoadingStudents = true;
         return this.studentsService.findAll({ ...query, limit: 15 });
       })
     ).subscribe(results => {
       this.studentResults = results.rows;
-      this.isLoadingUsers = false;
+      this.isLoadingStudents = false;
     });
-    this.topicsService.findAll().pipe(takeUntilDestroyed()).subscribe(topics => {
-      this.remainingTopics =
-        topics.filter(topic => !this.selectedTopics.find(t => t.id == topic.id));
+    this.authService.userData.pipe(
+      switchMap(user => {
+        if(!isTeacher(user)) {
+          return this.teacherLookupForm.valueChanges.pipe(
+            startWith(this.teacherLookupForm.value),
+            debounceTime(500),
+            switchMap((query) => {
+              this.isLoadingTeachers = true;
+              return this.teachersService.findAll({ ...query, limit: 15 });
+            })
+          );
+        }
+        return of({ rows: [] });
+      }),
+      takeUntilDestroyed()
+    ).subscribe(results => {
+      this.teacherResults = results.rows;
+      this.isLoadingTeachers = false;
     });
   }
+
+  ngAfterViewInit() {
+    this.stepper.selectionChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
+      this.showFooter = event.selectedIndex === this.stepper.steps.length - 1;
+    });
+  }
+
+  userIsTeacher = false;
+  showFooter = false;
 
   paperForm = new FormGroup({
     title: new FormControl("", [Validators.required]),
@@ -97,12 +136,21 @@ export class AddPaperComponent {
     domainId: new FormControl(null),
   });
 
-  selectedStudentControl = new FormControl<Student[]>([], [Validators.minLength(1)]);
+  teacherLookupForm = new FormGroup({
+    firstName: new FormControl(""),
+    lastName: new FormControl(""),
+    email: new FormControl(""),
+  });
 
-  isLoadingQuery = false;
-  isLoadingUsers = false;
+  selectedStudentControl = new FormControl<Student[]>([], [Validators.required, Validators.minLength(1)]);
+  selectedTeacherControl = new FormControl<Teacher[]>([], [Validators.required, Validators.minLength(1)]);
+
+  isSubmitting = false;
+  isLoadingStudents = false;
+  isLoadingTeachers = false;
 
   studentResults: Student[] = [];
+  teacherResults: Teacher[] = [];
   domains = this.domainsService.findAll();
 
   selectedTopics: Topic[] = [];
@@ -113,7 +161,7 @@ export class AddPaperComponent {
   DOMAIN_TYPES = DOMAIN_TYPES;
 
   async savePaper() {
-    this.isLoadingQuery = true;
+    this.isSubmitting = true;
     try {
       let topicIds = this.selectedTopics.filter(topic => topic.id != 0).map(topic => topic.id);
       const newTopicNames = this.selectedTopics.filter(topic => topic.id == 0).map(topic => topic.name);
@@ -123,19 +171,20 @@ export class AddPaperComponent {
       }
       const { title, description } = this.paperForm.value;
       const studentId = this.selectedStudentControl.value?.[0]?.id;
-      const teacherId = (await firstValueFrom(this.authService.userData)).id;
+      const teacherId = this.selectedTeacherControl.value?.[0]?.id;
       const paper = await firstValueFrom(
         this.papersService.create({ title, description, topicIds, studentId, teacherId })
       );
       this.dialog.close(paper);
       this.snackbar.open("Lucrarea a fost salvată.");
     } finally {
-      this.isLoadingQuery = false;
+      this.isSubmitting = false;
     }
   }
 
   @ViewChild('topicInput') topicInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
+  @ViewChild('stepper') stepper: MatStepper;
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -207,11 +256,17 @@ export class AddPaperComponent {
     return this.paperForm.get("topics");
   }
 
+  get formValid() {
+    return this.paperForm.valid && this.selectedStudentControl.valid && this.selectedTeacherControl.valid;
+  }
+
   get resultedPaper() {
     const student = this.selectedStudentControl.value?.[0];
+    const teacher = this.selectedTeacherControl.value?.[0];
     return {
       ...this.paperForm.value,
-      student
+      student,
+      teacher,
     }
   }
 
