@@ -497,3 +497,10 @@ input[type="time"]::-webkit-inner-spin-button {
     padding: 0;
   }
 }
+
+// Exclude the navigation drawer from view transitions.
+::view-transition-group(main-drawer),
+::view-transition-old(main-drawer),
+::view-transition-new(main-drawer) {
+  animation: none;
+}
