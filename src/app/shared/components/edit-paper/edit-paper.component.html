@@ -41,6 +41,17 @@
         }
       </mat-autocomplete>
     </mat-form-field>
+    @if(user.type === 'admin') {
+      @defer {
+        <mat-form-field appearance="outline" fxFlex="100">
+          <mat-label>Profesor coordonator</mat-label>
+          <app-filterable-select
+            [config]="teacherSelectConfig"
+            formControlName="teacherId"
+          />
+        </mat-form-field>
+      }
+    }
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

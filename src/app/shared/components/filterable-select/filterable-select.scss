@@ -1,0 +1,123 @@
+app-filterable-select {
+  .trigger {
+    display: flex;
+    gap: 8px;
+    pointer-events: none;
+    min-width: min-content;
+
+    .value {
+      flex: 1;
+
+      .option-label {
+        .option-secondary-label {
+          font-size: var(--mat-sys-body-medium-size);
+        }
+      }
+    }
+
+    &.disabled {
+      color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+    }
+  }
+}
+
+.filterable-select-menu {
+  overflow: unset;
+  max-width: none;
+
+  .mat-mdc-menu-content {
+    padding: 0;
+  }
+
+  .menu-content {
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    min-width: 320px;
+    max-width: calc(100vw - 32px);
+
+    .filter-input {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+      span {
+        margin: 0 8px;
+        font: var(--mat-sys-label-large);
+      }
+
+      input {
+        flex: 1;
+        border: none;
+        outline: none;
+        background: transparent;
+        font: var(--mat-sys-label-large);
+      }
+    }
+
+    .discrete-scroll {
+      position: relative;
+      padding: 8px 0;
+      flex: 1;
+    }
+
+    .no-options {
+      font: var(--mat-sys-label-medium);
+    }
+
+    .option-item {
+      border: none;
+      outline: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      padding: 4px 16px;
+      padding-right: 8px;
+      cursor: pointer;
+      font: var(--mat-sys-label-large);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      &.selected {
+        color: var(--mat-sys-on-primary-container);
+      }
+
+      &:hover {
+        color: var(--mat-sys-on-surface);
+        background-color: var(--mat-sys-surface-dim);
+      }
+
+      .option-item-text {
+        flex: 1;
+        &>:nth-child(2) {
+          font-weight: 400;
+        }
+      }
+
+      .selected-icon {
+        width: 24px;
+        height: 24px;
+        mat-icon {
+          color: var(--mat-sys-primary);
+        }
+      }
+    }
+
+    .actions-bar {
+      border-top: 1px solid var(--mat-sys-outline-variant);
+      display: flex;
+      padding: 8px;
+      gap: 8px;
+
+      &.centered {
+        justify-content: center;
+      }
+
+      .spacer {
+        flex: 1;
+      }
+    }
+  }
+}

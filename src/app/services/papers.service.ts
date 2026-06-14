@@ -91,6 +91,7 @@ type UpdatePaperDto = {
   title: string;
   description: string;
   topicIds: number[];
+  teacherId?: number;
 }
 
 type CreatePaperDto = UpdatePaperDto & {

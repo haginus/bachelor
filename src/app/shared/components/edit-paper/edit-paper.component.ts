@@ -17,6 +17,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { PapersService } from '../../../services/papers.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Paper, Topic, User } from '../../../lib/types';
+import { FilterableSelect } from '../filterable-select/filterable-select';
+import { getTeacherSelectConfig } from '../filterable-select/teacher-select.config';
 
 @Component({
   selector: 'app-edit-paper',
@@ -34,6 +36,7 @@ import { Paper, Topic, User } from '../../../lib/types';
     MatIconModule,
     LoadingComponent,
     AsyncPipe,
+    FilterableSelect,
   ]
 })
 export class EditPaperComponent implements OnInit {
@@ -52,12 +55,15 @@ export class EditPaperComponent implements OnInit {
     );
   }
 
+  teacherSelectConfig = getTeacherSelectConfig();
+
   user!: User;
 
   paperForm = new FormGroup({
-    "title": new FormControl(this.paper.title, [Validators.required, Validators.minLength(3), Validators.maxLength(256)]),
-    "description": new FormControl(this.paper.description, [Validators.required, Validators.minLength(64), Validators.maxLength(1024)]),
-    "topics": new FormControl('')
+    title: new FormControl(this.paper.title, [Validators.required, Validators.minLength(3), Validators.maxLength(256)]),
+    description: new FormControl(this.paper.description, [Validators.required, Validators.minLength(64), Validators.maxLength(1024)]),
+    topics: new FormControl(''),
+    teacherId: new FormControl(this.paper.teacherId, [Validators.required]),
   });
 
   @ViewChild('topicInput') topicInput: ElementRef<HTMLInputElement>;
@@ -114,10 +120,11 @@ export class EditPaperComponent implements OnInit {
     const title = this.paperForm.get("title").value;
     const description = this.paperForm.get("description").value;
     const topicIds = this.selectedTopics.map(topic => topic.id);
+    const teacherId = this.paperForm.get("teacherId").value;
     this.isLoadingQuery = true;
     try {
       const result = await firstValueFrom(
-        this.papersService.update(this.paper.id, { title, description, topicIds })
+        this.papersService.update(this.paper.id, { title, description, topicIds, teacherId })
       );
       let snackMessage = "Lucrarea a fost salvată.";
       if(result.documentsGenerated) {

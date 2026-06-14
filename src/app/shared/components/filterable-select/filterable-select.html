@@ -1,0 +1,80 @@
+<div class="trigger" #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="selectMenu" [class.disabled]="disabled">
+  <div class="value">
+    @for(option of selectedOptions(); track config().getOptionId(option)) {
+      <span class="option-label">
+        <span>{{ config().getOptionLabel(option) }}</span>
+        @if(config().showSecondaryLabelInTrigger && config().getOptionSecondaryLabel(option)) {
+          <span class="option-secondary-label">&nbsp;({{ config().getOptionSecondaryLabel(option) }})</span>
+        }
+        @if(!$last) {
+          <span>, </span>
+        }
+      </span>
+    }
+  </div>
+  <mat-icon class="select-icon">arrow_drop_down</mat-icon>
+</div>
+
+<mat-menu class="filterable-select-menu" #selectMenu (closed)="onMenuClosed()">
+  <div class="menu-content" (click)="$event.stopPropagation()" [style]="{ minWidth: menuContentMinWidth() + 'px' }">
+    <div class="filter-input" (click)="filterInput.focus()">
+      <mat-icon>filter_list</mat-icon>
+      <span>Filtrați</span>
+      <input #filterInput placeholder="Tastați pentru a filtra" (input)="onInputChange($event)" />
+    </div>
+    <div class="discrete-scroll">
+      @if(isLoading() || isLoadingMore()) {
+        @if(isFirstLoad()) {
+          <div class="centered-h">
+            <mat-progress-spinner mode="indeterminate" [diameter]="32"></mat-progress-spinner>
+          </div>
+        } @else {
+          <app-loading type="bar" position="absolute" />
+        }
+      } @else if(options().length === 0) {
+        <div class="centered-h no-options">
+          Nu există opțiuni disponibile.
+        </div>
+      }
+      @for(option of options(); track config().getOptionId(option)) {
+        <button matRipple class="option-item" [class.selected]="isOptionSelected(option)" (click)="selectOption(option)">
+          <div class="option-item-text">
+            <div>{{ config().getOptionLabel(option) }}</div>
+            <div>{{ config().getOptionSecondaryLabel(option) }}</div>
+          </div>
+          <div class="selected-icon">
+            @if(isOptionSelected(option)) {
+              <mat-icon matSuffix class="selected-icon">check</mat-icon>
+            }
+          </div>
+        </button>
+      }
+    </div>
+    @if(!isLoading() && options().length < optionCount()) {
+      <div class="actions-bar centered">
+        <button mat-button (click)="loadMoreOptions()" [disabled]="isLoadingMore()">
+          <mat-icon>unfold_more</mat-icon>
+          <span>Arătați încă {{ loadMoreCount() }} din {{ optionCount() }}</span>
+        </button>
+      </div>
+    }
+    @if(config().createOption) {
+      <div class="actions-bar centered">
+        <button mat-button (click)="onCreateOption()">
+          <mat-icon>add</mat-icon>
+          {{ config().createOptionLabel }}
+        </button>
+      </div>
+    }
+    <div class="actions-bar">
+      @if(config().clearable && !empty) {
+        <button mat-button (click)="clearSelection()">Ștergeți</button>
+      }
+      <div class="spacer"></div>
+      @if(config().multiple) {
+        <button mat-button (click)="closeMenu()">Anulați</button>
+      }
+      <button mat-button (click)="closeMenu()">OK</button>
+    </div>
+  </div>
+</mat-menu>
