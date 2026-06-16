@@ -16,7 +16,7 @@
 </div>
 
 <mat-menu class="filterable-select-menu" #selectMenu (closed)="onMenuClosed()">
-  <div class="menu-content" (click)="$event.stopPropagation()" [style]="{ minWidth: menuContentMinWidth() + 'px' }">
+  <div class="menu-content" (click)="$event.stopPropagation()" [style]="{ minWidth: menuContentWidth() + 'px', maxWidth: menuContentWidth() + 'px' }">
     <div class="filter-input" (click)="filterInput.focus()">
       <mat-icon>filter_list</mat-icon>
       <span>Filtrați</span>

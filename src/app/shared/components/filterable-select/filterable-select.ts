@@ -135,7 +135,7 @@ export class FilterableSelect<OptionType = any, ValueType = any> implements Cont
   private onChange: (value: ValueType | ValueType[] | null | undefined) => void = () => {};
   private onTouched: () => void = () => {};
 
-  protected menuContentMinWidth = signal(0);
+  protected menuContentWidth = signal(0);
 
   async writeValue(value: ValueType | ValueType[] | null | undefined): Promise<void> {
     this._underlyingValue = value;
@@ -173,7 +173,7 @@ export class FilterableSelect<OptionType = any, ValueType = any> implements Cont
       triggerElementRef = new ElementRef(formFieldElement);
       (this.menuTrigger as any)._element = triggerElementRef;
     }
-    this.menuContentMinWidth.set(triggerElementRef.nativeElement.getBoundingClientRect().width);
+    this.menuContentWidth.set(triggerElementRef.nativeElement.getBoundingClientRect().width);
     this.menuTrigger.openMenu();
     this.loadOptions();
     this.focused = true;
@@ -201,6 +201,16 @@ export class FilterableSelect<OptionType = any, ValueType = any> implements Cont
       this.options.set(rows);
       this.optionCount.set(count);
       this.offset = rows.length;
+      if(this.isFirstLoad()) {
+        // Reposition the menu after the first load to ensure it is positioned correctly with the new content size
+        setTimeout(() => {
+          const overlayRef = (this.menuTrigger as any)._overlayRef;
+          const strategy = overlayRef?.getConfig().positionStrategy as any;
+          strategy?.withLockedPosition(false);
+          overlayRef?.updatePosition();
+          strategy?.withLockedPosition(true);
+        });
+      }
       this.isFirstLoad.set(false);
     } finally {
       this.isLoading.set(false);
