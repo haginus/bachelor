@@ -3,14 +3,16 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TopicsService } from '../../../services/topics.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { Topic } from '../../../lib/types';
+import { FilterableSelectConfig } from '../../../shared/components/filterable-select/filterable-select';
+import { removeDiacritics } from '../../../lib/utils';
 
 @Component({
   selector: 'app-topic-dialog',
   templateUrl: './topic-dialog.component.html',
   styleUrls: ['./topic-dialog.component.scss'],
-  standalone: false
+  standalone: false,
 })
 export class AdminTopicDialogComponent implements OnInit {
 
@@ -24,6 +26,20 @@ export class AdminTopicDialogComponent implements OnInit {
   isLoading = false;
   remainingTopics: Topic[] = [];
   needsMove: boolean = false;
+
+  topicSelectConfig: FilterableSelectConfig<Topic, number> = {
+    clearable: true,
+    limit: 100000,
+    getOptions: (query) => {
+      const prepareStr = (str: string) => removeDiacritics(str).toLowerCase();
+      query.search = prepareStr(query.search);
+      const rows = this.remainingTopics.filter(topic => prepareStr(topic.name).includes(query.search));
+      return of({ rows, count: rows.length });
+    },
+    getSelectedOption: () => of(this.data.topic!),
+    getOptionLabel: (option) => option.name,
+    getOptionValue: (option) => option.id,
+  };
 
   editTopicForm = new FormGroup({
     "name": new FormControl(this.data.topic?.name, [Validators.required]),

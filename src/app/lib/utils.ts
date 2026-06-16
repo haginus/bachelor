@@ -107,3 +107,7 @@ export function removeEmptyProperties<T extends Object>(obj: T): Partial<T> {
 export function getNowSignal(intervalMs: number = 60000) {
   return toSignal(interval(intervalMs).pipe(map(() => new Date())), { initialValue: new Date() });
 }
+
+export function removeDiacritics(str: string) {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}

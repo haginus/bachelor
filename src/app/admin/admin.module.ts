@@ -46,6 +46,7 @@ import { TextProgressSpinnerComponent } from '../shared/components/text-progress
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideAppDateAdapter } from '../providers/date-adapter';
 import { WrittenExamGradesComponent } from './pages/written-exam-grades/written-exam-grades.component';
+import { FilterableSelect } from '../shared/components/filterable-select/filterable-select';
 
 const materialDeps = [
   MatPaginatorModule,
@@ -101,6 +102,7 @@ const materialDeps = [
     NgxJsonViewerModule,
     UploadFileDirective,
     DatetimePipe,
+    FilterableSelect,
     ...materialDeps
   ],
   providers: [

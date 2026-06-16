@@ -3,9 +3,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TopicsService } from '../../../services/topics.service';
-import { arrayMap } from '../../../lib/utils';
-import { firstValueFrom } from 'rxjs';
+import { arrayMap, removeDiacritics } from '../../../lib/utils';
+import { firstValueFrom, of } from 'rxjs';
 import { Topic } from '../../../lib/types';
+import { FilterableSelectConfig } from '../../../shared/components/filterable-select/filterable-select';
 
 @Component({
   selector: 'app-topic-bulk-delete-dialog',
@@ -26,6 +27,19 @@ export class TopicBulkDeleteDialogComponent implements OnInit {
   isLoading: boolean = false;
   needsMove: boolean = false;
 
+  topicSelectConfig: FilterableSelectConfig<Topic, number> = {
+    clearable: true,
+    limit: 100000,
+    getOptions: (query) => {
+      const prepareStr = (str: string) => removeDiacritics(str).toLowerCase();
+      query.search = prepareStr(query.search);
+      const rows = this.remainingTopics.filter(topic => prepareStr(topic.name).includes(query.search));
+      return of({ rows, count: rows.length });
+    },
+    getSelectedOption: () => of(null!),
+    getOptionLabel: (option) => option.name,
+    getOptionValue: (option) => option.id,
+  };
 
   deleteTopicForm = new FormGroup({
     "moveTo": new FormControl<number>(null, [Validators.required])

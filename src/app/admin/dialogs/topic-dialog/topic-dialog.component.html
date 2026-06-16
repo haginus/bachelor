@@ -30,11 +30,11 @@
       <form [formGroup]="deleteTopicForm">
         <mat-form-field appearance="outline">
           <mat-label>Mutați în</mat-label>
-          <mat-select formControlName="moveTo">
+          <app-filterable-select [config]="topicSelectConfig" formControlName="moveTo">
             @for (topic of remainingTopics; track topic) {
               <mat-option [value]="topic.id">{{ topic.name }}</mat-option>
             }
-          </mat-select>
+          </app-filterable-select>
         </mat-form-field>
       </form>
     }
