@@ -217,7 +217,14 @@
       </div>
     </div>
   } @else if(paper().isValid == null) {
-    @if(hasPendingReuploadRequests()) {
+    @if(isWaitingForDocumentGeneration()) {
+      <div class="tip-card primary rounded">
+        <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+        <div class="tip-card-content">
+          Se generează documentele...
+        </div>
+      </div>
+    } @else if(hasPendingReuploadRequests()) {
       <div class="tip-card warning rounded">
         <mat-icon class="tip-icon">warning_amber</mat-icon>
         <div class="tip-card-content">

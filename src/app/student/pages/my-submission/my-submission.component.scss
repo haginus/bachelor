@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 .section-card {
   margin: 16px;
   padding: 24px;
@@ -48,6 +50,14 @@
 
 .tip-card {
   margin-bottom: 16px;
+
+  @include mat.progress-spinner-overrides((
+    active-indicator-color: var(--mat-sys-on-primary),
+  ));
+
+  mat-progress-spinner {
+    margin-right: 16px;
+  }
 }
 
 .requirement-item {

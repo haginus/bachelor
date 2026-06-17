@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UserSnippetComponent } from '../../../shared/components/user-snippet/user-snippet.component';
 import { CommitteeSnippetComponent } from '../../../shared/components/committee-snippet/committee-snippet.component';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -35,7 +35,7 @@ import { SubmissionGradeTableComponent } from "../../../shared/components/submis
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressBarModule,
+    MatProgressSpinnerModule,
     UserSnippetComponent,
     CommitteeSnippetComponent,
     DatetimePipe,
@@ -143,27 +143,33 @@ export class MySubmissionComponent {
   });
 
   async openEditPaperDialog() {
-    const dialogRef = this.dialog.open(EditPaperComponent, {
+    const dialogRef = this.dialog.open<EditPaperComponent, Paper, { result: Paper; documentsGenerated: boolean; } | undefined>(EditPaperComponent, {
       data: this.paper(),
     });
-    const result: { result: Paper; } | undefined = await firstValueFrom(dialogRef.afterClosed());
-    if(result?.result) {
-      this.paper.set(result.result);
+    const result = await firstValueFrom(dialogRef.afterClosed());
+    if(!result) return;
+    this.paper.set(result.result);
+    if(result.documentsGenerated) {
+      this._refreshDocuments();
     }
   }
 
   async openUserExtraDataEditorDialog() {
-    const dialogRef = this.dialog.open(UserExtraDataEditorComponent, {
+    const dialogRef = this.dialog.open<UserExtraDataEditorComponent, UserExtraDataEditorData, { result: UserExtraData; documentsGenerated: boolean; } | undefined>(UserExtraDataEditorComponent, {
       data: {
         extraData: this.extraData(),
         user: await firstValueFrom(this.authService.userData),
-      } satisfies UserExtraDataEditorData
+      }
     });
-
-    const result = await firstValueFrom(dialogRef.afterClosed()) as { result: UserExtraData; documentsGenerated: boolean; } | undefined;
+    const result = await firstValueFrom(dialogRef.afterClosed());
     if(!result) return;
     this.extraData.set(result.result);
-    if(!result.documentsGenerated) return;
+    if(result.documentsGenerated) {
+      this._refreshDocuments();
+    }
+  }
+
+  private async _refreshDocuments() {
     try {
       this.isWaitingForDocumentGeneration.set(true);
       this.paper.set(await firstValueFrom(this.papersService.findMineStudent()));
