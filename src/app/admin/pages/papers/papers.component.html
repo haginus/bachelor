@@ -23,6 +23,12 @@
       <mat-icon>delete</mat-icon>
       <span>Rupeți asocierea</span>
     </button>
+    @if((user$ | async)?.type === 'admin') {
+      <button mat-menu-item appLogLink [filters]="{ paperId: { matching: [paper.id] } }">
+        <mat-icon>history</mat-icon>
+        <span>Vedeți istoricul</span>
+      </button>
+    }
   </ng-template>
 </mat-menu>
 

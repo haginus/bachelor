@@ -47,6 +47,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideAppDateAdapter } from '../providers/date-adapter';
 import { WrittenExamGradesComponent } from './pages/written-exam-grades/written-exam-grades.component';
 import { FilterableSelect } from '../shared/components/filterable-select/filterable-select';
+import { LogLinkDirective } from '../shared/directives/log-link.directive';
 
 const materialDeps = [
   MatPaginatorModule,
@@ -101,6 +102,7 @@ const materialDeps = [
     TextProgressSpinnerComponent,
     NgxJsonViewerModule,
     UploadFileDirective,
+    LogLinkDirective,
     DatetimePipe,
     FilterableSelect,
     ...materialDeps

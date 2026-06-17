@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { ThemeService } from '../../../services/theme.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-logs',
@@ -23,9 +24,18 @@ import { ThemeService } from '../../../services/theme.service';
 export class LogsComponent {
 
   constructor(
+    private readonly router: Router,
     private readonly logsService: LogsService,
     protected readonly themeService: ThemeService,
   ) {
+    const filters = this.router.currentNavigation().extras.state?.['filters'] || {};
+    this.logsQuery.filters = JSON.parse(JSON.stringify(filters));
+    this.model = {
+      language: 'json',
+      uri: 'main.json',
+      value: JSON.stringify(this.logsQuery, null, 2),
+      schemas: [{ uri: '$schema', schema: logFilterSchema }]
+    };
     this.queryLogs();
   }
 
@@ -93,12 +103,7 @@ export class LogsComponent {
     this.queryLogs();
   }
 
-  model: CodeModel = {
-    language: 'json',
-    uri: 'main.json',
-    value: JSON.stringify(this.logsQuery, null, 2),
-    schemas: [{ uri: '$schema', schema: logFilterSchema }]
-  };
+  model: CodeModel;
 
   options: CodeEditorComponent['options'] = {
     tabSize: 2,

@@ -25,6 +25,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SubmissionsService } from '../../../services/submissions.service';
 import { AddPaperComponent } from '../../../teacher/dialogs/add-paper/add-paper.component';
 import { CommonDialogComponent, CommonDialogData } from '../../../shared/components/common-dialog/common-dialog.component';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-papers',
@@ -47,7 +48,8 @@ export class AdminPapersComponent {
     private readonly documentReuploadRequestsService: DocumentReuploadRequestsService,
     private cd: ChangeDetectorRef,
     private dialog: MatDialog,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private readonly authService: AuthService,
   ) {
     this.route.data.pipe(takeUntilDestroyed()).subscribe(data => {
       this.resolverData = data['resolverData'];
@@ -109,6 +111,7 @@ export class AdminPapersComponent {
     });
   }
 
+  user$ = this.authService.userData;
   resolverData!: PaginatedResolverResult<ExtendedPaper, PaperQueryDto>;
   displayedColumns: string[] = ['status', 'id', 'title', 'type', 'student', 'teacher', 'committee'];
   expandedPaperId: string | null;

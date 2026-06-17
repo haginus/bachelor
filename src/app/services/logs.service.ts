@@ -51,9 +51,7 @@ export interface LogsQuery {
     offset?: number;
   };
   filters?: {
-    severity?: MatchingOrNotMatching<LogSeverity>;
-    name?: MatchingOrNotMatching<any>;
-    paperId?: MatchingOrNotMatching<number | null>;
+    [key: string]: MatchingOrNotMatching<any> | any;
   };
 }
 

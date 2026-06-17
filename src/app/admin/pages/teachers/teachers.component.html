@@ -16,6 +16,23 @@
       <mat-icon>people</mat-icon>
       <span>Impersonare</span>
     </button>
+    <button mat-menu-item [matMenuTriggerFor]="logsMenu" [matMenuTriggerData]="{ user: teacher }">
+      <mat-icon>history</mat-icon>
+      <span>Vedeți istoricul</span>
+    </button>
+  </ng-template>
+</mat-menu>
+
+<mat-menu #logsMenu="matMenu">
+  <ng-template matMenuContent let-user="user">
+    <button mat-menu-item appLogLink [filters]="{ byUserId: { matching: [user.id] } }">
+      <mat-icon>history</mat-icon>
+      <span>Acțiuni ale utilizatorului</span>
+    </button>
+    <button mat-menu-item appLogLink [filters]="{ userId: { matching: [user.id] } }">
+      <mat-icon>history</mat-icon>
+      <span>Acțiuni asupra utilizatorului</span>
+    </button>
   </ng-template>
 </mat-menu>
 
