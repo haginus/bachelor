@@ -5,7 +5,7 @@
   </p>
   <ul>
     <li>Ați completat corect toate datele cerute în procesul de înscriere, în special numele, prenumele și inițiala părintelui;</li>
-    <button mat-button [mat-dialog-close]="false" (click)="reportInvalidData()">
+    <button mat-button mat-dialog-close="cancel" (click)="reportInvalidData()">
       <mat-icon>feedback</mat-icon>
       <span>Date incorecte?</span>
     </button>
@@ -14,6 +14,10 @@
       <br>
       În prezent, titlul lucrării este: <i>„{{ paper.title }}”</i>.
     </li>
+    <button mat-button mat-dialog-close="edit-paper">
+      <mat-icon>edit</mat-icon>
+      <span>Editați lucrarea</span>
+    </button>
   </ul>
   <p>
     Este imperios necesar ca datele să fie corecte, deoarece acestea vor fi prezente în cataloagele folosite la notare
@@ -21,8 +25,8 @@
   </p>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-button [mat-dialog-close]="false">Anulați</button>
-  <button mat-button [mat-dialog-close]="true" [disabled]="cooldownSeconds > 0">
+  <button mat-button mat-dialog-close="cancel">Anulați</button>
+  <button mat-button mat-dialog-close="submit" [disabled]="cooldownSeconds > 0">
     Am citit și doresc înscrierea
     @if(cooldownSeconds > 0) {
       ({{ cooldownSeconds }})

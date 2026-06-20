@@ -51,3 +51,5 @@ export class SubmitPaperDialogComponent {
   }
 
 }
+
+export type SubmitPaperDialogResult = 'submit' | 'cancel' | 'edit-paper' | undefined;

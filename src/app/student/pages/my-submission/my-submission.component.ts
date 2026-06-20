@@ -22,7 +22,7 @@ import { DatePipe } from '@angular/common';
 import { AreDocumentsUploaded, DocumentMapElement, PaperDocumentEvent, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { UserExtraDataEditorComponent, UserExtraDataEditorData } from '../../../shared/components/user-extra-data-editor/user-extra-data-editor.component';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { SubmitPaperDialogComponent } from '../../dialogs/submit-paper-dialog/submit-paper-dialog.component';
+import { SubmitPaperDialogComponent, SubmitPaperDialogResult } from '../../dialogs/submit-paper-dialog/submit-paper-dialog.component';
 import { SubmissionsService } from '../../../services/submissions.service';
 import { WrittenExamService } from '../../../services/written-exam.service';
 import { FixedPipe } from '../../../shared/pipes/fixed.pipe';
@@ -109,6 +109,7 @@ export class MySubmissionComponent {
     return [
       { title: 'Completați datele necesare înscrierii', fulfilled: !!this.extraData() },
       { title: 'Semnați cererea de înscriere', fulfilled: this.paper().documents.some(d => d.name === 'sign_up_form' && d.type === 'signed') },
+      { title: `Încărcați lucrarea de ${PAPER_TYPES[this.paper().type]}`, fulfilled: this.paper().documents.some(d => d.name === 'paper') },
     ];
   });
   allSubmissionRequirementsFulfilled = computed(() => this.submissionRequirements().every(r => r.fulfilled));
@@ -181,11 +182,16 @@ export class MySubmissionComponent {
   async toggleSubmission(isSubmitted: boolean) {
     let result: Submission;
     if(isSubmitted) {
-      const confirmDialogRef = this.dialog.open(SubmitPaperDialogComponent, {
+      const confirmDialogRef = this.dialog.open<SubmitPaperDialogComponent, Paper, SubmitPaperDialogResult>(SubmitPaperDialogComponent, {
         autoFocus: 'dialog',
         data: this.paper(),
       });
-      if(!await firstValueFrom(confirmDialogRef.afterClosed())) return;
+      const dialogResult = await firstValueFrom(confirmDialogRef.afterClosed());
+      if(dialogResult === 'edit-paper') {
+        this.openEditPaperDialog();
+        return;
+      }
+      if(dialogResult !== 'submit') return;
       result = await firstValueFrom(this.submissionsService.submit(this.submission().id));
       this.snackBar.open('V-ați înscris în această sesiune.');
     } else {
