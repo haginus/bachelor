@@ -60,8 +60,12 @@
           <mat-datepicker #paperSubmissionEndDatePicker></mat-datepicker>
           <mat-hint>Data până la care studenții și profesorii pot depune lucrarea, respectiv referatul</mat-hint>
           <mat-error>
-            Termenul limită pentru depunerea lucrărilor nu poate fi mai devreme de data începerii depunerilor de
-            documente!
+            @if(settingsForm.hasError('paperSubmissionEndDateLowerThanFileSubmissionStartDate')) {
+              Termenul limită pentru depunerea lucrărilor nu poate fi mai devreme de data începerii depunerilor de documente!
+            }
+            @if(settingsForm.hasError('paperSubmissionEndDateGreaterThanFileSubmissionEndDate')) {
+              Termenul limită pentru depunerea lucrărilor nu poate fi mai târziu de data încheierii depunerilor de documente!
+            }
           </mat-error>
         </mat-form-field>
         <div fxFlex="100" fxFlex.gt-xs="50">

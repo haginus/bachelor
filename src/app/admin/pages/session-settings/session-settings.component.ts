@@ -132,6 +132,9 @@ const dateValidator: ValidatorFn = (control: FormGroup): ValidationErrors | null
   if(new Date(settings.paperSubmissionEndDate).getTime() < new Date(settings.fileSubmissionStartDate).getTime()) {
     errors['paperSubmissionEndDateLowerThanFileSubmissionStartDate'] = true;
   }
+  if(new Date(settings.paperSubmissionEndDate).getTime() > new Date(settings.fileSubmissionEndDate).getTime()) {
+    errors['paperSubmissionEndDateGreaterThanFileSubmissionEndDate'] = true;
+  }
   if(settings.writtenExamDate && new Date(settings.writtenExamDate).getTime() < new Date(settings.fileSubmissionStartDate).getTime()) {
     errors['writtenExamDateLowerThanFileSubmissionStartDate'] = true;
   }
