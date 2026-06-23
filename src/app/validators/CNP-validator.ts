@@ -45,7 +45,7 @@ const parseCNP = (cnp: string): ParsedCNP => {
   }
 
   const county = Number(cnp.substring(7, 9));
-  if (!((1 <= county && county <= 46) || [51, 52].includes(county))) {
+  if (!((1 <= county && county <= 48) || [51, 52, 70, 80].includes(county))) {
     throw new CNPParseError("invalid_county", "Codul județului din CNP este invalid.");
   } else {
     parsedData['countyCode'] = county;
