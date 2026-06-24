@@ -35,7 +35,7 @@ export class ReportsComponent {
 
   async getFinalReport() {
     const document = await firstValueFrom(this.reportsService.getFinalReport());
-    this.filesService.saveFile(document, 'application/zip', 'Raport final');
+    this.filesService.saveFile(document);
   }
 
   get lastGeneratedOn() {

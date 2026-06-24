@@ -31,7 +31,7 @@ export class SubmissionsService {
   }
 
   getExportCsv() {
-    return this.filesService.getFileWithProgress(`${this.apiUrl}/export/csv`);
+    return this.filesService.getFileWithProgress(`${this.apiUrl}/export/csv`, { indeterminateTitle: 'Se generează fișierul...' });
   }
 
   getStats() {

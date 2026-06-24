@@ -8,7 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { fileToBase64 } from '../../../lib/utils';
 import { DocumentViewerDialogData } from '../document-viewer-dialog/document-viewer-dialog.component';
-import { DocumentService } from '../../../services/document.service';
+import { DocumentsService } from '../../../services/documents.service';
 import { firstValueFrom } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoadingComponent } from '../loading/loading.component';
@@ -35,7 +35,7 @@ export class SignDialogComponent {
     private readonly dialogRef: MatDialogRef<SignDialogComponent>,
     private readonly auth: AuthService,
     private readonly signaturesService: SignaturesService,
-    private readonly documentsService: DocumentService,
+    private readonly documentsService: DocumentsService,
     private readonly dialog: MatDialog,
     private readonly snackBar: MatSnackBar,
     protected readonly themeService: ThemeService,
@@ -71,10 +71,8 @@ export class SignDialogComponent {
         this.documentsService.signDocument(this.signOptions.paperId, this.signOptions.requiredDocument.name)
       );
       const content = await firstValueFrom(this.documentsService.getDocument(document.id));
-      if(content) {
-        this.dialogRef.close({ document, content });
-        this.snackBar.open('Documentul a fost semnat.');
-      }
+      this.dialogRef.close({ document, content });
+      this.snackBar.open('Documentul a fost semnat.');
     } finally {
       this.loadingSubmit = false;
     }

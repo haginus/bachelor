@@ -14,7 +14,6 @@ import { GradePaperComponent } from '../../dialogs/grade-paper/grade-paper.compo
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { AuthService } from '../../../services/auth.service';
-import { DocumentService } from '../../../services/document.service';
 import { PAPER_TYPES } from '../../../lib/constants';
 import { AreDocumentsUploaded, PaperDocumentListComponent } from '../../../shared/components/paper-document-list/paper-document-list.component';
 import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
@@ -34,8 +33,9 @@ import { PaperSchedulerNoticeComponent } from '../../../shared/components/paper-
 import { CommitteeSnippetComponent } from '../../../shared/components/committee-snippet/committee-snippet.component';
 import { DatetimePipe } from '../../../shared/pipes/datetime.pipe';
 import { LoaderService } from '../../../services/loader.service';
-import { CommitteeFile, CommitteeFilesFormat, CommitteesService } from '../../../services/committees.service';
+import { CommitteeFile, CommitteesService } from '../../../services/committees.service';
 import { Committee, CommitteeMember, Paper, User } from '../../../lib/types';
+import { FilesService } from '../../../services/files.service';
 
 @Component({
   selector: 'app-committee-papers',
@@ -75,9 +75,9 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private auth: AuthService,
     private dialog: MatDialog,
-    private documentService: DocumentService,
     private snackbar: MatSnackBar,
     private loader: LoaderService,
+    private filesService: FilesService,
   ) {}
 
   displayedColumns: string[] = [
@@ -258,19 +258,8 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
   }
 
   async getCommitteeFile(fileName: CommitteeFile) {
-    let sbRef = this.snackbar.open('Se generează documentul...');
-    try {
-      const document = await firstValueFrom(this.committeesService.getFile(this.committee.id, fileName));
-      const [mimeType, title] = CommitteeFilesFormat[fileName];
-      const documentTitle = [this.committee.name, title].join(' - ');
-      if(mimeType === 'application/pdf') {
-        this.documentService.viewDocument(document, mimeType, documentTitle);
-      } else {
-        this.documentService.downloadDocument(document, documentTitle, mimeType);
-      }
-    } finally {
-      sbRef.dismiss();
-    }
+    const document = await firstValueFrom(this.committeesService.getFile(this.committee.id, fileName));
+    this.filesService.viewOrSaveFile(document);
   }
 
   async markGradesAsFinal() {

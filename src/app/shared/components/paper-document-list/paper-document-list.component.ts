@@ -2,7 +2,7 @@ import { Component, DoCheck, EventEmitter, Input, OnChanges, Output, SimpleChang
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DocumentUploadDialogComponent, DocumentUploadDialogData } from '../document-upload-dialog/document-upload-dialog.component';
-import { DocumentService } from '../../../services/document.service';
+import { DocumentsService } from '../../../services/documents.service';
 import { USER_TYPES } from '../../../lib/constants';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,6 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { DatePipe } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { DocumentUploadHistoryDialogComponent, DocumentUploadHistoryDialogData } from '../document-upload-history-dialog/document-upload-history-dialog.component';
+import { FilesService } from '../../../services/files.service';
 
 @Component({
   selector: 'app-paper-document-list',
@@ -33,7 +34,8 @@ export class PaperDocumentListComponent implements OnChanges {
   constructor(
     private snackbar: MatSnackBar,
     private dialog: MatDialog,
-    private document: DocumentService
+    private document: DocumentsService,
+    private filesService: FilesService,
   ) { }
 
   @Input({ required: true }) requiredDocuments: RequiredDocument[] = [];
@@ -253,14 +255,13 @@ export class PaperDocumentListComponent implements OnChanges {
   }
 
   async signDocument(mapElement: DocumentMapElement) {
-    const { buffer, type, title } = await this.getDocument(mapElement);
-    if(!buffer) return;
-    const dialogRef = this.document.viewDocument(
-      buffer,
-      type,
-      title,
-      { requiredDocument: mapElement.requiredDocument, paperId: this.paperId, signUserId: this.signUserId }
-    );
+    const file = await this.getDocument(mapElement);
+    if(!file) return;
+    const dialogRef = this.filesService.viewFile(file, {
+      requiredDocument: mapElement.requiredDocument,
+      paperId: this.paperId,
+      signUserId: this.signUserId
+    });
     dialogRef.componentInstance.documentSigned.subscribe(document => {
       this.documents.push(document);
       this.documentEvents.emit({
@@ -281,9 +282,9 @@ export class PaperDocumentListComponent implements OnChanges {
   }
 
   async viewDocument(mapElement: DocumentMapElement) {
-    const { buffer, type, title } = await this.getDocument(mapElement);
-    if(!buffer) return;
-    this.document.viewDocument(buffer, type, title);
+    const file = await this.getDocument(mapElement);
+    if(!file) return;
+    this.filesService.viewFile(file);
   }
 
   async deleteDocument(mapElement: DocumentMapElement) {
@@ -315,28 +316,17 @@ export class PaperDocumentListComponent implements OnChanges {
     });
   }
 
-  private async getDocument(mapElement: DocumentMapElement) {
-    mapElement.actionPending = true;
-    let snackbarRef = this.snackbar.open("Se descarcă documentul...", null, {
-      duration: null,
-    });
-    const id = mapElement.lastId;
-    if(!id) {
-      snackbarRef.dismiss();
+  private async getDocument(mapElement: DocumentMapElement): Promise<File | null> {
+    const lastId = mapElement.lastId;
+    if(!lastId) {
       this.snackbar.open("Document inexistent.");
-      mapElement.actionPending = false;
       return null;
     }
-    const type = this.documents.find(doc => doc.id == id).mimeType;
+    mapElement.actionPending = true;
     const title = [mapElement.title, this.documentNameSuffix].filter(Boolean).join(' - ').slice(0, 255);
-    const buffer = await firstValueFrom(this.document.getDocument(id));
+    const file = await firstValueFrom(this.document.getDocument(lastId));
     mapElement.actionPending = false;
-    snackbarRef.dismiss();
-    return {
-      buffer,
-      type,
-      title
-    };
+    return new File([file], title, { type: file.type });
   }
 
 }

@@ -1,16 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { firstValueFrom } from 'rxjs';
 import { SignUpRequestDialogComponent } from '../../dialogs/sign-up-request-dialog/sign-up-request-dialog.component';
-import { DocumentService } from '../../../services/document.service';
 import { DOMAIN_TYPES } from '../../../lib/constants';
 import { rowAnimation } from '../../../row-animations';
 import { ActivatedRoute } from '@angular/router';
 import { SignUpRequest } from '../../../lib/types';
 import { SignUpRequestsService } from '../../../services/sign-up-requests.service';
+import { FilesService } from '../../../services/files.service';
 
 @Component({
   selector: 'app-sign-up-requests',
@@ -27,8 +26,7 @@ export class SignUpRequestsComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly signUpRequestsService: SignUpRequestsService,
     private dialog: MatDialog,
-    private document: DocumentService,
-    private snackbar: MatSnackBar
+    private filesService: FilesService,
   ) {}
 
   @ViewChild('table') table: MatTable<SignUpRequest>;
@@ -82,12 +80,7 @@ export class SignUpRequestsComponent implements OnInit {
   }
 
   async downloadRequests() {
-    let sbRef = this.snackbar.open('Se generează fișierul...', null, { duration: null });
-    try {
-      const buffer = await firstValueFrom(this.signUpRequestsService.getExcelReport());
-      this.document.downloadDocument(buffer, 'Cereri de înscriere.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    } finally {
-      sbRef.dismiss();
-    }
+    const buffer = await firstValueFrom(this.signUpRequestsService.getExcelReport());
+    this.filesService.saveFile(buffer);
   }
 }

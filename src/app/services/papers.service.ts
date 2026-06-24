@@ -35,12 +35,12 @@ export class PapersService {
   }
 
   getXlsxExport(params?: { onlySubmitted?: boolean; teacherId?: number; }) {
-    return this.filesService.getFile(`${this.apiUrl}/export/xlsx`, removeEmptyProperties(params));
+    return this.filesService.getFileWithProgress(`${this.apiUrl}/export/xlsx`, { params: removeEmptyProperties(params), indeterminateTitle: 'Se generează fișierul...' });
   }
 
   async saveXlsxExport(params?: { onlySubmitted?: boolean; teacherId?: number; }) {
-    const buffer = await firstValueFrom(this.getXlsxExport(params));
-    this.filesService.saveFile(buffer, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Lucrări.xlsx');
+    const file = await firstValueFrom(this.getXlsxExport(params));
+    this.filesService.saveFile(file);
   }
 
   getPaperDocumentsArchive(params?: PaperDocumentsArchiveDto) {
@@ -51,12 +51,12 @@ export class PapersService {
       });
       delete params.paperFilters;
     }
-    return this.filesService.getFileWithProgress(`${this.apiUrl}/export/zip`, params);
+    return this.filesService.getFileWithProgress(`${this.apiUrl}/export/zip`, { params: params as any, indeterminateTitle: 'Se generează arhiva...', determinateTitle: 'Se descarcă arhiva...' });
   }
 
   async savePaperDocumentsArchive(params?: PaperDocumentsArchiveDto) {
-    const buffer = await firstValueFrom(this.getPaperDocumentsArchive(params));
-    this.filesService.saveFile(buffer, 'application/zip', 'Documente.zip');
+    const file = await firstValueFrom(this.getPaperDocumentsArchive(params));
+    this.filesService.saveFile(file);
   }
 
   create(paper: CreatePaperDto) {

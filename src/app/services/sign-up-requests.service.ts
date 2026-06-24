@@ -4,13 +4,17 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { SignUpRequest, Student } from '../lib/types';
 import { removeEmptyProperties } from '../lib/utils';
+import { FilesService } from './files.service';
 
 @Injectable({
   providedIn: 'any'
 })
 export class SignUpRequestsService {
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly filesService: FilesService,
+  ) {}
 
   private readonly baseUrl = `${environment.apiUrl}/sign-up-requests`;
 
@@ -30,8 +34,8 @@ export class SignUpRequestsService {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 
-  getExcelReport(): Observable<ArrayBuffer> {
-    return this.http.get<ArrayBuffer>(`${this.baseUrl}/export/excel`, { responseType: 'arraybuffer' as 'json' });
+  getExcelReport(): Observable<File> {
+    return this.filesService.getFileWithProgress(`${this.baseUrl}/export/excel`, { indeterminateTitle: 'Se generează fișierul...' });
   }
 
 }

@@ -4,15 +4,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { CommitteeDialogComponent } from '../../dialogs/committee-dialog/committee-dialog.component';
-import { DocumentService } from '../../../services/document.service';
 import { AuthService } from '../../../services/auth.service';
 import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
 import { rowAnimation } from '../../../row-animations';
-import { CommitteeFile, CommitteeFilesFormat, CommitteesService } from '../../../services/committees.service';
+import { CommitteeFile, CommitteesService } from '../../../services/committees.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { User, Teacher, Committee } from '../../../lib/types';
 import { ReportFile, ReportsService } from '../../../services/reports.service';
 import { ImportResultDialogComponent } from '../../dialogs/import-result-dialog/import-result-dialog.component';
+import { FilesService } from '../../../services/files.service';
 
 @Component({
   selector: 'app-committees',
@@ -29,7 +29,7 @@ export class CommitteesComponent {
     private committeesService: CommitteesService,
     private readonly reportsService: ReportsService,
     private dialog: MatDialog,
-    private document: DocumentService,
+    private filesService: FilesService,
     private auth: AuthService,
     private snackbar: MatSnackBar
   ) {
@@ -118,19 +118,8 @@ export class CommitteesComponent {
   }
 
   async getCommitteeDocument(committee: Committee, fileName: CommitteeFile) {
-    let sbRef = this.snackbar.open('Se generează documentul...');
-    try {
-      const document = await firstValueFrom(this.committeesService.getFile(committee.id, fileName));
-      const [mimeType, title] = CommitteeFilesFormat[fileName];
-      const documentTitle = [committee.name, title].join(' - ');
-      if(mimeType === 'application/pdf') {
-        this.document.viewDocument(document, mimeType, documentTitle);
-      } else {
-        this.document.downloadDocument(document, documentTitle, mimeType);
-      }
-    } finally {
-      sbRef.dismiss();
-    }
+    const document = await firstValueFrom(this.committeesService.getFile(committee.id, fileName));
+    this.filesService.viewOrSaveFile(document);
   }
 
   async autoAssign() {

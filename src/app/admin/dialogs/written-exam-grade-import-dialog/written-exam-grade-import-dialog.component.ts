@@ -31,7 +31,7 @@ export class BulkGradeWrittenExamDialogComponent extends ImportDialogComponent {
 
   async downloadTemplate() {
     const file = await firstValueFrom(this.submissionsService.getExportCsv());
-    this.filesService.saveFile(file, 'text/csv', 'note_proba_scrisa.csv');
+    this.filesService.saveFile(file);
   }
 
   async handleFileInput(file: File) {

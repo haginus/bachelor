@@ -1,7 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { firstValueFrom, map, Observable } from "rxjs";
 import { SseClient } from "./sse-client";
 import { FileGenerationStatus } from "../lib/types";
@@ -15,34 +14,18 @@ export class ReportsService {
   constructor(
     private readonly http: HttpClient,
     private readonly sseClient: SseClient,
-    private readonly snackbar: MatSnackBar,
     private readonly filesService: FilesService,
   ) {}
 
   private readonly baseUrl = `${environment.apiUrl}/reports`;
 
   getFile(fileName: ReportFile) {
-    return this.http.get<ArrayBuffer>(`${this.baseUrl}/files/${fileName}`, {
-      headers: {
-        'Cache-Control': 'no-store',
-      },
-      responseType: 'blob' as 'json',
-    });
+    return this.filesService.getFileWithProgress(`${this.baseUrl}/files/${fileName}`, { indeterminateTitle: 'Se generează fișierul...' });
   }
 
   async openFile(fileName: ReportFile) {
-    let sbRef = this.snackbar.open('Se generează documentul...');
-    try {
-      const document = await firstValueFrom(this.getFile(fileName));
-      const [mimeType, title] = ReportFilesFormat[fileName];
-      if(mimeType === 'application/pdf') {
-        this.filesService.viewFile(document, mimeType, title);
-      } else {
-        this.filesService.saveFile(document, mimeType, title);
-      }
-    } finally {
-      sbRef.dismiss();
-    }
+    const document = await firstValueFrom(this.getFile(fileName));
+    this.filesService.viewOrSaveFile(document);
   }
 
   getFinalReportStatus(): Observable<FileGenerationStatus> {
@@ -61,20 +44,17 @@ export class ReportsService {
 
 }
 
-export const ReportFilesFormat = {
-  'written_exam_catalog_pdf': ['application/pdf', 'Catalog proba scrisă'],
-  'written_exam_catalog_docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Catalog proba scrisă'],
-  'written_exam_after_disputes_catalog_pdf': ['application/pdf', 'Catalog proba scrisă după contestații'],
-  'written_exam_after_disputes_catalog_docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Catalog proba scrisă după contestații'],
-  'final_catalog_pdf': ['application/pdf', 'Catalog final'],
-  'final_catalog_docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Catalog final'],
-  'centralizing_catalog_pdf': ['application/pdf', 'Catalog centralizator'],
-  'centralizing_catalog_docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Catalog centralizator'],
-  'paper_list_xlsx': ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Listă lucrări'],
-  'submitted_paper_list_xlsx': ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Listă lucrări înscrise'],
-  'committee_compositions_pdf': ['application/pdf', 'Componența comisiilor și planificarea pe săli și zile'],
-  'student_assignation_pdf': ['application/pdf', 'Repartizarea studenților pe comisii'],
-  'student_assignation_xlsx': ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Repartizarea studenților pe comisii'],
-} as const satisfies Record<string, [string, string]>;
-
-export type ReportFile = keyof typeof ReportFilesFormat;
+export type ReportFile =
+  | 'written_exam_catalog_pdf'
+  | 'written_exam_catalog_docx'
+  | 'written_exam_after_disputes_catalog_pdf'
+  | 'written_exam_after_disputes_catalog_docx'
+  | 'final_catalog_pdf'
+  | 'final_catalog_docx'
+  | 'centralizing_catalog_pdf'
+  | 'centralizing_catalog_docx'
+  | 'paper_list_xlsx'
+  | 'submitted_paper_list_xlsx'
+  | 'committee_compositions_pdf'
+  | 'student_assignation_pdf'
+  | 'student_assignation_xlsx';
