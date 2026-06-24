@@ -1,0 +1,42 @@
+@if(isDownloading()) {
+  <app-loading type="bar" color="primary"></app-loading>
+}
+<div mat-dialog-title>Descărcați arhiva cu documente</div>
+<div mat-dialog-content [formGroup]="formGroup">
+  <p>
+    Obțineți o arhivă în format ZIP cu documentele lucrărilor. În funcție de filtrele selectate, această operațiune poate dura câteva minute.
+  </p>
+  <mat-button-toggle-group formControlName="includePaperFilters">
+    <mat-button-toggle [value]="false">Toate lucrările</mat-button-toggle>
+    <mat-button-toggle [value]="true" [disabled]="!data.paperFilters">Conform filtrelor selectate</mat-button-toggle>
+  </mat-button-toggle-group>
+  <mat-form-field>
+    <mat-label>Includeți doar documentele de tip</mat-label>
+    <mat-select multiple formControlName="documentNames">
+      <mat-option value="sign_up_form">Cerere de înscriere</mat-option>
+      <mat-option value="statutory_declaration">Declarație pe proprie răspundere</mat-option>
+      <mat-option value="liquidation_form">Formular de lichidare</mat-option>
+      <mat-option value="identity_card">Carte de identitate</mat-option>
+      <mat-option value="birth_certificate">Certificat de naștere</mat-option>
+      <mat-option value="marriage_certificate">Certificat de căsătorie</mat-option>
+      <mat-option value="language_certificate">Certificat de competență lingvistică</mat-option>
+      <mat-option value="bacalaureat_diploma">Diplomă de bacalaureat</mat-option>
+      <mat-option value="bachelor_diploma">Diplomă de licență</mat-option>
+      <mat-option value="graduate_form">Formular absolventi.unibuc.ro</mat-option>
+      <mat-option value="paper">Lucrare</mat-option>
+      <mat-option value="plagiarism_report">Referat coordonator științific</mat-option>
+      <mat-option value="committee_report">Referat preliminar comisie</mat-option>
+      <mat-option value="committee_turnitin">Raport Turnitin</mat-option>
+    </mat-select>
+    <mat-hint>Lăsați necompletat pentru a include toate tipurile de documente</mat-hint>
+  </mat-form-field>
+  <mat-button-toggle-group formControlName="groupStrategy">
+    <mat-button-toggle value="paper">Grupați după lucrare</mat-button-toggle>
+    <mat-button-toggle value="document_name">Grupați după tipul documentului</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Anulați</button>
+  <button mat-button (click)="download()">Descărcați</button>
+</div>
+

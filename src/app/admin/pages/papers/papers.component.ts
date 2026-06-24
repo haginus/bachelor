@@ -26,6 +26,7 @@ import { SubmissionsService } from '../../../services/submissions.service';
 import { AddPaperComponent } from '../../../teacher/dialogs/add-paper/add-paper.component';
 import { CommonDialogComponent, CommonDialogData } from '../../../shared/components/common-dialog/common-dialog.component';
 import { AuthService } from '../../../services/auth.service';
+import { PaperDocumentsArchiveDialogComponent } from '../../../shared/components/paper-documents-archive-dialog/paper-documents-archive-dialog.component';
 
 @Component({
   selector: 'app-papers',
@@ -316,6 +317,14 @@ export class AdminPapersComponent {
     } catch (error) {
       this.snackbar.open('A apărut o eroare la ruperea asocierii.');
     }
+  }
+
+  openPaperDocumentsArchiveDialog() {
+    this.dialog.open(PaperDocumentsArchiveDialogComponent, {
+      data: {
+        paperFilters: this.showFilters ? this.getFilterValue() : undefined,
+      }
+    });
   }
 
 }

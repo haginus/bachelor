@@ -43,6 +43,22 @@ export class PapersService {
     this.filesService.saveFile(buffer, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Lucrări.xlsx');
   }
 
+  getPaperDocumentsArchive(params?: PaperDocumentsArchiveDto) {
+    params = removeEmptyProperties(params || {});
+    if (params.paperFilters) {
+      Object.keys(removeEmptyProperties(params.paperFilters)).forEach(key => {
+        params[`paperFilters[${key}]`] = params.paperFilters[key as keyof PaperQueryDto];
+      });
+      delete params.paperFilters;
+    }
+    return this.filesService.getFileWithProgress(`${this.apiUrl}/export/zip`, params);
+  }
+
+  async savePaperDocumentsArchive(params?: PaperDocumentsArchiveDto) {
+    const buffer = await firstValueFrom(this.getPaperDocumentsArchive(params));
+    this.filesService.saveFile(buffer, 'application/zip', 'Documente.zip');
+  }
+
   create(paper: CreatePaperDto) {
     return this.http.post<Paper>(this.apiUrl, paper);
   }
@@ -103,4 +119,10 @@ type ValidatePaperDto = {
   isValid: boolean;
   generalAverage?: number;
   ignoreRequiredDocuments?: boolean;
+}
+
+type PaperDocumentsArchiveDto = {
+  paperFilters?: PaperQueryDto;
+  documentNames?: string[];
+  groupStrategy?: 'paper' | 'document_name';
 }
