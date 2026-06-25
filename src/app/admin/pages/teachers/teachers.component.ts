@@ -81,7 +81,7 @@ export class AdminTeachersComponent {
     });
   }
 
-  displayedColumns: string[] = ['status', 'id', 'lastName', 'firstName', 'email', 'offerCount', 'paperCount', 'plagiarismReportCount', 'actions'];
+  displayedColumns: string[] = ['status', 'id', 'lastName', 'firstName', 'email', 'offerCount', 'paperCount', 'missingPlagiarismReportCount', 'actions'];
   resolverData!: PaginatedResolverResult<Teacher, { sortBy?: string; sortDirection?: 'asc' | 'desc'; lastName?: string; firstName?: string, email?: string; onlyMissingPlagiarismReports?: boolean; }>;
   showFilters = false;
 

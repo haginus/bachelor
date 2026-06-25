@@ -8,7 +8,7 @@ export const teachersResolver = createPaginatedResolver({
   getData: (params) => inject(TeachersService).findAll(params),
   getAdditionalParams: (params) => {
     return removeEmptyProperties({
-      sortBy: parseEnumParam(params['sortBy'], ['id', 'firstName', 'lastName', 'email', 'offerCount', 'paperCount', 'plagiarismReportCount']),
+      sortBy: parseEnumParam(params['sortBy'], ['id', 'firstName', 'lastName', 'email', 'offerCount', 'paperCount', 'plagiarismReportCount', 'missingPlagiarismReportCount']),
       sortDirection: parseSortDirectionParam(params['sortDirection']),
       firstName: params['firstName'],
       lastName: params['lastName'],
