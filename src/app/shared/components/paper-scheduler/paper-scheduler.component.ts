@@ -11,11 +11,12 @@ import { MatInputModule } from '@angular/material/input';
 import { firstValueFrom } from 'rxjs';
 import { DatetimePipe } from '../../pipes/datetime.pipe';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { arrayMap } from '../../../lib/utils';
+import { arrayMap, sortArray, SortCriterion } from '../../../lib/utils';
 import { LoadingComponent } from '../loading/loading.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { CommitteesService } from '../../../services/committees.service';
 import { Committee, Paper } from '../../../lib/types';
+import { NgTemplateOutlet, UpperCasePipe } from '@angular/common';
 
 const MINUTE = 60 * 1000;
 
@@ -77,23 +78,28 @@ class ChangeTimeDialogComponent {
   }
 }
 
-const autoScheduleSortOptions = {
-  byId: (a: ExtendedPaper, b: ExtendedPaper) => a.id - b.id,
-  byStudentName: (a: ExtendedPaper, b: ExtendedPaper) => a.student.fullName.toLocaleLowerCase().localeCompare(b.student.fullName),
-  byTeacherName: (a: ExtendedPaper, b: ExtendedPaper) => {
-    const teacherA = [a.teacher.lastName, a.teacher.firstName].filter(Boolean).join(' ').toLocaleLowerCase();
-    const teacherB = [b.teacher.lastName, b.teacher.firstName].filter(Boolean).join(' ').toLocaleLowerCase();
-    const teacherSort = teacherA.localeCompare(teacherB);
-    return teacherSort === 0 ? autoScheduleSortOptions.byStudentName(a, b) : teacherSort;
-  },
-  bySpecializationStudent: (a: ExtendedPaper, b: ExtendedPaper) => {
-    const specializationSort = a.student.specialization.id - b.student.specialization.id;
-    return specializationSort === 0 ? autoScheduleSortOptions.byStudentName(a, b) : specializationSort;
-  },
-  bySpecializationTeacher: (a: ExtendedPaper, b: ExtendedPaper) => {
-    const specializationSort = a.student.specialization.id - b.student.specialization.id;
-    return specializationSort === 0 ? autoScheduleSortOptions.byTeacherName(a, b) : specializationSort;
-  },
+const byStudentNameCriteria: SortCriterion<ExtendedPaper>[] = [
+  (paper) => paper.student.fullName.toLocaleLowerCase(),
+];
+
+const byTeacherNameCriteria: SortCriterion<ExtendedPaper>[] = [
+  (paper) => [paper.teacher.lastName, paper.teacher.firstName].filter(Boolean).join(' ').toLocaleLowerCase(),
+  ...byStudentNameCriteria,
+];
+
+const autoScheduleSortCriteria: Record<string, SortCriterion<ExtendedPaper>[]> = {
+  manual: [],
+  byId: [(paper) => paper.id],
+  byStudentName: byStudentNameCriteria,
+  byTeacherName: byTeacherNameCriteria,
+  bySpecializationStudent: [
+    (paper) => paper.student.specialization.id,
+    ...byStudentNameCriteria,
+  ],
+  bySpecializationTeacher: [
+    (paper) => paper.student.specialization.id,
+    ...byTeacherNameCriteria,
+  ],
 };
 
 @Component({
@@ -113,6 +119,8 @@ const autoScheduleSortOptions = {
     CdkDrag,
     TimePipe,
     DatetimePipe,
+    NgTemplateOutlet,
+    UpperCasePipe,
   ],
   templateUrl: './paper-scheduler.component.html',
   styleUrl: './paper-scheduler.component.scss'
@@ -158,7 +166,7 @@ export class PaperSchedulerComponent {
   protected papersPerDay: Record<number, ExtendedPaper[]>;
   protected minutesPerPaper = new FormControl<number>(this.committee.paperPresentationTime, { nonNullable: true });
   protected publicScheduling = new FormControl<boolean>(this.committee.publicScheduling, { nonNullable: true });
-  protected autoScheduleSort = new FormControl<keyof typeof autoScheduleSortOptions>('byStudentName', { nonNullable: true });
+  protected autoScheduleSort = new FormControl<keyof typeof autoScheduleSortCriteria>('byStudentName', { nonNullable: true });
   protected minutesPerPaperOptions = [10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 26, 28, 30];
   protected isSubmitting = false;
 
@@ -192,6 +200,8 @@ export class PaperSchedulerComponent {
             paper.scheduledGradingDraft = new Date(paper.scheduledGradingDraft.getTime() + minutesPerPaperMs);
           }
         }
+      } else {
+        this.autoScheduleSort.setValue('manual');
       }
     } else {
       transferArrayItem(
@@ -211,6 +221,8 @@ export class PaperSchedulerComponent {
           const paper = event.container.data[i];
           paper.scheduledGradingDraft = new Date(paper.scheduledGradingDraft.getTime() + minutesPerPaperMs);
         }
+      } else {
+        this.autoScheduleSort.setValue('manual');
       }
     }
 
@@ -233,16 +245,14 @@ export class PaperSchedulerComponent {
   }
 
   sortUnassignedPapers() {
-    return this.papersPerDay[0].sort((a, b) => {
-      const sortResult = autoScheduleSortOptions[this.autoScheduleSort.value](a, b);
-      if(a.isValid === null) {
-        return 10000 + sortResult;
-      }
-      if(b.isValid === null) {
-        return -10000 + sortResult;
-      }
-      return sortResult;
-    });
+    if(this.autoScheduleSort.value === 'manual') {
+      return this.papersPerDay[0];
+    }
+    const sortCriteria: SortCriterion<ExtendedPaper>[] = [
+      (paper) => paper.isValid === null ? 1 : 0,
+      ...autoScheduleSortCriteria[this.autoScheduleSort.value]
+    ];
+    return sortArray(this.papersPerDay[0], sortCriteria);
   }
 
   autoSchedule() {

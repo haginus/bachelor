@@ -25,7 +25,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UserSnippetComponent } from '../../../shared/components/user-snippet/user-snippet.component';
 import { PaperGradeTableComponent } from '../../../shared/components/paper-grade-table/paper-grade-table.component';
-import { TitleCasePipe } from '@angular/common';
+import { TitleCasePipe, UpperCasePipe } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { PaperTitlePipe } from '../../../shared/pipes/paper-title.pipe';
@@ -63,6 +63,7 @@ import { FilesService } from '../../../services/files.service';
     PaperSchedulerNoticeComponent,
     CommitteeSnippetComponent,
     TitleCasePipe,
+    UpperCasePipe,
     PaperTitlePipe,
     DatetimePipe,
   ]
@@ -85,6 +86,7 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
     'id',
     'title',
     'type',
+    'specialization',
     'student',
     'teacher',
     'scheduledGrading'
@@ -149,6 +151,8 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSource.sortingDataAccessor = (paper, property) => {
       switch (property) {
+        case 'specialization':
+          return paper.student.specialization.id;
         case 'student':
           return paper.student.fullName;
         case 'teacher':

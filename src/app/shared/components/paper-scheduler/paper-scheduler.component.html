@@ -38,6 +38,7 @@
             <mat-form-field appearance="outline">
               <mat-label>Sortare</mat-label>
               <mat-select [formControl]="autoScheduleSort">
+                <mat-option value="manual">Manual</mat-option>
                 <mat-option value="byId">După data înscrierii</mat-option>
                 <mat-option value="byStudentName">După numele studentului</mat-option>
                 <mat-option value="byTeacherName">După numele profesorului, apoi al studentului</mat-option>
@@ -50,15 +51,14 @@
         }
         @for (paper of papersPerDay[0]; track paper) {
           <div class="paper-box" cdkDrag>
-            <div class="paper-text">
-              <div class="paper-title">
-                <span>{{ paper.title }}</span>
-                @if(paper.isValid) {
-                  <mat-icon class="valid-icon">verified</mat-icon>
-                }
-              </div>
-              <div>{{ paper.student.fullName }} · {{ paper.teacher.lastName }} {{ paper.teacher.firstName }}</div>
-            </div>
+            <ng-container
+              [ngTemplateOutlet]="paperBoxContent"
+              [ngTemplateOutletContext]="{
+                $implicit: paper,
+                day: null,
+                index: $index
+              }"
+            />
           </div>
         }
       </div>
@@ -74,19 +74,14 @@
         <div cdkDropList [id]="day.id.toString()" [cdkDropListData]="papersPerDay[day.id]" class="paper-list" (cdkDropListDropped)="drop($event)">
           @for (paper of papersPerDay[day.id]; track paper) {
             <div class="paper-box" cdkDrag>
-              <div class="paper-text">
-                <div class="paper-title">
-                  <span>{{ paper.title }}</span>
-                  @if(paper.isValid) {
-                    <mat-icon class="valid-icon">verified</mat-icon>
-                  }
-                </div>
-                <div>{{ paper.student.fullName }} · {{ paper.teacher.lastName }} {{ paper.teacher.firstName }}</div>
-              </div>
-              <button mat-button color="primary" class="edit-time" (click)="changePaperTime(day, $index)">
-                <span>{{ paper.scheduledGradingDraft | time }}</span>
-                <mat-icon>edit</mat-icon>
-              </button>
+              <ng-container
+                [ngTemplateOutlet]="paperBoxContent"
+                [ngTemplateOutletContext]="{
+                  $implicit: paper,
+                  day: day,
+                  index: $index
+                }"
+              />
             </div>
           }
         </div>
@@ -98,3 +93,22 @@
   <button mat-button mat-dialog-close>Anulați</button>
   <button mat-button (click)="saveSchedule()">Salvați</button>
 </div>
+
+<ng-template #paperBoxContent let-paper let-day="day" let-index="index">
+  <div class="paper-text">
+    <div class="paper-title">
+      <span>{{ paper.title }}</span>
+      @if(paper.isValid) {
+        <mat-icon class="valid-icon">verified</mat-icon>
+      }
+    </div>
+    <div>{{ paper.student.specialization.name }} ({{ paper.student.specialization.studyForm | uppercase }}) · {{ paper.student.fullName }} · {{ paper.teacher.lastName }} {{ paper.teacher.firstName }}</div>
+  </div>
+
+  @if(day) {
+    <button mat-button color="primary" class="edit-time" (click)="changePaperTime(day, index)">
+      <span>{{ paper.scheduledGradingDraft | time }}</span>
+      <mat-icon>edit</mat-icon>
+    </button>
+  }
+</ng-template>

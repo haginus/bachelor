@@ -111,3 +111,35 @@ export function getNowSignal(intervalMs: number = 60000) {
 export function removeDiacritics(str: string) {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
+
+export function toComparable(value: string | number | Date): string | number {
+  if(value instanceof Date) {
+    return value.getTime();
+  }
+  return value;
+}
+
+type GetValueFn<T> = (item: T) => string | number | Date;
+
+export type SortCriterion<T> =
+  | GetValueFn<T>
+  | {
+    getValue: GetValueFn<T>;
+    direction?: 'asc' | 'desc';
+  };
+
+export function sortArray<T>(array: T[], criteria: SortCriterion<T>[]): T[] {
+  function sortFn(a: T, b: T): number {
+    for(const criterion of criteria) {
+      const getValue = typeof criterion === 'function' ? criterion : criterion.getValue;
+      const direction = typeof criterion === 'function' ? 'asc' : criterion.direction ?? 'asc';
+      const dir = direction === 'desc' ? -1 : 1;
+      const aValue = toComparable(getValue(a));
+      const bValue = toComparable(getValue(b));
+      if (aValue < bValue) return -1 * dir;
+      if (aValue > bValue) return 1 * dir;
+    }
+    return 0;
+  };
+  return array.sort(sortFn);
+}
