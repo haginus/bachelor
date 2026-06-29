@@ -513,3 +513,7 @@ input[type="time"]::-webkit-inner-spin-button {
 ::view-transition-new(main-drawer) {
   animation: none;
 }
+
+.no-radius-dialog .mat-mdc-dialog-surface {
+  border-radius: 0 !important;
+}

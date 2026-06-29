@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostListener, Inject, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, EventEmitter, HostListener, inject, Inject, Output, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,8 @@ import { PdfViewerComponent } from '../pdf-viewer/pdf-viewer.component';
 import { SignDialogComponent } from '../sign-dialog/sign-dialog.component';
 import { firstValueFrom } from 'rxjs';
 import { Document, RequiredDocument } from '../../../lib/types';
+import { DocxViewerComponent } from '../docx-viewer/docx-viewer.component';
+import { XlsxViewerComponent } from '../xlsx-viewer/xlsx-viewer.component';
 
 @Component({
   selector: 'app-document-viewer-dialog',
@@ -20,31 +22,52 @@ import { Document, RequiredDocument } from '../../../lib/types';
     MatTooltipModule,
     LoadingComponent,
     PdfViewerComponent,
+    DocxViewerComponent,
+    XlsxViewerComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './document-viewer-dialog.component.html',
   styleUrl: './document-viewer-dialog.component.scss'
 })
 export class DocumentViewerDialogComponent {
-  constructor(
-    @Inject(MAT_DIALOG_DATA) protected data: DocumentViewerDialogData,
-    private readonly dialogRef: MatDialogRef<DocumentViewerDialogComponent>,
-    private readonly dialog: MatDialog,
-    private readonly cd: ChangeDetectorRef,
-  ) {
-    const supportedTypes = ['application/pdf', 'image/*'];
-    this.previewSupported = supportedTypes.some(type => {
-      const regex = new RegExp(type.replace('*', '.*'));
-      return regex.test(data.type);
+
+  static supportedTypes = [
+    'application/pdf',
+    'image/*',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  ];
+
+  static browserSupportedTypes = [
+    'application/pdf',
+    'image/*',
+  ];
+
+  static _supportsType(type: string, typeList: string[]): boolean {
+    return typeList.some(supportedType => {
+      const regex = new RegExp(supportedType.replace('*', '.*'));
+      return regex.test(type);
     });
-    this.isLoading = !!this.previewSupported;
   }
 
-  documentTitle = this.data.title || 'Document';
-  previewSupported: boolean;
-  errorLoading = false;
-  isLoading = true;
+  static supportsType(type: string): boolean {
+    return DocumentViewerDialogComponent._supportsType(type, DocumentViewerDialogComponent.supportedTypes);
+  }
+
+  protected data = inject(MAT_DIALOG_DATA) as DocumentViewerDialogData;
+  protected dialogRef = inject(MatDialogRef<DocumentViewerDialogComponent>);
+  protected dialog = inject(MatDialog);
+  protected cd = inject(ChangeDetectorRef);
+
+  protected file = signal(this.data.file);
+  protected resourceUrl = computed(() => window.URL.createObjectURL(this.file()));
+  protected previewSupported = computed(() => DocumentViewerDialogComponent.supportsType(this.file().type));
+  protected openInNewTabSupported = computed(() => DocumentViewerDialogComponent._supportsType(this.file().type, DocumentViewerDialogComponent.browserSupportedTypes));
+  protected errorLoading = signal(false);
+  protected isLoading = signal(true);
+  protected documentTitle = computed(() => this.file().name || 'Document');
   @Output() documentSigned = new EventEmitter<Document>();
+
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
@@ -59,13 +82,13 @@ export class DocumentViewerDialogComponent {
   }
 
   openInNewTab() {
-    window.open(this.data.url, '_blank');
+    window.open(this.resourceUrl(), '_blank');
   }
 
   downloadResource() {
     const anchor = document.createElement('a');
-    anchor.href = this.data.url;
-    anchor.download = this.documentTitle;
+    anchor.href = this.resourceUrl();
+    anchor.download = this.documentTitle();
     anchor.click();
   }
 
@@ -74,10 +97,9 @@ export class DocumentViewerDialogComponent {
       data: this.data.signOptions,
       autoFocus: '.sign-button',
     });
-    const result = await firstValueFrom<{ document: Document, content: ArrayBuffer }>(dialogRef.afterClosed());
+    const result = await firstValueFrom<{ document: Document; content: File; }>(dialogRef.afterClosed());
     if(result) {
-      const blob = new Blob([result.content], { type: result.document.mimeType });
-      this.data.url = window.URL.createObjectURL(blob);
+      this.file.set(result.content);
       this.data.signOptions = undefined;
       this.cd.detectChanges();
       this.documentSigned.emit(result.document);
@@ -87,9 +109,7 @@ export class DocumentViewerDialogComponent {
 }
 
 export interface DocumentViewerDialogData {
-  url: string;
-  type: string;
-  title: string;
+  file: File;
   signOptions?: {
     requiredDocument: RequiredDocument;
     paperId: number;

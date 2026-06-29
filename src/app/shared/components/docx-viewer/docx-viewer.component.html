@@ -1,0 +1,16 @@
+<div class="docx-toolbar" (dblclick)="$event.preventDefault()">
+  <div class="zoom-controls">
+    <button type="button" mat-icon-button class="zoom-btn" (click)="zoomOut()" (dblclick)="$event.preventDefault()">
+      <mat-icon>remove</mat-icon>
+    </button>
+    <span class="zoom-label">{{ (zoomLevel * 100).toFixed(0) }}%</span>
+    <button type="button" mat-icon-button class="zoom-btn" (click)="zoomIn()" (dblclick)="$event.preventDefault()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</div>
+<div #docxContainer class="docx-container">
+  <div #docxStage class="docx-stage">
+    <div #docxContent class="docx-content"></div>
+  </div>
+</div>

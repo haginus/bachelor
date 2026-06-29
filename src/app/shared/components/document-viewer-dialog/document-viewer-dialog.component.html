@@ -1,8 +1,10 @@
 <mat-toolbar>
-  <span class="document-title">{{ documentTitle }}</span>
-  <button mat-icon-button matTooltip="Deschideți într-o filă nouă" (click)="openInNewTab()">
-    <mat-icon>open_in_new</mat-icon>
-  </button>
+  <span class="document-title">{{ documentTitle() }}</span>
+  @if(openInNewTabSupported()) {
+    <button mat-icon-button matTooltip="Deschideți într-o filă nouă" (click)="openInNewTab()">
+      <mat-icon>open_in_new</mat-icon>
+    </button>
+  }
   <button mat-icon-button matTooltip="Descărcați" (click)="downloadResource()">
     <mat-icon>download</mat-icon>
   </button>
@@ -11,20 +13,34 @@
   </button>
 </mat-toolbar>
 <div class="preview-container">
-  @if(isLoading) {
+  @if(isLoading()) {
     <app-loading type="spinner" color="primary" />
   }
-  @if(previewSupported && !errorLoading) {
-    @if(data.type === 'application/pdf') {
+  @if(previewSupported() && !errorLoading()) {
+    @if(file().type === 'application/pdf') {
       @defer {
         <app-pdf-viewer
-          [src]="data.url"
-          (pdfLoaded)="isLoading = false"
+          [src]="resourceUrl()"
+          (pdfLoaded)="isLoading.set(false)"
           (findbarVisibleChange)="findbarVisibleChange($event)"
         />
       }
+    } @else if(file().type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      @defer {
+        <app-docx-viewer
+          [file]="file()"
+          (docxLoaded)="isLoading.set(false)"
+        />
+      }
+    } @else if (file().type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      @defer {
+        <app-xlsx-viewer
+          [file]="file()"
+          (xlsxLoaded)="isLoading.set(false)"
+        />
+      }
     } @else {
-      <img [src]="data.url" (load)="isLoading = false" />
+      <img [src]="resourceUrl()" (load)="isLoading.set(false)" />
     }
   } @else {
     <div class="no-preview">
@@ -35,7 +51,7 @@
       </div>
     </div>
   }
-  @if(!isLoading && data.signOptions) {
+  @if(!isLoading() && data.signOptions) {
     <button mat-fab extended color="primary" class="sign-fab" (click)="openSignDialog()">
       <mat-icon>draw</mat-icon>
       <span>Semnați</span>

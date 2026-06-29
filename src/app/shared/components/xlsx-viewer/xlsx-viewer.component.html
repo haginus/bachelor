@@ -1,0 +1,8 @@
+<div class="spreadsheet-container" [innerHTML]="selectedSheetHtml()"></div>
+<div class="sheets">
+  @for(sheetName of sheets(); track sheetName) {
+    <button mat-button (click)="selectSheet(sheetName)" [class.selected]="sheetName === selectedSheet()">
+      {{ sheetName }}
+    </button>
+  }
+</div>

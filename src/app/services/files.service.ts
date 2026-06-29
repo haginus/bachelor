@@ -21,19 +21,17 @@ export class FilesService {
   ) {}
 
   viewFile(file: File, signOptions?: DocumentViewerDialogData['signOptions']) {
-    const url = window.URL.createObjectURL(file);
     return this.dialog.open(DocumentViewerDialogComponent, {
       width: '100%',
       height: '100%',
       maxWidth: '100%',
       maxHeight: '100%',
       data: {
-        url,
-        type: file.type,
-        title: file.name,
+        file,
         signOptions,
       },
       autoFocus: 'dialog',
+      panelClass: 'no-radius-dialog',
     });
   }
 
@@ -46,7 +44,7 @@ export class FilesService {
   }
 
   viewOrSaveFile(file: File, downloadTitle?: string) {
-    if(file.type.startsWith('image/') || file.type === 'application/pdf') {
+    if(DocumentViewerDialogComponent.supportsType(file.type)) {
       this.viewFile(file);
     } else {
       this.saveFile(file, downloadTitle);
