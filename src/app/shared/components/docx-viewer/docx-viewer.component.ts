@@ -1,6 +1,7 @@
-import { Component, ElementRef, input, ViewChild, effect, output, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, input, ViewChild, effect, output, ViewEncapsulation, HostListener } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from "@angular/material/icon";
+import { clamp } from '../../../lib/utils';
 
 @Component({
   selector: 'app-docx-viewer',
@@ -39,6 +40,17 @@ export class DocxViewerComponent {
     });
   }
 
+  @HostListener('wheel', ['$event'])
+  onWheel(event: WheelEvent) {
+    if (!event.ctrlKey && !event.metaKey) {
+      return;
+    }
+    event.preventDefault();
+
+    const delta = event.deltaY > 0 ? -0.02 : 0.02;
+    this.setZoom(this.zoomLevel + delta, false);
+  }
+
   private async renderDocx(file: File) {
     const arrayBuffer = await file.arrayBuffer();
     const { renderAsync } = await import('docx-preview');
@@ -60,7 +72,7 @@ export class DocxViewerComponent {
     const rounded = roundToStep
       ? Math.round(nextZoom * 10) / 10
       : Math.round(nextZoom * 100) / 100;
-    this.zoomLevel = Math.min(this.maxZoom, Math.max(this.minZoom, rounded));
+    this.zoomLevel = clamp(rounded, this.minZoom, this.maxZoom);
     this.applyZoom();
   }
 

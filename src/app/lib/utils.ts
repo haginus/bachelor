@@ -55,6 +55,10 @@ export function arrayMap<T, K extends keyof any>(arr: T[], getKey: (item: T) => 
   }, {} as Record<K, T>);
 }
 
+export function clamp(value: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, value));
+}
+
 export function toFixedTruncate(number: number, digits: number) {
   let re = new RegExp("(\\d+\\.\\d{" + digits + "})(\\d)");
   let m = number.toString().match(re);
