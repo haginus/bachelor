@@ -85,6 +85,11 @@ export class MySubmissionComponent {
     this.now() <= inclusiveDate(this.sessionSettings().writtenExamDisputeEndDate) &&
     (this.submission().writtenExamGrade?.initialGrade ?? 0) !== 0
   ));
+  writtenExamTemporaryGrade = computed(() => {
+    const grade = this.submission().writtenExamGrade;
+    const maxGrade = Math.max(grade?.initialGrade ?? 0, grade?.disputeGrade ?? 0);
+    return maxGrade === 0 ? null : maxGrade;
+  });
   writtenExamFinalGrade = computed(() => {
     const grade = this.submission().writtenExamGrade;
     if(!grade || (this.canDisputeWrittenExamGrade() && !grade.isDisputed)) return null;

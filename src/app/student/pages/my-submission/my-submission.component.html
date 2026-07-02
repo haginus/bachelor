@@ -120,27 +120,34 @@
   </div>
 </mat-card>
 
-@if(writtenExamFinalGrade() != null || paper().gradeAverage !== undefined) {
+@if((!hasWrittenExam() || writtenExamTemporaryGrade() !== null) && paper().gradeAverage !== undefined) {
   @defer {
     <mat-card class="section-card">
       <h1>Media examenului de finalizare a studiilor</h1>
       <app-submission-grade-table
         #submissionGradeTable
         [hasWrittenExam]="hasWrittenExam()"
-        [writtenExamFinalGrade]="writtenExamFinalGrade()"
+        [writtenExamFinalGrade]="writtenExamTemporaryGrade()"
         [paperGrade]="paper().gradeAverage"
       />
-      @if(submissionGradeTable?.submissionGrade().average !== undefined) {
+      @if(hasWrittenExam() && submission().writtenExamGrade?.isDisputed && !writtenExamFinalGrade()) {
+        <div class="tip-card rounded" style="margin-top: 12px;">
+          <mat-icon class="tip-icon">warning_amber</mat-icon>
+          <div class="tip-card-content">
+            Nota la proba scrisă a fost contestată. Media finală va fi calculată după soluționarea contestației.
+          </div>
+        </div>
+      } @else if(submissionGradeTable?.submissionGrade().average !== undefined) {
         <div
           style="margin-top: 12px;"
           class="tip-card rounded"
-          [class.success]="submissionGradeTable.submissionGrade().average >= 6"
-          [class.severe]="submissionGradeTable.submissionGrade().average < 6"
+          [class.success]="submissionGradeTable.submissionGrade().isPromoted"
+          [class.severe]="!submissionGradeTable.submissionGrade().isPromoted"
         >
           <mat-icon class="tip-icon">
             @if(submissionGradeTable.submissionGrade().average === null) {
               cancel
-            } @else if(submissionGradeTable.submissionGrade().average < 6) {
+            } @else if(!submissionGradeTable.submissionGrade().isPromoted) {
               sentiment_dissatisfied
             } @else {
               sentiment_satisfied
@@ -149,7 +156,7 @@
           <div class="tip-card-content">
             @if(submissionGradeTable?.submissionGrade().average === null) {
               <div>Din păcate, nu ați promovat examenul de finalizare studii, deoarece ați fost absent la una dintre probe.</div>
-            } @else if(submissionGradeTable?.submissionGrade().average < 6) {
+            } @else if(!submissionGradeTable?.submissionGrade().isPromoted) {
               <div>Din păcate, nu ați promovat examenul de finalizare studii.</div>
             } @else {
               <div>Felicitări! Ați promovat examenul de finalizare studii.</div>
