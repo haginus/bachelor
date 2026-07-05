@@ -1,5 +1,5 @@
 <mat-menu #catalogFormatMenu="matMenu">
-  <ng-template matMenuContent let-catalogName="catalogName">
+  <ng-template matMenuContent let-catalogName="catalogName" let-supportsXlsx="supportsXlsx">
     <button mat-menu-item (click)="openReportFile($any(catalogName + '_pdf'))">
       <mat-icon>picture_as_pdf</mat-icon>
       <span>Format PDF</span>
@@ -8,6 +8,12 @@
       <mat-icon>description</mat-icon>
       <span>Format DOCX</span>
     </button>
+    @if(supportsXlsx) {
+      <button mat-menu-item (click)="openReportFile($any(catalogName + '_xlsx'))">
+        <mat-icon>grid_on</mat-icon>
+        <span>Format XLSX</span>
+      </button>
+    }
   </ng-template>
 </mat-menu>
 
@@ -41,7 +47,7 @@
         <div>Generați catalogul final</div>
         <div>Conține mediile notelor studenților din această sesiune</div>
       </div>
-      <button mat-stroked-button [matMenuTriggerFor]="catalogFormatMenu" [matMenuTriggerData]="{ catalogName: 'final_catalog' }">
+      <button mat-stroked-button [matMenuTriggerFor]="catalogFormatMenu" [matMenuTriggerData]="{ catalogName: 'final_catalog', supportsXlsx: true }">
         <span>Generați</span>
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
@@ -51,7 +57,7 @@
         <div>Generați catalogul centralizator</div>
         <div>Conține mediile notelor studenților din această sesiune care au fost declarați admiși</div>
       </div>
-      <button mat-stroked-button [matMenuTriggerFor]="catalogFormatMenu" [matMenuTriggerData]="{ catalogName: 'centralizing_catalog' }">
+      <button mat-stroked-button [matMenuTriggerFor]="catalogFormatMenu" [matMenuTriggerData]="{ catalogName: 'centralizing_catalog', supportsXlsx: true }">
         <span>Generați</span>
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
