@@ -94,7 +94,18 @@
     <mat-card-title>Raport sesiune</mat-card-title>
   </mat-card-header>
   <div class="list">
-    @if(finalReportStatus?.status === 'in_progress') {
+    @if(!finalReportStatus) {
+      <div class="list-item">
+        <div class="content">
+          <div>Generați raport sesiune</div>
+          <div>Se obțin date despre starea raportului....</div>
+        </div>
+        <app-text-progress-spinner
+          mode="indeterminate"
+          [diameter]="32"
+        />
+      </div>
+    } @else if(finalReportStatus?.status === 'in_progress') {
       <div class="list-item">
         <div class="content">
           <div>Generați raport sesiune</div>
@@ -106,7 +117,7 @@
           [diameter]="32"
         />
       </div>
-    } @else if(!finalReportStatus || !finalReportStatus.lastGeneratedAt) {
+    } @else if(!finalReportStatus.lastGeneratedAt) {
       <div class="list-item">
         <div class="content">
           <div>Generați raport sesiune</div>

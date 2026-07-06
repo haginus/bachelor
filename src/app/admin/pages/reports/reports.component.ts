@@ -30,7 +30,15 @@ export class ReportsComponent {
   }
 
   async generateFinalReport() {
-    await firstValueFrom(this.reportsService.generateFinalReport());
+    const previousStatus = { ...this.finalReportStatus };
+    this.finalReportStatus = {
+      ...previousStatus,
+      status: 'in_progress',
+      progress: 0,
+    };
+    await firstValueFrom(this.reportsService.generateFinalReport()).catch(() => {
+      this.finalReportStatus = previousStatus;
+    });
   }
 
   async getFinalReport() {
