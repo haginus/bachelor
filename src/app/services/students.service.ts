@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ImportResult, Paginated, Student } from '../lib/types';
+import { ImportResult, ImportSpecification, Paginated, Student } from '../lib/types';
 import { removeEmptyProperties } from '../lib/utils';
 
 @Injectable({
@@ -24,6 +24,10 @@ export class StudentsService {
 
   create(dto: StudentDto): Observable<Student> {
     return this.http.post<Student>(this.baseUrl, dto);
+  }
+
+  getImportSpecification(): Observable<ImportSpecification> {
+    return this.http.get<ImportSpecification>(`${this.baseUrl}/import/specification`);
   }
 
   import(file: File, specializationId: number): Observable<ImportResult<StudentDto, Student>> {

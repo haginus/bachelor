@@ -347,19 +347,49 @@ export type PaginatedQuery<P extends Record<string | number, any> = {}> = P & {
 };
 
 export interface ImportResult<RowType = any, EntityType = any> {
-  summary: {
-    proccessed: number;
-    created?: number;
-    updated?: number;
-    failed: number;
-  };
-  rows: {
-    rowIndex: number;
-    result: 'created' | 'updated' | 'failed';
-    row: RowType;
-    data: EntityType | null;
-    error?: string;
-  }[];
+  summary: ImportResultSummary;
+  rows: ImportResultRow<RowType, EntityType>[];
+}
+
+export interface ImportResultSummary {
+  processed: number;
+  created?: number;
+  updated?: number;
+  failed: number;
+}
+
+export interface ImportResultRow<RowType = any, EntityType = any> {
+  rowIndex: number;
+  result: 'created' | 'updated' | 'failed';
+  row: RowType;
+  data: EntityType | null;
+  error?: string;
+}
+
+
+export interface ImportSpecification {
+  type: 'csv';
+  mimeType: string;
+  properties: ImportSpecificationProperty[];
+  exampleFile?: ImportSpecificationExampleFile;
+}
+
+export interface ImportSpecificationProperty {
+  name: string;
+  entityPropertyPath: string;
+  order?: number;
+  required?: boolean;
+  description?: string;
+  types?: string[];
+  anyOf?: any[];
+  examples?: any[];
+}
+
+export interface ImportSpecificationExampleFile {
+  fileName: string;
+  mimeType: string;
+  encoding: 'base64' | 'utf-8';
+  content: string;
 }
 
 export interface FileGenerationStatus {

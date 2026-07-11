@@ -1,0 +1,96 @@
+@if(specification(); as specification) {
+  <h2 mat-dialog-title>{{ title() }}</h2>
+  <mat-dialog-content class="mat-typography">
+    @if(description(); as description) {
+      <p>
+        {{ description }}
+      </p>
+    }
+    <ng-content></ng-content>
+    <p></p>
+    <form>
+      @if(!isSubmitting()) {
+        <div class="flex-container align-center">
+          <button mat-stroked-button appUploadFile [accept]="specification.mimeType" (file)="handlePick($event)" [disabled]="!canUpload()">
+            <mat-icon>cloud_upload</mat-icon>
+            <span>Încărcați</span>
+          </button>
+        </div>
+      } @else {
+        <div class="flex-container align-center">
+          <mat-progress-spinner mode="indeterminate" [diameter]="36"></mat-progress-spinner>
+        </div>
+      }
+    </form>
+    <section class="specification-panel">
+      <div class="specification-panel__header">
+        <div>
+          <h3 class="specification-panel__title">Specificații import</h3>
+          <p class="specification-panel__subtitle">Un fișier CSV în format UTF-8, care conține toate coloanele de mai jos, în aceeași ordine.</p>
+          @if (exampleFileUrl(); as exampleFileUrl) {
+            <a
+              [href]="exampleFileUrl"
+              [attr.download]="specification.exampleFile?.fileName"
+              target="_blank"
+              rel="noopener noreferrer"
+              >
+                <button mat-stroked-button>
+                  <mat-icon>file_download</mat-icon>
+                  <span>Descărcați fișierul exemplu</span>
+                </button>
+              </a>
+            }
+        </div>
+        <span class="specification-panel__badge">{{ specification.type.toUpperCase() }}</span>
+      </div>
+
+      <div class="specification-list">
+        @for (property of specification.properties; track property.name) {
+          <article class="specification-item">
+            <div class="specification-item__meta">
+              <span class="specification-item__order">{{ property.order ?? $index + 1 }}</span>
+              <div class="specification-item__heading">
+                <h4>{{ property.name }}</h4>
+                <div class="specification-item__tags">
+                  @for (type of property.types ?? []; track type) {
+                    <span class="specification-tag specification-tag--neutral">{{ type }}</span>
+                  }
+                  @if (property.required) {
+                    <span class="specification-tag specification-tag--required">obligatoriu</span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            @if (property.description) {
+              <p class="specification-item__description">{{ property.description }}</p>
+            }
+
+            <dl class="specification-item__details">
+              @if (property.anyOf?.length) {
+                <div>
+                  <dt>Valori permise</dt>
+                  <dd>
+                    @for(allowedValue of property.anyOf; track allowedValue) {
+                      <span class="specification-tag specification-tag--neutral">{{ formatValue(allowedValue) }}</span>
+                    }
+                  </dd>
+                </div>
+              }
+              @if(property.examples?.length) {
+                <div>
+                  <dt>Exemplu</dt>
+                  <dd>
+                    @for(example of property.examples; track example) {
+                      <span class="specification-tag specification-tag--neutral">{{ formatValue(example) }}</span>
+                    }
+                  </dd>
+                </div>
+              }
+            </dl>
+          </article>
+        }
+      </div>
+    </section>
+  </mat-dialog-content>
+}

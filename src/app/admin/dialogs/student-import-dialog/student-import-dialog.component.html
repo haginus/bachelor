@@ -1,10 +1,13 @@
-<h2 mat-dialog-title>Adăugare studenți din .CSV</h2>
-<mat-dialog-content class="mat-typography">
+<app-import-dialog-content
+  title="Adăugare studenți din .CSV"
+  description="Selectați un program de studiu și încărcați un fișier CSV conform specificațiilor."
+  [canUpload]="studentForm.valid"
+>
   <form [formGroup]="studentForm" fxLayout="row grid" fxLayoutGap="10px grid">
     <mat-form-field appearance="outline" fxFlex="100">
       <mat-label>Programul de studii</mat-label>
       <mat-select formControlName="specializationId">
-        @for (domain of domains | async; track domain) {
+        @for (domain of domains$ | async; track domain) {
           @for (specialization of domain.specializations; track specialization) {
             <mat-option [value]="specialization.id">
               <span>{{specialization.name}} ({{ specialization.studyForm.toLocaleUpperCase()}})</span>
@@ -22,30 +25,5 @@
         }
       </mat-select>
     </mat-form-field>
-    <p fxFlex="100">
-      Încărcați un fișier .csv cu următoarele coloane: <br>
-      <i class="wrap">NUME,PRENUME,CNP,EMAIL,GRUPA,NUMAR_MATRICOL,PROMOTIE,FORMA_FINANTARE,AN_INMATRICULARE</i>
-    </p>
-    @if(!loading) {
-      <div class="flex-container align-center" fxFlex="100">
-        <button
-          mat-stroked-button
-          appUploadFile
-          accept="text/csv"
-          (file)="handleFileInput($event)"
-          [disabled]="studentForm.invalid"
-          >
-          <mat-icon>cloud_upload</mat-icon>
-          <span>Încărcați</span>
-        </button>
-      </div>
-      <div class="flex-container align-center" fxFlex="100">
-        <a class="link" href="/assets/example-csv/students.csv" target="_blank">Descărcați un exemplu</a>
-      </div>
-    } @else {
-      <div class="flex-container align-center" fxFlex="100">
-        <mat-spinner [diameter]="36"></mat-spinner>
-      </div>
-    }
   </form>
-</mat-dialog-content>
+</app-import-dialog-content>

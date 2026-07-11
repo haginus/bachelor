@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { ImportDialogComponent } from '../../abstract/import-dialog.component';
 import { StudentsService } from '../../../services/students.service';
 import { DomainsService } from '../../../services/domains.service';
+import { ImportResult } from '../../../lib/types';
 
 @Component({
   selector: 'app-student-import-dialog',
@@ -15,23 +16,18 @@ export class StudentImportDialogComponent extends ImportDialogComponent {
 
   private readonly studentsService = inject(StudentsService);
   private readonly domainsService = inject(DomainsService);
-  loading: boolean = false;
 
-  domains = this.domainsService.findAll();
+  domains$ = this.domainsService.findAll();
 
   studentForm = new FormGroup({
-    'specializationId': new FormControl(null, [Validators.required]),
+    specializationId: new FormControl(null, [Validators.required]),
   });
 
-  async handleFileInput(file: File) {
-    this.loading = true;
-    try {
-      const specializationId = this.studentForm.value.specializationId!;
-      const result = await firstValueFrom(this.studentsService.import(file, specializationId));
-      this.handleImportResult(result);
-    } finally {
-      this.loading = false;
-    }
+  protected override specification$ = this.studentsService.getImportSpecification();
+
+  protected override async uploadFile(file: File): Promise<ImportResult<any, any>> {
+    const specializationId = this.studentForm.value.specializationId!;
+    return firstValueFrom(this.studentsService.import(file, specializationId));
   }
 
 }

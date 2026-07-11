@@ -4,26 +4,77 @@
   <div class="result-list">
     <div class="result-item">
       <mat-icon>format_list_numbered</mat-icon>
-      <span class="label">{{ data.summary.proccessed }} procesate</span>
+      <span class="label">{{ data.result.summary.processed }} procesate</span>
     </div>
-    @if(data.summary.created !== undefined) {
+    @if(data.result.summary.created !== undefined) {
       <div class="result-item">
         <mat-icon>add_circle_outline</mat-icon>
-        <span class="label">{{ data.summary.created }} adăugate</span>
+        <span class="label">{{ data.result.summary.created }} adăugate</span>
       </div>
     }
-    @if(data.summary.updated !== undefined) {
+    @if(data.result.summary.updated !== undefined) {
       <div class="result-item">
         <mat-icon>edit</mat-icon>
-        <span class="label">{{ data.summary.updated }} editate</span>
+        <span class="label">{{ data.result.summary.updated }} editate</span>
       </div>
     }
     <div class="result-item">
       <mat-icon>error_outline</mat-icon>
-      <span class="label">{{ data.summary.failed }} ignorate</span>
+      <span class="label">{{ data.result.summary.failed }} ignorate</span>
     </div>
   </div>
-  <ngx-json-viewer [json]="data.rows" [expanded]="false"></ngx-json-viewer>
+
+  <div class="table-container">
+    <div class="discrete-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Linie</th>
+            <th>Stare</th>
+            @for(property of data.properties; track property) {
+              <th>{{ property.name }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for(result of data.result.rows; track result.rowIndex) {
+            <tr>
+              <td class="centered">{{ result.rowIndex }}</td>
+              <td>
+                @if(result.result === 'created') {
+                  <div class="result-status success">
+                    <mat-icon>add_circle_outline</mat-icon>
+                    <span>Adăugat</span>
+                  </div>
+                }
+                @else if(result.result === 'updated') {
+                  <div class="result-status success">
+                    <mat-icon>edit</mat-icon>
+                    <span>Editat</span>
+                  </div>
+                }
+                @else if(result.result === 'failed') {
+                  <div class="result-status error">
+                    <mat-icon>error_outline</mat-icon>
+                    <span>Eroare</span>
+                  </div>
+                }
+              </td>
+              @if(result.result === 'failed') {
+                <td [colSpan]="data.properties.length" class="error-message">
+                  {{ result.error }}
+                </td>
+              } @else {
+                @for(property of data.properties; track property) {
+                  <td>{{ getProperty(result.data, property.entityPropertyPath) }}</td>
+                }
+              }
+            </tr>
+          }
+      </table>
+    </div>
+  </div>
+
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

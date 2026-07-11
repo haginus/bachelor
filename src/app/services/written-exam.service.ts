@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { environment } from "../../environments/environment";
-import { ImportResult, WrittenExamGrade } from "../lib/types";
+import { ImportResult, ImportSpecification, WrittenExamGrade } from "../lib/types";
 
 @Injectable({
   providedIn: 'any'
@@ -17,6 +17,10 @@ export class WrittenExamService {
 
   gradeSubmission(submissionId: number, payload: GradePayload): Observable<WrittenExamGrade> {
     return this.http.post<WrittenExamGrade>(`${this.apiUrl}/grades/${submissionId}`, payload);
+  }
+
+  getImportGradesSpecification(): Observable<ImportSpecification> {
+    return this.http.get<ImportSpecification>(`${this.apiUrl}/grades/import/specification`);
   }
 
   importGrades(file: File): Observable<ImportResult<GradePayload, WrittenExamGrade>> {

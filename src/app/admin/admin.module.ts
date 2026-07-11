@@ -11,7 +11,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminTeacherDialogComponent } from './dialogs/teacher-dialog/teacher-dialog.component';
 import { AdminTeachersComponent } from './pages/teachers/teachers.component';
 import { AdminTeacherDeleteDialogComponent } from './dialogs/teacher-delete-dialog/teacher-delete-dialog.component';
-import { TeacherImportDialogComponent } from './dialogs/teacher-import-dialog/teacher-import-dialog.component';
 import { AdminDomainsComponent } from './pages/domains/domains.component';
 import { AdminDomainDialogComponent } from './dialogs/domain-dialog/domain-dialog.component';
 import { SharedModule } from '../shared/shared.module';
@@ -48,6 +47,7 @@ import { provideAppDateAdapter } from '../providers/date-adapter';
 import { WrittenExamGradesComponent } from './pages/written-exam-grades/written-exam-grades.component';
 import { FilterableSelect } from '../shared/components/filterable-select/filterable-select';
 import { LogLinkDirective } from '../shared/directives/log-link.directive';
+import { ImportDialogContentComponent } from "../shared/components/import-dialog-content/import-dialog-content.component";
 
 const materialDeps = [
   MatPaginatorModule,
@@ -71,7 +71,6 @@ const materialDeps = [
     AdminTeachersComponent,
     AdminTeacherDialogComponent,
     AdminTeacherDeleteDialogComponent,
-    TeacherImportDialogComponent,
     AdminDomainsComponent,
     AdminDomainDialogComponent,
     AdminTopicsComponent,
@@ -105,7 +104,8 @@ const materialDeps = [
     LogLinkDirective,
     DatetimePipe,
     FilterableSelect,
-    ...materialDeps
+    ImportDialogContentComponent,
+    ...materialDeps,
   ],
   providers: [
     provideAppDateAdapter(),

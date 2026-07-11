@@ -6,7 +6,6 @@ import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom, merge, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { TeacherImportDialogComponent } from '../../dialogs/teacher-import-dialog/teacher-import-dialog.component';
 import { AdminTeacherDeleteDialogComponent } from '../../dialogs/teacher-delete-dialog/teacher-delete-dialog.component';
 import { AdminTeacherDialogComponent } from '../../dialogs/teacher-dialog/teacher-dialog.component';
 import { AuthService } from '../../../services/auth.service';
@@ -16,6 +15,8 @@ import { UsersService } from '../../../services/users.service';
 import { PaginatedResolverResult } from '../../../lib/resolver-factory';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { removeEmptyProperties } from '../../../lib/utils';
+import { StandarImportDialogComponent } from '../../abstract/import-dialog.component';
+import { TeachersService } from '../../../services/teachers.service';
 
 @Component({
   selector: 'app-admin-teachers',
@@ -28,6 +29,7 @@ export class AdminTeachersComponent {
   constructor(
     private readonly destroyRef: DestroyRef,
     private readonly usersService: UsersService,
+    private readonly teachersService: TeachersService,
     private readonly auth: AuthService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
@@ -175,12 +177,17 @@ export class AdminTeachersComponent {
     this.performedActions.next("refresh");
   }
 
-  bulkAddTeachers() {
-    const dialogRef = this.dialog.open(TeacherImportDialogComponent);
-    dialogRef.afterClosed().subscribe(res => {
-      if (res) {
-        this.performedActions.next("bulkAdd");
+  async bulkAddTeachers() {
+    const dialogRef = this.dialog.open(StandarImportDialogComponent, {
+      data: {
+        title: 'Adăugare profesori din .CSV',
+        description: 'Încărcați un fișier CSV conform specificațiilor.',
+        specification$: this.teachersService.getImportSpecification(),
+        uploadFile: (file: File) => firstValueFrom(this.teachersService.import(file)),
       }
-    })
+    });
+    if(await firstValueFrom(dialogRef.afterClosed())) {
+      this.performedActions.next("bulkAdd");
+    }
   }
 }
