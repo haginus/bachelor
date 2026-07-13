@@ -1,0 +1,65 @@
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.table-container {
+  flex: 1;
+  border-radius: 4px;
+  background: var(--mat-sys-surface-container-lowest);
+  box-shadow: var(--mat-sys-level1);
+  margin-bottom: 4px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead tr {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  th {
+    text-align: left;
+    background: var(--mat-sys-surface-variant);
+    box-shadow: inset 0 -1px 0 var(--mat-sys-outline-variant);
+  }
+
+  td, th {
+    padding: 4px;
+    white-space: normal;
+  }
+
+  td {
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+  }
+
+  td.centered {
+    text-align: center;
+  }
+
+  tr:last-child td {
+    border-bottom: 0;
+  }
+}
+
+.error-message {
+  display: flex;
+  gap: 4px;
+  color: var(--mat-sys-error);
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+  }
+
+  span {
+    flex: 1;
+  }
+}
+

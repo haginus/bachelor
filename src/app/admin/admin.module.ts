@@ -48,6 +48,8 @@ import { WrittenExamGradesComponent } from './pages/written-exam-grades/written-
 import { FilterableSelect } from '../shared/components/filterable-select/filterable-select';
 import { LogLinkDirective } from '../shared/directives/log-link.directive';
 import { ImportDialogContentComponent } from "../shared/components/import-dialog-content/import-dialog-content.component";
+import { ImportErrorsDialogComponent } from './dialogs/import-errors-dialog/import-errors-dialog.component';
+import { PaperAutoAssignDialogComponent } from './dialogs/paper-auto-assign-dialog/paper-auto-assign-dialog.component';
 
 const materialDeps = [
   MatPaginatorModule,
@@ -78,6 +80,7 @@ const materialDeps = [
     SessionSettingsComponent,
     CommitteesComponent,
     CommitteeDialogComponent,
+    PaperAutoAssignDialogComponent,
     PaperAssignComponent,
     AdminPapersComponent,
     NewSessionDialogComponent,
@@ -90,6 +93,7 @@ const materialDeps = [
     AdminEditDialogComponent,
     SudoDialogComponent,
     ImportResultDialogComponent,
+    ImportErrorsDialogComponent,
     WrittenExamGradesComponent,
   ],
   imports: [

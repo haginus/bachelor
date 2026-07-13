@@ -346,15 +346,29 @@ export type PaginatedQuery<P extends Record<string | number, any> = {}> = P & {
   offset: number;
 };
 
+export type ImportResponse<RowType = any, EntityType = any> =
+  | { jobId: string }
+  | ImportResult<RowType, EntityType>;
+
 export interface ImportResult<RowType = any, EntityType = any> {
   summary: ImportResultSummary;
   rows: ImportResultRow<RowType, EntityType>[];
 }
 
+export interface ImportValidationErrorDetail<RowType = any> {
+  rowIndex: number;
+  row: RowType;
+  validationErrors: {
+    property: string;
+    messages: string[];
+  }[];
+}
+
 export interface ImportResultSummary {
+  total: number;
   processed: number;
-  created?: number;
-  updated?: number;
+  created: number;
+  updated: number;
   failed: number;
 }
 
@@ -364,6 +378,7 @@ export interface ImportResultRow<RowType = any, EntityType = any> {
   row: RowType;
   data: EntityType | null;
   error?: string;
+  warnings?: string[];
 }
 
 
@@ -376,6 +391,7 @@ export interface ImportSpecification {
 
 export interface ImportSpecificationProperty {
   name: string;
+  propertyPath: string;
   entityPropertyPath: string;
   order?: number;
   required?: boolean;

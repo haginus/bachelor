@@ -1,0 +1,9 @@
+@if(isSubmitting()) {
+  <app-loading type="bar" color="primary"></app-loading>
+}
+<h2 mat-dialog-title>Atribuire automată lucrări</h2>
+<mat-dialog-content>Folosiți această funcție pentru a atribui automat lucrările de licență care nu sunt încă atribuite unei comisii.</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Anulați</button>
+  <button mat-button (click)="onFilePicked(null)">Atribuiți automat</button>
+</mat-dialog-actions>

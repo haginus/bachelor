@@ -2,15 +2,16 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ImportResult, ImportSpecification, Paginated, Teacher } from '../lib/types';
+import { ImportResponse, ImportSpecification, Paginated, Teacher } from '../lib/types';
 import { removeEmptyProperties } from '../lib/utils';
+import { ImportJobsService } from './import-jobs.service';
 
 @Injectable({
   providedIn: 'any'
 })
 export class TeachersService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private importJobsService: ImportJobsService) {}
 
   private readonly baseUrl = `${environment.apiUrl}/teachers`;
 
@@ -30,10 +31,12 @@ export class TeachersService {
     return this.http.get<ImportSpecification>(`${this.baseUrl}/import/specification`);
   }
 
-  import(file: File): Observable<ImportResult<TeacherDto, Teacher>> {
+  import(file: File) {
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
-    return this.http.post<ImportResult<TeacherDto, Teacher>>(`${this.baseUrl}/import`, formData);
+    return this.importJobsService.createAndWatchImportJob<TeacherDto, Teacher>(
+      () => this.http.post<ImportResponse<TeacherDto, Teacher>>(`${this.baseUrl}/import`, formData)
+    );
   }
 
   update(id: number, dto: TeacherDto): Observable<Teacher> {

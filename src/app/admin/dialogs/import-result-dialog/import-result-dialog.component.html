@@ -2,8 +2,12 @@
 
 <mat-dialog-content class="mat-typography">
   <div class="result-list">
-    <div class="result-item">
+     <div class="result-item">
       <mat-icon>format_list_numbered</mat-icon>
+      <span class="label">{{ data.result.summary.total }} rânduri</span>
+    </div>
+    <div class="result-item">
+      <mat-icon>sync</mat-icon>
       <span class="label">{{ data.result.summary.processed }} procesate</span>
     </div>
     @if(data.result.summary.created !== undefined) {
@@ -24,59 +28,74 @@
     </div>
   </div>
 
-  <div class="table-container">
-    <div class="discrete-scroll">
-      <table>
-        <thead>
+  <div class="table-container discrete-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Rând</th>
+          <th>Stare</th>
+          @for(property of data.properties; track property) {
+            <th>{{ property.name }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @if(data.result.summary.processed < data.result.summary.total) {
           <tr>
-            <th>Linie</th>
-            <th>Stare</th>
-            @for(property of data.properties; track property) {
-              <th>{{ property.name }}</th>
-            }
+            <td class="loading-import" [attr.colspan]="2 + data.properties.length">
+              <div class="loading-import-content">
+                <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+                <span>Se procesează...</span>
+              </div>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          @for(result of data.result.rows; track result.rowIndex) {
-            <tr>
-              <td class="centered">{{ result.rowIndex }}</td>
-              <td>
+        }
+        @for(result of data.result.rows; track result.rowIndex) {
+          <tr>
+            <td class="centered">{{ result.rowIndex }}</td>
+            <td>
+              @if(result.result === 'created' || result.result === 'updated') {
                 @if(result.result === 'created') {
                   <div class="result-status success">
                     <mat-icon>add_circle_outline</mat-icon>
                     <span>Adăugat</span>
                   </div>
-                }
-                @else if(result.result === 'updated') {
+                } @else if(result.result === 'updated') {
                   <div class="result-status success">
                     <mat-icon>edit</mat-icon>
                     <span>Editat</span>
                   </div>
                 }
-                @else if(result.result === 'failed') {
-                  <div class="result-status error">
-                    <mat-icon>error_outline</mat-icon>
-                    <span>Eroare</span>
+                @if(result.warnings && result.warnings.length > 0) {
+                  <div class="warning-message">
+                    Atenționare: {{ result.warnings.join(', ') }}
                   </div>
                 }
-              </td>
-              @if(result.result === 'failed') {
-                <td [colSpan]="data.properties.length" class="error-message">
-                  {{ result.error }}
-                </td>
-              } @else {
-                @for(property of data.properties; track property) {
-                  <td>{{ getProperty(result.data, property.entityPropertyPath) }}</td>
-                }
+              } @else if(result.result === 'failed') {
+                <div class="result-status error">
+                  <mat-icon>error_outline</mat-icon>
+                  <span>Eroare</span>
+                </div>
+                <div class="error-message">{{ result.error }}</div>
               }
-            </tr>
-          }
-      </table>
-    </div>
+            </td>
+            @for(property of data.properties; track property) {
+              @if(result.result !== 'failed') {
+                <td>{{ getProperty(result.data, property.entityPropertyPath) }}</td>
+              } @else {
+                <td class="muted">{{ getProperty(result.row, property.propertyPath) }}</td>
+              }
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
   </div>
 
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Închideți</button>
+  <button mat-button mat-dialog-close [disabled]="data.result.summary.processed < data.result.summary.total">
+    Închideți
+  </button>
 </mat-dialog-actions>

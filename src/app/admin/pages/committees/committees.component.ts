@@ -5,14 +5,13 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { CommitteeDialogComponent } from '../../dialogs/committee-dialog/committee-dialog.component';
 import { AuthService } from '../../../services/auth.service';
-import { CommonDialogComponent } from '../../../shared/components/common-dialog/common-dialog.component';
 import { rowAnimation } from '../../../row-animations';
 import { CommitteeFile, CommitteesService } from '../../../services/committees.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { User, Teacher, Committee } from '../../../lib/types';
 import { ReportFile, ReportsService } from '../../../services/reports.service';
-import { ImportResultDialogComponent, ImportResultDialogData } from '../../dialogs/import-result-dialog/import-result-dialog.component';
 import { FilesService } from '../../../services/files.service';
+import { PaperAutoAssignDialogComponent } from '../../dialogs/paper-auto-assign-dialog/paper-auto-assign-dialog.component';
 
 @Component({
   selector: 'app-committees',
@@ -123,39 +122,9 @@ export class CommitteesComponent {
   }
 
   async autoAssign() {
-    const dialogDef = this.dialog.open(CommonDialogComponent, {
-      data: {
-        title: 'Atribuire automată lucrări',
-        content: 'Folosiți această funcție pentru a atribui automat lucrările de licență care nu sunt încă atribuite unei comisii.',
-        actions: [
-          { name: 'Anulați', value: false },
-          { name: 'Atribuiți automat', value: true }
-        ]
-      }
-    });
+    const dialogDef = this.dialog.open(PaperAutoAssignDialogComponent);
     if(!await firstValueFrom(dialogDef.afterClosed())) return;
-    try {
-      this.isLoadingResults = true;
-      const result = await firstValueFrom(this.committeesService.autoAssignPapers());
-      this.dialog.open<ImportResultDialogComponent, ImportResultDialogData>(ImportResultDialogComponent, {
-        data: {
-          result,
-          properties: [
-            { name: 'Titlu lucrare', entityPropertyPath: 'title' },
-            { name: 'Student', entityPropertyPath: 'student.fullName' },
-            { name: 'Profesor', entityPropertyPath: 'teacher.fullName' },
-            { name: 'Comisie', entityPropertyPath: 'committee.name' },
-          ],
-        },
-        width: '90vw',
-        maxWidth: '1000px'
-      });
-      this.snackbar.open(`Au fost atribuite ${result.summary.updated} din ${result.summary.processed} lucrări.`, null, { duration: 10000 });
-      this.isLoadingResults = false;
-      this.refreshResults();
-    } finally {
-      this.isLoadingResults = false;
-    }
+    this.refreshResults();
   }
 
   refreshResults() {

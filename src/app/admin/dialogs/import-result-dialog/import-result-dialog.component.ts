@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ImportResult, ImportSpecificationProperty } from '../../../lib/types';
+import { getProperty } from '../../../lib/utils';
 
 @Component({
   selector: 'app-import-result-dialog',
@@ -10,20 +11,9 @@ import { ImportResult, ImportSpecificationProperty } from '../../../lib/types';
 })
 export class ImportResultDialogComponent {
 
-  protected readonly data: ImportResultDialogData = inject(MAT_DIALOG_DATA);
+  public readonly data: ImportResultDialogData = inject(MAT_DIALOG_DATA);
 
-  protected getProperty(object: any, propertyPath: string): any {
-    const properties = propertyPath.split('.');
-    let currentObject = object;
-    for (const property of properties) {
-      if (currentObject && typeof currentObject === 'object' && property in currentObject) {
-        currentObject = currentObject[property];
-      } else {
-        return undefined;
-      }
-    }
-    return currentObject;
-  }
+  protected getProperty = getProperty;
 
 }
 

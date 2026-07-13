@@ -2,15 +2,19 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ImportResult, ImportSpecification, Paginated, Student } from '../lib/types';
+import { ImportResponse, ImportSpecification, Paginated, Student } from '../lib/types';
 import { removeEmptyProperties } from '../lib/utils';
+import { ImportJobsService } from './import-jobs.service';
 
 @Injectable({
   providedIn: 'any'
 })
 export class StudentsService {
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly importJobsService: ImportJobsService,
+  ) {}
 
   private readonly baseUrl = `${environment.apiUrl}/students`;
 
@@ -30,11 +34,13 @@ export class StudentsService {
     return this.http.get<ImportSpecification>(`${this.baseUrl}/import/specification`);
   }
 
-  import(file: File, specializationId: number): Observable<ImportResult<StudentDto, Student>> {
+  import(file: File, specializationId: number) {
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
     formData.append('specializationId', specializationId.toString());
-    return this.http.post<ImportResult<StudentDto, Student>>(`${this.baseUrl}/import`, formData);
+    return this.importJobsService.createAndWatchImportJob<StudentDto, Student>(
+      () => this.http.post<ImportResponse<StudentDto, Student>>(`${this.baseUrl}/import`, formData)
+    );
   }
 
   update(id: number, dto: StudentDto): Observable<{ student: Student; documentsGenerated?: boolean; }> {

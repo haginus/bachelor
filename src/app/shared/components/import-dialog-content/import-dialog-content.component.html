@@ -11,7 +11,7 @@
     <form>
       @if(!isSubmitting()) {
         <div class="flex-container align-center">
-          <button mat-stroked-button appUploadFile [accept]="specification.mimeType" (file)="handlePick($event)" [disabled]="!canUpload()">
+          <button type="button" mat-stroked-button appUploadFile [accept]="specification.mimeType" (file)="handlePick($event)" [disabled]="!canUpload()">
             <mat-icon>cloud_upload</mat-icon>
             <span>Încărcați</span>
           </button>

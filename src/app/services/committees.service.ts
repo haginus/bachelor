@@ -1,8 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Committee, CommitteeMemberRole, ImportResult, Paper } from "../lib/types";
+import { Committee, CommitteeMemberRole, ImportResponse, Paper } from "../lib/types";
 import { environment } from "../../environments/environment";
 import { FilesService } from "./files.service";
+import { ImportJobsService } from "./import-jobs.service";
 
 @Injectable({
   providedIn: 'any'
@@ -11,6 +12,7 @@ export class CommitteesService {
 
   constructor(
     private readonly http: HttpClient,
+    private readonly importJobsService: ImportJobsService,
     private readonly filesService: FilesService,
   ) {}
 
@@ -37,7 +39,9 @@ export class CommitteesService {
   }
 
   autoAssignPapers() {
-    return this.http.post<ImportResult<Paper, Paper>>(`${this.baseUrl}/auto-assign-papers`, {});
+    return this.importJobsService.createAndWatchImportJob<Paper, Paper>(
+      () => this.http.post<ImportResponse<Paper, Paper>>(`${this.baseUrl}/auto-assign-papers`, {})
+    );
   }
 
   setPapers(id: number, paperIds: number[]) {

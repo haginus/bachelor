@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
-import { firstValueFrom, merge, Subject } from 'rxjs';
+import { firstValueFrom, lastValueFrom, merge, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { AdminTeacherDeleteDialogComponent } from '../../dialogs/teacher-delete-dialog/teacher-delete-dialog.component';
 import { AdminTeacherDialogComponent } from '../../dialogs/teacher-dialog/teacher-dialog.component';
@@ -15,7 +15,7 @@ import { UsersService } from '../../../services/users.service';
 import { PaginatedResolverResult } from '../../../lib/resolver-factory';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { removeEmptyProperties } from '../../../lib/utils';
-import { StandarImportDialogComponent } from '../../abstract/import-dialog.component';
+import { StandardImportDialogComponent } from '../../abstract/import-dialog.component';
 import { TeachersService } from '../../../services/teachers.service';
 
 @Component({
@@ -178,12 +178,12 @@ export class AdminTeachersComponent {
   }
 
   async bulkAddTeachers() {
-    const dialogRef = this.dialog.open(StandarImportDialogComponent, {
+    const dialogRef = this.dialog.open(StandardImportDialogComponent, {
       data: {
         title: 'Adăugare profesori din .CSV',
         description: 'Încărcați un fișier CSV conform specificațiilor.',
         specification$: this.teachersService.getImportSpecification(),
-        uploadFile: (file: File) => firstValueFrom(this.teachersService.import(file)),
+        uploadFile: (file: File) => this.teachersService.import(file),
       }
     });
     if(await firstValueFrom(dialogRef.afterClosed())) {

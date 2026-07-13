@@ -147,3 +147,19 @@ export function sortArray<T>(array: T[], criteria: SortCriterion<T>[]): T[] {
   };
   return array.sort(sortFn);
 }
+
+export function getProperty(object: any, propertyPath: string): any {
+  if(!propertyPath) {
+    return undefined;
+  }
+  const properties = propertyPath.split('.');
+  let currentObject = object;
+  for (const property of properties) {
+    if (currentObject && typeof currentObject === 'object' && property in currentObject) {
+      currentObject = currentObject[property];
+    } else {
+      return undefined;
+    }
+  }
+  return currentObject;
+}

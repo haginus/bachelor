@@ -7,6 +7,7 @@ import { MatIcon } from '@angular/material/icon';
 import { WrittenExamService } from '../../../services/written-exam.service';
 import { ImportDialogComponent } from '../../abstract/import-dialog.component';
 import { ImportDialogContentComponent } from '../../../shared/components/import-dialog-content/import-dialog-content.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-bulk-grade-written-exam-dialog',
@@ -14,6 +15,7 @@ import { ImportDialogContentComponent } from '../../../shared/components/import-
     MatButtonModule,
     MatIcon,
     ImportDialogContentComponent,
+    LoadingComponent,
 ],
   templateUrl: './written-exam-grade-import-dialog.component.html',
   styleUrl: './written-exam-grade-import-dialog.component.scss',
@@ -23,12 +25,11 @@ export class BulkGradeWrittenExamDialogComponent extends ImportDialogComponent {
   private readonly filesService = inject(FilesService);
   private readonly submissionsService = inject(SubmissionsService);
   private readonly writtenExamService = inject(WrittenExamService);
-  protected isSubmitting: boolean = false;
 
   protected override specification$ = this.writtenExamService.getImportGradesSpecification();
 
   protected override uploadFile(file: File) {
-    return firstValueFrom(this.writtenExamService.importGrades(file));
+    return this.writtenExamService.importGrades(file);
   }
 
   async downloadTemplate() {

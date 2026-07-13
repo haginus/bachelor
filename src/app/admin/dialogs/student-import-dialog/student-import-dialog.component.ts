@@ -25,9 +25,9 @@ export class StudentImportDialogComponent extends ImportDialogComponent {
 
   protected override specification$ = this.studentsService.getImportSpecification();
 
-  protected override async uploadFile(file: File): Promise<ImportResult<any, any>> {
+  protected override uploadFile(file: File) {
     const specializationId = this.studentForm.value.specializationId!;
-    return firstValueFrom(this.studentsService.import(file, specializationId));
+    return this.studentsService.import(file, specializationId);
   }
 
 }

@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>Fișierul de import nu a putut fi procesat</h2>
+
+<mat-dialog-content class="mat-typography">
+  <p>Unele rânduri au erori de validare. Remediați erorile și încercați din nou.</p>
+
+  <div class="table-container discrete-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Rând</th>
+          @for(property of data.properties; track property) {
+            <th>{{ property.name }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for(detail of data.details; track detail.rowIndex) {
+          <tr>
+            <td class="centered">{{ detail.rowIndex }}</td>
+            @for(property of data.properties; track property) {
+              <td>
+                <div>{{ getProperty(detail.row, property.propertyPath) }}</div>
+                @for(error of getRowPropertyErrors(detail.rowIndex, property.propertyPath); track error) {
+                  <div class="error-message">
+                    <mat-icon>error_outline</mat-icon>
+                    <span>{{ error }}</span>
+                  </div>
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>
+    Închideți
+  </button>
+</mat-dialog-actions>

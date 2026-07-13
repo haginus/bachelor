@@ -1,3 +1,6 @@
+@if(isSubmitting()) {
+  <app-loading type="bar" color="primary"></app-loading>
+}
 <app-import-dialog-content title="Notați proba scrisă în bloc">
   <p>1. Descărcați fișierul CSV care conține toți studenții înscriși la proba scrisă.</p>
   <button matButton="outlined" (click)="downloadTemplate()">

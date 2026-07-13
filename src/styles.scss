@@ -517,3 +517,8 @@ input[type="time"]::-webkit-inner-spin-button {
 .no-radius-dialog .mat-mdc-dialog-surface {
   border-radius: 0 !important;
 }
+
+.multiline-snackbar .mat-mdc-snack-bar-label {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
