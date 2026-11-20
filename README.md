@@ -27,10 +27,12 @@ The supplied Nginx configurations support deep links in both locales.
 ## Translations
 
 Student and teacher views, their shared components, authentication, FAQs and Material
-labels use Angular i18n. Admin-only views remain in Romanian. User-entered content,
-backend error messages and generated document contents retain their original language.
-Document titles and upload instructions are displayed as returned by the backend.
-API requests include `Accept-Language: ro` or `en`, ready for backend i18n support.
+labels use Angular i18n. Admin-only views remain in Romanian. User-entered content
+and generated document contents retain their original language.
+Document titles and upload instructions arrive as `{ ro, en }` maps. The `translate`
+pipe selects the display language from Angular's `LOCALE_ID`, with Romanian fallback.
+Document download and archive filenames use the Romanian title in both app languages.
+API requests include `Accept-Language: ro` or `en` for translated backend errors.
 Country names use locale-aware display names while retaining Romanian API values.
 
 Mark template text and attributes with `i18n` / `i18n-<attribute>` and use `$localize`

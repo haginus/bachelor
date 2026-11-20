@@ -261,15 +261,17 @@ export interface RequiredDocumentTypes {
   copy?: boolean;
 }
 
+export type TranslatableString = { ro: string; en: string };
+
 export interface RequiredDocument {
   name: string;
-  title: string;
+  title: TranslatableString;
   category: DocumentCategory;
   types: RequiredDocumentTypes;
   acceptedMimeTypes: string;
   acceptedExtensions: string[];
   uploadBy: DocumentUploadPerspective;
-  uploadInstructions?: string;
+  uploadInstructions?: TranslatableString;
 }
 
 export interface Document {

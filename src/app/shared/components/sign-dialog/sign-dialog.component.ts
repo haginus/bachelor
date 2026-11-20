@@ -14,6 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoadingComponent } from '../loading/loading.component';
 import { AuthService } from '../../../services/auth.service';
 import { ThemeService } from '../../../services/theme.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-sign-dialog',
@@ -24,6 +25,7 @@ import { ThemeService } from '../../../services/theme.service';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    TranslatePipe,
   ],
   templateUrl: './sign-dialog.component.html',
   styleUrl: './sign-dialog.component.scss'

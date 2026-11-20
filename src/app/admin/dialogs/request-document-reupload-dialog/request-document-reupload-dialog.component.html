@@ -22,7 +22,7 @@
       @for(document of requiredDocuments; track document.name) {
         <div [formGroupName]="document.name" class="document-item">
           <mat-checkbox formControlName="reuploadRequested" class="checkbox">
-            <span>{{ document.title }}</span>
+            <span>{{ document.title | translate }}</span>
           </mat-checkbox>
           @if(requestReuploadForm.get('documents').get(document.name).get('reuploadRequested').value) {
             <mat-form-field class="document-reason">

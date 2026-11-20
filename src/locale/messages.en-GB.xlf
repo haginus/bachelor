@@ -2135,8 +2135,8 @@ The student will then be able to find another supervisor.</target>
         </context-group>
       </trans-unit>
       <trans-unit id="8805588298565089776" datatype="html">
-        <source> Sunteți pe cale să semnați documentul „<x id="INTERPOLATION" equiv-text="{{ signOptions.requiredDocument.title }}"/>”. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br&gt;"/> Semnând acest document, vă asumați că l-ați citit în totalitate și sunteți de acord cu conținutul acestuia. </source>
-        <target state="translated">You are about to sign “<x id="INTERPOLATION" equiv-text="{{ signOptions.requiredDocument.title }}" />”.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br&gt;" />By signing this document, you confirm that you have read it in full and agree to its contents.</target>
+        <source> Sunteți pe cale să semnați documentul „<x id="INTERPOLATION" equiv-text="{{ signOptions.requiredDocument.title | translate }}"/>”. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br&gt;"/> Semnând acest document, vă asumați că l-ați citit în totalitate și sunteți de acord cu conținutul acestuia. </source>
+        <target state="translated">You are about to sign “<x id="INTERPOLATION" equiv-text="{{ signOptions.requiredDocument.title | translate }}" />”.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br&gt;" />By signing this document, you confirm that you have read it in full and agree to its contents.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/sign-dialog/sign-dialog.component.html</context>
           <context context-type="linenumber">7,10</context>

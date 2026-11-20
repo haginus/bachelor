@@ -8,7 +8,7 @@
       }
     </div>
     <div class="content">
-      <div class="title">{{ documentMap[document.name].title }}</div>
+      <div class="title">{{ documentMap[document.name].title | translate }}</div>
       <div>
         @if(documentMap[document.name].reuploadRequest && !documentMap[document.name].isUploaded) {
           <div class="reupload-request-notice upload-request-notice">
@@ -30,7 +30,7 @@
                   | Se încarcă de către {{ USER_TYPES[documentMap[document.name].uploadBy] }}
                 </span>
               } @else if(documentMap[document.name].requiredDocument.uploadInstructions) {
-                <mat-icon [matTooltip]="documentMap[document.name].requiredDocument.uploadInstructions">info</mat-icon>
+                <mat-icon [matTooltip]="documentMap[document.name].requiredDocument.uploadInstructions | translate">info</mat-icon>
               }
             </div>
           }

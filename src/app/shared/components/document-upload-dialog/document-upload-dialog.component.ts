@@ -9,6 +9,7 @@ import { UploadFileDirective } from '../../directives/upload-file.directive';
 import { RequiredDocument } from '../../../lib/types';
 import { firstValueFrom } from 'rxjs';
 import { FilesService } from '../../../services/files.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-document-upload-dialog',
@@ -21,6 +22,7 @@ import { FilesService } from '../../../services/files.service';
     MatProgressSpinnerModule,
     MatIconModule,
     UploadFileDirective,
+    TranslatePipe,
   ]
 })
 export class DocumentUploadDialogComponent implements OnInit {
@@ -56,7 +58,7 @@ export class DocumentUploadDialogComponent implements OnInit {
     this.isDownloadingGeneratedDocument = true;
     try {
       const document = await firstValueFrom(this.document.getDocument(this.data.generatedDocumentId));
-      this.filesService.saveFile(document, this.data.document.title);
+      this.filesService.saveFile(document, this.data.document.title.ro);
     } finally {
       this.isDownloadingGeneratedDocument = false;
     }

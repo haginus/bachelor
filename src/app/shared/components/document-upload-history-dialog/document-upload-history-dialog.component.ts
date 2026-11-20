@@ -8,6 +8,7 @@ import { DatePipe } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Document, RequiredDocument } from '../../../lib/types';
 import { FilesService } from '../../../services/files.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-document-upload-history-dialog',
@@ -17,6 +18,7 @@ import { FilesService } from '../../../services/files.service';
     MatButtonModule,
     MatProgressSpinnerModule,
     DatePipe,
+    TranslatePipe,
   ],
   templateUrl: './document-upload-history-dialog.component.html',
   styleUrl: './document-upload-history-dialog.component.scss'
@@ -40,7 +42,7 @@ export class DocumentUploadHistoryDialogComponent {
   }
 
   async viewDocument(document: Document, version: number) {
-    const title = `[Versiunea ${version} - #${document.id}] ${this.data.document.title}`;
+    const title = `[Versiunea ${version} - #${document.id}] ${this.data.document.title.ro}`;
     const file = await firstValueFrom(this.documentsService.getDocument(document.id));
     this.filesService.viewFile(new File([file], title, { type: document.mimeType }));
   }

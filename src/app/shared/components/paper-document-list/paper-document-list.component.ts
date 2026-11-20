@@ -15,6 +15,7 @@ import { DatePipe } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { DocumentUploadHistoryDialogComponent, DocumentUploadHistoryDialogData } from '../document-upload-history-dialog/document-upload-history-dialog.component';
 import { FilesService } from '../../../services/files.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-paper-document-list',
@@ -27,6 +28,7 @@ import { FilesService } from '../../../services/files.service';
     MatMenuModule,
     MatTooltipModule,
     DatePipe,
+    TranslatePipe,
   ]
 })
 export class PaperDocumentListComponent implements OnChanges {
@@ -323,7 +325,7 @@ export class PaperDocumentListComponent implements OnChanges {
       return null;
     }
     mapElement.actionPending = true;
-    const title = [mapElement.title, this.documentNameSuffix].filter(Boolean).join(' - ').slice(0, 255);
+    const title = [mapElement.title.ro, this.documentNameSuffix].filter(Boolean).join(' - ').slice(0, 255);
     const file = await firstValueFrom(this.document.getDocument(lastId));
     mapElement.actionPending = false;
     return new File([file], title, { type: file.type });
@@ -337,7 +339,7 @@ interface DocumentMap {
 
 export interface DocumentMapElement {
   requiredDocument: RequiredDocument;
-  title: string;
+  title: RequiredDocument['title'];
   category: DocumentCategory;
   requiredTypes: RequiredDocumentTypes;
   actualTypes: RequiredDocumentTypes;
