@@ -17,37 +17,37 @@ const routes: Routes = [
   {
     path: 'setup',
     loadComponent: () => import('./pages/setup/student-setup.component').then(m => m.StudentSetupComponent),
-    data: { hideDrawer: true, title: "Validare" },
+    data: { hideDrawer: true, title: $localize`Validare` },
     canActivate: [notValidatedGuard]
   },
   {
     path: 'teachers',
     loadComponent: () => import('./pages/teachers-grid/teachers-grid.component').then(m => m.StudentTeachersGridComponent),
-    data: { title: "Toți profesorii", mode: "all", hasPaper: false },
+    data: { title: $localize`Toți profesorii`, mode: "all", hasPaper: false },
     canActivate: [validatedGuard, paperGuard]
   },
   {
     path: 'suggested-teachers',
     loadComponent: () => import('./pages/teachers-grid/teachers-grid.component').then(m => m.StudentTeachersGridComponent),
-    data: { title: "Profesori sugerați", mode: "suggested", hasPaper: false },
+    data: { title: $localize`Profesori sugerați`, mode: "suggested", hasPaper: false },
     canActivate: [validatedGuard, paperGuard]
   },
   {
     path: 'applications',
     loadComponent: () => import('./pages/applications/applications.component').then(m => m.StudentApplicationsComponent),
-    data: { title: "Cereri", hasPaper: false },
+    data: { title: $localize`Cereri`, hasPaper: false },
     canActivate: [validatedGuard, paperGuard]
   },
   {
     path: 'applications/:state',
     loadComponent: () => import('./pages/applications/applications.component').then(m => m.StudentApplicationsComponent),
-    data: { title: "Cereri", hasPaper: false },
+    data: { title: $localize`Cereri`, hasPaper: false },
     canActivate: [validatedGuard, paperGuard]
   },
   {
     path: 'submission',
     loadComponent: () => import('./pages/my-submission/my-submission.component').then(m => m.MySubmissionComponent),
-    data: { title: "Lucrare și dosar" },
+    data: { title: $localize`Lucrare și dosar` },
     resolve: {
       submission: submissionResolver,
       paper: paperResolver,

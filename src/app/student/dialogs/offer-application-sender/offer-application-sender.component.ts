@@ -45,7 +45,7 @@ export class OfferApplicationSenderComponent{
     this.isLoadingQuery = true;
     try {
       const application = await firstValueFrom(this.applicationsService.create(dto));
-      this.snackbar.open("Cererea a fost trimisă.");
+      this.snackbar.open($localize`Cererea a fost trimisă.`);
       this.dialogRef.close(application);
     } finally {
       this.isLoadingQuery = false;

@@ -179,7 +179,7 @@ export class TeacherOfferDialogComponent implements OnInit {
         ? await firstValueFrom(this.offersService.update(this.data.offer.id, dto))
         : await firstValueFrom(this.offersService.create(dto));
       this.dialog.close(offer);
-      this.snackbar.open("Ofertă salvată.");
+      this.snackbar.open($localize`Ofertă salvată.`);
     } finally {
       this.isLoadingQuery = false;
     }

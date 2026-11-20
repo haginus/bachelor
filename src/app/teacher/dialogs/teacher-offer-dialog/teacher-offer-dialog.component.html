@@ -4,14 +4,14 @@
   </div>
 }
 @if(data.mode === 'create') {
-  <h2 mat-dialog-title>Adăugați ofertă</h2>
+  <h2 i18n mat-dialog-title>Adăugați ofertă</h2>
 } @else if(data.mode === 'edit') {
-  <h2 mat-dialog-title>Editați oferta</h2>
+  <h2 i18n mat-dialog-title>Editați oferta</h2>
 }
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="offerForm" fxLayout="row grid" fxLayoutGap="10px grid">
     <mat-form-field appearance="outline" fxFlex="100">
-      <mat-label>Domeniu</mat-label>
+      <mat-label i18n>Domeniu</mat-label>
       <mat-select formControlName="domainId">
         @for(domain of domains; track domain.id) {
           <mat-option [value]="domain.id">
@@ -25,8 +25,8 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" fxFlex="100" floatLabel="always">
-      <mat-label>Categorii ofertă</mat-label>
-      <mat-chip-grid #chipList aria-label="Selectare categorii">
+      <mat-label i18n>Categorii ofertă</mat-label>
+      <mat-chip-grid #chipList aria-label="Selectare categorii" i18n-aria-label>
         @for(topic of selectedTopics; track $index) {
           <mat-chip [removable]="true" (removed)="removeTopic(topic)">
             {{ topic.name }}
@@ -35,7 +35,7 @@
         }
         <input
           #topicInput
-          placeholder="Categorie nouă..."
+          placeholder="Categorie nouă..." i18n-placeholder
           formControlName="topics"
           [matAutocomplete]="auto"
           [matChipInputFor]="chipList"
@@ -51,39 +51,39 @@
           </mat-option>
         }
       </mat-autocomplete>
-      <mat-hint>
+      <mat-hint i18n>
         Adăugați o categorie înscriind numele și apăsând <b>Virgulă</b> sau <b>Enter.</b> <br/>
         <b>Nu folosiți acest câmp pentru a introduce titlul lucrărilor. Încercați să definiți o arie mai largă în care s-ar încadra lucrarea.</b>
       </mat-hint>
     </mat-form-field>
 
     <mat-form-field appearance="outline" fxFlex="100">
-      <mat-label>Limită de locuri</mat-label>
+      <mat-label i18n>Limită de locuri</mat-label>
       <input matInput type="number" formControlName="limit">
       @if(offerForm.get('limit')!.value < 1) {
-        <mat-error>Numărul de locuri trebuie să fie minimum 1.</mat-error>
+        <mat-error i18n>Numărul de locuri trebuie să fie minimum 1.</mat-error>
       } @else if(data.mode == 'edit') {
-        <mat-error>Numărul de locuri nu poate fi mai mic decât locurile ocupate deja!</mat-error>
+        <mat-error i18n>Numărul de locuri nu poate fi mai mic decât locurile ocupate deja!</mat-error>
       }
     </mat-form-field>
 
     <mat-form-field appearance="outline" fxFlex="100">
-      <mat-label>Descriere</mat-label>
+      <mat-label i18n>Descriere</mat-label>
       <textarea matInput #desc formControlName="description"></textarea>
       <mat-hint align="end">{{ desc.value?.length || 0 }} / 1024</mat-hint>
-      <mat-error>Descrierea poate avea maximum 1024 de caractere.</mat-error>
+      <mat-error i18n>Descrierea poate avea maximum 1024 de caractere.</mat-error>
     </mat-form-field>
   </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Anulați</button>
+  <button i18n mat-button mat-dialog-close>Anulați</button>
   @if(data.mode == 'create') {
-    <button mat-button (click)="addOffer()" [disabled]="offerForm.invalid || selectedTopics.length == 0">
+    <button i18n mat-button (click)="addOffer()" [disabled]="offerForm.invalid || selectedTopics.length == 0">
       Adăugați
     </button>
   } @else if(data.mode == 'edit') {
-    <button mat-button (click)="editOffer()" [disabled]="offerForm.invalid || selectedTopics.length == 0">
+    <button i18n mat-button (click)="editOffer()" [disabled]="offerForm.invalid || selectedTopics.length == 0">
       Salvați
     </button>
   }

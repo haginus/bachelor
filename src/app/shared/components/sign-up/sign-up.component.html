@@ -7,10 +7,10 @@
   </div>
   <div class="form-container">
     <form [formGroup]="signUpForm">
-      <h2>Creare cont student</h2>
+      <h2 i18n>Creare cont student</h2>
       <div class="tip-card translucent warning">
         <mat-icon class="tip-icon">warning_amber</mat-icon>
-        <div class="tip-card-content">
+        <div i18n class="tip-card-content">
           Această secțiune din aplicație este destinată studenților din promoțiile anterioare.
           În cazul în care sunteți student în promoția curentă, veți fi adăugat automat în aplicație.
         </div>
@@ -18,62 +18,62 @@
       <div fxLayout="row grid" fxLayoutGap="10px grid">
         <div fxFlex="100" fxFlex.gt-xs="50">
           <mat-form-field appearance="outline">
-            <mat-label>Nume</mat-label>
+            <mat-label i18n>Nume</mat-label>
             <input matInput type="text" formControlName="lastName" name="studentLastName">
           </mat-form-field>
         </div>
         <div fxFlex="100" fxFlex.gt-xs="50">
           <mat-form-field appearance="outline">
-            <mat-label>Prenume</mat-label>
+            <mat-label i18n>Prenume</mat-label>
             <input matInput type="text" formControlName="firstName" name="studentFirstName">
           </mat-form-field>
         </div>
         <div fxFlex="100" fxFlex.gt-xs="50">
           <mat-form-field appearance="outline">
-            <mat-label>CNP</mat-label>
+            <mat-label i18n>CNP</mat-label>
             <input matInput type="text" formControlName="CNP" name="studentCNP">
-            <mat-hint>În cazul în care nu aveți un CNP, lăsați necompletat.</mat-hint>
-            <mat-error>CNP invalid.</mat-error>
+            <mat-hint i18n>În cazul în care nu aveți un CNP, lăsați necompletat.</mat-hint>
+            <mat-error i18n>CNP invalid.</mat-error>
           </mat-form-field>
         </div>
         <div fxFlex="100" fxFlex.gt-xs="50">
           <mat-form-field appearance="outline">
-            <mat-label>E-mail</mat-label>
+            <mat-label i18n>E-mail</mat-label>
             <input matInput type="email" formControlName="email" name="studentEmail">
           </mat-form-field>
         </div>
         <div fxFlex="100" fxFlex.gt-xs="50">
           <mat-form-field appearance="outline">
-            <mat-label>Număr matricol</mat-label>
+            <mat-label i18n>Număr matricol</mat-label>
             <input matInput type="text" formControlName="identificationCode" name="studentIdentificationCode">
-            <mat-hint>Forma: [nr. unic]/[an înmatriculare]</mat-hint>
+            <mat-hint i18n>Forma: [nr. unic]/[an înmatriculare]</mat-hint>
           </mat-form-field>
         </div>
         <div fxFlex="100" fxFlex.gt-xs="50">
           <mat-form-field appearance="outline">
-            <mat-label>Forma de finanțare</mat-label>
+            <mat-label i18n>Forma de finanțare</mat-label>
             <mat-select formControlName="fundingForm">
-              <mat-option value="budget">Buget</mat-option>
-              <mat-option value="tax">Taxă</mat-option>
+              <mat-option i18n value="budget">Buget</mat-option>
+              <mat-option i18n value="tax">Taxă</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
         <div fxFlex="100" fxFlex.gt-xs="50">
           <mat-form-field appearance="outline">
-            <mat-label>Grupă</mat-label>
+            <mat-label i18n>Grupă</mat-label>
             <input matInput type="text" formControlName="group" name="studentGroup">
           </mat-form-field>
         </div>
         <div fxFlex="100" fxFlex.gt-xs="50">
           <mat-form-field appearance="outline">
-            <mat-label>Promoție</mat-label>
+            <mat-label i18n>Promoție</mat-label>
             <input matInput type="text" formControlName="promotion" name="studentPromotion">
-            <mat-hint>Anul în care ați absolvit</mat-hint>
+            <mat-hint i18n>Anul în care ați absolvit</mat-hint>
           </mat-form-field>
         </div>
         <div fxFlex="100" fxFlex.gt-xs="50">
           <mat-form-field appearance="outline">
-            <mat-label>Domeniu</mat-label>
+            <mat-label i18n>Domeniu</mat-label>
             <mat-select formControlName="domainId">
               @for(domain of domains; track domain.id) {
                 <mat-option [value]="domain.id">
@@ -85,7 +85,7 @@
         </div>
         <div fxFlex="100" fxFlex.gt-xs="50">
           <mat-form-field appearance="outline">
-            <mat-label>Programul de studii</mat-label>
+            <mat-label i18n>Programul de studii</mat-label>
             <mat-select formControlName="specializationId">
               @for(specialization of chosenDomain?.specializations; track specialization.id) {
                 <mat-option [value]="specialization.id">
@@ -97,16 +97,16 @@
         </div>
         <div fxFlex="100" fxFlex.gt-xs="50">
           <mat-form-field appearance="outline">
-            <mat-label>Anul înmatriculării</mat-label>
+            <mat-label i18n>Anul înmatriculării</mat-label>
             <input matInput type="text" formControlName="matriculationYear" name="studentMatriculationYear">
           </mat-form-field>
         </div>
       </div>
-      <mat-checkbox formControlName="segmentCheck" class="v-checkbox wrap">
+      <mat-checkbox i18n formControlName="segmentCheck" class="v-checkbox wrap">
         Fac parte dintr-o promoție anterioară sau mi s-a cerut expres să completez acest formular. *
       </mat-checkbox>
       <br>
-      <mat-checkbox formControlName="termsCheck" class="v-checkbox wrap">
+      <mat-checkbox i18n formControlName="termsCheck" class="v-checkbox wrap">
         Sunt de acord ca datele mele personale să fie folosite de facultate în scopul
         operării acestei platforme. *
       </mat-checkbox>
@@ -116,7 +116,7 @@
         <re-captcha (resolved)="solvedCaptcha($event)"></re-captcha>
       </div>
       <div class="flex-container align-center">
-          <button
+          <button i18n
             matButton="filled"
             [disabled]="signUpForm.invalid || !captchaToken || loading"
             (click)="signUp()"
@@ -129,7 +129,7 @@
     <div class="divider"></div>
     <div class="flex-container align-center">
       <router-link routerLink="/login">
-        <button mat-button>
+        <button i18n mat-button>
           <span>Înapoi la autentificare</span>
         </button>
       </router-link>

@@ -20,17 +20,19 @@ import { IdentityListItemComponent } from "./shared/components/identity-list-ite
 import { ApiUrlPipe } from './shared/pipes/api-url';
 import { getUserDescription } from './lib/utils';
 import { isStudent, SessionSettings, User } from './lib/types';
-import { ThemeService } from './services/theme.service';
 import { MatTooltip } from "@angular/material/tooltip";
+import { AppControlsComponent } from './shared/components/app-controls/app-controls.component';
+import { Title } from '@angular/platform-browser';
 
 const SideWidth = 800;
-const DEFAULT_TITLE = 'Finalizare studii';
+const DEFAULT_TITLE = $localize`Finalizare studii`;
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   imports: [
+    AppControlsComponent,
     FlexLayoutModule,
     MatProgressSpinnerModule,
     MatMenuModule,
@@ -59,8 +61,8 @@ export class AppComponent implements OnInit {
     private route: ActivatedRoute,
     private auth: AuthService,
     private dialog: MatDialog,
-    protected themeService: ThemeService,
     private loader: LoaderService,
+    private documentTitle: Title,
   ) {}
 
   user: User | undefined = undefined;
@@ -74,6 +76,7 @@ export class AppComponent implements OnInit {
   @ViewChild('drawer') drawer: MatDrawer;
 
   ngOnInit(): void {
+    this.documentTitle.setTitle(DEFAULT_TITLE);
     this.drawerMode = window.innerWidth < SideWidth ? "over" : "side";
     this.router.events.subscribe((event) => {
       switch (true) {

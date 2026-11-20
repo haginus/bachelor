@@ -13,19 +13,19 @@
         <div class="list-item">
           <mat-icon>event</mat-icon>
           <div class="content">
-            <div>Programarea lucrării dvs.</div>
+            <div i18n>Programarea lucrării dvs.</div>
             <div>
               @if(paper().scheduledGrading) {
-                {{ paper().scheduledGrading | datetime }} - Timp alocat {{ committee().paperPresentationTime }} min.
+                <ng-container i18n>{{ paper().scheduledGrading | datetime }} - Timp alocat {{ committee().paperPresentationTime }} min.</ng-container>
               } @else {
-                TBA
+                <ng-container i18n>De anunțat</ng-container>
               }
             </div>
           </div>
         </div>
       }
       @if(sortedDays().length > 0) {
-        <div class="list-header">Zile de activitate</div>
+        <div i18n class="list-header">Zile de activitate</div>
         @for(day of sortedDays(); track day.id) {
           <div class="list-item">
             <mat-icon>event</mat-icon>
@@ -36,7 +36,7 @@
           </div>
         }
       }
-      <div class="list-header">Membri</div>
+      <div i18n class="list-header">Membri</div>
       @for(member of committee().members; track member.teacher.id) {
         <div class="list-item">
           <mat-icon>school</mat-icon>

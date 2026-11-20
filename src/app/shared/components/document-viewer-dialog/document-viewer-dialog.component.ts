@@ -65,7 +65,7 @@ export class DocumentViewerDialogComponent {
   protected openInNewTabSupported = computed(() => DocumentViewerDialogComponent._supportsType(this.file().type, DocumentViewerDialogComponent.browserSupportedTypes));
   protected errorLoading = signal(false);
   protected isLoading = signal(true);
-  protected documentTitle = computed(() => this.file().name || 'Document');
+  protected documentTitle = computed(() => this.file().name || $localize`Document`);
   @Output() documentSigned = new EventEmitter<Document>();
 
 

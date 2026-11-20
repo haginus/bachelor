@@ -247,7 +247,7 @@ export class AuthService {
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      this.snackbar.open(error.error?.message || "A apărut o eroare.");
+      this.snackbar.open(error.error?.message || $localize`A apărut o eroare.`);
       return of(result as T);
     };
   }
@@ -255,7 +255,7 @@ export class AuthService {
 
   private handleAuthError(result?: any) {
     return (error: HttpErrorResponse): Observable<AuthResponse> => {
-      this.snackbar.open(error.error?.message || "A apărut o eroare.");
+      this.snackbar.open(error.error?.message || $localize`A apărut o eroare.`);
       return of({ error: error.error.error || true } as AuthResponse);
     };
   }

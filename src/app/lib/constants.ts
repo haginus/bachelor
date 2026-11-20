@@ -1,45 +1,45 @@
 import { CivilState, CommitteeMemberRole } from "./types";
 
 export const DOMAIN_TYPES = {
-  bachelor: 'licență',
-  master: 'master',
+  bachelor: $localize`licență`,
+  master: $localize`master`,
 };
 
 export const FUNDING_FORMS = {
-  budget: 'buget',
-  tax: 'taxă',
+  budget: $localize`buget`,
+  tax: $localize`taxă`,
 };
 
 export const STUDY_FORMS = {
-  if: 'Învățământ cu frecvență',
-  ifr: 'Învățământ cu frecvență redusă',
-  id: 'Învățământ la distanță',
+  if: $localize`Învățământ cu frecvență`,
+  ifr: $localize`Învățământ cu frecvență redusă`,
+  id: $localize`Învățământ la distanță`,
 };
 
 export const USER_TYPES = {
-  student: 'student',
-  teacher: 'profesor',
-  committee: 'comisie',
-  admin: 'administrator',
-  secretary: 'secretar',
+  student: $localize`student`,
+  teacher: $localize`profesor`,
+  committee: $localize`comisie`,
+  admin: $localize`administrator`,
+  secretary: $localize`secretar`,
 };
 
 export const PAPER_TYPES = {
-  bachelor: 'licență',
-  diploma: 'diplomă',
-  master: 'disertație',
+  bachelor: $localize`licență`,
+  diploma: $localize`diplomă`,
+  master: $localize`disertație`,
 };
 
 export const CIVIL_STATE = {
-  not_married: 'Necăsătorit(ă)',
-  married: 'Căsătorit(ă)',
-  divorced: 'Divorțat(ă)',
-  widow: 'Văduv(ă)',
-  re_married: 'Recăsătorit(ă)',
+  not_married: $localize`Necăsătorit(ă)`,
+  married: $localize`Căsătorit(ă)`,
+  divorced: $localize`Divorțat(ă)`,
+  widow: $localize`Văduv(ă)`,
+  re_married: $localize`Recăsătorit(ă)`,
 } as const satisfies Record<CivilState, string>;
 
 export const COMMITTEE_MEMBER_ROLE = {
-  president: 'Președinte',
-  secretary: 'Secretar',
-  member: 'Membru',
+  president: $localize`Președinte`,
+  secretary: $localize`Secretar`,
+  member: $localize`Membru`,
 } as const satisfies Record<CommitteeMemberRole, string>;

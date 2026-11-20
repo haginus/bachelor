@@ -1,25 +1,25 @@
 <table mat-table [dataSource]="paper.grades" #table>
   <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef> Profesor </th>
+    <th i18n mat-header-cell *matHeaderCellDef> Profesor </th>
     <td mat-cell *matCellDef="let row"> {{row.committeeMember?.teacher?.lastName}} {{row.committeeMember?.teacher?.firstName}} </td>
-    <td mat-footer-cell *matFooterCellDef><b>Medie</b></td>
+    <td i18n mat-footer-cell *matFooterCellDef><b>Medie</b></td>
 
   </ng-container>
 
   <ng-container matColumnDef="forPaper">
-    <th mat-header-cell *matHeaderCellDef> Notă pentru lucrare </th>
+    <th i18n mat-header-cell *matHeaderCellDef> Notă pentru lucrare </th>
     <td mat-cell *matCellDef="let row"> {{row.forPaper}} </td>
     <td mat-footer-cell *matFooterCellDef><b>{{ getAverageForPaper() | fixed }}</b></td>
   </ng-container>
 
   <ng-container matColumnDef="forPresentation">
-    <th mat-header-cell *matHeaderCellDef> Notă pentru prezentare </th>
+    <th i18n mat-header-cell *matHeaderCellDef> Notă pentru prezentare </th>
     <td mat-cell *matCellDef="let row"> {{row.forPresentation}} </td>
     <td mat-footer-cell *matFooterCellDef><b>{{ getAverageForPresentation() | fixed }}</b></td>
   </ng-container>
 
   <ng-container matColumnDef="average">
-    <th mat-header-cell *matHeaderCellDef> Medie </th>
+    <th i18n mat-header-cell *matHeaderCellDef> Medie </th>
     <td mat-cell *matCellDef="let row"> {{ (row.forPaper + row.forPresentation) / 2 | fixed }} </td>
     <td mat-footer-cell *matFooterCellDef><b>{{ getAverage() | fixed }}</b></td>
   </ng-container>
@@ -29,7 +29,7 @@
   <tr mat-footer-row @rowAnimation *matFooterRowDef="displayedColumns;" [hidden]="paper.grades.length == 0"></tr>
 
   <tr class="mat-mdc-row mdc-data-table__row" *matNoDataRow>
-    <td class="mat-mdc-cell mdc-data-table__cell" colspan="1000">
+    <td i18n class="mat-mdc-cell mdc-data-table__cell" colspan="1000">
       Nu s-au acordat încă note.
     </td>
   </tr>

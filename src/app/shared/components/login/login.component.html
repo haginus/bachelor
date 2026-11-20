@@ -1,6 +1,4 @@
-<button class="toggle-theme-button" matIconButton matTooltip="Comutați tema" (click)="themeService.toggleTheme()">
-  <mat-icon>{{ themeService.isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
-</button>
+<app-controls class="page-controls" />
 
 <div class="flex-container align-center v-align-center fullscreen page-container">
   <div class="login-container mat-elevation-z2">
@@ -14,38 +12,38 @@
       @if(view === 'login') {
         <form [formGroup]="loginForm">
           <mat-form-field appearance="outline">
-            <mat-label>E-mail</mat-label>
+            <mat-label i18n>E-mail</mat-label>
             <input matInput type="email" formControlName="email">
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Parolă</mat-label>
+            <mat-label i18n>Parolă</mat-label>
             <input matInput type="password" formControlName="password">
           </mat-form-field>
           <div class="flex-container align-center captcha-container">
             <re-captcha [theme]="themeService.isDarkMode ? 'dark' : 'light'" (resolved)="solvedCaptcha($event)" #captcha></re-captcha>
           </div>
           <div class="flex-container align-center">
-            <button matButton="filled" [disabled]="loginForm.invalid || !captchaToken || loading"
+            <button i18n matButton="filled" [disabled]="loginForm.invalid || !captchaToken || loading"
               (click)="signIn()">Autentificare</button>
           </div>
         </form>
       } @else if(view === 'forgotPassword') {
         <form [formGroup]="forgotPasswordForm">
           <mat-form-field appearance="outline">
-            <mat-label>E-mail</mat-label>
+            <mat-label i18n>E-mail</mat-label>
             <input matInput type="email" formControlName="email">
           </mat-form-field>
           <div class="flex-container align-center captcha-container">
             <re-captcha [theme]="themeService.isDarkMode ? 'dark' : 'light'" (resolved)="solvedCaptcha($event)" #captcha></re-captcha>
           </div>
           <div class="flex-container align-center">
-            <button matButton="filled" [disabled]="forgotPasswordForm.invalid || !captchaToken || loading"
+            <button i18n matButton="filled" [disabled]="forgotPasswordForm.invalid || !captchaToken || loading"
               (click)="sendForgotPasswordEmail()">Trimiteți e-mail de resetare</button>
           </div>
         </form>
       } @else if(view === 'pickIdentity') {
         <div>
-          <h2>Alegeți identitatea cu care doriți să vă autentificați:</h2>
+          <h2 i18n>Alegeți identitatea cu care doriți să vă autentificați:</h2>
           <div class="identity-list">
             @for (identity of identities; track identity.id) {
               <app-identity-list-item [user]="identity" (click)="pickIdentity($index)" />
@@ -57,16 +55,16 @@
 
       <div class="flex-container align-center">
         @if(view === 'login') {
-          <button mat-button (click)="changeView('forgotPassword')">
+          <button i18n mat-button (click)="changeView('forgotPassword')">
             <span>Ați uitat parola?</span>
           </button>
           <router-link routerLink="/sign-up">
-            <button mat-button>
+            <button i18n mat-button>
               <span>Creare cont student</span>
             </button>
           </router-link>
         } @else if(view === 'forgotPassword' || view === 'pickIdentity') {
-          <button mat-button (click)="changeView('login')">
+          <button i18n mat-button (click)="changeView('login')">
             <span>Înapoi la autentificare</span>
           </button>
         }
@@ -74,9 +72,9 @@
     </div>
   </div>
   <div class="footer">
-    <span>Facultatea de Matematică și Informatică,</span>
+    <span i18n>Facultatea de Matematică și Informatică,</span>
     <span>&nbsp;</span>
-    <span>Universitatea din București</span> <br>
+    <span i18n>Universitatea din București</span> <br>
     @defer {
       <app-problem-report-button [showText]="true" />
     }

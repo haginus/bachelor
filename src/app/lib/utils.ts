@@ -23,7 +23,7 @@ export function getErrorMessage(err: any) {
   function maybeTakeFirst(message: any) {
     return message instanceof Array ? message[0] : message;
   }
-  return err.error?.message || maybeTakeFirst(err.message) || err.error?.error || 'A apărut o eroare.';
+  return err.error?.message || maybeTakeFirst(err.message) || err.error?.error || $localize`A apărut o eroare.`;
 }
 
 export function capitalize(str: string) {
@@ -91,7 +91,7 @@ export function getUserDescription(user: User) {
     const specialization = user.specialization;
     const domain = specialization.domain;
     str += ` · ${capitalize(DOMAIN_TYPES[domain.type])}, ${specialization.name} (${specialization.studyForm.toLocaleUpperCase()})`;
-    str += ` · Gr. ${user.group}`;
+    str += $localize` · Gr. ${user.group}`;
     str += ` · ${user.promotion}`;
   }
   return str;

@@ -1,3 +1,4 @@
+import { CountryNamePipe } from '../../pipes/country-name.pipe';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -25,6 +26,7 @@ import { CIVIL_STATE } from '../../../lib/constants';
   templateUrl: './user-extra-data-editor.component.html',
   styleUrls: ['./user-extra-data-editor.component.scss'],
   imports: [
+    CountryNamePipe,
     ReactiveFormsModule,
     FlexLayoutModule,
     MatDialogModule,
@@ -159,9 +161,9 @@ export class UserExtraDataEditorComponent implements OnInit {
       this.studentExtraData = formValue;
       const result = await firstValueFrom(this.auth.updateUserExtraData(this.userData.id, formValue));
       this.dialog.close(result);
-      let message = "Datele suplimentare au fost salvate.";
+      let message = $localize`Datele suplimentare au fost salvate.`;
       if('documentsGenerated' in result && result.documentsGenerated) {
-        message += " Documentele vor fi regenerate.";
+        message += $localize` Documentele vor fi regenerate.`;
       }
       this.snackBar.open(message);
     } finally {

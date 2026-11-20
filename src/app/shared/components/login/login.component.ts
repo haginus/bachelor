@@ -14,8 +14,7 @@ import { ProblemReportButtonComponent } from '../../../components/problem-report
 import { IdentityListItemComponent } from '../identity-list-item/identity-list-item.component';
 import { User } from '../../../lib/types';
 import { ThemeService } from '../../../services/theme.service';
-import { MatIcon } from '@angular/material/icon';
-import { MatTooltip } from "@angular/material/tooltip";
+import { AppControlsComponent } from '../app-controls/app-controls.component';
 import { ThemedImageDirective } from '../../directives/themed-image.directive';
 
 @Component({
@@ -34,8 +33,7 @@ import { ThemedImageDirective } from '../../directives/themed-image.directive';
     LoadingComponent,
     RouterLink,
     IdentityListItemComponent,
-    MatIcon,
-    MatTooltip,
+    AppControlsComponent,
     ThemedImageDirective,
   ],
 })
@@ -139,7 +137,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.loading = true;
     try {
       await firstValueFrom(this.auth.sendResetPasswordEmail(email, this.captchaToken));
-      this.snackBar.open("E-mailul de resetare a parolei a fost trimis.");
+      this.snackBar.open($localize`E-mailul de resetare a parolei a fost trimis.`);
     } finally {
       this.loading = false;
       this.captchaComponent.reset();

@@ -4,11 +4,11 @@
       <mat-icon>photo_camera</mat-icon>
       <div class="text">
         @if(!userProfile?.picture && !profilePictureFile) {
-          <span>
+          <span i18n>
             Adăugați o poză
           </span>
         } @else {
-          <span>
+          <span i18n>
             Schimbați poza
           </span>
         }
@@ -25,11 +25,11 @@
 <form [formGroup]="profileForm" fxLayout="row grid" fxLayoutGap="10px grid">
   <mat-form-field appearance="outline" fxFlex="100">
     <mat-icon matPrefix>language</mat-icon>
-    <mat-label>Website</mat-label>
+    <mat-label i18n>Site web</mat-label>
     <input matInput formControlName="website" />
   </mat-form-field>
   <mat-form-field appearance="outline" fxFlex="100">
-    <mat-label>Bio (descriere)</mat-label>
+    <mat-label i18n>Bio (descriere)</mat-label>
     <textarea matInput #bio formControlName="bio"></textarea>
     <mat-hint align="end">{{bio.value?.length || 0}}/256</mat-hint>
   </mat-form-field>
@@ -37,7 +37,7 @@
 
 <div fxLayout="row" fxLayoutAlign="end">
   @if(showReset) {
-    <button mat-button (click)="resetForm()" [disabled]="loading">Resetați</button>
+    <button i18n mat-button (click)="resetForm()" [disabled]="loading">Resetați</button>
   }
-  <button matButton="filled" color="primary" (click)="saveProfile()" [disabled]="loading">Salvați profilul</button>
+  <button i18n matButton="filled" color="primary" (click)="saveProfile()" [disabled]="loading">Salvați profilul</button>
 </div>

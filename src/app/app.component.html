@@ -6,10 +6,10 @@
 
 @if(backendDown) {
   <div class="flex-container align-center v-align-center fixed">
-    <h2>Platforma este indisponibilă</h2>
-    <p>Dacă problema persistă, contactați administratorul.</p>
+    <h2 i18n>Platforma este indisponibilă</h2>
+    <p i18n>Dacă problema persistă, contactați administratorul.</p>
     <p></p>
-    <button matButton="filled" color="primary" (click)="reloadApp()">Reîncercați</button>
+    <button i18n matButton="filled" color="primary" (click)="reloadApp()">Reîncercați</button>
   </div>
 }
 <div [matMenuTriggerFor]="userMenu" #userMenuTrigger="matMenuTrigger"></div>
@@ -32,7 +32,7 @@
       <div class="actions">
         <button mat-stroked-button color="primary" (click)="editProfile(); userMenuTrigger.closeMenu()">
           <mat-icon>edit</mat-icon>
-          <span>Editați profilul</span>
+          <span i18n>Editați profilul</span>
         </button>
       </div>
     </div>
@@ -48,7 +48,7 @@
       }
       <button mat-button (click)="signOut(); userMenuTrigger.closeMenu()">
         <mat-icon>logout</mat-icon>
-        <span>Deconectare</span>
+        <span i18n>Deconectare</span>
       </button>
     </div>
   </div>
@@ -61,19 +61,22 @@
   @if(!hideToolbar) {
     <mat-toolbar>
       @if(!hideDrawer) {
-        <button mat-icon-button matTooltip="Comutați meniul" (click)="drawer.toggle()">
+        <button mat-icon-button matTooltip="Comutați meniul" i18n-matTooltip (click)="drawer.toggle()">
           <mat-icon>menu</mat-icon>
         </button>
       }
       <span class="toolbar-title">{{ title }}</span>
       <span class="toolbar-spacer"></span>
+      @if(hideDrawer) {
+        <app-controls />
+      }
       <button mat-button class="user-preview-container" [matMenuTriggerFor]="userMenu">
         <div class="content">
           @if(user) {
             <div class="user-name" fxHide.lt-sm>
               <div>{{ user.firstName }} {{ user.lastName }}</div>
               @if(isStudent(user)) {
-                <div>Gr. {{ user.group }}</div>
+                <div i18n>Gr. {{ user.group }}</div>
               }
             </div>
           }
@@ -96,35 +99,35 @@
           <div class="nav-list">
             <a class="nav-list-item" routerLink="student" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
               <mat-icon>lightbulb</mat-icon>
-              <span>Informații și întrebări</span>
+              <span i18n>Informații și întrebări</span>
             </a>
           </div>
           @if(!$any(user).paper) {
             <div class="nav-list">
               <a class="nav-list-item" routerLink="student/suggested-teachers" routerLinkActive="active">
                 <mat-icon>stars</mat-icon>
-                <span>Profesori sugerați</span>
+                <span i18n>Profesori sugerați</span>
               </a>
               <a class="nav-list-item" routerLink="student/teachers" routerLinkActive="active">
                 <mat-icon>school</mat-icon>
-                <span>Toți profesorii</span>
+                <span i18n>Toți profesorii</span>
               </a>
             </div>
             <div class="nav-list">
               <a class="nav-list-item" routerLink="student/applications/pending" routerLinkActive="active">
                 <mat-icon>assignment</mat-icon>
-                <span>Cereri în așteptare</span>
+                <span i18n>Cereri în așteptare</span>
               </a>
               <a class="nav-list-item" routerLink="student/applications/declined" routerLinkActive="active">
                 <mat-icon>assignment_returned</mat-icon>
-                <span>Cereri respinse</span>
+                <span i18n>Cereri respinse</span>
               </a>
             </div>
           } @else {
             <div class="nav-list">
               <a class="nav-list-item" routerLink="student/submission" routerLinkActive="active">
                 <mat-icon>stars</mat-icon>
-                <span>Lucrare și dosar</span>
+                <span i18n>Lucrare și dosar</span>
               </a>
             </div>
           }
@@ -133,35 +136,35 @@
           <div class="nav-list">
             <a class="nav-list-item" routerLink="teacher" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
               <mat-icon>lightbulb</mat-icon>
-              <span>Informații și întrebări</span>
+              <span i18n>Informații și întrebări</span>
             </a>
           </div>
           <div class="nav-list">
             <a class="nav-list-item" routerLink="teacher/offers" routerLinkActive="active">
               <mat-icon>stars</mat-icon>
-              <span>Ofertele dvs.</span>
+              <span i18n>Ofertele dvs.</span>
             </a>
           </div>
           <div class="nav-list">
             <a class="nav-list-item" routerLink="teacher/applications/pending" routerLinkActive="active">
               <mat-icon>assignment</mat-icon>
-              <span>Cereri în așteptare</span>
+              <span i18n>Cereri în așteptare</span>
             </a>
             <a class="nav-list-item" routerLink="teacher/applications/declined" routerLinkActive="active">
               <mat-icon>assignment_returned</mat-icon>
-              <span>Cereri respinse</span>
+              <span i18n>Cereri respinse</span>
             </a>
           </div>
           <div class="nav-list">
             <a class="nav-list-item" routerLink="teacher/papers" routerLinkActive="active">
               <mat-icon>description</mat-icon>
-              <span>Lucrări coordonate</span>
+              <span i18n>Lucrări coordonate</span>
             </a>
           </div>
           <div class="nav-list">
             <a class="nav-list-item" routerLink="teacher/committees" routerLinkActive="active">
               <mat-icon>description</mat-icon>
-              <span>Comisii</span>
+              <span i18n>Comisii</span>
             </a>
           </div>
         }
@@ -246,9 +249,7 @@
         @defer {
           <app-problem-report-button />
         }
-        <button matIconButton matTooltip="Comutați tema" (click)="themeService.toggleTheme()">
-          <mat-icon>{{ themeService.isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
-        </button>
+        <app-controls />
         <span class="flex-spacer"></span>
         @if(user?.type === 'admin') {
           <em class="app-version">v{{ appVersion }}</em>

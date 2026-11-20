@@ -45,7 +45,7 @@ export class DocumentUploadDialogComponent implements OnInit {
     this.isUploadingFile = true;
     try {
       const document = await firstValueFrom(this.document.uploadDocument(this.data.paperId, this.data.document.name, 'copy', file));
-      this.snackbar.open(`Document încărcat.`);
+      this.snackbar.open($localize`Document încărcat.`);
       this.dialogRef.close(document);
     } finally {
       this.isUploadingFile = false;

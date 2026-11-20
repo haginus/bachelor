@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, LOCALE_ID, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,6 +18,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   standalone: false
 })
 export class SessionSettingsComponent implements OnInit {
+
+  private readonly locale = inject(LOCALE_ID);
 
   constructor(
     private auth: AuthService,
@@ -56,7 +58,7 @@ export class SessionSettingsComponent implements OnInit {
   }
 
   private setFormValue(sessionSettings: SessionSettings) {
-    const _formatDate = (date: string) => formatDate(date, 'yyyy-MM-dd', 'ro-RO', 'Europe/Bucharest');
+    const _formatDate = (date: string) => formatDate(date, 'yyyy-MM-dd', this.locale, 'Europe/Bucharest');
     const settings = {
       sessionName: sessionSettings.sessionName,
       currentPromotion: sessionSettings.currentPromotion,

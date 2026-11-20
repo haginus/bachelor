@@ -1,68 +1,68 @@
 @if(isSavingData) {
   <div class="loading-shade">
     <mat-spinner diameter="48" color="accent"></mat-spinner>
-    <div class="message">Se salveză datele...</div>
+    <div i18n class="message">Se salveză datele...</div>
   </div>
 }
 
-<h2 mat-dialog-title>Completați datele necesare înscrierii</h2>
+<h2 i18n mat-dialog-title>Completați datele necesare înscrierii</h2>
 
 <mat-dialog-content class="mat-typography">
   @if(studentExtraData) {
     <div class="tip-card translucent">
       <mat-icon class="tip-icon">warning_amber</mat-icon>
-      <div class="tip-card-content">
+      <div i18n class="tip-card-content">
         Editarea datelor va duce la regenerarea documentelor necesare înscrierii, acestea
         trebuind semnate din nou.
       </div>
     </div>
   }
   <form [formGroup]="studentDataForm">
-    <div class="section-header">Date personale</div>
+    <div i18n class="section-header">Date personale</div>
     <div fxLayout="row grid" fxLayoutGap="10px grid">
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Nume de familie la naștere</mat-label>
+        <mat-label i18n>Nume de familie la naștere</mat-label>
         <input matInput type="text" formControlName="birthLastName">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Nume de familie la înmatriculare</mat-label>
+        <mat-label i18n>Nume de familie la înmatriculare</mat-label>
         <input matInput type="text" disabled [value]="userData.lastName">
       </mat-form-field>
 
       <div fxFlex="100" fxFlex.gt-xs="70">
         <mat-form-field appearance="outline">
-          <mat-label>Prenume</mat-label>
+          <mat-label i18n>Prenume</mat-label>
           <input matInput type="text" disabled [value]="userData.firstName">
         </mat-form-field>
       </div>
 
       <div fxFlex="100" fxFlex.gt-xs="30">
         <mat-form-field appearance="outline">
-          <mat-label>Inițiala părintelui</mat-label>
-          <input matInput type="text" formControlName="parentInitial" placeholder="Exemplu: A. G. B.">
-          <mat-error>Inițiala trebuie să fie majusculă, urmată de punct.
+          <mat-label i18n>Inițiala părintelui</mat-label>
+          <input matInput type="text" formControlName="parentInitial" placeholder="Exemplu: A. G. B." i18n-placeholder>
+          <mat-error i18n>Inițiala trebuie să fie majusculă, urmată de punct.
             Se acceptă maximum 3 inițiale separate prin spațiu.
           </mat-error>
         </mat-form-field>
       </div>
 
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Prenume tată</mat-label>
+        <mat-label i18n>Prenume tată</mat-label>
         <input matInput type="text" formControlName="fatherName">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Prenume mamă</mat-label>
+        <mat-label i18n>Prenume mamă</mat-label>
         <input matInput type="text" formControlName="motherName">
       </mat-form-field>
 
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Data nașterii</mat-label>
+        <mat-label i18n>Data nașterii</mat-label>
         <input matInput [matDatepicker]="dateOfBirthPicker" formControlName="dateOfBirth">
         <mat-datepicker-toggle matSuffix [for]="dateOfBirthPicker"></mat-datepicker-toggle>
         <mat-datepicker #dateOfBirthPicker></mat-datepicker>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Stare civilă</mat-label>
+        <mat-label i18n>Stare civilă</mat-label>
         <mat-select formControlName="civilState">
           @for(option of civilStates; track option) {
             <mat-option [value]="option">{{ CIVIL_STATE[option] }}</mat-option>
@@ -71,34 +71,34 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Cetățenie</mat-label>
+        <mat-label i18n>Cetățenie</mat-label>
         <input matInput type="text" formControlName="citizenship">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Etnie</mat-label>
+        <mat-label i18n>Etnie</mat-label>
         <input matInput type="text" formControlName="ethnicity">
       </mat-form-field>
 
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="100">
-        <mat-label>CNP</mat-label>
+        <mat-label i18n>CNP</mat-label>
         <input matInput type="text" disabled [value]="userData.CNP">
       </mat-form-field>
     </div>
 
-    <div class="section-header">Locul nașterii</div>
+    <div i18n class="section-header">Locul nașterii</div>
     <div fxLayout="row grid" fxLayoutGap="10px grid">
       <mat-form-field appearance="outline" fxFlex="100">
-        <mat-label>Țară</mat-label>
+        <mat-label i18n>Țară</mat-label>
         <mat-select formControlName="placeOfBirthCountry">
           @for(country of countries; track country) {
-            <mat-option [value]="country">{{ country }}</mat-option>
+            <mat-option [value]="country">{{ country | countryName }}</mat-option>
           }
         </mat-select>
       </mat-form-field>
 
       @if(placeOfBirthCountry.value === 'România') {
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-          <mat-label>Județ/Sector</mat-label>
+          <mat-label i18n>Județ/Sector</mat-label>
           <mat-select formControlName="placeOfBirthCounty">
             @for(county of counties_ro; track county) {
               <mat-option [value]="county">{{ county }}</mat-option>
@@ -107,48 +107,48 @@
         </mat-form-field>
       } @else {
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-          <mat-label>Regiune</mat-label>
+          <mat-label i18n>Regiune</mat-label>
           <input matInput type="text" formControlName="placeOfBirthCounty">
         </mat-form-field>
       }
 
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Localitate</mat-label>
+        <mat-label i18n>Localitate</mat-label>
         <input matInput type="text" formControlName="placeOfBirthLocality">
       </mat-form-field>
     </div>
 
-    <div class="section-header">Date de contact</div>
+    <div i18n class="section-header">Date de contact</div>
     <div fxLayout="row grid" fxLayoutGap="10px grid">
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Telefon fix</mat-label>
+        <mat-label i18n>Telefon fix</mat-label>
         <input matInput type="text" formControlName="landline">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Telefon mobil</mat-label>
+        <mat-label i18n>Telefon mobil</mat-label>
         <input matInput type="text" formControlName="mobilePhone">
       </mat-form-field>
 
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>E-mail</mat-label>
+        <mat-label i18n>E-mail</mat-label>
         <input matInput type="text" formControlName="personalEmail">
       </mat-form-field>
     </div>
 
-    <div class="section-header">Adresă de domiciliu</div>
+    <div i18n class="section-header">Adresă de domiciliu</div>
     <div fxLayout="row grid" fxLayoutGap="10px grid" formGroupName="address">
       <mat-form-field appearance="outline" fxFlex="100">
-        <mat-label>Țară</mat-label>
+        <mat-label i18n>Țară</mat-label>
         <mat-select formControlName="country">
           @for(country of countries; track country) {
-            <mat-option [value]="country">{{ country }}</mat-option>
+            <mat-option [value]="country">{{ country | countryName }}</mat-option>
           }
         </mat-select>
       </mat-form-field>
 
       @if(addressCountry.value === 'România') {
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-          <mat-label>Județ/Sector</mat-label>
+          <mat-label i18n>Județ/Sector</mat-label>
           <mat-select formControlName="county">
             @for(county of counties_ro; track county) {
               <mat-option [value]="county">{{ county }}</mat-option>
@@ -157,49 +157,49 @@
         </mat-form-field>
       } @else {
         <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-          <mat-label>Regiune</mat-label>
+          <mat-label i18n>Regiune</mat-label>
           <input matInput type="text" formControlName="county">
         </mat-form-field>
       }
 
       <mat-form-field appearance="outline" fxFlex="100" fxFlex.gt-xs="50">
-        <mat-label>Localitate</mat-label>
+        <mat-label i18n>Localitate</mat-label>
         <input matInput type="text" formControlName="locality">
       </mat-form-field>
 
       <mat-form-field appearance="outline" fxFlex="70" fxFlex.gt-xs="70">
-        <mat-label>Stradă</mat-label>
+        <mat-label i18n>Stradă</mat-label>
         <input matInput type="text" formControlName="street">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="30" fxFlex.gt-xs="30">
-        <mat-label>Număr</mat-label>
+        <mat-label i18n>Număr</mat-label>
         <input matInput type="text" formControlName="streetNumber">
       </mat-form-field>
 
       <mat-form-field appearance="outline" fxFlex="50" fxFlex.gt-xs="25">
-        <mat-label>Bloc</mat-label>
+        <mat-label i18n>Bloc</mat-label>
         <input matInput type="text" formControlName="building">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="50" fxFlex.gt-xs="25">
-        <mat-label>Scară</mat-label>
+        <mat-label i18n>Scară</mat-label>
         <input matInput type="text" formControlName="stair">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="50" fxFlex.gt-xs="25">
-        <mat-label>Etaj </mat-label>
+        <mat-label i18n>Etaj </mat-label>
         <input matInput type="text" formControlName="floor">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="50" fxFlex.gt-xs="25">
-        <mat-label>Apartament</mat-label>
+        <mat-label i18n>Apartament</mat-label>
         <input matInput type="text" formControlName="apartment">
       </mat-form-field>
     </div>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>
+  <button i18n mat-button mat-dialog-close>
     Anulați
   </button>
-  <button mat-button color="primary" [disabled]="studentDataForm.invalid" (click)="saveData()">
+  <button i18n mat-button color="primary" [disabled]="studentDataForm.invalid" (click)="saveData()">
     Salvați
   </button>
 </mat-dialog-actions>

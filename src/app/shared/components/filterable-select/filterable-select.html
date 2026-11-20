@@ -19,8 +19,8 @@
   <div class="menu-content" (click)="$event.stopPropagation()" [style]="{ minWidth: menuContentWidth() + 'px', maxWidth: menuContentWidth() + 'px' }">
     <div class="filter-input" (click)="filterInput.focus()">
       <mat-icon>filter_list</mat-icon>
-      <span>Filtrați</span>
-      <input #filterInput placeholder="Tastați pentru a filtra" (input)="onInputChange($event)" />
+      <span i18n>Filtrați</span>
+      <input #filterInput placeholder="Tastați pentru a filtra" i18n-placeholder (input)="onInputChange($event)" />
     </div>
     <div class="discrete-scroll">
       @if(isLoading() || isLoadingMore()) {
@@ -32,7 +32,7 @@
           <app-loading type="bar" position="absolute" />
         }
       } @else if(options().length === 0) {
-        <div class="centered-h no-options">
+        <div i18n class="centered-h no-options">
           Nu există opțiuni disponibile.
         </div>
       }
@@ -54,7 +54,7 @@
       <div class="actions-bar centered">
         <button mat-button (click)="loadMoreOptions()" [disabled]="isLoadingMore()">
           <mat-icon>unfold_more</mat-icon>
-          <span>Arătați încă {{ loadMoreCount() }} din {{ optionCount() }}</span>
+          <span i18n>Arătați încă {{ loadMoreCount() }} din {{ optionCount() }}</span>
         </button>
       </div>
     }
@@ -68,13 +68,13 @@
     }
     <div class="actions-bar">
       @if(config().clearable && !empty) {
-        <button mat-button (click)="clearSelection()">Ștergeți</button>
+        <button i18n mat-button (click)="clearSelection()">Ștergeți</button>
       }
       <div class="spacer"></div>
       @if(config().multiple) {
-        <button mat-button (click)="closeMenu()">Anulați</button>
+        <button i18n mat-button (click)="closeMenu()">Anulați</button>
       }
-      <button mat-button (click)="closeMenu()">OK</button>
+      <button i18n mat-button (click)="closeMenu()">OK</button>
     </div>
   </div>
 </mat-menu>

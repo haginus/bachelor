@@ -1,33 +1,33 @@
-<div mat-dialog-title>Înscrieți-vă în această sesiune</div>
+<div i18n mat-dialog-title>Înscrieți-vă în această sesiune</div>
 <div mat-dialog-content>
-  <p>
+  <p i18n>
     Înainte de a vă înscrie la examenul de finalizare studii, asigurați-vă că:
   </p>
   <ul>
-    <li>Ați completat corect toate datele cerute în procesul de înscriere, în special numele, prenumele și inițiala părintelui;</li>
+    <li i18n>Ați completat corect toate datele cerute în procesul de înscriere, în special numele, prenumele și inițiala părintelui;</li>
     <button mat-button mat-dialog-close="cancel" (click)="reportInvalidData()">
       <mat-icon>feedback</mat-icon>
-      <span>Date incorecte?</span>
+      <span i18n>Date incorecte?</span>
     </button>
-    <li>
+    <li i18n>
       Titlul lucrării înscris în platformă este <b>exact la fel</b> ca cel înscris în documentul predat comisiei (verificați inclusiv diacriticele);
       <br>
       În prezent, titlul lucrării este: <i>„{{ paper.title }}”</i>.
     </li>
     <button mat-button mat-dialog-close="edit-paper">
       <mat-icon>edit</mat-icon>
-      <span>Editați lucrarea</span>
+      <span i18n>Editați lucrarea</span>
     </button>
   </ul>
-  <p>
+  <p i18n>
     Este imperios necesar ca datele să fie corecte, deoarece acestea vor fi prezente în cataloagele folosite la notare
     și, implicit, pe diploma pe care o veți primi în urma promovării examenului.
   </p>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close="cancel">Anulați</button>
+  <button i18n mat-button mat-dialog-close="cancel">Anulați</button>
   <button mat-button mat-dialog-close="submit" [disabled]="cooldownSeconds > 0">
-    Am citit și doresc înscrierea
+    <ng-container i18n>Am citit și doresc înscrierea</ng-container>
     @if(cooldownSeconds > 0) {
       ({{ cooldownSeconds }})
     }

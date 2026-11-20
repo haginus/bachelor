@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, LOCALE_ID, Output } from '@angular/core';
 import { NgxExtendedPdfViewerComponent, NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { ThemeService } from '../../../services/theme.service';
 
@@ -12,6 +12,7 @@ import { ThemeService } from '../../../services/theme.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PdfViewerComponent {
+  protected readonly locale = inject(LOCALE_ID);
 
   protected readonly themeService = inject(ThemeService);
 

@@ -74,7 +74,7 @@ export class UserProfileEditorComponent implements OnInit {
     this.user.editProfile(this.profilePictureFile, bio, website).subscribe(profile => {
       this.loading = false;
       if(profile) {
-        this.sb.open("Profilul a fost salvat.");
+        this.sb.open($localize`Profilul a fost salvat.`);
         this.userProfile = profile;
         this.resetForm();
         this.profileSaved.emit();

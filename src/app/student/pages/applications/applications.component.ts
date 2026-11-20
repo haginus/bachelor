@@ -65,7 +65,7 @@ export class StudentApplicationsComponent {
     }
     try {
       await firstValueFrom(this.applicationsService.withdraw(application.id));
-      this.snackbar.open("Cerere retrasă.");
+      this.snackbar.open($localize`Cerere retrasă.`);
     } catch {
       idx >= 0 && this.applications.splice(idx, 0, application);
     }

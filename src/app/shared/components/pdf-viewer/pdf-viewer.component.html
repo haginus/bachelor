@@ -1,7 +1,7 @@
 <ngx-extended-pdf-viewer
   [src]="src"
   [customToolbar]="customToolbar"
-  language="ro-RO"
+  [language]="locale"
   [textLayer]="true"
   (pdfLoaded)="pdfLoaded.emit($event)"
   [enableDragAndDrop]="false"

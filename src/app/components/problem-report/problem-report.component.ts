@@ -85,7 +85,7 @@ export class ProblemReportComponent implements OnInit, OnDestroy {
     try {
       await firstValueFrom(this.feedbackService.sendFeedback(dto));
       this.dialog.close();
-      this.snackbar.open("Mesajul a fost trimis. Ați primit o copie pe e-mail.");
+      this.snackbar.open($localize`Mesajul a fost trimis. Ați primit o copie pe e-mail.`);
     } finally {
       this.isSendingMessage = false;
     }
@@ -113,10 +113,10 @@ export interface ProblemReportDialogData {
     @if(showText) {
       <button mat-button (click)="openDialog()">
         <mat-icon>feedback</mat-icon>
-        <span>Raportați o problemă</span>
+        <span i18n>Raportați o problemă</span>
       </button>
     } @else {
-      <button mat-icon-button (click)="openDialog()" matTooltip="Raportați o problemă">
+      <button mat-icon-button (click)="openDialog()" matTooltip="Raportați o problemă" i18n-matTooltip>
         <mat-icon>feedback</mat-icon>
       </button>
     }

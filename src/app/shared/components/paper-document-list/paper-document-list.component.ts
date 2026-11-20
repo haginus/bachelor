@@ -295,7 +295,7 @@ export class PaperDocumentListComponent implements OnChanges {
       let idx = this.documents.findIndex(doc => doc.id == documentId);
       this.documents.splice(idx, 1);
       this._generateDocumentMap();
-      this.snackbar.open('Document șters.');
+      this.snackbar.open($localize`Document șters.`);
       this.documentEvents.emit({
         documentName: mapElement.requiredDocument.name,
         action: 'delete',
@@ -319,7 +319,7 @@ export class PaperDocumentListComponent implements OnChanges {
   private async getDocument(mapElement: DocumentMapElement): Promise<File | null> {
     const lastId = mapElement.lastId;
     if(!lastId) {
-      this.snackbar.open("Document inexistent.");
+      this.snackbar.open($localize`Document inexistent.`);
       return null;
     }
     mapElement.actionPending = true;

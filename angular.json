@@ -21,6 +21,7 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
+              "@angular/localize/init",
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
@@ -37,7 +38,8 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "i18nMissingTranslation": "error"
           },
           "configurations": {
             "production": {
@@ -59,12 +61,16 @@
                   "maximumError": "4kb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "localize": true
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "localize": [
+                "ro"
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -84,13 +90,17 @@
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n",
           "options": {
-            "buildTarget": "bachelor:build"
+            "buildTarget": "bachelor:build:development",
+            "outputPath": "src/locale",
+            "outFile": "messages.xlf",
+            "format": "xlf"
           }
         },
         "test": {
           "builder": "@angular/build:karma",
           "options": {
             "polyfills": [
+              "@angular/localize/init",
               "zone.js",
               "zone.js/testing"
             ],
@@ -104,6 +114,18 @@
               "src/styles.scss"
             ],
             "scripts": []
+          }
+        }
+      },
+      "i18n": {
+        "sourceLocale": {
+          "code": "ro",
+          "subPath": ""
+        },
+        "locales": {
+          "en-GB": {
+            "translation": "src/locale/messages.en-GB.xlf",
+            "subPath": "en"
           }
         }
       }

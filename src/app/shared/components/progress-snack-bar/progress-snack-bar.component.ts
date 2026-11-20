@@ -21,7 +21,7 @@ export class ProgressSnackBarComponent {
     @Inject(MAT_SNACK_BAR_DATA) public data: ProgressSnackbarData,
   ) {
     this.mode = data?.mode ?? 'indeterminate';
-    this.title = data?.title ?? 'Se încarcă...';
+    this.title = data?.title ?? $localize`Se încarcă...`;
     this.progress = data?.progress ?? undefined;
     this.suffix = data?.suffix ?? '';
   }

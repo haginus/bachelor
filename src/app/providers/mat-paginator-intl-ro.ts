@@ -3,15 +3,15 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 
 @Injectable()
 export class MatPaginatorIntlRo extends MatPaginatorIntl {
-  override itemsPerPageLabel = 'Rezultate pe pagină:';
-  override nextPageLabel = 'Pagina următoare';
-  override previousPageLabel = 'Pagina anterioară';
-  override firstPageLabel = 'Prima pagină';
-  override lastPageLabel = 'Ultima pagină';
+  override itemsPerPageLabel = $localize`Rezultate pe pagină:`;
+  override nextPageLabel = $localize`Pagina următoare`;
+  override previousPageLabel = $localize`Pagina anterioară`;
+  override firstPageLabel = $localize`Prima pagină`;
+  override lastPageLabel = $localize`Ultima pagină`;
 
   override getRangeLabel = function (page: number, pageSize: number, length: number) {
     if (length === 0 || pageSize === 0) {
-      return '0 din ' + length;
+      return $localize`0 din ${length}:total:`;
     }
     length = Math.max(length, 0);
     const startIndex = page * pageSize;
@@ -19,7 +19,7 @@ export class MatPaginatorIntlRo extends MatPaginatorIntl {
     const endIndex = startIndex < length ?
       Math.min(startIndex + pageSize, length) :
       startIndex + pageSize;
-    return (startIndex + 1) + ' - ' + endIndex + ' din ' + length;
+    return $localize`${startIndex + 1}:start: – ${endIndex}:end: din ${length}:total:`;
   };
 
 }

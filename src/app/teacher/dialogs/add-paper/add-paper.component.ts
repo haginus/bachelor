@@ -176,7 +176,7 @@ export class AddPaperComponent {
         this.papersService.create({ title, description, topicIds, studentId, teacherId })
       );
       this.dialog.close(paper);
-      this.snackbar.open("Lucrarea a fost salvată.");
+      this.snackbar.open($localize`Lucrarea a fost salvată.`);
     } finally {
       this.isSubmitting = false;
     }

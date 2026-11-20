@@ -1,44 +1,44 @@
-<h2 mat-dialog-title>Raportați o problemă sau oferiți feedback</h2>
+<h2 i18n mat-dialog-title>Raportați o problemă sau oferiți feedback</h2>
 @if(isSendingMessage) {
   <app-loading class="in-dialog" color="primary"></app-loading>
 }
 <mat-dialog-content>
   <form [formGroup]="problemReportForm" fxLayout="row grid" fxLayoutGap="10px grid">
     <mat-form-field appearance="outline" fxFlex="100">
-      <mat-label>Tip mesaj</mat-label>
+      <mat-label i18n>Tip mesaj</mat-label>
       <mat-select formControlName="type">
-        <mat-option value="data">Inadvertențe ale datelor sau probleme de logare</mat-option>
-        <mat-option value="feedback">Feedback</mat-option>
-        <mat-option value="bug">Raportare de probleme tehnice</mat-option>
-        <mat-option value="question">Întrebări cu privire la platformă</mat-option>
+        <mat-option i18n value="data">Inadvertențe ale datelor sau probleme de logare</mat-option>
+        <mat-option i18n value="feedback">Feedback</mat-option>
+        <mat-option i18n value="bug">Raportare de probleme tehnice</mat-option>
+        <mat-option i18n value="question">Întrebări cu privire la platformă</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="outline" fxFlex="100">
-      <mat-label>Descrieți</mat-label>
+      <mat-label i18n>Descrieți</mat-label>
       <textarea matInput formControlName="description"></textarea>
       @if(problemType.value == 'data') {
-        <mat-hint>Precizați ce date sunt incorecte și valorile corecte ale acestora.</mat-hint>
+        <mat-hint i18n>Precizați ce date sunt incorecte și valorile corecte ale acestora.</mat-hint>
       }
-      <mat-error>Descrierea trebuie să aibă între 16 și 1024 de caractere.</mat-error>
+      <mat-error i18n>Descrierea trebuie să aibă între 16 și 1024 de caractere.</mat-error>
     </mat-form-field>
     @if(!user) {
       <mat-form-field appearance="outline" fxFlex="100">
-        <mat-label>Nume și prenume</mat-label>
+        <mat-label i18n>Nume și prenume</mat-label>
         <input type="text" matInput formControlName="fullName" />
-        <mat-error>Introduceți numele întreg.</mat-error>
+        <mat-error i18n>Introduceți numele întreg.</mat-error>
       </mat-form-field>
     }
     <mat-form-field appearance="outline" fxFlex="100">
-      <mat-label>E-mail de contact</mat-label>
+      <mat-label i18n>E-mail de contact</mat-label>
       <input type="email" matInput formControlName="replyToEmail" />
-      <mat-error>Introduceți un e-mail valid.</mat-error>
+      <mat-error i18n>Introduceți un e-mail valid.</mat-error>
     </mat-form-field>
   </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Anulați</button>
-  <button matButton="filled" (click)="sendForm()" [disabled]="problemReportForm.invalid">
+  <button i18n mat-button mat-dialog-close>Anulați</button>
+  <button i18n matButton="filled" (click)="sendForm()" [disabled]="problemReportForm.invalid">
     Trimiteți
   </button>
 </mat-dialog-actions>

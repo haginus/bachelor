@@ -200,7 +200,7 @@ export class TeacherPapersComponent
       this.refreshResults();
       if (result.documentsGenerated) {
         this.snackbar.open(
-          'Documente noi au fost generate în urma modificărilor. Cereți studentului să le semneze.',
+          $localize`Documente noi au fost generate în urma modificărilor. Cereți studentului să le semneze.`,
           null,
           { duration: 10000 }
         );
@@ -211,11 +211,11 @@ export class TeacherPapersComponent
   async unsubmitPaper(paper: Paper) {
     let dialogRef = this.dialog.open<CommonDialogComponent, CommonDialogData, boolean>(CommonDialogComponent, {
       data: {
-        title: 'Anulați înscrierea?',
-        content: 'Sunteți sigur că doriți să anulați înscrierea?',
+        title: $localize`Anulați înscrierea?`,
+        content: $localize`Sunteți sigur că doriți să anulați înscrierea?`,
         actions: [
-          { name: 'Înapoi', value: false },
-          { name: 'Anulați înscrierea', value: true },
+          { name: $localize`Înapoi`, value: false },
+          { name: $localize`Anulați înscrierea`, value: true },
         ],
       },
     });
@@ -224,7 +224,7 @@ export class TeacherPapersComponent
     try {
       await firstValueFrom(this.submissionsService.unsubmit(paper.student.submission.id));
       this.refreshResults();
-      this.snackbar.open('Înscrierea a fost anulată.');
+      this.snackbar.open($localize`Înscrierea a fost anulată.`);
     } catch {
 
     }
@@ -233,11 +233,11 @@ export class TeacherPapersComponent
   async removePaper(paper: Paper) {
     const dialogRef = this.dialog.open<CommonDialogComponent, CommonDialogData, boolean>(CommonDialogComponent, {
       data: {
-        title: 'Rupeți asocierea?',
-        content: `Sunteți sigur că doriți să rupeți asocierea cu ${paper.student.fullName}?\nStudentul va trebui să își găsească alt profesor.`,
+        title: $localize`Rupeți asocierea?`,
+        content: $localize`Sunteți sigur că doriți să rupeți asocierea cu ${paper.student.fullName}?\nStudentul va trebui să își găsească alt profesor.`,
         actions: [
-          { name: 'Anulați', value: false },
-          { name: 'Rupeți asocierea', value: true },
+          { name: $localize`Anulați`, value: false },
+          { name: $localize`Rupeți asocierea`, value: true },
         ],
       },
     });
@@ -250,7 +250,7 @@ export class TeacherPapersComponent
     } finally {
       this.isLoadingResults = false;
     }
-    this.snackbar.open('Asociere ruptă.');
+    this.snackbar.open($localize`Asociere ruptă.`);
     this.refreshResults();
   }
 

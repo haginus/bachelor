@@ -62,7 +62,7 @@ export class CommitteesService {
 
   getFile(committeeId: number, fileName: CommitteeFile) {
     return this.filesService.getFileWithProgress(`${this.baseUrl}/${committeeId}/files/${fileName}`, {
-      indeterminateTitle: 'Se generează documentul...',
+      indeterminateTitle: $localize`Se generează documentul...`,
     });
   }
 

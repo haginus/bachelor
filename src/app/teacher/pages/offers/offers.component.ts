@@ -56,7 +56,7 @@ export class TeacherOffersComponent implements OnInit {
       this.offers = await firstValueFrom(this.offersService.findMine());
     } catch {
       this.offers = [];
-      this.snackbar.open("Eroare la încărcarea ofertelor.");
+      this.snackbar.open($localize`Eroare la încărcarea ofertelor.`);
     } finally {
       this.isLoadingOffers = false;
     }
@@ -98,16 +98,16 @@ export class TeacherOffersComponent implements OnInit {
       let content = '';
       let actions = [];
       if(offer.takenSeats >= offer.limit) {
-        content = "Oferta este deja inactivă - studenții nu mai pot trimite cereri noi, deoarece numărul de locuri limită setat a fost atins.";
+        content = $localize`Oferta este deja inactivă - studenții nu mai pot trimite cereri noi, deoarece numărul de locuri limită setat a fost atins.`;
         actions.push({ name: "OK", value: false });
       } else {
-        content = "Inactivați oferta setând limita de locuri la numărul actual de locuri ocupate.";
-        actions.push({ name: "Anulați", value: false });
-        actions.push({ name: "Mergeți la editare", value: true });
+        content = $localize`Inactivați oferta setând limita de locuri la numărul actual de locuri ocupate.`;
+        actions.push({ name: $localize`Anulați`, value: false });
+        actions.push({ name: $localize`Mergeți la editare`, value: true });
       }
       let dialogRef = this.dialog.open(CommonDialogComponent, {
         data: {
-          title: "Ofertele cu cereri acceptate nu pot fi șterse",
+          title: $localize`Ofertele cu cereri acceptate nu pot fi șterse`,
           content,
           actions,
         }
@@ -121,11 +121,11 @@ export class TeacherOffersComponent implements OnInit {
     }
     const dialogRef = this.dialog.open(CommonDialogComponent, {
       data: {
-        title: "Doriți să ștergeți această ofertă?",
-        content: "Toate cererile în curs de la studenți vor fi revocate.",
+        title: $localize`Doriți să ștergeți această ofertă?`,
+        content: $localize`Toate cererile în curs de la studenți vor fi revocate.`,
         actions: [
-          { name: "Anulați", value: false },
-          { name: "Ștergeți", value: true }
+          { name: $localize`Anulați`, value: false },
+          { name: $localize`Ștergeți`, value: true }
         ]
       }
     });
@@ -133,7 +133,7 @@ export class TeacherOffersComponent implements OnInit {
     if(!result) return;
     await firstValueFrom(this.offersService.delete(offer.id));
     this.getOffers();
-    this.snackbar.open("Ofertă ștearsă.");
+    this.snackbar.open($localize`Ofertă ștearsă.`);
   }
 
 }

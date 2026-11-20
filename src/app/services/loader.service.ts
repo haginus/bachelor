@@ -20,7 +20,7 @@ export class LoaderService {
       const result = await Promise.all(resources);
       return result;
     } catch {
-      this.snackBar.open('A apărut o eroare.');
+      this.snackBar.open($localize`A apărut o eroare.`);
       throw new Error();
     } finally {
       this.eventsSource.next({ type: 'LoadEnd' });

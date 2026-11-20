@@ -18,9 +18,9 @@ export class SubmissionGradeTableComponent {
   submissionGrade = computed(() => {
     const parts: { title: string; grade: number | null | undefined; minGrade: number }[] = [];
     if(this.hasWrittenExam()) {
-      parts.push({ title: 'Cunoștințe fundamentale și de specialitate', grade: this.writtenExamFinalGrade(), minGrade: 5 });
+      parts.push({ title: $localize`Cunoștințe fundamentale și de specialitate`, grade: this.writtenExamFinalGrade(), minGrade: 5 });
     }
-    parts.push({ title: 'Prezentarea și susținerea lucrării', grade: this.paperGrade(), minGrade: 5 });
+    parts.push({ title: $localize`Prezentarea și susținerea lucrării`, grade: this.paperGrade(), minGrade: 5 });
     const grades = parts.map(p => p.grade);
     const hasPendingGrades = grades.some(grade => grade === undefined);
     const isAbsent = grades.some(grade => grade === null || grade === 0);

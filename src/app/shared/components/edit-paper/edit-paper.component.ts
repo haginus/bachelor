@@ -126,9 +126,9 @@ export class EditPaperComponent implements OnInit {
       const result = await firstValueFrom(
         this.papersService.update(this.paper.id, { title, description, topicIds, teacherId })
       );
-      let snackMessage = "Lucrarea a fost salvată.";
+      let snackMessage = $localize`Lucrarea a fost salvată.`;
       if(result.documentsGenerated) {
-        snackMessage += " Documentele au fost regenerate.";
+        snackMessage += $localize` Documentele au fost regenerate.`;
       }
       this.snackBar.open(snackMessage, null, { duration: 8000 });
       this.dialog.close(result);

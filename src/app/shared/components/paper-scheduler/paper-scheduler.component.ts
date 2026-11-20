@@ -42,21 +42,21 @@ export class TimePipe implements PipeTransform {
     TimePipe,
   ],
   template: `
-    <div matDialogTitle>Editați timpul programării</div>
+    <div i18n matDialogTitle>Editați timpul programării</div>
     <div matDialogContent>
-      <p>
+      <p i18n>
         Editați timpul la care lucrarea va fi evaluată pentru a adăuga/elimina o pauză. <br>
         Nu puteți seta un timp care să schimbe ordinea lucrărilor.
       </p>
       <mat-form-field style="width: 100%;" appearance="outline">
-        <mat-label>Timp programare</mat-label>
+        <mat-label i18n>Timp programare</mat-label>
         <input matInput [formControl]="timeControl" type="time" [min]="data.minTime | time" />
-        <mat-hint>Timpul minim: <b>{{ data.minTime | time }}</b></mat-hint>
+        <mat-hint i18n>Timpul minim: <b>{{ data.minTime | time }}</b></mat-hint>
       </mat-form-field>
     </div>
     <div matDialogActions align="end">
-      <button mat-button mat-dialog-close>Anulați</button>
-      <button mat-button [mat-dialog-close]="getMinuteDelta()" [disabled]="timeControl.invalid">Editați</button>
+      <button i18n mat-button mat-dialog-close>Anulați</button>
+      <button i18n mat-button [mat-dialog-close]="getMinuteDelta()" [disabled]="timeControl.invalid">Editați</button>
     </div>
   `
 })
@@ -305,7 +305,7 @@ export class PaperSchedulerComponent {
     }
     try {
       const result = await firstValueFrom(this.committeesService.schedulePapers(dto));
-      this.snackBar.open('Lucrările au fost programate.');
+      this.snackBar.open($localize`Lucrările au fost programate.`);
       this.committee.papers.forEach(paper => {
         paper.scheduledGrading = paperMap[paper.id].scheduledGrading;
       });

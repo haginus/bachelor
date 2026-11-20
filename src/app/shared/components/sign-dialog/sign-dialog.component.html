@@ -1,14 +1,14 @@
 @if(loadingSubmit) {
   <app-loading type="bar" color="primary"></app-loading>
 }
-<div mat-dialog-title>Semnați documentul</div>
+<div i18n mat-dialog-title>Semnați documentul</div>
 <div mat-dialog-content>
-  <p>
+  <p i18n>
     Sunteți pe cale să semnați documentul „{{ signOptions.requiredDocument.title }}”. <br>
     Semnând acest document, vă asumați că l-ați citit în totalitate și sunteți de acord cu conținutul acestuia.
   </p>
   <div class="sample-container">
-    <div class="header">Specimen semnătură</div>
+    <div i18n class="header">Specimen semnătură</div>
     <div class="sample-box" [class]="{ np: !!signature }">
       @if(loadingSignature) {
         <mat-progress-spinner mode="indeterminate" [diameter]="48"></mat-progress-spinner>
@@ -18,35 +18,39 @@
         } @else {
           @if(signatureError) {
             <mat-icon>warning_amber</mat-icon>
-            A apărut o eroare. <br> Dacă problema persistă, contactați administratorul.
+            <ng-container i18n>A apărut o eroare.</ng-container> <br> <ng-container i18n>Dacă problema persistă, contactați administratorul.</ng-container>
           } @else {
             <mat-icon>draw</mat-icon>
-            Adăugați un specimen de semnătură.
+            <ng-container i18n>Adăugați un specimen de semnătură.</ng-container>
           }
         }
       }
     </div>
     <div class="footer" [class]="{ visible: !loadingSignature && !signatureError && signatureUserId === userId }">
       <button mat-button (click)="openSampleEditor()">
-        {{ !signature ? 'Adăugați specimenul' : 'Editați specimenul' }}
+        @if(!signature) {
+          <ng-container i18n>Adăugați specimenul</ng-container>
+        } @else {
+          <ng-container i18n>Editați specimenul</ng-container>
+        }
       </button>
     </div>
   </div>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Anulați</button>
-  <button mat-button [disabled]="!signature" (click)="sign()" class="sign-button">Semnați</button>
+  <button i18n mat-button mat-dialog-close>Anulați</button>
+  <button i18n mat-button [disabled]="!signature" (click)="sign()" class="sign-button">Semnați</button>
 </div>
 
 <ng-template #createSampleTemplate>
-  <div mat-dialog-title>Adăugați un specimen de semnătură</div>
+  <div i18n mat-dialog-title>Adăugați un specimen de semnătură</div>
   <div mat-dialog-content>
-    <p>Glisați în interiorul căsuței pentru a vă desena semnătura.</p>
+    <p i18n>Glisați în interiorul căsuței pentru a vă desena semnătura.</p>
     <app-signature-pad #signaturePad />
   </div>
   <div mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Anulați</button>
-    <button mat-button mat-dialog-close [disabled]="!signaturePad.dirty" (click)="saveSample(signaturePad.getBlob())">
+    <button i18n mat-button mat-dialog-close>Anulați</button>
+    <button i18n mat-button mat-dialog-close [disabled]="!signaturePad.dirty" (click)="saveSample(signaturePad.getBlob())">
       Salvați
     </button>
   </div>

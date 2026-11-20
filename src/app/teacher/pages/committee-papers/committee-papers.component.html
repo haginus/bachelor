@@ -2,11 +2,11 @@
   <ng-template matMenuContent>
     <button mat-menu-item (click)="getCommitteeFile('catalog_pdf')">
       <mat-icon>description</mat-icon>
-      <span>Format PDF</span>
+      <span i18n>Format PDF</span>
     </button>
     <button mat-menu-item (click)="getCommitteeFile('catalog_docx')">
       <mat-icon>description</mat-icon>
-      <span>Format DOCX</span>
+      <span i18n>Format DOCX</span>
     </button>
   </ng-template>
 </mat-menu>
@@ -15,11 +15,11 @@
   <ng-template matMenuContent>
     <button mat-menu-item (click)="getCommitteeFile('student_assignation_pdf')">
       <mat-icon>description</mat-icon>
-      <span>[PDF] Programarea lucrărilor</span>
+      <span i18n>[PDF] Programarea lucrărilor</span>
     </button>
     <button mat-menu-item (click)="getCommitteeFile('student_assignation_xlsx')">
       <mat-icon>description</mat-icon>
-      <span>[Excel] Programarea lucrărilor</span>
+      <span i18n>[Excel] Programarea lucrărilor</span>
     </button>
   </ng-template>
 </mat-menu>
@@ -43,7 +43,11 @@
   <mat-toolbar color="white">
     @if(hasGenerationRights && (gradingAllowed || committee.finalGrades)) {
       <button fxHide.lt-sm matButton="filled" color="warn" (click)="markGradesAsFinal()" [disabled]="committee.finalGrades">
-        {{ committee.finalGrades ? 'Note marcate drept finale' : 'Marcați notele drept finale' }}
+        @if(committee.finalGrades) {
+          <ng-container i18n>Note marcate drept finale</ng-container>
+        } @else {
+          <ng-container i18n>Marcați notele drept finale</ng-container>
+        }
       </button>
       <button
         fxHide
@@ -52,25 +56,25 @@
         color="warn"
         (click)="markGradesAsFinal()"
         [disabled]="committee.finalGrades"
-        matTooltip="Marcați notele drept finale"
+        matTooltip="Marcați notele drept finale" i18n-matTooltip
       >
         <mat-icon>published_with_changes</mat-icon>
       </button>
       <button mat-button [matMenuTriggerFor]="catalogGeneration">
-        <span>Generați catalogul</span>
+        <span i18n>Generați catalogul</span>
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
     }
     <span class="toolbar-spacer"></span>
     @if(hasGenerationRights) {
-      <button mat-icon-button matTooltip="Programați lucrările" (click)="schedulePapers()" [disabled]="committee.finalGrades || committee.activityDays.length == 0">
+      <button mat-icon-button matTooltip="Programați lucrările" i18n-matTooltip (click)="schedulePapers()" [disabled]="committee.finalGrades || committee.activityDays.length == 0">
         <mat-icon>schedule</mat-icon>
       </button>
     }
-    <button mat-icon-button matTooltip="Generați documente" [matMenuTriggerFor]="documentGeneration">
+    <button mat-icon-button matTooltip="Generați documente" i18n-matTooltip [matMenuTriggerFor]="documentGeneration">
       <mat-icon>description</mat-icon>
     </button>
-    <button mat-icon-button matTooltip="Descărcați toate lucrările" (click)="getCommitteeFile('paper_documents_zip')">
+    <button mat-icon-button matTooltip="Descărcați toate lucrările" i18n-matTooltip (click)="getCommitteeFile('paper_documents_zip')">
       <mat-icon>archive</mat-icon>
     </button>
   </mat-toolbar>
@@ -103,12 +107,12 @@
       </ng-container>
 
       <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <th i18n mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
         <td mat-cell *matCellDef="let row" class="wrap"> {{row.id}} </td>
       </ng-container>
 
       <ng-container matColumnDef="title">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Titlu </th>
+        <th i18n mat-header-cell *matHeaderCellDef mat-sort-header> Titlu </th>
         <td mat-cell *matCellDef="let row" class="wrap paper-title">
           <span>{{row.title}}</span>
           @if(row.isValid) {
@@ -118,34 +122,34 @@
       </ng-container>
 
       <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tip </th>
+        <th i18n mat-header-cell *matHeaderCellDef mat-sort-header> Tip </th>
         <td mat-cell *matCellDef="let row">
           {{ PAPER_TYPES[row.type] | titlecase }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="specialization">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Specializare </th>
+        <th i18n mat-header-cell *matHeaderCellDef mat-sort-header> Specializare </th>
         <td mat-cell *matCellDef="let row">{{ row.student?.specialization.name }} ({{ row.student?.specialization.studyForm | uppercase }})</td>
       </ng-container>
 
       <ng-container matColumnDef="student">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Student </th>
+        <th i18n mat-header-cell *matHeaderCellDef mat-sort-header> Student </th>
         <td mat-cell *matCellDef="let row"> {{row.student?.lastName}} {{row.student?.firstName}} </td>
       </ng-container>
 
       <ng-container matColumnDef="teacher">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Profesor </th>
+        <th i18n mat-header-cell *matHeaderCellDef mat-sort-header> Profesor </th>
         <td mat-cell *matCellDef="let row"> {{row.teacher?.lastName}} {{row.teacher?.firstName}} </td>
       </ng-container>
 
       <ng-container matColumnDef="scheduledGrading">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Programare </th>
+        <th i18n mat-header-cell *matHeaderCellDef mat-sort-header> Programare </th>
         <td mat-cell *matCellDef="let row"> {{ row.scheduledGrading | datetime }} </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Acțiuni </th>
+        <th i18n mat-header-cell *matHeaderCellDef> Acțiuni </th>
         <td mat-cell *matCellDef="let row">
 
         </td>
@@ -163,17 +167,17 @@
               }
             </div>
             <div class="contact-info">
-              <app-user-snippet [user]="paper.student">Student</app-user-snippet>
-              <app-user-snippet [user]="paper.teacher">Profesor coordonator</app-user-snippet>
+              <app-user-snippet i18n [user]="paper.student">Student</app-user-snippet>
+              <app-user-snippet i18n [user]="paper.teacher">Profesor coordonator</app-user-snippet>
             </div>
             @if(member.role != 'secretary' && gradingAllowed && !committee.finalGrades) {
               <div fxLayout="row" fxLayoutAlign="center">
                 @if(paperNeedsAttentionMap[paper.id] != null) {
-                  <button matButton="filled" (click)="gradePaper(paper)">
+                  <button i18n matButton="filled" (click)="gradePaper(paper)">
                     Notați lucrarea
                   </button>
                 } @else {
-                  <button matButton="filled" (click)="gradePaper(paper)">
+                  <button i18n matButton="filled" (click)="gradePaper(paper)">
                     Schimbați nota
                   </button>
                 }
@@ -183,7 +187,7 @@
               <app-paper-grade-table [paper]="paper" />
             }
             <div class="document-list">
-              <div mat-subheader>Documente</div>
+              <div i18n mat-subheader>Documente</div>
               <app-paper-document-list
                 [paperId]="paper.id"
                 [requiredDocuments]="paper.requiredDocuments"
@@ -205,7 +209,7 @@
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail'];" class="detail-row"></tr>
 
       <tr class="mat-mdc-row mdc-data-table__row" *matNoDataRow>
-        <td class="mat-mdc-cell mdc-data-table__cell" colspan="1000" [hidden]="isLoadingResults">
+        <td i18n class="mat-mdc-cell mdc-data-table__cell" colspan="1000" [hidden]="isLoadingResults">
           Nu există lucrări.
         </td>
       </tr>

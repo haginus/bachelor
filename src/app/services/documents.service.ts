@@ -32,7 +32,7 @@ export class DocumentsService {
 
   getDocument(id: number): Observable<File> {
     const url = `${environment.apiUrl}/documents/${id}/content`;
-    return this.filesService.getFileWithProgress(url, { indeterminateTitle: 'Se descarcă documentul...', determinateTitle: 'Se descarcă documentul...' });
+    return this.filesService.getFileWithProgress(url, { indeterminateTitle: $localize`Se descarcă documentul...`, determinateTitle: $localize`Se descarcă documentul...` });
   }
 
   delete(id: number): Observable<void> {

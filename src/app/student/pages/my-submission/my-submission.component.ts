@@ -1,3 +1,4 @@
+import { CountryNamePipe } from '../../../shared/pipes/country-name.pipe';
 import { Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -31,6 +32,7 @@ import { SubmissionGradeTableComponent } from "../../../shared/components/submis
 @Component({
   selector: 'app-my-submission',
   imports: [
+    CountryNamePipe,
     MatDialogModule,
     MatCardModule,
     MatButtonModule,
@@ -112,9 +114,9 @@ export class MySubmissionComponent {
   });
   submissionRequirements = computed(() => {
     return [
-      { title: 'Completați datele necesare înscrierii', fulfilled: !!this.extraData() },
-      { title: 'Semnați cererea de înscriere', fulfilled: this.paper().documents.some(d => d.name === 'sign_up_form' && d.type === 'signed') },
-      { title: `Încărcați lucrarea de ${PAPER_TYPES[this.paper().type]}`, fulfilled: this.paper().documents.some(d => d.name === 'paper') },
+      { title: $localize`Completați datele necesare înscrierii`, fulfilled: !!this.extraData() },
+      { title: $localize`Semnați cererea de înscriere`, fulfilled: this.paper().documents.some(d => d.name === 'sign_up_form' && d.type === 'signed') },
+      { title: $localize`Încărcați lucrarea de ${PAPER_TYPES[this.paper().type]}`, fulfilled: this.paper().documents.some(d => d.name === 'paper') },
     ];
   });
   allSubmissionRequirementsFulfilled = computed(() => this.submissionRequirements().every(r => r.fulfilled));
@@ -198,10 +200,10 @@ export class MySubmissionComponent {
       }
       if(dialogResult !== 'submit') return;
       result = await firstValueFrom(this.submissionsService.submit(this.submission().id));
-      this.snackBar.open('V-ați înscris în această sesiune.');
+      this.snackBar.open($localize`V-ați înscris în această sesiune.`);
     } else {
       result = await firstValueFrom(this.submissionsService.unsubmit(this.submission().id));
-      this.snackBar.open('V-ați retras din această sesiune.');
+      this.snackBar.open($localize`V-ați retras din această sesiune.`);
     }
     this.submission.set(result);
   }
@@ -213,7 +215,7 @@ export class MySubmissionComponent {
   async disputeWrittenExamGrade() {
     const writtenExamGrade = await firstValueFrom(this.writtenExamService.disputeGrade(this.submission().id));
     this.submission.update(submission => ({ ...submission, writtenExamGrade }));
-    this.snackBar.open('Ați contestat nota la examenul scris.');
+    this.snackBar.open($localize`Ați contestat nota la examenul scris.`);
   }
 
   PAPER_TYPES = PAPER_TYPES;

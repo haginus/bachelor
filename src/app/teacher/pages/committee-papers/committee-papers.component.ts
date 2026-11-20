@@ -240,7 +240,7 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
           forPresentation,
         })
       );
-      this.snackbar.open('Lucrarea a fost notată.');
+      this.snackbar.open($localize`Lucrarea a fost notată.`);
       const oldGrade = paper.grades.find((grade) => grade.committeeMemberTeacherId == this.user.id);
       if (oldGrade) {
         oldGrade.forPaper = forPaper;
@@ -269,12 +269,13 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
   async markGradesAsFinal() {
     const dialogRef = this.dialog.open(CommonDialogComponent, {
       data: {
-        title: 'Atenție!',
+        title: $localize`Atenție!`,
         content:
-          'Marcând notele drept finale, nu le veți mai putea modica.\nDe asemenea, studenții își vor putea vedea notele.',
+          $localize`Marcând notele drept finale, nu le veți mai putea modica.
+De asemenea, studenții își vor putea vedea notele.`,
         actions: [
-          { name: 'Anulați', value: false },
-          { name: 'Continuați', value: true },
+          { name: $localize`Anulați`, value: false },
+          { name: $localize`Continuați`, value: true },
         ],
       },
     });
@@ -283,7 +284,7 @@ export class TeacherCommitteePapersComponent implements OnInit, AfterViewInit {
     try {
       await firstValueFrom(this.committeesService.markGradesFinal(this.committee.id, true));
       this.committee.finalGrades = true;
-      this.snackbar.open('Note marcate drept finale.');
+      this.snackbar.open($localize`Note marcate drept finale.`);
       this.updateScheduleNotice();
     } finally {
       this.isLoadingResults = false;

@@ -72,7 +72,7 @@ export class SignDialogComponent {
       );
       const content = await firstValueFrom(this.documentsService.getDocument(document.id));
       this.dialogRef.close({ document, content });
-      this.snackBar.open('Documentul a fost semnat.');
+      this.snackBar.open($localize`Documentul a fost semnat.`);
     } finally {
       this.loadingSubmit = false;
     }

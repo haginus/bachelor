@@ -8,22 +8,25 @@
       <mat-card>
         <mat-card-header>
           <mat-card-title>{{ committee.name }}</mat-card-title>
-          <mat-card-subtitle>
-            {{ committee.papers.length }}
-            {{ committee.papers.length == 1 ? 'lucrare' : 'lucrări' }}
+          <mat-card-subtitle i18n="@@committeePaperCount">
+            {committee.papers.length, plural,
+              one {1 lucrare}
+              few {{{ committee.papers.length }} lucrări}
+              other {{{ committee.papers.length }} de lucrări}
+            }
           </mat-card-subtitle>
         </mat-card-header>
         <div class="list">
           <div class="list-item">
             <div class="content">
-              <div>Domenii</div>
+              <div i18n>Domenii</div>
               <div>{{ committee.domains | pluck:'name' | join }}</div>
             </div>
           </div>
           @if(committee.activityDays.length > 0) {
             <div class="list-item">
               <div class="content">
-                <div>Zile de activitate</div>
+                <div i18n>Zile de activitate</div>
                 <div>
                   @for(day of committee.activityDays; track day.id) {
                     <div>{{ day.location }} | {{ day.startTime | datetime }}</div>
@@ -34,7 +37,7 @@
           }
           <div class="list-item">
             <div class="content">
-              <div>Membri</div>
+              <div i18n>Membri</div>
               <div>
                 @for(member of committee.members; track member.teacherId) {
                   <div>
@@ -47,7 +50,7 @@
         </div>
         <mat-card-actions align="end">
           <button matButton="filled" color="primary" [routerLink]="[committee.id]">
-            <span>Lucrări </span>
+            <span i18n>Lucrări </span>
             <mat-icon>navigate_next</mat-icon>
           </button>
         </mat-card-actions>
@@ -59,6 +62,6 @@
 @if(!isLoadingCommittees && committees.length == 0) {
   <div class="no-results-container">
     <mat-icon class="hero-icon">cloud</mat-icon>
-    <h2>Nu sunteți membru în nicio comisie.</h2>
+    <h2 i18n>Nu sunteți membru în nicio comisie.</h2>
   </div>
 }

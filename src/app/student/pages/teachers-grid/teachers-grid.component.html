@@ -6,7 +6,7 @@
   @if(!canApply) {
     <div class="tip-card warning">
       <mat-icon class="tip-icon">warning_amber</mat-icon>
-      <div class="tip-card-content">
+      <div i18n class="tip-card-content">
         Perioada de depuneri de cereri de asociere s-a încheiat. <br> Nu mai puteți aplica în această sesiune.
       </div>
     </div>
@@ -15,11 +15,11 @@
   @if(mode === 'all') {
     <div class="filter-container mat-elevation-z3">
       <form [formGroup]="filterForm" class="form-group">
-        <div class="group-header">FILTRAȚI DUPĂ</div>
+        <div i18n class="group-header">FILTRAȚI DUPĂ</div>
         <div class="group-controls">
           <div>
             <mat-form-field appearance="outline">
-              <mat-label>Teme propuse</mat-label>
+              <mat-label i18n>Teme propuse</mat-label>
               <mat-select formControlName="topicIds" multiple>
                 @for(topic of topics; track topic.id) {
                   <mat-option [value]="topic.id">
@@ -27,7 +27,7 @@
                   </mat-option>
                 }
               </mat-select>
-              <mat-hint class="select-options">
+              <mat-hint i18n class="select-options">
                 <span (click)="setAllTopics()">Selectați tot</span> |
                 <span (click)="removeTopicSelection()">Ștergeți selecția</span>
               </mat-hint>
@@ -35,14 +35,14 @@
           </div>
           <div class="flex-grow">
             <mat-form-field appearance="outline">
-              <mat-label>Nume profesor</mat-label>
+              <mat-label i18n>Nume profesor</mat-label>
               <input matInput type="text" formControlName="search" />
             </mat-form-field>
           </div>
           <div>
             <mat-button-toggle-group class="toggle-group" formControlName="onlyActive">
-              <mat-button-toggle [value]="false">Toți profesorii</mat-button-toggle>
-              <mat-button-toggle [value]="true">Profesorii liberi</mat-button-toggle>
+              <mat-button-toggle i18n [value]="false">Toți profesorii</mat-button-toggle>
+              <mat-button-toggle i18n [value]="true">Profesorii liberi</mat-button-toggle>
             </mat-button-toggle-group>
           </div>
         </div>
@@ -57,7 +57,7 @@
     @if(canApply) {
       <div class="tip-card translucent">
         <mat-icon class="tip-icon">school</mat-icon>
-        <div class="tip-card-content">
+        <div i18n class="tip-card-content">
           Lista de mai jos conține doar profesorii care au adăugat oferte în aplicație. Pentru a accesa
           lista completă a profesorilor, accesați
           <a class="link" href="https://fmi.unibuc.ro/departamente/" target="_blank">acest link.</a>
@@ -68,8 +68,13 @@
       <mat-card class="teacher-card">
         <mat-card-header>
           <app-user-snippet [user]="teacher" class="teacher-snippet">
-            <span>{{ teacher.offers.length }} </span>
-            <span>{{ teacher.offers.length === 1 ? 'ofertă' : 'oferte' }}</span>
+            <span i18n="@@teacherOfferCount">
+              {teacher.offers.length, plural,
+                one {1 ofertă}
+                few {{{ teacher.offers.length }} oferte}
+                other {{{ teacher.offers.length }} de oferte}
+              }
+            </span>
           </app-user-snippet>
         </mat-card-header>
         <mat-card-content>
@@ -82,13 +87,17 @@
                 }
               </div>
               @if(offer.limit != offer.takenSeats) {
-                <div
+                <div i18n="@@availablePlaceCount"
                   class="offer-places"
                   [class.low]="offer.takenSeats / offer.limit < 0.35"
                   [class.mid]="offer.takenSeats / offer.limit >= 0.35"
                   [class.high]="offer.takenSeats / offer.limit > 0.75"
                 >
-                  {{ offer.limit - offer.takenSeats }} locuri
+                  {offer.limit - offer.takenSeats, plural,
+                    one {1 loc}
+                    few {{{ offer.limit - offer.takenSeats }} locuri}
+                    other {{{ offer.limit - offer.takenSeats }} de locuri}
+                  }
                 </div>
               }
               <div class="offer-actions">
@@ -96,15 +105,15 @@
                   [disabled]="!!offer.hasApplied || offer.takenSeats == offer.limit || !canApply"
                   (click)="applyOffer(offer)">
                   @if(offer.hasApplied) {
-                    <span>Aplicat</span>
+                    <span i18n>Aplicat</span>
                   } @else if(offer.takenSeats < offer.limit) {
                     @if(offer.description) {
-                      <span>Detalii</span>
+                      <span i18n>Detalii</span>
                     } @else {
-                      <span>Aplicați</span>
+                      <span i18n>Aplicați</span>
                     }
                   } @else {
-                    <span>Ocupat</span>
+                    <span i18n>Ocupat</span>
                   }
                 </button>
               </div>
@@ -120,7 +129,7 @@
     @if(!isLoadingTeachers && teachers.length == 0) {
       <div class="no-results">
         <mat-icon>sentiment_very_dissatisfied</mat-icon>
-        <h1>Nu există rezultate.</h1>
+        <h1 i18n>Nu există rezultate.</h1>
       </div>
     }
   </div>

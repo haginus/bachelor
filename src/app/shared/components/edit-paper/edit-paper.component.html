@@ -1,21 +1,21 @@
 @if(isLoadingQuery) {
   <app-loading class="in-dialog" color="primary"></app-loading>
 }
-<h2 mat-dialog-title>Editați lucrarea</h2>
+<h2 i18n mat-dialog-title>Editați lucrarea</h2>
 <mat-dialog-content>
   <form [formGroup]="paperForm" fxLayout="row grid" fxLayoutGap="12px grid">
     <mat-form-field appearance="outline" fxFlex="100">
-      <mat-label>Titlu</mat-label>
+      <mat-label i18n>Titlu</mat-label>
       <input type="text" matInput formControlName="title" />
-      <mat-error>Titlul trebuie să fie de lungime între 3 și 256 caractere.</mat-error>
+      <mat-error i18n>Titlul trebuie să fie de lungime între 3 și 256 caractere.</mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline" fxFlex="100">
-      <mat-label>Descriere</mat-label>
+      <mat-label i18n>Descriere</mat-label>
       <textarea matInput type="text" formControlName="description"></textarea>
-      <mat-error>Descrierea trebuie să fie de lungime între 64 și 1024 caractere.</mat-error>
+      <mat-error i18n>Descrierea trebuie să fie de lungime între 64 și 1024 caractere.</mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline" fxFlex="100" floatLabel="always">
-      <mat-label>Teme *</mat-label>
+      <mat-label i18n>Teme *</mat-label>
       <mat-chip-grid #chipList>
         @for(topic of selectedTopics; track $index) {
           <mat-chip [removable]="true" (removed)="removeTopic(topic)">
@@ -26,7 +26,7 @@
           </mat-chip>
         }
         <input
-          placeholder="Alegeți o temă nouă..."
+          placeholder="Alegeți o temă nouă..." i18n-placeholder
           #topicInput
           formControlName="topics"
           [matAutocomplete]="auto"
@@ -44,7 +44,7 @@
     @if(user.type === 'admin') {
       @defer {
         <mat-form-field appearance="outline" fxFlex="100">
-          <mat-label>Profesor coordonator</mat-label>
+          <mat-label i18n>Profesor coordonator</mat-label>
           <app-filterable-select
             [config]="teacherSelectConfig"
             formControlName="teacherId"
@@ -55,6 +55,6 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Anulați</button>
-  <button mat-button (click)="savePaper()" [disabled]="paperForm.invalid || selectedTopics.length == 0">Salvați</button>
+  <button i18n mat-button mat-dialog-close>Anulați</button>
+  <button i18n mat-button (click)="savePaper()" [disabled]="paperForm.invalid || selectedTopics.length == 0">Salvați</button>
 </mat-dialog-actions>

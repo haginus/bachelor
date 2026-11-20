@@ -5,83 +5,89 @@
 } @else if(user) {
   <mat-horizontal-stepper labelPosition="bottom" linear #stepper (selectionChange)="selectionChange($event)">
     <mat-step [stepControl]="validationForm" [editable]="false">
-      <ng-template matStepLabel>Validare</ng-template>
+      <ng-template i18n matStepLabel>Validare</ng-template>
       <form [formGroup]="validationForm">
         <div class="step-header">
-          <h2>Validarea datelor</h2>
-          <div class="step-details">Asigurați-vă că datele de mai jos sunt corecte.</div>
+          <h2 i18n>Validarea datelor</h2>
+          <div i18n class="step-details">Asigurați-vă că datele de mai jos sunt corecte.</div>
         </div>
         <mat-list>
-          <div mat-subheader>Date personale</div>
+          <div i18n mat-subheader>Date personale</div>
           <mat-list-item>
-            <div matListItemTitle>Nume</div>
+            <div i18n matListItemTitle>Nume</div>
             <div matListItemLine>{{ user.lastName }}</div>
           </mat-list-item>
           <mat-list-item>
-            <div matListItemTitle>Prenume</div>
+            <div i18n matListItemTitle>Prenume</div>
             <div matListItemLine>{{ user.firstName }}</div>
           </mat-list-item>
           <mat-list-item>
-            <div matListItemTitle>CNP</div>
-            <div matListItemLine>{{ user.CNP || 'Nu a fost introdus.' }}</div>
+            <div i18n matListItemTitle>CNP</div>
+            <div matListItemLine>
+              @if(user.CNP) {
+                {{ user.CNP }}
+              } @else {
+                <ng-container i18n>Nu a fost introdus.</ng-container>
+              }
+            </div>
           </mat-list-item>
           <mat-list-item>
-            <div matListItemTitle>Număr matricol</div>
+            <div i18n matListItemTitle>Număr matricol</div>
             <div matListItemLine>{{ user.identificationCode }}</div>
           </mat-list-item>
           <mat-divider></mat-divider>
-          <div mat-subheader>Formațiune de studiu</div>
+          <div i18n mat-subheader>Formațiune de studiu</div>
           <mat-list-item>
-            <div matListItemTitle>Formă de învățământ</div>
+            <div i18n matListItemTitle>Formă de învățământ</div>
             <div matListItemLine>{{ STUDY_FORMS[user.specialization.studyForm] }}</div>
           </mat-list-item>
           <mat-list-item>
-            <div matListItemTitle>Domeniu</div>
+            <div i18n matListItemTitle>Domeniu</div>
             <div matListItemLine>{{ user.specialization.domain?.name }}</div>
           </mat-list-item>
           <mat-list-item>
-            <div matListItemTitle>Program de studiu</div>
+            <div i18n matListItemTitle>Program de studiu</div>
             <div matListItemLine>{{ user.specialization?.name }}</div>
           </mat-list-item>
           <mat-list-item>
-            <div matListItemTitle>Grupă</div>
+            <div i18n matListItemTitle>Grupă</div>
             <div matListItemLine>{{ user.group }}</div>
           </mat-list-item>
           <mat-list-item>
-            <div matListItemTitle>Promoție</div>
+            <div i18n matListItemTitle>Promoție</div>
             <div matListItemLine>{{ user.promotion }}</div>
           </mat-list-item>
           <mat-list-item>
-            <div matListItemTitle>An de înmatriculare</div>
+            <div i18n matListItemTitle>An de înmatriculare</div>
             <div matListItemLine>{{ user.matriculationYear }}</div>
           </mat-list-item>
           <mat-list-item>
-            <div matListItemTitle>Formă de finanțare</div>
+            <div i18n matListItemTitle>Formă de finanțare</div>
             <div matListItemLine>{{ FUNDING_FORMS[user.fundingForm] | titlecase }}</div>
           </mat-list-item>
         </mat-list>
-        <mat-checkbox formControlName="isValid" class="v-checkbox wrap">
+        <mat-checkbox i18n formControlName="isValid" class="v-checkbox wrap">
           <span>Confirm că datele sunt corecte. </span>
           <a class="link" (click)="sendProblem($event)">Date incorecte?</a>
         </mat-checkbox>
         <br>
-        <mat-checkbox formControlName="hasAgreed" class="v-checkbox wrap">
+        <mat-checkbox i18n formControlName="hasAgreed" class="v-checkbox wrap">
           Sunt de acord ca datele mele personale să fie folosite de facultate în scopul
           operării acestei platforme.
         </mat-checkbox>
         <div class="flex-container align-end actions-container">
-          <button matButton="filled" matStepperNext [disabled]="validationForm.invalid">
+          <button i18n matButton="filled" matStepperNext [disabled]="validationForm.invalid">
             Pasul următor
           </button>
         </div>
       </form>
     </mat-step>
     <mat-step [stepControl]="topicsForm" [editable]="false">
-      <ng-template matStepLabel>Teme</ng-template>
+      <ng-template i18n matStepLabel>Teme</ng-template>
       <form [formGroup]="topicsForm">
         <div class="step-header">
-          <h2>Teme preferate</h2>
-          <div class="step-details">Alegeți temele care vă atrag.</div>
+          <h2 i18n>Teme preferate</h2>
+          <div i18n class="step-details">Alegeți temele care vă atrag.</div>
         </div>
 
         <mat-selection-list #topicSelect formControlName="selectedTopics">
@@ -92,30 +98,30 @@
       </form>
 
       <div class="flex-container align-end actions-container">
-        <button matButton="filled" matStepperNext [disabled]="topicsForm.invalid">Pasul următor</button>
+        <button i18n matButton="filled" matStepperNext [disabled]="topicsForm.invalid">Pasul următor</button>
       </div>
     </mat-step>
     <mat-step>
-      <ng-template matStepLabel>Profil</ng-template>
+      <ng-template i18n matStepLabel>Profil</ng-template>
       <div class="step-header">
-        <h2>Profilul dvs.</h2>
-        <div class="step-details">Completați-vă profilul pentru mai multă vizibilitate pe platformă.</div>
+        <h2 i18n>Profilul dvs.</h2>
+        <div i18n class="step-details">Completați-vă profilul pentru mai multă vizibilitate pe platformă.</div>
       </div>
       <app-user-profile-editor [showReset]="false" (profileSaved)="stepper.next()"></app-user-profile-editor>
     </mat-step>
     <mat-step [editable]="false">
-      <ng-template matStepLabel>Gata</ng-template>
+      <ng-template i18n matStepLabel>Gata</ng-template>
       <div class="flex-container last-tab-container">
         @if(loadingValidation) {
           <div>
             <mat-spinner [diameter]="48"></mat-spinner>
-            <h3>În curs de validare</h3>
+            <h3 i18n>În curs de validare</h3>
           </div>
         } @else {
           <div>
-            <h3>A apărut o eroare.</h3>
-            <button matButton="filled" (click)="validateStudent()">Reîncercați</button>
-            <button matButton="outlined" (click)="stepper.reset()">Reluați validarea</button>
+            <h3 i18n>A apărut o eroare.</h3>
+            <button i18n matButton="filled" (click)="validateStudent()">Reîncercați</button>
+            <button i18n matButton="outlined" (click)="stepper.reset()">Reluați validarea</button>
           </div>
         }
       </div>

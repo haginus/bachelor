@@ -71,7 +71,7 @@ export class TeacherApplicationsComponent {
     application.accepted = false;
     try {
       await firstValueFrom(this.applicationsService.decline(application.id));
-      this.snackbar.open("Cerere respinsă.");
+      this.snackbar.open($localize`Cerere respinsă.`);
     } catch {
       application.accepted = null;
     }
@@ -88,7 +88,7 @@ export class TeacherApplicationsComponent {
           offer.takenSeats += 1;
         }
       });
-      this.snackbar.open("Cerere acceptată.");
+      this.snackbar.open($localize`Cerere acceptată.`);
     } catch {
       application.accepted = null;
     }

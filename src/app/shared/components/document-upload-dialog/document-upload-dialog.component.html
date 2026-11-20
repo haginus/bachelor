@@ -1,5 +1,5 @@
 <div class="header">
-  <h2 class="title">Încărcați documentul</h2>
+  <h2 i18n class="title">Încărcați documentul</h2>
   <h3 class="subtitle">{{ data.document.title }}</h3>
   @if(data.document.uploadInstructions) {
     <p>{{ data.document.uploadInstructions }}</p>
@@ -15,14 +15,14 @@
         [disabled]="isDownloadingGeneratedDocument"
       >
         <mat-icon>cloud_download</mat-icon>
-        <span>Descărcați șablonul generat</span>
+        <span i18n>Descărcați șablonul generat</span>
       </button>
       @if(isDownloadingGeneratedDocument) {
         <mat-spinner [diameter]="36"></mat-spinner>
       }
     </div>
   }
-  <p>
+  <p i18n>
     Fișiere acceptate:
     {{ acceptedExtensions }}
   </p>
@@ -35,7 +35,7 @@
       (file)="handleFileInput($event)"
     >
       <mat-icon>cloud_upload</mat-icon>
-      <span>Încărcați documentul</span>
+      <span i18n>Încărcați documentul</span>
     </button>
   } @else {
     <mat-spinner [diameter]="36"></mat-spinner>

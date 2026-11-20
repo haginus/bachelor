@@ -35,7 +35,7 @@ export class PapersService {
   }
 
   getXlsxExport(params?: { onlySubmitted?: boolean; teacherId?: number; }) {
-    return this.filesService.getFileWithProgress(`${this.apiUrl}/export/xlsx`, { params: removeEmptyProperties(params), indeterminateTitle: 'Se generează fișierul...' });
+    return this.filesService.getFileWithProgress(`${this.apiUrl}/export/xlsx`, { params: removeEmptyProperties(params), indeterminateTitle: $localize`Se generează fișierul...` });
   }
 
   async saveXlsxExport(params?: { onlySubmitted?: boolean; teacherId?: number; }) {
@@ -51,7 +51,7 @@ export class PapersService {
       });
       delete params.paperFilters;
     }
-    return this.filesService.getFileWithProgress(`${this.apiUrl}/export/zip`, { params: params as any, indeterminateTitle: 'Se generează arhiva...', determinateTitle: 'Se descarcă arhiva...' });
+    return this.filesService.getFileWithProgress(`${this.apiUrl}/export/zip`, { params: params as any, indeterminateTitle: $localize`Se generează arhiva...`, determinateTitle: $localize`Se descarcă arhiva...` });
   }
 
   async savePaperDocumentsArchive(params?: PaperDocumentsArchiveDto) {

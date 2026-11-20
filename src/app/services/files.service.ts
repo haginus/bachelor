@@ -6,8 +6,8 @@ import { ProgressSnackBarComponent } from "../shared/components/progress-snack-b
 import { DocumentViewerDialogComponent, DocumentViewerDialogData } from "../shared/components/document-viewer-dialog/document-viewer-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 
-const DefaultIndeterminateTitle = 'Se descarcă fișierul...';
-const DefaultDeterminateTitle = 'Se descarcă fișierul...';
+const DefaultIndeterminateTitle = $localize`Se descarcă fișierul...`;
+const DefaultDeterminateTitle = $localize`Se descarcă fișierul...`;
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +53,7 @@ export class FilesService {
 
   private httpResponseToFile(response: HttpResponse<Blob>, fileName?: string, fileType?: string): File {
     const blob = response.body!;
-    return new File([blob], getFileName(response) || fileName || 'Fișier', { type: fileType || blob.type });
+    return new File([blob], getFileName(response) || fileName || $localize`Fișier`, { type: fileType || blob.type });
   }
 
   getFile(
@@ -138,7 +138,7 @@ export class FilesService {
       data: {
         mode,
         progress: 0,
-        title: title ?? 'Se descarcă fișierul...',
+        title: title ?? $localize`Se descarcă fișierul...`,
       }
     });
   }

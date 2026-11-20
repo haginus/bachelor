@@ -17,7 +17,7 @@
         <div class="list-item">
           <mat-icon>mail</mat-icon>
           <div class="content">
-            <div>E-mail</div>
+            <div i18n>E-mail</div>
             <div>
               <a class="link" href="mailto:{{ user.email }}" target="_blank">
                 {{ user.email }}
@@ -29,7 +29,7 @@
           <div class="list-item">
             <mat-icon>groups</mat-icon>
             <div class="content">
-              <div>Grupă</div>
+              <div i18n>Grupă</div>
               <div>{{ $any(user).group }}</div>
             </div>
           </div>
@@ -37,7 +37,7 @@
             <div class="list-item">
               <mat-icon>work_outline</mat-icon>
               <div class="content">
-                <div>Program de studiu</div>
+                <div i18n>Program de studiu</div>
                 <div>{{ ($any(user)).specialization.name }}</div>
               </div>
             </div>
@@ -47,7 +47,7 @@
           <div class="list-item">
             <mat-icon>language</mat-icon>
             <div class="content">
-              <div>Website</div>
+              <div i18n>Website</div>
               <div>
                 <a class="link" [href]="makeLink(user.profile.website)" target="_blank">
                   {{ user.profile.website }}
@@ -60,7 +60,7 @@
           <div class="list-item auto-height">
             <mat-icon>article</mat-icon>
             <div class="content">
-              <div>Bio</div>
+              <div i18n>Bio</div>
               <div>{{ user.profile.bio }}</div>
             </div>
           </div>

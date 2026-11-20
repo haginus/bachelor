@@ -12,7 +12,7 @@
           }
         </div>
       </div>
-      <div>
+      <div i18n>
         <span class="badge">
           {{application.offer.takenSeats }} / {{application.offer.limit}}
           Locuri ocupate
@@ -21,27 +21,27 @@
     </mat-card-header>
     <mat-card-content>
       @if(mode === 'teacher') {
-        <app-user-snippet [user]="application.student">Student</app-user-snippet>
+        <app-user-snippet i18n [user]="application.student">Student</app-user-snippet>
       } @else if(mode === 'student') {
-        <app-user-snippet [user]="application.offer.teacher">Profesor</app-user-snippet>
+        <app-user-snippet i18n [user]="application.offer.teacher">Profesor</app-user-snippet>
       }
       <div class="list">
         <div class="list-item">
           <div class="content">
-            <div>Titlu</div>
+            <div i18n>Titlu</div>
             <div>{{ application.title }}</div>
           </div>
         </div>
         <div class="list-item">
           <div class="content">
-            <div>Descriere</div>
+            <div i18n>Descriere</div>
             <div>{{ application.description }}</div>
           </div>
         </div>
         @if(application.usedTechnologies) {
           <div class="list-item">
             <div class="content">
-              <div>Tehnologii folosite</div>
+              <div i18n>Tehnologii folosite</div>
               <div>{{ application.usedTechnologies }}</div>
             </div>
           </div>
@@ -51,22 +51,22 @@
     <mat-card-actions align="end">
       @if(application.accepted == null) {
         @if(mode === 'teacher') {
-          <button mat-button (click)="sendEvent('decline', application)">
+          <button i18n mat-button (click)="sendEvent('decline', application)">
             Respingeți
           </button>
-          <button mat-flat-button color="primary" (click)="sendEvent('accept', application)">
+          <button i18n mat-flat-button color="primary" (click)="sendEvent('accept', application)">
             Acceptați
           </button>
         } @else if(mode === 'student') {
-          <button mat-button (click)="sendEvent('cancel', application)">
+          <button i18n mat-button (click)="sendEvent('cancel', application)">
             Retrageți cererea
           </button>
         }
       } @else {
         @if(application.accepted) {
-          <button mat-button disabled>Acceptată</button>
+          <button i18n mat-button disabled>Acceptată</button>
         } @else {
-          <button mat-button disabled>Respinsă</button>
+          <button i18n mat-button disabled>Respinsă</button>
         }
       }
     </mat-card-actions>
@@ -74,6 +74,6 @@
 } @empty {
   <div class="no-results-container">
     <mat-icon class="hero-icon">assignment</mat-icon>
-    <h2>Nu există cereri.</h2>
+    <h2 i18n>Nu există cereri.</h2>
   </div>
 }

@@ -20,11 +20,11 @@ const parseCNP = (cnp: string): ParsedCNP => {
   //https://ro.wikipedia.org/wiki/Cod_numeric_personal
   const rgx = /^[0-9]{13}$/;
   if (!cnp.match(rgx)) {
-    throw new CNPParseError("invalid_structure", "Structura CNP-ului este invalidă.");
+    throw new CNPParseError("invalid_structure", $localize`Structura CNP-ului este invalidă.`);
   }
   const yearSex = Number(cnp[0]);
   if (!(1 <= yearSex && yearSex <= 8)) {
-    throw new CNPParseError("invalid_year_sex", "Cifra de sex/secol din CNP este invalidă.");
+    throw new CNPParseError("invalid_year_sex", $localize`Cifra de sex/secol din CNP este invalidă.`);
   }
   let parsedData: any = {};
 
@@ -39,14 +39,14 @@ const parseCNP = (cnp: string): ParsedCNP => {
   date += cnp.substring(1, 3) + '-' + cnp.substring(3, 5) + '-' + cnp.substring(5, 7); // YYYY-MM-DD
   const dateParsed = Date.parse(date);
   if (isNaN(dateParsed)) {
-    throw new CNPParseError("invalid_date", "Data nașterii din CNP este invalidă.");
+    throw new CNPParseError("invalid_date", $localize`Data nașterii din CNP este invalidă.`);
   } else {
     parsedData['dateBorn'] = dateParsed;
   }
 
   const county = Number(cnp.substring(7, 9));
   if (!((1 <= county && county <= 48) || [51, 52, 70, 80].includes(county))) {
-    throw new CNPParseError("invalid_county", "Codul județului din CNP este invalid.");
+    throw new CNPParseError("invalid_county", $localize`Codul județului din CNP este invalid.`);
   } else {
     parsedData['countyCode'] = county;
   }
@@ -57,7 +57,7 @@ const parseCNP = (cnp: string): ParsedCNP => {
   }, 0) % 11;
   const controlDigit = sum == 10 ? 1 : sum;
   if (Number(cnp[12]) != controlDigit) {
-    throw new CNPParseError("invalid_control_digit", "Cifra de control din CNP este invalidă.");
+    throw new CNPParseError("invalid_control_digit", $localize`Cifra de control din CNP este invalidă.`);
   }
 
   return parsedData;

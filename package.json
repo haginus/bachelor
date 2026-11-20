@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "i18n:extract": "ng extract-i18n"
   },
   "private": true,
   "overrides": {
@@ -23,6 +24,7 @@
     "@angular/core": "^21.1.3",
     "@angular/flex-layout": "^15.0.0-beta.42",
     "@angular/forms": "^21.1.3",
+    "@angular/localize": "^21.1.3",
     "@angular/material": "^21.1.3",
     "@angular/platform-browser": "^21.1.3",
     "@angular/platform-browser-dynamic": "^21.1.3",

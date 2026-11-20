@@ -4,28 +4,28 @@
   </div>
 }
 
-<h2 mat-dialog-title>Aplicați la această ofertă</h2>
+<h2 i18n mat-dialog-title>Aplicați la această ofertă</h2>
 
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="applicationForm">
     <mat-form-field subscriptSizing="fixed">
-      <mat-label>Titlu lucrare</mat-label>
+      <mat-label i18n>Titlu lucrare</mat-label>
       <input matInput type="text" formControlName="title">
-      <mat-error>
+      <mat-error i18n>
         Titlul trebuie să fie de lungime între 3 și 256 caractere.
       </mat-error>
     </mat-form-field>
     <mat-form-field subscriptSizing="fixed">
-      <mat-label>Descriere lucrare</mat-label>
+      <mat-label i18n>Descriere lucrare</mat-label>
       <textarea matInput type="text" formControlName="description"></textarea>
-      <mat-error>
+      <mat-error i18n>
         Descrierea trebuie să fie de lungime între 64 și 1024 caractere.
       </mat-error>
     </mat-form-field>
     <mat-form-field subscriptSizing="fixed">
-      <mat-label>Tehnologii folosite</mat-label>
+      <mat-label i18n>Tehnologii folosite</mat-label>
       <input matInput type="text" formControlName="usedTechnologies">
-      <mat-error>
+      <mat-error i18n>
         Acest câmp poate avea maximum 256 de caractere.
       </mat-error>
     </mat-form-field>
@@ -33,8 +33,8 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Anulați</button>
-  <button mat-button (click)="applyToOffer()" [disabled]="applicationForm.invalid">
+  <button i18n mat-button mat-dialog-close>Anulați</button>
+  <button i18n mat-button (click)="applyToOffer()" [disabled]="applicationForm.invalid">
     Aplicați
   </button>
 </mat-dialog-actions>

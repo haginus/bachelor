@@ -127,11 +127,11 @@ export class StudentTeachersGridComponent implements OnInit, OnDestroy {
     if(offer.description) {
       const detailsRef = this.dialog.open(CommonDialogComponent, {
         data: {
-          title: "Detalii ofertă",
+          title: $localize`Detalii ofertă`,
           content: offer.description,
           actions: [
             {
-              name: "Aplicați",
+              name: $localize`Aplicați`,
               value: true,
             }
           ]

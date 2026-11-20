@@ -8,11 +8,11 @@
       }
     </div>
     <div class="content">
-      <div class="title">{{ document.title }}</div>
+      <div class="title">{{ documentMap[document.name].title }}</div>
       <div>
         @if(documentMap[document.name].reuploadRequest && !documentMap[document.name].isUploaded) {
           <div class="reupload-request-notice upload-request-notice">
-            <span>
+            <span i18n>
               Reîncărcare solicitată până pe {{ documentMap[document.name].reuploadRequest.deadline | date:"dd.MM.yyyy" }}
             </span>
             @if(documentMap[document.name].reuploadRequest.comment) {
@@ -22,11 +22,11 @@
         } @else {
           @if(documentMap[document.name].nextAction == null || documentMap[document.name].nextAction == 'upload') {
             <div class="upload-request-notice">
-              <span>
+              <span i18n>
                 Document lipsă
               </span>
               @if(documentMap[document.name].uploadBy != perspective) {
-                <span>
+                <span i18n>
                   | Se încarcă de către {{ USER_TYPES[documentMap[document.name].uploadBy] }}
                 </span>
               } @else if(documentMap[document.name].requiredDocument.uploadInstructions) {
@@ -35,17 +35,17 @@
             </div>
           }
           @if(documentMap[document.name].nextAction == 'sign') {
-            <span>Necesită semnătură</span>
+            <span i18n>Necesită semnătură</span>
           }
           @if(documentMap[document.name].nextAction == 'view') {
             @if(documentMap[document.name].actualTypes.generated && !documentMap[document.name].requiredTypes.signed && !documentMap[document.name].requiredTypes.copy) {
-              <span>Document generat</span>
+              <span i18n>Document generat</span>
             }
             @if(documentMap[document.name].actualTypes.signed) {
-              <span>Document semnat</span>
+              <span i18n>Document semnat</span>
             }
             @if(documentMap[document.name].actualTypes.copy) {
-              <span>Document încărcat</span>
+              <span i18n>Document încărcat</span>
             }
           }
         }
@@ -55,7 +55,7 @@
       <button
         class="left-button"
         mat-icon-button
-        matTooltip="Ștergeți documentul"
+        matTooltip="Ștergeți documentul" i18n-matTooltip
         (click)="deleteDocument(documentMap[document.name])"
         [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange"
       >
@@ -64,7 +64,7 @@
     }
     @switch (documentMap[document.name].nextAction) {
       @case ('view') {
-        <button
+        <button i18n
           mat-stroked-button
           (click)="viewDocument(documentMap[document.name])"
           [disabled]="documentMap[document.name].actionPending"
@@ -73,7 +73,7 @@
         </button>
       }
       @case ('sign') {
-        <button
+        <button i18n
           mat-stroked-button
           (click)="signDocument(documentMap[document.name])"
           [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange"
@@ -82,7 +82,7 @@
         </button>
       }
       @case ('upload') {
-        <button
+        <button i18n
           mat-stroked-button
           (click)="openUploadDialog(documentMap[document.name])"
           [disabled]="documentMap[document.name].actionPending || !documentMap[document.name].canChange"

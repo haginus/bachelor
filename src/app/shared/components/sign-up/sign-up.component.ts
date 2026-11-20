@@ -110,8 +110,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
 
       this.dialog.open<CommonDialogComponent, CommonDialogData>(CommonDialogComponent, {
         data: {
-          title: "Cerere înregistrată",
-          content: "Vom verifica datele pe care le-ați introdus. Veți primi un e-mail în momentul în care contul dvs. este creat.",
+          title: $localize`Cerere înregistrată`,
+          content: $localize`Vom verifica datele pe care le-ați introdus. Veți primi un e-mail în momentul în care contul dvs. este creat.`,
           actions: [
             { name: "OK", value: true }
           ]

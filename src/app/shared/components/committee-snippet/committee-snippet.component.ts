@@ -20,9 +20,9 @@ export class CommitteeSnippetComponent {
   paper = input<Paper>();
 
   roles = {
-    president: 'Președinte',
-    secretary: 'Secretar',
-    member: 'Membru',
+    president: $localize`Președinte`,
+    secretary: $localize`Secretar`,
+    member: $localize`Membru`,
   }
 
   sortedDays = computed(() => (

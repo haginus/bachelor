@@ -1,18 +1,18 @@
 <table mat-table [dataSource]="submissionGrade().parts" #table>
 
   <ng-container matColumnDef="title">
-    <th mat-header-cell *matHeaderCellDef>Probă</th>
+    <th i18n mat-header-cell *matHeaderCellDef>Probă</th>
     <td mat-cell *matCellDef="let row">{{ row.title }}</td>
-    <td mat-footer-cell *matFooterCellDef><b>Medie</b></td>
+    <td i18n mat-footer-cell *matFooterCellDef><b>Medie</b></td>
   </ng-container>
 
   <ng-container matColumnDef="grade">
-    <th mat-header-cell *matHeaderCellDef>Notă obținută</th>
+    <th i18n mat-header-cell *matHeaderCellDef>Notă obținută</th>
     <td mat-cell *matCellDef="let row">
       @if(row.grade === undefined) {
         -
       } @else if(row.grade === null || row.grade === 0) {
-        Absent
+        <ng-container i18n>Absent</ng-container>
       } @else {
         {{ row.grade | fixed }}
       }
@@ -21,7 +21,7 @@
       @if(submissionGrade().average === undefined) {
         <b>-</b>
       } @else if(submissionGrade().average == null) {
-        <b>Absent</b>
+        <b i18n>Absent</b>
       } @else {
         <b>{{ submissionGrade().average | fixed }}</b>
       }
@@ -29,7 +29,7 @@
   </ng-container>
 
   <ng-container matColumnDef="minGrade">
-    <th mat-header-cell *matHeaderCellDef>Notă minimă</th>
+    <th i18n mat-header-cell *matHeaderCellDef>Notă minimă</th>
     <td mat-cell *matCellDef="let row">≥ {{ row.minGrade }}</td>
     <td mat-footer-cell *matFooterCellDef><b>≥ 6</b></td>
   </ng-container>
