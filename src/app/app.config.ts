@@ -1,11 +1,12 @@
 import { ApplicationConfig, importProvidersFrom, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter, withViewTransitions } from '@angular/router';
+import { provideRouter, TitleStrategy, withViewTransitions } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatPaginatorIntlRo } from './providers/mat-paginator-intl-ro';
+import { AppTitleStrategy } from './providers/app-title-strategy';
 import { environment } from '../environments/environment';
 import { RECAPTCHA_LANGUAGE, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
@@ -26,6 +27,7 @@ export const appConfig: ApplicationConfig = {
       ])
     ),
     provideAnimations(),
+    { provide: TitleStrategy, useClass: AppTitleStrategy },
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 4000, horizontalPosition: 'center' } },
     { provide: MatPaginatorIntl, useClass: MatPaginatorIntlRo },
     { provide: RECAPTCHA_SETTINGS, useValue: { siteKey: environment.captchaKey, } },

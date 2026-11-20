@@ -1,5 +1,7 @@
 import { CivilState, CommitteeMemberRole } from "./types";
 
+export const DEFAULT_TITLE = $localize`Finalizare studii`;
+
 export const DOMAIN_TYPES = {
   bachelor: $localize`licență`,
   master: $localize`master`,

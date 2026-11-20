@@ -30,7 +30,7 @@ const routes: Routes = [
   {
     path: 'students',
     component: AdminStudentsComponent,
-    data: { title: 'Studenți' },
+    title: 'Studenți',
     resolve: {
       resolverData: studentsResolver,
     },
@@ -40,7 +40,8 @@ const routes: Routes = [
     path: 'teachers',
     component: AdminTeachersComponent,
     canActivate: [roleGuard],
-    data: { title: 'Profesori', role: 'admin' },
+    title: 'Profesori',
+    data: { role: 'admin' },
     resolve: {
       resolverData: teachersResolver,
     },
@@ -50,40 +51,44 @@ const routes: Routes = [
     path: 'admins',
     component: AdminsComponent,
     canActivate: [roleGuard, sudoModeGuard],
-    data: { title: 'Administratori și secretari', role: 'admin' }
+    title: 'Administratori și secretari',
+    data: { role: 'admin' }
   },
   {
     path: 'sign-up-requests',
     component: SignUpRequestsComponent,
-    data: { title: 'Cereri de înregistrare' }
+    title: 'Cereri de înregistrare'
   },
   {
     path: 'domains',
     component: AdminDomainsComponent,
     canActivate: [roleGuard],
-    data: { title: 'Domenii', role: 'admin' }
+    title: 'Domenii',
+    data: { role: 'admin' }
   },
   {
     path: 'topics',
     component: AdminTopicsComponent,
     canActivate: [roleGuard],
-    data: { title: 'Teme', role: 'admin' }
+    title: 'Teme',
+    data: { role: 'admin' }
   },
   {
     path: 'session',
     component: SessionSettingsComponent,
     canActivate: [roleGuard, sudoModeGuard],
-    data: { title: 'Setări sesiune de examinare', role: 'admin' }
+    title: 'Setări sesiune de examinare',
+    data: { role: 'admin' }
   },
   {
     path: 'reports',
     component: ReportsComponent,
-    data: { title: 'Rapoarte' }
+    title: 'Rapoarte'
   },
   {
     path: 'papers',
     component: AdminPapersComponent,
-    data: { title: 'Lucrări' },
+    title: 'Lucrări',
     resolve: {
       resolverData: papersResolver,
     },
@@ -92,13 +97,14 @@ const routes: Routes = [
   {
     path: 'committees',
     component: CommitteesComponent,
-    data: { title: 'Comisii' }
+    title: 'Comisii'
   },
   {
     path: 'committees/:committeeId/assign-papers',
     component: PaperAssignComponent,
     canActivate: [roleGuard],
-    data: { title: 'Atribuire lucrări', role: 'admin' }
+    title: 'Atribuire lucrări',
+    data: { role: 'admin' }
   },
   {
     path: 'written-exam',
@@ -107,14 +113,15 @@ const routes: Routes = [
       resolverData: submissionsResolver,
       stats: submissionStatsResolver,
     },
-    data: { title: 'Note examen scris' },
+    title: 'Note examen scris',
     runGuardsAndResolvers: 'always',
   },
   {
     path: 'logs',
     loadComponent: () => import('./pages/logs/logs.component').then(m => m.LogsComponent),
     canActivate: [roleGuard],
-    data: { title: 'Loguri', role: 'admin' }
+    title: 'Loguri',
+    data: { role: 'admin' }
   }
 ];
 

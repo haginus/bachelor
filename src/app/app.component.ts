@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer, MatDrawerMode, MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { combineLatest } from 'rxjs';
-import { filter, map, mergeMap } from 'rxjs/operators'
+import { filter, map, switchMap } from 'rxjs/operators'
 import { ProblemReportButtonComponent } from './components/problem-report/problem-report.component';
 import { AuthService } from './services/auth.service';
 import { UserProfileEditorComponent } from './shared/components/user-profile-editor/user-profile-editor.component';
@@ -22,10 +22,9 @@ import { getUserDescription } from './lib/utils';
 import { isStudent, SessionSettings, User } from './lib/types';
 import { MatTooltip } from "@angular/material/tooltip";
 import { AppControlsComponent } from './shared/components/app-controls/app-controls.component';
-import { Title } from '@angular/platform-browser';
+import { DEFAULT_TITLE } from './lib/constants';
 
 const SideWidth = 800;
-const DEFAULT_TITLE = $localize`Finalizare studii`;
 
 @Component({
   selector: 'app-root',
@@ -62,7 +61,6 @@ export class AppComponent implements OnInit {
     private auth: AuthService,
     private dialog: MatDialog,
     private loader: LoaderService,
-    private documentTitle: Title,
   ) {}
 
   user: User | undefined = undefined;
@@ -76,7 +74,6 @@ export class AppComponent implements OnInit {
   @ViewChild('drawer') drawer: MatDrawer;
 
   ngOnInit(): void {
-    this.documentTitle.setTitle(DEFAULT_TITLE);
     this.drawerMode = window.innerWidth < SideWidth ? "over" : "side";
     this.router.events.subscribe((event) => {
       switch (true) {
@@ -100,7 +97,7 @@ export class AppComponent implements OnInit {
           break;
       }
     });
-    this.router.events.pipe(  // code to check for route changes and get route data
+    this.router.events.pipe(  // code to check for route changes and get route data and title
       filter(event => event instanceof NavigationEnd),
       map(() => this.route),
       map(route => {
@@ -108,14 +105,14 @@ export class AppComponent implements OnInit {
         return route
       }),
       filter(route => route.outlet === 'primary'),
-      mergeMap(route => route.data)
-    ).subscribe(data => {
+      switchMap(route => combineLatest({ data: route.data, title: route.title }))
+    ).subscribe(({ data, title }) => {
       if(this.drawerMode == 'over') {
         this.drawer.close();
       }
       this.hideDrawer = data['hideDrawer'] === true;
       this.hideToolbar = data['hideToolbar'] === true;
-      this.title = data['title'] || DEFAULT_TITLE;
+      this.title = title || DEFAULT_TITLE;
       if(this.hideDrawer) {
         this.drawer.close();
       } else if(this.drawerMode == 'side') {
