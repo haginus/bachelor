@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { roleGuard } from '../guards/role.guard';
+import { rolesGuard } from '../guards/roles.guard';
 import { AdminComponent } from './admin.component';
 import { AdminsComponent } from './pages/admins/admins.component';
 import { CommitteesComponent } from './pages/committees/committees.component';
@@ -39,9 +39,8 @@ const routes: Routes = [
   {
     path: 'teachers',
     component: AdminTeachersComponent,
-    canActivate: [roleGuard],
+    canActivate: [rolesGuard('admin')],
     title: 'Profesori',
-    data: { role: 'admin' },
     resolve: {
       resolverData: teachersResolver,
     },
@@ -50,9 +49,8 @@ const routes: Routes = [
   {
     path: 'admins',
     component: AdminsComponent,
-    canActivate: [roleGuard, sudoModeGuard],
+    canActivate: [rolesGuard('admin'), sudoModeGuard],
     title: 'Administratori și secretari',
-    data: { role: 'admin' }
   },
   {
     path: 'sign-up-requests',
@@ -62,23 +60,20 @@ const routes: Routes = [
   {
     path: 'domains',
     component: AdminDomainsComponent,
-    canActivate: [roleGuard],
+    canActivate: [rolesGuard('admin')],
     title: 'Domenii',
-    data: { role: 'admin' }
   },
   {
     path: 'topics',
     component: AdminTopicsComponent,
-    canActivate: [roleGuard],
+    canActivate: [rolesGuard('admin')],
     title: 'Teme',
-    data: { role: 'admin' }
   },
   {
     path: 'session',
     component: SessionSettingsComponent,
-    canActivate: [roleGuard, sudoModeGuard],
+    canActivate: [rolesGuard('admin'), sudoModeGuard],
     title: 'Setări sesiune de examinare',
-    data: { role: 'admin' }
   },
   {
     path: 'reports',
@@ -102,9 +97,8 @@ const routes: Routes = [
   {
     path: 'committees/:committeeId/assign-papers',
     component: PaperAssignComponent,
-    canActivate: [roleGuard],
+    canActivate: [rolesGuard('admin')],
     title: 'Atribuire lucrări',
-    data: { role: 'admin' }
   },
   {
     path: 'written-exam',
@@ -119,9 +113,8 @@ const routes: Routes = [
   {
     path: 'logs',
     loadComponent: () => import('./pages/logs/logs.component').then(m => m.LogsComponent),
-    canActivate: [roleGuard],
+    canActivate: [rolesGuard('admin')],
     title: 'Loguri',
-    data: { role: 'admin' }
   }
 ];
 

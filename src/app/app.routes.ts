@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { notSignedInGuard } from './guards/not-signed-in.guard';
 import { signedInGuard } from './guards/signed-in.guard';
-import { roleGuard } from './guards/role.guard';
+import { rolesGuard } from './guards/roles.guard';
 import { Component } from '@angular/core';
 
 @Component({ template: '' }) class RedirectTrap {}
@@ -27,20 +27,17 @@ export const routes: Routes = [
   {
     path: 'admin',
     loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
-    canActivate: [signedInGuard, roleGuard],
-    data: { role: ['admin', 'secretary'] }
+    canActivate: [signedInGuard, rolesGuard(['admin', 'secretary'])],
   },
   {
     path: 'teacher',
     loadChildren: () => import('./teacher/teacher.module').then(m => m.TeacherModule),
-    canActivate: [signedInGuard, roleGuard],
-    data: { role: 'teacher' }
+    canActivate: [signedInGuard, rolesGuard('teacher')],
   },
   {
     path: 'student',
     loadChildren: () => import('./student/student.module').then(m => m.StudentModule),
-    canActivate: [signedInGuard, roleGuard],
-    data: { role: 'student' }
+    canActivate: [signedInGuard, rolesGuard('student')],
   },
-  { path: '**', component: RedirectTrap, canActivate: [signedInGuard, roleGuard] },
+  { path: '**', component: RedirectTrap, canActivate: [signedInGuard, rolesGuard([])] },
 ];
